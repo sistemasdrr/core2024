@@ -99,3 +99,8 @@
 /DRRCore.Transversal.Mapper/obj/DRRCore.Transversal.Mapper.csproj.nuget.g.targets
 /DRRCore.Transversal.Mapper/obj/project.assets.json
 /DRRCore.Transversal.Mapper/obj/project.nuget.cache
+/.vs/DRRCore/FileContentIndex/13cf3ca7-946d-43d7-8527-925c92fd0fd1.vsidx
+*.lock
+*.vsidx
+*.wsuo
+/.vs/slnx.sqlite
