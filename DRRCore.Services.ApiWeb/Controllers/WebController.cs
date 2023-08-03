@@ -1,8 +1,15 @@
 ﻿using DRRCore.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace DRRCore.Services.ApiWeb.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class WebController : Controller
@@ -19,7 +26,7 @@ namespace DRRCore.Services.ApiWeb.Controllers
         {
             return Ok(await _webDataApplication.AddOrUpdateWebDataAsync());
         }
-        [HttpGet()]
+        [HttpGet()]        
         [Route("get/param/{param}/{page}")]
         public async Task<ActionResult> GetByParamPaging(string param,int page=1)
         {           
@@ -31,5 +38,8 @@ namespace DRRCore.Services.ApiWeb.Controllers
         {
             return Ok(await _webDataApplication.GetByCodeAsync(code));
         }
+
+       
+       
     }
 }

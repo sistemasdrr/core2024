@@ -142,3 +142,14 @@
 /DRRCore.Transversal.Mapper/bin/Debug/net6.0
 /DRRCore.Transversal.Mapper/obj/Debug/net6.0
 *.suo
+/DRRCore.Services.ApiWeb/obj/Release/net6.0/DRRCore.Services.ApiWeb.assets.cache
+/DRRCore.Services.ApiWeb/obj/Release/net6.0/DRRCore.Services.ApiWeb.csproj.AssemblyReference.cache
+/DRRCore.Application.DTO/obj/Debug/net6.0/DRRCore.Application.DTO.csproj.AssemblyReference.cache
+*.cache
+/DRRCore.Application.DTO/obj/Release/net6.0/DRRCore.Application.DTO.csproj.AssemblyReference.cache
+/DRRCore.Application.Interfaces/obj/Release/net6.0/DRRCore.Application.Interfaces.csproj.AssemblyReference.cache
+/DRRCore.Application.Main/obj/Release/net6.0/DRRCore.Application.Main.csproj.AssemblyReference.cache
+*.json
+*.bin
+*.v2
+*.config
