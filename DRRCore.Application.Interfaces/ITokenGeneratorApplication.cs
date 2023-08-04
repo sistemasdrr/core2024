@@ -2,7 +2,7 @@
 
 namespace DRRCore.Application.Interfaces
 {
-    public interface ITokenGenerator
+    public interface ITokenGeneratorApplication
     {
         Task<Response<string>> GetTokenAsync();
     }

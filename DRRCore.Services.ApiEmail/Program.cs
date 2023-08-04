@@ -20,15 +20,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IMySqlUserRepository, MySqlUserRepository>();
-builder.Services.AddScoped<IEmailRepository, EmailRepository>();
-builder.Services.AddScoped<IEmailUserRepository, EmailUserRepository>();
+builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
+builder.Services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
+builder.Services.AddScoped<IAttachmentsNotSendRepository, AttachmentsNotSendRepository>();
+builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
 
 
-builder.Services.AddScoped<IEmailDomain, EmailDomain>();
-builder.Services.AddScoped<IEmailUserDomain, EmailUserDomain>();
 
-
-builder.Services.AddScoped<IEmailUserApplication, EmailUserApplication>();
 
 var app = builder.Build();
 

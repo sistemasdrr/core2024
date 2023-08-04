@@ -11,6 +11,8 @@ public partial class EmailHistory
 
     public string Message { get; set; } = null!;
 
+    public string? Htmlbody { get; set; }
+
     public DateTime? Date { get; set; }
 
     public string FromMails { get; set; } = null!;
@@ -23,15 +25,15 @@ public partial class EmailHistory
 
     public string Domain { get; set; } = null!;
 
-    public bool? WasSent { get; set; }
+    public bool? Success { get; set; }
 
     public DateTime? InsertDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
 
-    public Guid InsertUser { get; set; }
+    public string InsertUser { get; set; } = null!;
 
-    public Guid? UpdateUser { get; set; }
+    public string? UpdateUser { get; set; }
 
     public bool? Enable { get; set; }
 }

@@ -153,3 +153,9 @@
 *.bin
 *.v2
 *.config
+/DRRCore.Domain.Interfaces/obj/Release/net6.0/DRRCore.Domain.Interfaces.csproj.AssemblyReference.cache
+/DRRCore.Domain.Entities/obj/Release/net6.0/DRRCore.Domain.Entities.csproj.AssemblyReference.cache
+/DRRCore.Infraestructure.Repository/obj/Release/net6.0/DRRCore.Infraestructure.Repository.csproj.AssemblyReference.cache
+/DRRCore.Services.ApiEmail/obj/Release/net6.0/DRRCore.Services.ApiEmail.csproj.AssemblyReference.cache
+/DRRCore.Infraestructure.Interfaces/obj/Release/net6.0/DRRCore.Infraestructure.Interfaces.csproj.AssemblyReference.cache
+/DRRCore.Domain.Main/obj/Release/net6.0/DRRCore.Domain.Main.csproj.AssemblyReference.cache

@@ -8,11 +8,11 @@ using System.Text;
 
 namespace DRRCore.Application.Main
 {
-    public class TokenGenerator : ITokenGenerator
+    public class TokenGeneratorApplication : ITokenGeneratorApplication
     {
 
         private readonly IConfiguration Configuration;
-        public TokenGenerator(IConfiguration configuration)
+        public TokenGeneratorApplication(IConfiguration configuration)
         {
             Configuration = configuration;
         }

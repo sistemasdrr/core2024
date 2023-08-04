@@ -1,26 +1,24 @@
-﻿using DRRCore.Application.Interfaces;
+﻿using DRRCore.Application.DTO.Email;
+using DRRCore.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace DRRCore.Services.ApiEmail.Controllers
 {
-    [Route("[controller]")]
+    [ApiController]
+    [Route("api/[controller]")]
     public class EmailController : Controller
     {
-        private readonly IEmailUserApplication _emailUserApplication;
-
-        /// <summary>
-        /// Constructor de la controlador
-        /// </summary>     
-        public EmailController(IEmailUserApplication emailUserApplication)
+        private readonly IEmailApplication _emailApplication;
+        public EmailController(IEmailApplication emailApplication)
         {
-            _emailUserApplication = emailUserApplication;
+            _emailApplication=emailApplication;
         }
+
         [HttpPost()]
-        [Route("api/addUser")]
-        public async Task<ActionResult> AddAsync()
+        [Route("sendMail")]
+        public async Task<ActionResult> SendMail(EmailDataDTO dataDTO)
         {
-           return Ok(_emailUserApplication.Add());
+            return Ok(await _emailApplication.SendMailAsync(dataDTO));
         }
     }
 }

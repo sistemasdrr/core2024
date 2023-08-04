@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DRRCore.Application.DTO\DRRCore.Application.DTO.csproj" />
+    <ProjectReference Include="..\DRRCore.Domain.Entities\DRRCore.Domain.Entities.csproj" />
     <ProjectReference Include="..\DRRCore.Transversal.Common\DRRCore.Transversal.Common.csproj" />
   </ItemGroup>
 

@@ -10,8 +10,8 @@ namespace DRRCore.Services.ApiWeb.Controllers
 {
     public class TokenController : Controller
     {
-       private readonly ITokenGenerator _tokenGenerator;
-        public TokenController(ITokenGenerator tokenGenerator)
+       private readonly ITokenGeneratorApplication _tokenGenerator;
+        public TokenController(ITokenGeneratorApplication tokenGenerator)
         {
             _tokenGenerator = tokenGenerator;
         }
