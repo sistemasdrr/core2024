@@ -27,18 +27,20 @@ builder.Services.AddAutoMapper(typeof(DataProfile).Assembly);
 //Injection Repository
 builder.Services.AddScoped<IMySqlUserRepository, MySqlUserRepository>();
 builder.Services.AddScoped<IMySqlWebRepository, MySqlWebRepository>();
-builder.Services.AddScoped<IEmailRepository, EmailRepository>();
-builder.Services.AddScoped<IEmailUserRepository, EmailUserRepository>();
 builder.Services.AddScoped<IWebQueryRepository, WebQueryRepository>();
+builder.Services.AddScoped<IAttachmentsNotSendRepository, AttachmentsNotSendRepository>();
+builder.Services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
+builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
 
 //Injection Domain
-builder.Services.AddScoped<IEmailDomain, EmailDomain>();
-builder.Services.AddScoped<IEmailUserDomain, EmailUserDomain>();
 builder.Services.AddScoped<IWebDataDomain, WebDataDomain>();
+builder.Services.AddScoped<IAttachmentsNotSendDomain, AttachmentsNotSendDomain>();
+builder.Services.AddScoped<IEmailConfigurationDomain, EmailConfigurationDomain>();
+builder.Services.AddScoped<IEmailHistoryDomain, EmailHistoryDomain>();
+
 //Injection Application
-builder.Services.AddScoped<IEmailUserApplication, EmailUserApplication>();
 builder.Services.AddScoped<IWebDataApplication, WebDataApplication>();
-builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
+builder.Services.AddScoped<IEmailApplication, EmailApplication>();
 //Injection Common
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
