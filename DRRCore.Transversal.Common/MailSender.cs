@@ -26,10 +26,12 @@ namespace DRRCore.Transversal.Common
      }
 public class MailSender : IMailSender
     {
-        private readonly EmailSettings _emailSettings;       
-        public MailSender(IOptions<EmailSettings> options)
+        private readonly EmailSettings _emailSettings;
+        private readonly ILogger _logger;
+        public MailSender(IOptions<EmailSettings> options,ILogger logger)
         {
             _emailSettings = options.Value;
+            _logger = logger;
         }
        
         public async Task<bool> SendMailAsync(EmailValues values)
@@ -43,6 +45,7 @@ public class MailSender : IMailSender
                     try
                     {
                         await client.SendMailAsync(mailMessage(values));
+                        _logger.LogInformation(Messages.MailSuccessSend);
                         response = true;
 
                     }catch
@@ -53,11 +56,13 @@ public class MailSender : IMailSender
                             try
                             {
                                 await client.SendMailAsync(mailMessage(values));
+                                _logger.LogInformation(Messages.MailSuccessSend);
                                 response = true;
                                 break;
                             }
-                            catch 
+                            catch (Exception ex)
                             {
+                                _logger.LogInformation(string.Format(Messages.ErrorMailSend,ex.Message));
                                 continue;
                             }                            
                         }
@@ -69,10 +74,12 @@ public class MailSender : IMailSender
                     try
                     {
                         await client.SendMailAsync(mailMessage(values));
+                        _logger.LogInformation(Messages.MailSuccessSend);
                         response = true;
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        _logger.LogInformation(string.Format(Messages.ErrorMailSend, ex.Message));
                         return false;
                     }
                    
@@ -85,9 +92,11 @@ public class MailSender : IMailSender
         {
               return new SmtpClient()
                 {
-                    EnableSsl = _emailSettings.PrincipalDomain.EnableSsl,
+                    Host= _emailSettings.PrincipalDomain.Host,
+                    //EnableSsl = _emailSettings.PrincipalDomain.EnableSsl,
+                    Port= _emailSettings.PrincipalDomain.Port,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = _emailSettings.PrincipalDomain.UseDefaultCredentials,
+                   // UseDefaultCredentials = _emailSettings.PrincipalDomain.UseDefaultCredentials,
                     Credentials = new NetworkCredential(_emailSettings.PrincipalDomain.Credential.Username, _emailSettings.PrincipalDomain.Credential.Password)
                 };
           
@@ -96,8 +105,10 @@ public class MailSender : IMailSender
         {
             return new SmtpClient()
             {
-                EnableSsl = _emailSettings.OtherDomainsConfiguration[index].EnableSsl,
+                Host = _emailSettings.OtherDomainsConfiguration[index].Host,
+                //EnableSsl = _emailSettings.OtherDomainsConfiguration[index].EnableSsl,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
+                Port= _emailSettings.OtherDomainsConfiguration[index].Port,
                 UseDefaultCredentials = _emailSettings.OtherDomainsConfiguration[index].UseDefaultCredentials,
                 Credentials = new NetworkCredential(_emailSettings.OtherDomainsConfiguration[index].Credential.Username,
                                                     _emailSettings.OtherDomainsConfiguration[index].Credential.Password)
@@ -108,15 +119,25 @@ public class MailSender : IMailSender
         {
             MailAddress from = new(values.FromEmail);
             MailAddress to = new(values.ToEmail);
-            MailAddress bcc = new(values.CcEmail);
-            MailAddress cc = new(values.BccEmail);
+           
             MailMessage message = new(from, to);           
             message.Subject = values.Subject;
-            message.Body = values.Body;          
-            message.Bcc.Add(bcc);
-            message.CC.Add(cc);
+            message.Body = values.Body;
+            if (!string.IsNullOrEmpty(values.CcEmail))
+            {
+                message.Bcc.Add(values.CcEmail);
+            }
+            if (!string.IsNullOrEmpty(values.BccEmail))
+            {
+                message.Bcc.Add(values.BccEmail);
+            }
+           
             message.IsBodyHtml = values.IsHtml;
-            message.Attachments.Add(new Attachment(values.attachment[0], ""));
+            if (values.attachment!=null || values.attachment?.Count>0)
+            {
+                message.Attachments.Add(new Attachment(values.attachment[0], ""));
+            }
+           
             return message;
         }
     }

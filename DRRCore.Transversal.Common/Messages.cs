@@ -6,5 +6,8 @@
         public static readonly string BadQuery = "No se pudo realizar la consulta";
         public static readonly string WhiteParameter = "El parámetro ingresado es incorrecto";
         public static readonly string ParameterIsNotTooLonger = "El parámetro no tiene la longitud correcta";
+
+        public static readonly string MailSuccessSend = "Email ha sido enviado con éxito";
+        public static readonly string ErrorMailSend = "Hubo un error al enviar el correo : {0}";
     }
 }

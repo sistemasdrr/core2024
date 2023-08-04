@@ -17,6 +17,7 @@ namespace DRRCore.Transversal.Common.JsonReader
     public class DomainConfiguration
     {
         public string? Host { get; set; }
+        public int Port { get; set; }
         public bool EnableSsl { get; set; }
         public bool UseDefaultCredentials { get; set; }
         public Credential? Credential { get; set; }
