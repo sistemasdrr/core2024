@@ -5,7 +5,7 @@ namespace DRRCore.Domain.Entities.SQLContext;
 
 public partial class EmailHistory
 {
-    public int Id { get; set; }
+    public int IdEmailHistory { get; set; }
 
     public string Subject { get; set; } = null!;
 
@@ -36,4 +36,6 @@ public partial class EmailHistory
     public string? UpdateUser { get; set; }
 
     public bool? Enable { get; set; }
+
+    public virtual ICollection<AttachmentsNotSend> AttachmentsNotSends { get; set; } = new List<AttachmentsNotSend>();
 }

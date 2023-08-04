@@ -20,10 +20,14 @@ namespace DRRCore.Transversal.Common
         public string? Subject { get; set; } = string.Empty;
         public string? Body { get; set; } = string.Empty;
         public bool IsHtml { get; set; } = true;
-        public List<MemoryStream>? attachment { get; set; }
-
+        public List<Attachment> Attachments { get; set; }= new List<Attachment>();
 
      }
+    public class Attachment
+    {
+        public string FileName { get; set; }=string.Empty;
+        public MemoryStream Stream { get; set; }=new MemoryStream();
+    }
 public class MailSender : IMailSender
     {
         private readonly EmailSettings _emailSettings;
@@ -133,12 +137,21 @@ public class MailSender : IMailSender
             }
            
             message.IsBodyHtml = values.IsHtml;
-            if (values.attachment!=null || values.attachment?.Count>0)
+            if (values.Attachments!=null || values.Attachments?.Count>0)
             {
-                message.Attachments.Add(new Attachment(values.attachment[0], ""));
+                foreach (var attachment in values.Attachments)
+                {
+                    message.Attachments.Add(new System.Net.Mail.Attachment(attachment.Stream, attachment.FileName));
+                }
+               
             }
            
             return message;
+        }
+
+        public Task<bool> ReSendMailAsync(EmailValues values)
+        {
+            throw new NotImplementedException();
         }
     }
 }

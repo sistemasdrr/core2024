@@ -42,7 +42,7 @@ namespace DRRCore.Transversal.Common
             }
         }
 
-        public async Task<string> DownloadFile(string remoteFilePath)
+        public async Task<MemoryStream> DownloadFile(string remoteFilePath)
         {            
             try
             {
@@ -55,26 +55,25 @@ namespace DRRCore.Transversal.Common
             }))
             {              
                 await ftpClient.LoginAsync();
-                using (var ftpReadStream = await ftpClient.OpenFileReadStreamAsync(_fileName))
+                using (var ftpReadStream = await ftpClient.OpenFileReadStreamAsync(remoteFilePath))
                 {                    
                     using (var fileWriteStream = new MemoryStream())
                     {
                         await ftpReadStream.CopyToAsync(fileWriteStream);
                         if (fileWriteStream != null)
                         {
-                            return Encoding.UTF8.GetString((fileWriteStream).ToArray());                            
+                            return fileWriteStream;                            
                         }
                     }
                 }
             }
-               
             }
             finally
             {
               
             }           
            
-            return string.Empty;
+            return new MemoryStream();
         }
        
 
@@ -95,7 +94,6 @@ namespace DRRCore.Transversal.Common
                     using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(_fileName))
                     {                        
                         await body.CopyToAsync(writeStream);
-                       
                     }
                     return true;
                 }
@@ -106,6 +104,36 @@ namespace DRRCore.Transversal.Common
                 return false;
             }
             
+        }
+        public async Task<string> UploadFile(MemoryStream body,string fileName)
+        {
+            try
+            {
+                string path = string.Format("{0}/{1}", _sftpSettings.RemotePath, fileName);
+                using (var ftpClient = new FtpClient(new FtpClientConfiguration
+                {
+                    Host = _sftpSettings.Host,
+                    Port = _sftpSettings.Port,
+                    Username = _sftpSettings.UserName,
+                    Password = _sftpSettings.Password
+                }))
+                {
+                    await ftpClient.LoginAsync();
+
+                    using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(path))
+                    {
+                        await body.CopyToAsync(writeStream);
+
+                    }
+                    return path;
+                }
+
+            }
+            catch
+            {
+                return string.Empty;
+            }
+
         }
     }
 }

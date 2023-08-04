@@ -68,7 +68,12 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
             }
         }
 
-        public async Task<List<EmailHistory>> GetByUser(string user)
+        public Task<EmailHistory> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<EmailHistory>> GetByUserAsync(string user)
         {
             using (var context = new SqlContext())
             {

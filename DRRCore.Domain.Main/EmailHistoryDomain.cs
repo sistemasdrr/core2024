@@ -27,9 +27,14 @@ namespace DRRCore.Domain.Main
             return await _emailHistoryRepository.GetAllAsync();
         }
 
-        public async Task<List<EmailHistory>> GetByUser(string user)
+        public async Task<EmailHistory> GetByIdAsync(int id)
         {
-            return await _emailHistoryRepository.GetByUser(user);
+            return await _emailHistoryRepository.GetByIdAsync(id);
+        }
+
+        public async Task<List<EmailHistory>> GetByUserAsync(string user)
+        {
+            return await _emailHistoryRepository.GetByUserAsync(user);
         }
 
         public async Task<List<EmailHistory>> GetEmailNotSendAsync()

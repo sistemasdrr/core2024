@@ -3,7 +3,8 @@
     public interface IFileManager
     {       
         Task<bool> UploadFile(MemoryStream body);
-        Task<string> DownloadFile(string remoteFilePath);
+        Task<string> UploadFile(MemoryStream body,string fileName);
+        Task<MemoryStream> DownloadFile(string remoteFilePath);
         Task<bool> DeleteFile();
     }
 }

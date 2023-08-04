@@ -5,7 +5,7 @@ namespace DRRCore.Domain.Entities.SQLContext;
 
 public partial class AttachmentsNotSend
 {
-    public int Id { get; set; }
+    public int IdAttachmentsNotSend { get; set; }
 
     public int IdEmailHistory { get; set; }
 

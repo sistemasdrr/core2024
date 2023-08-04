@@ -9,5 +9,7 @@ namespace DRRCore.Transversal.Common.Interface
     public interface IMailSender
     {
         Task<bool> SendMailAsync(EmailValues values);
+        Task<bool> ReSendMailAsync(EmailValues values);
+
     }
 }

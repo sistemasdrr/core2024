@@ -31,34 +31,30 @@ public partial class SqlContext : DbContext
     {
         modelBuilder.Entity<AttachmentsNotSend>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("AttachmentsNotSend");
+            entity.HasKey(e => e.IdAttachmentsNotSend).HasName("PK__Attachme__7F41A4DD912F7FD4");
 
+            entity.ToTable("AttachmentsNotSend");
+
+            entity.Property(e => e.IdAttachmentsNotSend).HasColumnName("idAttachmentsNotSend");
             entity.Property(e => e.AttachmentsUrl)
                 .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("attachmentsUrl");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.IdEmailHistory).HasColumnName("idEmailHistory");
 
-            entity.HasOne(d => d.IdEmailHistoryNavigation).WithMany()
+            entity.HasOne(d => d.IdEmailHistoryNavigation).WithMany(p => p.AttachmentsNotSends)
                 .HasForeignKey(d => d.IdEmailHistory)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Attachmen__idEma__30F848ED");
+                .HasConstraintName("FK__Attachmen__idEma__44FF419A");
         });
 
         modelBuilder.Entity<EmailConfiguration>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__EmailCon__3213E83FE1B4C506");
+            entity.HasKey(e => e.IdEmailConfiguration).HasName("PK__EmailCon__23D609DBA31BA0FE");
 
             entity.ToTable("EmailConfiguration");
 
-            entity.HasIndex(e => e.Name, "UQ__EmailCon__72E12F1B53899718").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IdEmailConfiguration).HasColumnName("idEmailConfiguration");
             entity.Property(e => e.Description)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -89,11 +85,11 @@ public partial class SqlContext : DbContext
 
         modelBuilder.Entity<EmailHistory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__EmailHis__3213E83FF1D00367");
+            entity.HasKey(e => e.IdEmailHistory).HasName("PK__EmailHis__E0A96BD41B250C3E");
 
             entity.ToTable("EmailHistory");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.IdEmailHistory).HasColumnName("idEmailHistory");
             entity.Property(e => e.CcMails)
                 .HasMaxLength(500)
                 .IsUnicode(false)

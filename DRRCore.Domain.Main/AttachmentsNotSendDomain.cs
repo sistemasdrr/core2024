@@ -23,9 +23,9 @@ namespace DRRCore.Domain.Main
         {
             return await _attachmentsNotSendRepository.UpdateAsync(obj);
         }      
-        public async Task<AttachmentsNotSend> GetByIdAsync(int id)
+        public async Task<List<AttachmentsNotSend>> GetByIdAsync(int id)
         {
-            return await _attachmentsNotSendRepository.GetByIdAsync(id);
+            return await _attachmentsNotSendRepository.GetByEmailHistoryIdAsync(id);
         }
 
         public async Task<List<AttachmentsNotSend>> GetAllAsync()

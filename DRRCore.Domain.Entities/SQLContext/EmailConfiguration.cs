@@ -5,7 +5,7 @@ namespace DRRCore.Domain.Entities.SQLContext;
 
 public partial class EmailConfiguration
 {
-    public int Id { get; set; }
+    public int IdEmailConfiguration { get; set; }
 
     public string Name { get; set; } = null!;
 

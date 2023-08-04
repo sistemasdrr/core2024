@@ -51,17 +51,17 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
                 }
         }
 
-        public async Task<AttachmentsNotSend> GetByIdAsync(int id)
+        public async Task<List<AttachmentsNotSend>> GetByEmailHistoryIdAsync(int id)
         {
             using (var context = new SqlContext())
             {
-                var response= await context.AttachmentsNotSends.FindAsync(id);
+                var response= await context.AttachmentsNotSends.Where(e=>e.IdEmailHistory==id).ToListAsync();
                 if(response != null)
                 {
                     return response;
                 }
             }
-            return new AttachmentsNotSend();
+            return new List<AttachmentsNotSend>();
         }
 
         public async Task<bool> UpdateAsync(AttachmentsNotSend obj)

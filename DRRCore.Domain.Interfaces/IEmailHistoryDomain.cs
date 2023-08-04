@@ -10,10 +10,11 @@ namespace DRRCore.Domain.Interfaces
     public interface IEmailHistoryDomain
     {
         Task<bool> AddAsync(EmailHistory obj);
-        Task<bool> DeleteAsync(int id);       
-        Task<List<EmailHistory>> GetAllAsync();
-        Task<List<EmailHistory>> GetByUser(string user);
-        Task<List<EmailHistory>> GetEmailNotSendAsync();
+        Task<bool> DeleteAsync(int id);
         Task<bool> UpdateAsync(EmailHistory obj);
+        Task<List<EmailHistory>> GetAllAsync();
+        Task<List<EmailHistory>> GetByUserAsync(string user);
+        Task<EmailHistory> GetByIdAsync(int id);
+        Task<List<EmailHistory>> GetEmailNotSendAsync();
     }
 }
