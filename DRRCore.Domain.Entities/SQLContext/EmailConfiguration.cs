@@ -17,9 +17,9 @@ public partial class EmailConfiguration
 
     public DateTime? UpdateDate { get; set; }
 
-    public Guid InsertUser { get; set; }
+    public string InsertUser { get; set; } = null!;
 
-    public Guid? UpdateUser { get; set; }
+    public string? UpdateUser { get; set; }
 
     public bool? Enable { get; set; }
 }

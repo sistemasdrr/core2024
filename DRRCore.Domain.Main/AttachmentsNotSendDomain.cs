@@ -1,0 +1,36 @@
+﻿using DRRCore.Domain.Entities.SQLContext;
+using DRRCore.Domain.Interfaces;
+using DRRCore.Infraestructure.Interfaces.Repository;
+
+namespace DRRCore.Domain.Main
+{
+    public class AttachmentsNotSendDomain : IAttachmentsNotSendDomain
+    {
+        private readonly IAttachmentsNotSendRepository _attachmentsNotSendRepository;
+        public AttachmentsNotSendDomain(IAttachmentsNotSendRepository attachmentsNotSendRepository)
+        {
+            _attachmentsNotSendRepository = attachmentsNotSendRepository;
+        }
+        public async Task<bool> AddAsync(AttachmentsNotSend obj)
+        {
+            return await _attachmentsNotSendRepository.AddAsync(obj);
+        }
+        public async Task<bool> DeleteAsync(int id)
+        {
+            return await _attachmentsNotSendRepository.DeleteAsync(id);
+        }
+        public async Task<bool> UpdateAsync(AttachmentsNotSend obj)
+        {
+            return await _attachmentsNotSendRepository.UpdateAsync(obj);
+        }      
+        public async Task<AttachmentsNotSend> GetByIdAsync(int id)
+        {
+            return await _attachmentsNotSendRepository.GetByIdAsync(id);
+        }
+
+        public async Task<List<AttachmentsNotSend>> GetAllAsync()
+        {
+           return await _attachmentsNotSendRepository.GetAllAsync();
+        }
+    }
+}

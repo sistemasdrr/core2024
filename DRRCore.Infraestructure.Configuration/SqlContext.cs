@@ -15,11 +15,11 @@ public partial class SqlContext : DbContext
     {
     }
 
+    public virtual DbSet<AttachmentsNotSend> AttachmentsNotSends { get; set; }
+
     public virtual DbSet<EmailConfiguration> EmailConfigurations { get; set; }
 
     public virtual DbSet<EmailHistory> EmailHistories { get; set; }
-
-    public virtual DbSet<EmailUser> EmailUsers { get; set; }
 
     public virtual DbSet<WebQuery> WebQueries { get; set; }
 
@@ -29,27 +29,48 @@ public partial class SqlContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AttachmentsNotSend>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("AttachmentsNotSend");
+
+            entity.Property(e => e.AttachmentsUrl)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("attachmentsUrl");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("id");
+            entity.Property(e => e.IdEmailHistory).HasColumnName("idEmailHistory");
+
+            entity.HasOne(d => d.IdEmailHistoryNavigation).WithMany()
+                .HasForeignKey(d => d.IdEmailHistory)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Attachmen__idEma__30F848ED");
+        });
+
         modelBuilder.Entity<EmailConfiguration>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__EmailCon__3213E83F6AAFFBB4");
+            entity.HasKey(e => e.Id).HasName("PK__EmailCon__3213E83FE1B4C506");
 
             entity.ToTable("EmailConfiguration");
 
-            entity.HasIndex(e => e.Name, "UQ__EmailCon__72E12F1B829D82BB").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__EmailCon__72E12F1B53899718").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Description)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("description");
-            entity.Property(e => e.Enable)
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("enable");
+            entity.Property(e => e.Enable).HasColumnName("enable");
             entity.Property(e => e.InsertDate)
-                .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("insertDate");
-            entity.Property(e => e.InsertUser).HasColumnName("insertUser");
+            entity.Property(e => e.InsertUser)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("insertUser");
             entity.Property(e => e.Name)
                 .HasMaxLength(30)
                 .IsUnicode(false)
@@ -57,7 +78,10 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
-            entity.Property(e => e.UpdateUser).HasColumnName("updateUser");
+            entity.Property(e => e.UpdateUser)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("updateUser");
             entity.Property(e => e.Value)
                 .IsUnicode(false)
                 .HasColumnName("value");
@@ -65,17 +89,17 @@ public partial class SqlContext : DbContext
 
         modelBuilder.Entity<EmailHistory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__EmailHis__3213E83F8CD53B6F");
+            entity.HasKey(e => e.Id).HasName("PK__EmailHis__3213E83FF1D00367");
 
             entity.ToTable("EmailHistory");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CcMails)
-                .HasMaxLength(150)
+                .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("ccMails");
             entity.Property(e => e.CcoMails)
-                .HasMaxLength(150)
+                .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("ccoMails");
             entity.Property(e => e.Date)
@@ -85,18 +109,21 @@ public partial class SqlContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("domain");
-            entity.Property(e => e.Enable)
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("enable");
+            entity.Property(e => e.Enable).HasColumnName("enable");
             entity.Property(e => e.FromMails)
-                .HasMaxLength(150)
+                .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("fromMails");
+            entity.Property(e => e.Htmlbody)
+                .IsUnicode(false)
+                .HasColumnName("htmlbody");
             entity.Property(e => e.InsertDate)
-                .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("insertDate");
-            entity.Property(e => e.InsertUser).HasColumnName("insertUser");
+            entity.Property(e => e.InsertUser)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("insertUser");
             entity.Property(e => e.Message)
                 .IsUnicode(false)
                 .HasColumnName("message");
@@ -104,45 +131,23 @@ public partial class SqlContext : DbContext
                 .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("subject");
+            entity.Property(e => e.Success).HasColumnName("success");
             entity.Property(e => e.ToMails)
-                .HasMaxLength(150)
+                .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("toMails");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
-            entity.Property(e => e.UpdateUser).HasColumnName("updateUser");
-            entity.Property(e => e.WasSent).HasColumnName("wasSent");
-        });
-
-        modelBuilder.Entity<EmailUser>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__EmailUse__3213E83F4E02346E");
-
-            entity.ToTable("EmailUser");
-
-            entity.HasIndex(e => e.UserCode, "UQ__EmailUse__F97F2AEAD9DD6B4C").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Identifier).HasColumnName("identifier");
-            entity.Property(e => e.LoginName)
-                .HasMaxLength(20)
+            entity.Property(e => e.UpdateUser)
+                .HasMaxLength(10)
                 .IsUnicode(false)
-                .HasColumnName("loginName");
-            entity.Property(e => e.UserCode)
-                .HasMaxLength(4)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("userCode");
-            entity.Property(e => e.UserName)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("userName");
+                .HasColumnName("updateUser");
         });
 
         modelBuilder.Entity<WebQuery>(entity =>
         {
-            entity.HasKey(e => new { e.Id, e.CodigoEmpresa }).HasName("PK__WebQuery__499C40373BC919FD");
+            entity.HasKey(e => new { e.Id, e.CodigoEmpresa }).HasName("PK__WebQuery__499C40374042DC7A");
 
             entity.ToTable("WebQuery");
 

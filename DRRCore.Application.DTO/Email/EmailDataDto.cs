@@ -1,22 +1,15 @@
-﻿using DRRCore.Transversal.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DRRCore.Application.DTO.Email
+﻿namespace DRRCore.Application.DTO.Email
 {
-    internal class EmailDataDTO
+    public class EmailDataDTO
     {
 
         public string User { get; set; } = string.Empty;
         public string From { get; set; } = string.Empty;
-        public List<string>? To { get; set; }
-        public string CC { get; set; } = string.Empty;
-        public string CCO { get; set; } = string.Empty;
+        public List<string> To { get; set; } = new List<string>();
+        public List<string> CC { get; set; } = new List<string>();
+        public List<string> CCO { get; set; } = new List<string>();
         public string BodyHTML { get; set; } = string.Empty;
-        public FileManager? Attachment { get; set; }    
+        public List<byte[]> Attachments { get; set; } = new List<byte[]>();    
 
     }
 }
