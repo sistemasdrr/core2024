@@ -20,5 +20,11 @@ namespace DRRCore.Services.ApiEmail.Controllers
         {
             return Ok(await _emailApplication.SendMailAsync(dataDTO));
         }
+        [HttpGet()]
+        [Route("reSendMail")]
+        public async Task<ActionResult> ReSendMail()
+        {
+            return Ok(await _emailApplication.ReSendMailAsync());
+        }
     }
 }

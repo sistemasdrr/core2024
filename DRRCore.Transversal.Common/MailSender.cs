@@ -83,6 +83,7 @@ public class MailSender : IMailSender
                     }
                     catch (Exception ex)
                     {
+                        //await client.SendMailAsync(mailMessage(values));
                         _logger.LogInformation(string.Format(Messages.ErrorMailSend, ex.Message));
                         return false;
                     }

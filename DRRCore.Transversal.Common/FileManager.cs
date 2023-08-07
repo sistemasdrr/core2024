@@ -19,10 +19,11 @@ namespace DRRCore.Transversal.Common
             _fileName =string.Format("{0}/{1}", _sftpSettings.RemotePath, _sftpSettings.FileName);
         }
 
-        public async Task<bool> DeleteFile()
+        public async Task<bool> DeleteFile(string fileName)
         {
             try
             {
+                string path = string.Format("{0}/{1}", _sftpSettings.RemotePath, fileName);
                 using (var ftpClient = new FtpClient(new FtpClientConfiguration
                 {
                     Host = _sftpSettings.Host,
@@ -32,7 +33,7 @@ namespace DRRCore.Transversal.Common
                 }))
                 {
                     await ftpClient.LoginAsync();
-                    await ftpClient.DeleteFileAsync(_fileName);
+                    await ftpClient.DeleteFileAsync(path);
                     return true;
                 }
             }
@@ -42,7 +43,7 @@ namespace DRRCore.Transversal.Common
             }
         }
 
-        public async Task<MemoryStream> DownloadFile(string remoteFilePath)
+        public async Task DownloadFile(string remoteFilePath,MemoryStream stream)
         {            
             try
             {
@@ -57,23 +58,21 @@ namespace DRRCore.Transversal.Common
                 await ftpClient.LoginAsync();
                 using (var ftpReadStream = await ftpClient.OpenFileReadStreamAsync(remoteFilePath))
                 {                    
-                    using (var fileWriteStream = new MemoryStream())
+                    using (stream = new MemoryStream())
                     {
-                        await ftpReadStream.CopyToAsync(fileWriteStream);
-                        if (fileWriteStream != null)
-                        {
-                            return fileWriteStream;                            
-                        }
+                            ftpReadStream.Position = 0;    
+                        await ftpReadStream.CopyToAsync(stream);                        
                     }
                 }
             }
             }
-            finally
+            catch (Exception ex)
             {
-              
-            }           
+                throw new Exception(string.Format(Messages.ExceptionMessage,ex.Message));
+            }
+                 
            
-            return new MemoryStream();
+            
         }
        
 

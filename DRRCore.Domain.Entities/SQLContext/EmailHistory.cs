@@ -9,8 +9,6 @@ public partial class EmailHistory
 
     public string Subject { get; set; } = null!;
 
-    public string Message { get; set; } = null!;
-
     public string? Htmlbody { get; set; }
 
     public DateTime? Date { get; set; }

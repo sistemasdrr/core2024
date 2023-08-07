@@ -9,6 +9,8 @@ public partial class AttachmentsNotSend
 
     public int IdEmailHistory { get; set; }
 
+    public string FileName { get; set; } = null!;
+
     public string AttachmentsUrl { get; set; } = null!;
 
     public virtual EmailHistory IdEmailHistoryNavigation { get; set; } = null!;

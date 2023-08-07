@@ -23,11 +23,13 @@ namespace DRRCore.Transversal.Mapper.Profiles.Email
 
             CreateMap<AttachmentDto, Attachment>()
                 .ForMember(dest => dest.FileName, opt => opt?.MapFrom(src => src.FileName))
-                .ForMember(dest => dest.Stream, opt => opt?.MapFrom(src => new MemoryStream(src.Content)))               
+                .ForMember(dest => dest.Stream, opt => opt?.MapFrom(src => new MemoryStream(Convert.FromBase64String(src.Content))))               
                .ReverseMap();
 
-            CreateMap<EmailDataDTO, EmailHistory>()
+            CreateMap<EmailDataDTO, EmailHistory>()               
                 .ForMember(dest => dest.Subject, opt => opt.MapFrom(src => src.Subject))
+                .ForMember(dest => dest.Domain, opt => opt.MapFrom(src => src.Domain))
+                .ForMember(dest => dest.Success, opt => opt.MapFrom(src => true))
                 .ForMember(dest => dest.FromMails, opt => opt.MapFrom(src => src.From))
                 .ForMember(dest => dest.ToMails, opt => opt.MapFrom(src => string.Join(';', src.To)))
                 .ForMember(dest => dest.CcMails, opt => opt.MapFrom(src => string.Join(';', src.CC)))
@@ -36,10 +38,21 @@ namespace DRRCore.Transversal.Mapper.Profiles.Email
                 .ForMember(dest => dest.InsertUser, opt => opt.MapFrom(src => src.User))
                 .ForMember(dest => dest.AttachmentsNotSends, opt => opt.MapFrom(src => src.Attachments))
                 .ReverseMap();
-            CreateMap<AttachmentDto, AttachmentsNotSend>()
-              .ForMember(dest => dest.AttachmentsUrl, opt => opt?.MapFrom(src => src.Path))            
-             .ReverseMap();
 
+            CreateMap<AttachmentDto, AttachmentsNotSend>()
+                .ForMember(dest => dest.FileName, opt => opt?.MapFrom(src => src.FileName))
+                .ForMember(dest => dest.AttachmentsUrl, opt => opt?.MapFrom(src => src.Path))            
+                .ReverseMap();
+
+            CreateMap<EmailHistory, EmailValues>()
+                .ForMember(dest => dest.Subject, opt => opt?.MapFrom(src => src.Subject))
+                .ForMember(dest => dest.FromEmail, opt => opt?.MapFrom(src => src.FromMails))
+                .ForMember(dest => dest.ToEmail, opt => opt.MapFrom(src =>  src.ToMails))
+                .ForMember(dest => dest.CcEmail, opt => opt?.MapFrom(src =>  src.CcMails))
+                .ForMember(dest => dest.BccEmail, opt => opt?.MapFrom(src => src.CcoMails))
+                .ForMember(dest => dest.Body, opt => opt?.MapFrom(src => src.Htmlbody))
+                .ReverseMap();
         }
+
     }
 }

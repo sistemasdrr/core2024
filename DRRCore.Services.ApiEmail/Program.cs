@@ -14,6 +14,11 @@ using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.Configure<SftpSettings>(builder.Configuration.GetSection("SftpSettings"));
+
+
+
 // Add services to the container.
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddControllers();

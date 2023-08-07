@@ -4,7 +4,7 @@
     {       
         Task<bool> UploadFile(MemoryStream body);
         Task<string> UploadFile(MemoryStream body,string fileName);
-        Task<MemoryStream> DownloadFile(string remoteFilePath);
-        Task<bool> DeleteFile();
+        Task DownloadFile(string remoteFilePath, MemoryStream stream);
+        Task<bool> DeleteFile(string fileName);
     }
 }

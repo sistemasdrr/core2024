@@ -32,5 +32,10 @@ namespace DRRCore.Domain.Main
         {
            return await _attachmentsNotSendRepository.GetAllAsync();
         }
+
+        public async Task<List<AttachmentsNotSend>> GetByEmailHistoryIdAsync(int id)
+        {
+            return await _attachmentsNotSendRepository.GetByEmailHistoryIdAsync(id);
+        }
     }
 }

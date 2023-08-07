@@ -5,6 +5,7 @@
 
         public string User { get; set; } = string.Empty;
         public string From { get; set; } = string.Empty;
+        public string Domain { get; set; } = string.Empty;      
         public List<string> To { get; set; } = new List<string>();
         public List<string> CC { get; set; } = new List<string>();
         public List<string> CCO { get; set; } = new List<string>();
@@ -17,7 +18,7 @@
     public class AttachmentDto
     {
         public string FileName { get; set;}=string.Empty;
-        public byte[] Content { get; set;} = new byte[0];
+        public string Content { get; set;} = string.Empty;
         public string Path { get; set;}=string.Empty;   
     }
 }
