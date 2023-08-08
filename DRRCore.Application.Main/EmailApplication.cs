@@ -80,7 +80,7 @@ namespace DRRCore.Application.Main
                 {
                     var attachmentsNotSend = await _attachmentsNotSendDomain.GetByEmailHistoryIdAsync(mail.IdEmailHistory);//obtiene el adjunto no enviado por medio del id
                     listAttachments = new List<Attachment>();
-                    foreach (var attachment in attachmentsNotSend)
+                    foreach (var attachment in attachmentsNotSend) //Recorre todos los adjuntos
                     {
                         var newAttachment= new Attachment { 
                          FileName = attachment.FileName

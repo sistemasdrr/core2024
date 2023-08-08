@@ -28,7 +28,7 @@ namespace DRRCore.Transversal.Common
         public string FileName { get; set; }=string.Empty;
         public MemoryStream Stream { get; set; }=new MemoryStream();
     }
-public class MailSender : IMailSender
+    public class MailSender : IMailSender
     {
         private readonly EmailSettings _emailSettings;
         private readonly ILogger _logger;
@@ -83,7 +83,6 @@ public class MailSender : IMailSender
                     }
                     catch (Exception ex)
                     {
-                        //await client.SendMailAsync(mailMessage(values));
                         _logger.LogInformation(string.Format(Messages.ErrorMailSend, ex.Message));
                         return false;
                     }
