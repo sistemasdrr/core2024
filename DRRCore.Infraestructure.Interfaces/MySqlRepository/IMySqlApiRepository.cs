@@ -8,7 +8,6 @@ namespace DRRCore.Infraestructure.Interfaces.MySqlRepository
         Task<REmpVsAspLeg> GetRempByCodigo(string codigo);
         Task<REmpVsRamNeg> GetREmpVsRamNegByCodigo(string codigo); //Persona Juridica Empresa
         Task<REmpVsInfFin> GetREmpVsInfByCodigo(string codigo);
-        Task<>
 
     }
 }
