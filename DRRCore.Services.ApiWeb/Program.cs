@@ -58,6 +58,7 @@ builder.Services.AddAutoMapper(typeof(DataProfile).Assembly);
 
 
 //Injection Repository
+builder.Services.AddScoped<IMySqlApiRepository, MySqlApiRepository>();
 builder.Services.AddScoped<IMySqlUserRepository, MySqlUserRepository>();
 builder.Services.AddScoped<IMySqlWebRepository, MySqlWebRepository>();
 //builder.Services.AddScoped<IEmailUserRepository, EmailUserRepository>();

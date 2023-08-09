@@ -1,4 +1,5 @@
 ﻿using DRRCore.Domain.Entities.MYSQLContext;
+using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Infraestructure.Interfaces.MySqlRepository;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,36 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
 {
     public class MySqlApiRepository : IMySqlApiRepository
     {
-        public Task<REmpVsRep> DeleteRepComercialEmpresaAsync(string codigo)
+        public async Task<MEmpresa> GetmEmpresaByCodigoAsync(string codigo)
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    return await context.MEmpresas.FirstOrDefaultAsync(x => x.EmCodigo == codigo);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<List<MPersona>> GetAllMPersonaAsync()
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    return await context.MPersonas.ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteRepComercialEmpresaAsync(string codigo)
         {
             try
             {
@@ -17,7 +47,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
                     {
                         context.REmpVsReps.Remove(obj);
                         await context.SaveChangesAsync();
-        }
+                    }
                     return true;
                 }
             }
@@ -42,13 +72,60 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             }
         }
 
-        public async Task<List<MPersona>> GetAllMPersonaAsync()
+        
+
+        public async Task<List<RCupVsAbo>> GetAllRCupVsAboAsync()
         {
             try
             {
                 using (var context = new MySqlContext())
                 {
-                    return await context.MPersonas.ToListAsync();
+                    return await context.RCupVsAbos.ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<REmpVsInfFin>> GetAllREmpVsInfAsync()
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    return await context.REmpVsInfFins.ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<REmpVsRamNeg>> GetAllREmpVsRamNegAsync()
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    return await context.REmpVsRamNegs.ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<RPerVsEr>> GetAllRPerVsErAsync()
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    return await context.RPerVsErs.ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -64,6 +141,36 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
                 using (var context = new MySqlContext())
                 {
                     return await context.TCalidads.ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<TContinente>> GetAllTContinenteAsync()
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    return await context.TContinentes.ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<TCupon>> GetAllTCuponAsync()
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    return await context.TCupons.ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -183,7 +290,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             {
                 using (var context = new MySqlContext())
                 {
-                    return context.TClasifs.Where(x => x.CrCodigo == codigo).FirstOrDefault();
+                    return await context.TClasifs.FirstOrDefaultAsync(x => x.CrCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -191,31 +298,13 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
                 throw new Exception(ex.Message);
             }
         }
-
-
-
-        public async Task<MEmpresa> GetmEmpresaByCodigoAsync(string codigo)
-        {
-            try
-            {
-                using (var context = new MySqlContext())
-                {
-                    return context.MEmpresas.Where(x => x.EmCodigo == codigo).FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
         public async Task<MPersona> GetMPersonaByCodigoAsync(string codigo)
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.MPersonas.Where(x => x.PeCodigo == codigo).FirstOrDefault();
+                    return await context.MPersonas.FirstOrDefaultAsync(x => x.PeCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -228,9 +317,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.RCupVsAbos.Where(x => x.EcCodigo == codigo).FirstOrDefault();
+                    return await context.RCupVsAbos.FirstOrDefaultAsync(x => x.EcCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -243,9 +332,10 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.REmpVsAspLegs.Where(x => x.EmCodigo == codigo).FirstOrDefault();
+                    return await context.REmpVsAspLegs.FirstOrDefaultAsync(x => x.EmCodigo == codigo);
+
                 }
             }
             catch (Exception ex)
@@ -258,9 +348,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.REmpVsInfFins.Where(x => x.EmCodigo == codigo).FirstOrDefault();
+                    return await context.REmpVsInfFins.FirstOrDefaultAsync(x => x.EmCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -273,9 +363,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.REmpVsRamNegs.Where(x => x.EmCodigo == codigo).FirstOrDefault();
+                    return await context.REmpVsRamNegs.FirstOrDefaultAsync(x => x.EmCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -288,9 +378,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.RPerVsErs.Where(x => x.PeCodigo == codigo).FirstOrDefault();
+                    return await context.RPerVsErs.FirstOrDefaultAsync(x => x.PeCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -303,9 +393,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.TCalidads.Where(x => x.CalCodigo == codigo).FirstOrDefault();
+                    return await context.TCalidads.FirstOrDefaultAsync(x => x.CalCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -318,9 +408,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.TContinentes.Where(x => x.ConCodigo == codigo).FirstOrDefault();
+                    return await context.TContinentes.FirstOrDefaultAsync(x => x.ConCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -333,9 +423,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.TCupons.Where(x => x.CupCodigo == codigo).FirstOrDefault();
+                    return await context.TCupons.FirstOrDefaultAsync(x => x.CupCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -348,9 +438,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.TTemporalPersonas.Where(x => x.PeCodigo == codigo).FirstOrDefault();
+                    return await context.TTemporalPersonas.FirstOrDefaultAsync(x => x.PeCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -364,9 +454,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.TJuridis.Where(x => x.JuCodigo == codigo).FirstOrDefault();
+                    return await context.TJuridis.FirstOrDefaultAsync(x => x.JuCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -379,9 +469,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    return context.TPagos.Where(x => x.PaCodigo == codigo).FirstOrDefault();
+                    return await context.TPagos.FirstOrDefaultAsync(x => x.PaCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -394,10 +484,9 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         {
             try
             {
-                using (var context = new MySqlContext())
+                using(var context = new MySqlContext())
                 {
-                    var empresa = context.MEmpresas.Where(x => x.EmCodigo == codigo).FirstOrDefault();
-                    return empresa;
+                    return await context.TPais.FirstOrDefaultAsync(x => x.PaiCodigo == codigo);
                 }
             }
             catch (Exception ex)
@@ -406,19 +495,50 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             }
         }
 
-        public Task<REmpVsAspLeg> GetRempByCodigo(string codigo)
+        public async Task<TRepCom> GetTRepComByCodigoAsync(string codigo)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using(var context = new MySqlContext())
+                {
+                    return await context.TRepComs.FirstOrDefaultAsync(x => x.RcCodigo == codigo);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public Task<REmpVsInfFin> GetREmpVsInfByCodigo(string codigo)
+        public async Task<TSituacion> GetTSituacionByCodigoAsync(string codigo)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using(var context = new MySqlContext())
+                {
+                    return await context.TSituacions.FirstOrDefaultAsync(x => x.SitCodigo == codigo);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public Task<REmpVsRamNeg> GetREmpVsRamNegByCodigo(string codigo)
+        public async Task<TTipoTramite> GetTTipoTramiteByCodigoAsync(string codigo)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using(var context = new MySqlContext())
+                {
+                    return await context.TTipoTramites.FirstOrDefaultAsync(x => x.TramCodigo == codigo);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

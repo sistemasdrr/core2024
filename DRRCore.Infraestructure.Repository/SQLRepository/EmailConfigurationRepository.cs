@@ -1,11 +1,6 @@
 ﻿using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Infraestructure.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DRRCore.Infraestructure.Repository.SQLRepository
 {
