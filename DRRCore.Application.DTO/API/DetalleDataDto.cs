@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DRRCore.Application.DTO.API
+﻿namespace DRRCore.Application.DTO.API
 {
     public class DetalleDataDto
     {

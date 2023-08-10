@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DRRCore.Application.DTO.API
+﻿namespace DRRCore.Application.DTO.API
 {
     public class AntecedentesDataDto
     {
@@ -33,27 +27,27 @@ namespace DRRCore.Application.DTO.API
     }
     public class CapitalPagadoDto
     {
-        public int cantidad { get; set; }
-        public string? moneda { get; set; }
-        public string? descripcion { get; set; }
-        public string? comentario { get; set; }
+        public int Cantidad { get; set; }
+        public string? Moneda { get; set; }
+        public string? Descripcion { get; set; }
+        public string? Comentario { get; set; }
     }
     public class AumentoDto
     {
-        public string? fecha { get; set; }
-        public string? descripcion { get; set; }
+        public string? Fecha { get; set; }
+        public string? Descripcion { get; set; }
     }
     public class TipoCambioDto
     {
-        public decimal? monto { get; set; }
-        public string? moneda { get; set; }
-        public string? descripcion { get; set; }
-        public string? observacion { get; set; }
+        public decimal? Monto { get; set; }
+        public string? Moneda { get; set; }
+        public string? Descripcion { get; set; }
+        public string? Observacion { get; set; }
     }
     public class RRPPDto
     {
-        public string? fecha { get; set; }
-        public string? descripcion { get; set; }
+        public string? Fecha { get; set; }
+        public string? Descripcion { get; set; }
     }
     
 }

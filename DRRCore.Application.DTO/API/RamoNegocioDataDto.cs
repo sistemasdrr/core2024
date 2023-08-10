@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DRRCore.Application.DTO.API
+﻿namespace DRRCore.Application.DTO.API
 {
     public class RamoNegocioDataDto
     {
@@ -40,24 +34,24 @@ namespace DRRCore.Application.DTO.API
     }
     public class ImportacionDto
     {
-        public string? importan { get; set; }
-        public string? paises { get; set; }
+        public string? Importan { get; set; }
+        public string? Paises { get; set; }
     }
     public class ExportacionDto
     {
-        public string? exportan { get; set; }
-        public string? paises { get; set; }
+        public string? Exportan { get; set; }
+        public string? Paises { get; set; }
     }
     public class VentaContadoDto
     {
-        public int? cantidad { get; set; }
-        public string? descripcion { get; set; }
-        public string? observacion { get;}
+        public int? Cantidad { get; set; }
+        public string? Descripcion { get; set; }
+        public string? Observacion { get;}
     }
     public class VentaCreditoDto
     {
-        public int? cantidad { get; set; }
-        public string? descripcion { get; set; }
-        public string? observacion { get; }
+        public int? Cantidad { get; set; }
+        public string? Descripcion { get; set; }
+        public string? Observacion { get; }
     }
 }

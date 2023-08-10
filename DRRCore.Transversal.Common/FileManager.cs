@@ -56,12 +56,13 @@ namespace DRRCore.Transversal.Common
             }))
             {              
                 await ftpClient.LoginAsync();
-                using (var ftpReadStream = await ftpClient.OpenFileReadStreamAsync(remoteFilePath))
+
+                    using (var ftpReadStream = await ftpClient.OpenFileReadStreamAsync(remoteFilePath))
                 {                    
                     using (stream = new MemoryStream())
                     {
-                            ftpReadStream.Position = 0;    
-                        await ftpReadStream.CopyToAsync(stream);                        
+                                
+                        ftpReadStream.CopyTo(stream);                        
                     }
                 }
             }

@@ -1,11 +1,7 @@
-﻿using Azure;
-using DRRCore.Application.DTO.Web;
-using DRRCore.Domain.Entities;
-using DRRCore.Domain.Entities.SQLContext;
+﻿using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Infraestructure.Interfaces.MySqlRepository;
 using DRRCore.Infraestructure.Interfaces.Repository;
-using DRRCore.Transversal.Common;
 
 namespace DRRCore.Domain.Main
 {

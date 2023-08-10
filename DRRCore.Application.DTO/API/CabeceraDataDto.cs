@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DRRCore.Application.DTO.API
+﻿namespace DRRCore.Application.DTO.API
 {
     public class CabeceraDataDto
     {
@@ -48,14 +42,14 @@ namespace DRRCore.Application.DTO.API
     }
     public class InformeDto
     {
-        public int? valor { get; set; }
-        public string? dato { get; set; }
-        public int? indicador { get; set; }
+        public int? Valor { get; set; }
+        public string? Dato { get; set; }
+        public int? Indicador { get; set; }
     }
     public class UsuarioDto
     {
-        public string? accion { get; set; }
-        public string? usuario { get; set; }
-        public string? fecha { get; set; }
+        public string? Accion { get; set; }
+        public string? Usuario { get; set; }
+        public string? Fecha { get; set; }
     }
 }

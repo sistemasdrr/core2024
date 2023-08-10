@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DRRCore.Application.DTO.API
+﻿namespace DRRCore.Application.DTO.API
 {
     public class BalanceDataDto
     {
@@ -31,31 +25,31 @@ namespace DRRCore.Application.DTO.API
     }
     public class ActivoDto
     {
-        public decimal cajaBanco { get; set; }
-        public decimal porCobrar { get; set; }
-        public decimal inventario{ get; set; }
-        public decimal otrosActivosCorrientes { get; set; }
+        public decimal CajaBanco { get; set; }
+        public decimal PorCobrar { get; set; }
+        public decimal Inventario{ get; set; }
+        public decimal OtrosActivosCorrientes { get; set; }
         public decimal ActivoCorriente { get; set; }
         public decimal ActivoCorrienteFijo { get; set; }
-        public decimal otrosActivosNCorrientes { get; set; }
+        public decimal OtrosActivosNCorrientes { get; set; }
         public decimal TotalActivo { get; set; }
     }
     public class PasivoDto 
     {
-        public decimal bancos { get; set; }
-        public decimal otrosPasivosCorrientes { get; set; }
+        public decimal Bancos { get; set; }
+        public decimal OtrosPasivosCorrientes { get; set; }
         public decimal PasivoCorriente { get; set; }
         public decimal LargoPlazo { get; set; }
-        public decimal otrosPasivosNoCorrientes { get; set; }
-        public decimal totalPasivo { get; set; }
+        public decimal OtrosPasivosNoCorrientes { get; set; }
+        public decimal TotalPasivo { get; set; }
     }
     public class PatrimonioDto
     {
-        public decimal? capital { get; set;}
-        public decimal? reservas { get; set;}
-        public decimal? utilidades { get; set;}
-        public decimal? otros { get; set;}
-        public decimal? totalPatrimonio { get; set;}
-        public decimal? totalPasivoPatrimonio { get; set;}
+        public decimal? Capital { get; set;}
+        public decimal? Reservas { get; set;}
+        public decimal? Utilidades { get; set;}
+        public decimal? Otros { get; set;}
+        public decimal? TotalPatrimonio { get; set;}
+        public decimal? TotalPasivoPatrimonio { get; set;}
     }
 }

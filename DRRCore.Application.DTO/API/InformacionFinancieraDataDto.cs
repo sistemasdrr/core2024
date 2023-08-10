@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DRRCore.Application.DTO.API
+﻿namespace DRRCore.Application.DTO.API
 {
     public class InformacionFinancieraDataDto
     {
@@ -24,15 +18,15 @@ namespace DRRCore.Application.DTO.API
     }
     public class EntrevistaDto
     {
-        public string? nombre { get; set; }
-        public string? cargo { get; set; }
-        public int? grado { get; set; }
-        public string? comentario { get; set; }
+        public string? Nombre { get; set; }
+        public string? Cargo { get; set; }
+        public int? Grado { get; set; }
+        public string? Comentario { get; set; }
     }
     public class SituacionFinancieraDto
     {
-        public int? codigo { get; set; }
-        public string? comentario { get; set; }
+        public int? Codigo { get; set; }
+        public string? Comentario { get; set; }
     }
 
 }
