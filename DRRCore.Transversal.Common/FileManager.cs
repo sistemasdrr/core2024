@@ -43,7 +43,7 @@ namespace DRRCore.Transversal.Common
             }
         }
 
-        public async Task DownloadFile(string remoteFilePath,MemoryStream stream)
+        public async Task<string> DownloadFile(string remoteFilePath)
         {            
             try
             {
@@ -58,11 +58,12 @@ namespace DRRCore.Transversal.Common
                 await ftpClient.LoginAsync();
 
                     using (var ftpReadStream = await ftpClient.OpenFileReadStreamAsync(remoteFilePath))
-                {                    
-                    using (stream = new MemoryStream())
-                    {
-                                
-                        ftpReadStream.CopyTo(stream);                        
+                {   
+                       
+                    using (var stream = new MemoryStream())
+                    {                                
+                        ftpReadStream.CopyTo(stream); 
+                        return Convert.ToBase64String(stream.ToArray());    
                     }
                 }
             }

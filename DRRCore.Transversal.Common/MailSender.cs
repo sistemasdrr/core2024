@@ -3,6 +3,7 @@ using DRRCore.Transversal.Common.JsonReader;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -26,7 +27,7 @@ namespace DRRCore.Transversal.Common
     public class Attachment
     {
         public string FileName { get; set; }=string.Empty;
-        public MemoryStream Stream { get; set; }=new MemoryStream();
+        public string StreamBase64 { get; set; }= string.Empty;
     }
     public class MailSender : IMailSender
     {
@@ -141,7 +142,8 @@ namespace DRRCore.Transversal.Common
             {
                 foreach (var attachment in values.Attachments)
                 {
-                    message.Attachments.Add(new System.Net.Mail.Attachment(attachment.Stream, attachment.FileName));
+                    var ms = new MemoryStream(Convert.FromBase64String(attachment.StreamBase64));
+                    message.Attachments.Add(new System.Net.Mail.Attachment(ms,attachment.FileName));
                 }
                
             }

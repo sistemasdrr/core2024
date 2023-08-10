@@ -23,7 +23,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Email
 
             CreateMap<AttachmentDto, Attachment>()
                 .ForMember(dest => dest.FileName, opt => opt?.MapFrom(src => src.FileName))
-                .ForMember(dest => dest.Stream, opt => opt?.MapFrom(src => new MemoryStream(Convert.FromBase64String(src.Content))))               
+                .ForMember(dest => dest.StreamBase64, opt => opt?.MapFrom(src => src.Content))               
                .ReverseMap();
 
             CreateMap<EmailDataDTO, EmailHistory>()               
