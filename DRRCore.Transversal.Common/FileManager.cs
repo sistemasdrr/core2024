@@ -56,7 +56,6 @@ namespace DRRCore.Transversal.Common
             }))
             {              
                 await ftpClient.LoginAsync();
-
                     using (var ftpReadStream = await ftpClient.OpenFileReadStreamAsync(remoteFilePath))
                 {   
                        

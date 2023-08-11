@@ -44,6 +44,7 @@ builder.Services.AddScoped<IEmailConfigurationDomain, EmailConfigurationDomain>(
 builder.Services.AddScoped<IEmailHistoryDomain, EmailHistoryDomain>();
 
 //Injection Application
+
 builder.Services.AddScoped<IWebDataApplication, WebDataApplication>();
 builder.Services.AddScoped<IEmailApplication, EmailApplication>();
 //Injection Common

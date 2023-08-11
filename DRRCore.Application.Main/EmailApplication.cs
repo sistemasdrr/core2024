@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using MySqlX.XDevAPI.Common;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DRRCore.Application.Main
 {
@@ -86,9 +85,7 @@ namespace DRRCore.Application.Main
                         var newAttachment= new Attachment { 
                          FileName = attachment.FileName
                         };
-                        var base64=await DownloadFile(attachment.AttachmentsUrl);
-                        newAttachment.StreamBase64 = base64;                       
-                        
+                        newAttachment.StreamBase64= await DownloadFile(attachment.AttachmentsUrl);
                         listAttachments.Add(newAttachment);
                     }
                     var emailRequest = _mapper.Map<EmailValues>(mail);

@@ -34,14 +34,15 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
                 {
                     var obj = await context.EmailHistories.FindAsync(id);
                     if (obj != null)
-                    {      
+                    {
                         obj.Enable = false;
                         context.EmailHistories.Update(obj);
-                        await context.SaveChangesAsync();                        
+                        await context.SaveChangesAsync();
                     }
                     return true;
                 }
-            }catch
+            }
+            catch
             {
                 return false;
             }

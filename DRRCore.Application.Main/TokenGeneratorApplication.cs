@@ -19,18 +19,17 @@ namespace DRRCore.Application.Main
 
         public async Task<Response<string>> GetTokenAsync()
         {
-            var response = new Response<string>();
-
+            var response = new Response<string>(); //se crea el response 
             try
             {
-                var claims = new[]
+                var claims = new[] //claims
                   {
                      new Claim(ClaimTypes.Name, "RolEjemplo")
                    };
 
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]);
-                var tokenDescriptor = new SecurityTokenDescriptor
+                var tokenHandler = new JwtSecurityTokenHandler(); 
+                var key = Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]); //se obtiene la key desde appsettings
+                var tokenDescriptor = new SecurityTokenDescriptor //el token con todos sus datos
                 {
                     Issuer= Configuration["Jwt:Issuer"],
                     Audience= Configuration["Jwt:Audience"],
@@ -38,15 +37,15 @@ namespace DRRCore.Application.Main
                     Expires = DateTime.UtcNow.AddMinutes(15),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                response.Data = tokenHandler.WriteToken(token);
+                var token = tokenHandler.CreateToken(tokenDescriptor); //se crea el token
+                response.Data = tokenHandler.WriteToken(token); //se guarda el token en el campo Data del response
             }
             catch (Exception ex)
             {
                 response.Message = ex.Message;
                 response.IsSuccess = false;
             }
-            return response;
+            return response; //se retorna el response 
         }
     }
 }
