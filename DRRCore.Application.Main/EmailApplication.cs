@@ -85,7 +85,7 @@ namespace DRRCore.Application.Main
                         var newAttachment= new Attachment { 
                          FileName = attachment.FileName
                         };
-                        await DownloadFile(attachment.AttachmentsUrl, newAttachment.Stream);
+                        newAttachment.StreamBase64= await DownloadFile(attachment.AttachmentsUrl);
                         listAttachments.Add(newAttachment);
                     }
                     var emailRequest = _mapper.Map<EmailValues>(mail);
@@ -117,9 +117,9 @@ namespace DRRCore.Application.Main
         {
             return await _fileManager.UploadFile(new MemoryStream(Convert.FromBase64String(attachmentDto.Content)), attachmentDto.FileName);
         }
-        private async Task DownloadFile(string remoteFilePath, MemoryStream stream)
+        private async Task<string> DownloadFile(string remoteFilePath)
         {
-            await _fileManager.DownloadFile(remoteFilePath, stream);
+            return await _fileManager.DownloadFile(remoteFilePath);
         }
         private async Task<bool> DeleteFile(string path)
         {
