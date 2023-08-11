@@ -15,6 +15,10 @@ public partial class SqlContext : DbContext
     {
     }
 
+    public virtual DbSet<ApiHistory> ApiHistories { get; set; }
+
+    public virtual DbSet<ApiUser> ApiUsers { get; set; }
+
     public virtual DbSet<AttachmentsNotSend> AttachmentsNotSends { get; set; }
 
     public virtual DbSet<EmailConfiguration> EmailConfigurations { get; set; }
@@ -29,6 +33,66 @@ public partial class SqlContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ApiHistory>(entity =>
+        {
+            entity.HasKey(e => e.IdApiHistory).HasName("PK__ApiHisto__390D0AC9E524746C");
+
+            entity.ToTable("ApiHistory");
+
+            entity.Property(e => e.IdApiHistory).HasColumnName("idApiHistory");
+            entity.Property(e => e.Empress)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("empress");
+            entity.Property(e => e.IdApiUser).HasColumnName("idApiUser");
+            entity.Property(e => e.InsertDate)
+                .HasColumnType("datetime")
+                .HasColumnName("insertDate");
+            entity.Property(e => e.Languaje)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('EN')")
+                .HasColumnName("languaje");
+            entity.Property(e => e.OrderDate)
+                .HasColumnType("datetime")
+                .HasColumnName("orderDate");
+            entity.Property(e => e.Success).HasColumnName("success");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdApiUserNavigation).WithMany(p => p.ApiHistories)
+                .HasForeignKey(d => d.IdApiUser)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ApiHistor__idApi__7F2BE32F");
+        });
+
+        modelBuilder.Entity<ApiUser>(entity =>
+        {
+            entity.HasKey(e => e.IdApiUser).HasName("PK__ApiUser__11F8EBB872F3374D");
+
+            entity.ToTable("ApiUser");
+
+            entity.Property(e => e.IdApiUser).HasColumnName("idApiUser");
+            entity.Property(e => e.CodigoAbonado)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("codigoAbonado");
+            entity.Property(e => e.Enable).HasColumnName("enable");
+            entity.Property(e => e.Environment)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("environment");
+            entity.Property(e => e.InsertDate)
+                .HasColumnType("datetime")
+                .HasColumnName("insertDate");
+            entity.Property(e => e.Token).HasColumnName("token");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
         modelBuilder.Entity<AttachmentsNotSend>(entity =>
         {
             entity.HasKey(e => e.IdAttachmentsNotSend).HasName("PK__Attachme__7F41A4DD6EADAFE0");
