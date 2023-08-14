@@ -13,7 +13,9 @@ public partial class ApiUser
 
     public string Environment { get; set; } = null!;
 
-    public bool Enable { get; set; }
+    public bool Active { get; set; }
+
+    public bool? Enable { get; set; }
 
     public DateTime? InsertDate { get; set; }
 

@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +24,6 @@ builder.Services.Configure<SftpSettings>(builder.Configuration.GetSection("SftpS
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
@@ -76,11 +77,14 @@ builder.Services.AddScoped<IApiUserDomain, ApiUserDomain>();
 builder.Services.AddScoped<IWebDataApplication, WebDataApplication>();
 builder.Services.AddScoped<ITokenGeneratorApplication, TokenGeneratorApplication>();
 builder.Services.AddScoped<ITokenValidationApplication, TokenValidationApplication>();
+builder.Services.AddScoped<IApiUserApplication, ApiUserAplication>();
+
 
 //Injection Common
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
 builder.Services.AddScoped<DRRCore.Transversal.Common.Interface.ILogger, LoggerManager>();
+builder.Services.AddHttpContextAccessor();
 
 /*
  * JWT

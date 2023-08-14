@@ -66,4 +66,8 @@ public partial class WebQuery
     public string? Sector { get; set; }
 
     public string? SectorIngles { get; set; }
+
+    public string? RamoIngles { get; set; }
+
+    public string? RamoActividadIngles { get; set; }
 }

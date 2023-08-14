@@ -26,7 +26,10 @@ namespace DRRCore.Domain.Main
         {
             return _repository.GetApiUserByTokenAsync(token);
         }
-
+        public Task<ApiUser> GetApiUserByAbonadoAndEnvironmentAsync(string codigoabonado, string environment)
+        {
+            return _repository.GetApiUserByAbonadoAndEnvironmentAsync(codigoabonado, environment);
+        }
         public Task<List<ApiUser>> GetApiUserListAllAsync()
         {
             return _repository.GetApiUserListAllAsync();

@@ -20,6 +20,21 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
             }
         }
 
+        public async Task<ApiUser> GetApiUserByAbonadoAndEnvironmentAsync(string codigoabonado, string environment)
+        {
+            try
+            {
+                using (var context = new SqlContext())
+                {
+                    return await context.ApiUsers.FirstOrDefaultAsync(x => x.CodigoAbonado == codigoabonado && x.Environment == environment);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<ApiUser> GetApiUserByCodeAsync(string code)
         {
             try
@@ -46,6 +61,7 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
             }
             catch (Exception ex)
             {
+                return null;
                 throw new Exception(ex.Message);
             }
         }

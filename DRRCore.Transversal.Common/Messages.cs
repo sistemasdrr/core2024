@@ -12,5 +12,11 @@
         public static readonly string MailSuccessSend = "Email ha sido enviado con éxito";
         public static readonly string ErrorMailSend = "Hubo un error al enviar el correo : {0}";
 
+        public static readonly string UnauthorizedUser = "Usuario no autorizado";
+        public static readonly string AuthorizedUser = "Usuario Autorizado";
+        public static readonly string UserNotActive = "Usuario no activo";
+        public static readonly string TokenNotSend = "Token no enviado";
+
+        public static readonly string InsertedUser = "Usuario insertado con codigo de abonado: {0}";
     }
 }

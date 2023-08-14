@@ -4,6 +4,7 @@ namespace DRRCore.Domain.Interfaces
 {
     public interface IApiUserDomain
     {
+        Task<ApiUser> GetApiUserByAbonadoAndEnvironmentAsync(string abonado, string environment);
         Task<ApiUser> GetApiUserByTokenAsync(string token);
         Task<ApiUser> GetApiUserByCodeAsync(string code);
         Task<List<ApiUser>> GetApiUserListAllAsync();

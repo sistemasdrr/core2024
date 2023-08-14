@@ -1,10 +1,14 @@
-﻿using DRRCore.Transversal.Common;
+﻿using DRRCore.Domain.Entities.SQLContext;
+using DRRCore.Transversal.Common;
 
 namespace DRRCore.Application.Interfaces
 {
     public interface ITokenValidationApplication
     {
-        Task<Response<bool>> ValidationTokenAsync(string token);
-        Task<Response<string>> EncriptTokenAsync(string token);
+        Task<Response<bool>> ValidationTokenAsync();
+        Task<Response<string>> EncryptTokenAsync(string token);
+        Task<Response<string>> decryptTokenAsync(string token);
+        string Encrypt(string token);
+        string GetTokenByHeader();
     }
 }
