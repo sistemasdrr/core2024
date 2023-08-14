@@ -62,7 +62,7 @@ namespace DRRCore.Application.Main
                         return response;
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -151,8 +151,6 @@ namespace DRRCore.Application.Main
 
                 encryptedBytes = stream.ToArray();
             }
-            }
-
             return encryptedBytes;
         }
 
@@ -179,7 +177,6 @@ namespace DRRCore.Application.Main
                 }
                 decryptedBytes = stream.ToArray();
             }
-            }
             return decryptedBytes;
         }
 
@@ -193,7 +190,8 @@ namespace DRRCore.Application.Main
             {
                 token = authHeaders.ToString()["Bearer ".Length..];
             }
-            else {
+            else
+            {
                 token = Messages.TokenNotSend;
             }
             return token;
@@ -202,7 +200,7 @@ namespace DRRCore.Application.Main
         public async Task<Response<string>> decryptTokenAsync(string token)
         {
             var response = new Response<string>();
-            if(token != null)
+            if (token != null)
             {
                 string tokenDesencriptado = Decrypt(token);
                 response.IsSuccess = true;
