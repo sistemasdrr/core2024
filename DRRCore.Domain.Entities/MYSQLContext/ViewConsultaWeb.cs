@@ -51,7 +51,11 @@ public partial class ViewConsultaWeb
 
     public string? Ramo { get; set; }
 
+    public string? RamoIngles { get; set; }
+
     public string? RamoActividad { get; set; }
+
+    public string? RamoActividadIngles { get; set; }
 
     public string? Persona { get; set; }
 

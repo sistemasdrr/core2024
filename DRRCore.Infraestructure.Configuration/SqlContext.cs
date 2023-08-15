@@ -35,7 +35,7 @@ public partial class SqlContext : DbContext
     {
         modelBuilder.Entity<ApiHistory>(entity =>
         {
-            entity.HasKey(e => e.IdApiHistory).HasName("PK__ApiHisto__390D0AC9E524746C");
+            entity.HasKey(e => e.IdApiHistory).HasName("PK__ApiHisto__390D0AC9462A86CB");
 
             entity.ToTable("ApiHistory");
 
@@ -46,6 +46,7 @@ public partial class SqlContext : DbContext
                 .HasColumnName("empress");
             entity.Property(e => e.IdApiUser).HasColumnName("idApiUser");
             entity.Property(e => e.InsertDate)
+                .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("insertDate");
             entity.Property(e => e.Languaje)
@@ -64,12 +65,12 @@ public partial class SqlContext : DbContext
             entity.HasOne(d => d.IdApiUserNavigation).WithMany(p => p.ApiHistories)
                 .HasForeignKey(d => d.IdApiUser)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ApiHistor__idApi__7F2BE32F");
+                .HasConstraintName("FK__ApiHistor__idApi__06CD04F7");
         });
 
         modelBuilder.Entity<ApiUser>(entity =>
         {
-            entity.HasKey(e => e.IdApiUser).HasName("PK__ApiUser__11F8EBB872F3374D");
+            entity.HasKey(e => e.IdApiUser).HasName("PK__ApiUser__11F8EBB8487E4BAF");
 
             entity.ToTable("ApiUser");
 
@@ -85,6 +86,7 @@ public partial class SqlContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("environment");
             entity.Property(e => e.InsertDate)
+                .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("insertDate");
             entity.Property(e => e.Token).HasColumnName("token");
@@ -293,9 +295,15 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.RamoActividad)
                 .IsUnicode(false)
                 .HasColumnName("ramoActividad");
+            entity.Property(e => e.RamoActividadIngles)
+                .IsUnicode(false)
+                .HasColumnName("ramoActividadIngles");
             entity.Property(e => e.RamoCodigo)
                 .IsUnicode(false)
                 .HasColumnName("ramoCodigo");
+            entity.Property(e => e.RamoIngles)
+                .IsUnicode(false)
+                .HasColumnName("ramoIngles");
             entity.Property(e => e.Sector)
                 .IsUnicode(false)
                 .HasColumnName("sector");

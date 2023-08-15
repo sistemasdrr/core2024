@@ -441,7 +441,7 @@ public partial class MySqlContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySQL("server=192.68.250.4;TLS Version=TLS 1.2;user id=dbrisre;password=K31@78va,.;database=DBSystemDelRisco;persist security info=True;SSL Mode=None;Convert Zero Datetime=True");
+        => optionsBuilder.UseMySQL("server=192.168.250.4;TLS Version=TLS 1.2;user id=dbrisre;password=K31@78va,.;database=DBSystemDelRisco;persist security info=True;SSL Mode=None;Convert Zero Datetime=True; Connection Timeout=12000000");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -13889,9 +13889,11 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Persona).HasMaxLength(100);
             entity.Property(e => e.Ramo).HasMaxLength(150);
             entity.Property(e => e.RamoActividad).HasMaxLength(200);
+            entity.Property(e => e.RamoActividadIngles).HasMaxLength(200);
             entity.Property(e => e.RamoCodigo)
                 .HasMaxLength(2)
                 .IsFixedLength();
+            entity.Property(e => e.RamoIngles).HasMaxLength(150);
             entity.Property(e => e.Sector).HasMaxLength(100);
             entity.Property(e => e.SectorIngles).HasMaxLength(100);
             entity.Property(e => e.Telefono).HasMaxLength(500);

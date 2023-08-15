@@ -19,8 +19,7 @@
         public string? Antecedentes { get; set; }
         public string? Comentarios { get; set; }
         public string? Flag { get; set; } // 1-0
-        public InformeDto? DatosInforme { get; set; }
-        public UsuarioDto? Usuario { get; set; }
+      
         public string? DescripcionGeneral { get; set; }
 
 

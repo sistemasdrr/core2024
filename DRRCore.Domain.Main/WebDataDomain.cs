@@ -16,10 +16,17 @@ namespace DRRCore.Domain.Main
         }
         public async Task<bool> AddOrUpdateWebDataAsync()
         {
-            var listadoGeneral= await _mySqlWebRepository.Get();
-            if (listadoGeneral.Count > 0) {
-                await _webQueryRepository.UpdateData(listadoGeneral);
-            }            
+            var count = await _mySqlWebRepository.Count();
+            var limit = Math.Ceiling(Convert.ToDecimal(count / 1000));
+            for (int i = 0; i <=  limit ; i++)
+            {
+                var listadoGeneral = await _mySqlWebRepository.Get(i);
+                if (listadoGeneral.Count > 0)
+                {
+                    await _webQueryRepository.UpdateData(listadoGeneral);
+                }
+            }
+             
             return true;
         }
 

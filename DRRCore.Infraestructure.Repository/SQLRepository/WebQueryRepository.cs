@@ -20,14 +20,15 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
         }
         public async Task<bool> UpdateData(List<ViewConsultaWeb> listWebData)
         {
+            int i = 0;
             using (var context = new SqlContext())
             {
                 foreach (var webData in listWebData)
             {
-               
+                    i++;
                     var data = await context.WebQueries.Where(x => x.CodigoEmpresa == webData.CodigoEmpresa).FirstOrDefaultAsync();
                     if (data != null)
-                    {
+                    {                        
                        context.WebQueries.Update(Mapper.Map(webData,data));
                     }
                     else

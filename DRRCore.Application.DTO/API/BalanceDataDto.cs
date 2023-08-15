@@ -19,8 +19,7 @@
         public decimal? Cierre {get; set;}
         public decimal? ActivoTotalANC {get; set;}
         public decimal? PasivoTotalANC {get; set;}
-        public InformeDto? Informe { get; set; }
-        public UsuarioDto? Usuario { get; set; }
+    
         public string? DescripcionGeneral { get; set; }
     }
     public class ActivoDto

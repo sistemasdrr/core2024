@@ -27,8 +27,7 @@
         public string? Comentarios { get; set; }
         public string? Tabulado { get; set; }
         public int? Flag { get; set; }
-        public InformeDto? DatosInforme { get; set; }
-        public UsuarioDto? Usuario { get; set; }
+       
         public string? DescripcionGeneral { get; set; } 
 
     }

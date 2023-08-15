@@ -21,5 +21,7 @@ namespace DRRCore.Transversal.Common
         public const string CodeSituation= "03|07|04|09|05";
         public const string Asterisco = "*";
         public const string EspacioBlanco = " ";
+
+        public const string CeoWebEstructure = "{0}***";
     }
 }

@@ -15,8 +15,7 @@
         public string? SBSAvalesRecibidos { get; set; } 
         public string? SBSAvalesEntregados { get; set; } 
         public string? ComentarioSupervisor { get; set; } 
-        public InformeDto? DatosInforme { get; set; }
-        public UsuarioDto? Usuario { get; set; }
+     
         public string? DescripcionGeneral { get; set; }
 
     }

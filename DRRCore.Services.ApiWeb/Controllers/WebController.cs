@@ -9,7 +9,7 @@ using System.Text;
 
 namespace DRRCore.Services.ApiWeb.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class WebController : Controller

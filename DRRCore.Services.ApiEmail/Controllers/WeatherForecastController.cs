@@ -36,12 +36,12 @@ namespace DRRCore.Services.ApiEmail.Controllers
         [Route("api/send")]
         public async Task<ActionResult> Send()
         {
-            for (int i = 0; i < 2500; i++)
+            for (int i = 0; i < 5; i++)
             {
                 await _mailSender.SendMailAsync(new Transversal.Common.EmailValues
                 {
-                    FromEmail = "pedido@informesdrr.com",
-                    ToEmail = "delriscoprueba@gmail.com",
+                    FromEmail = "info@del-risco.com",
+                    ToEmail = "diego.rodriguez@delrisco.com.pe",
                     Subject = "Probando Correo N° "+(i+1),
                     Body="Esto es prueba de correo N° "+(i + 1),
                     IsHtml = false

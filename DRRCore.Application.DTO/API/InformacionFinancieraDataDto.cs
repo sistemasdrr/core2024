@@ -12,8 +12,7 @@
         public string? UsuarioAnalista { get; set; }
         public string? ComentarioAnalista { get; set; }
         public int? Flag { get; set; }
-        public InformeDto? DatosInforme { get; set; }
-        public UsuarioDto? Usuario { get; set; }
+      
         public string? DescripcionGeneral { get; set; }
     }
     public class EntrevistaDto
