@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DRRCore.Application.DTO.Web;
 using DRRCore.Application.Interfaces;
+using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
@@ -13,7 +14,7 @@ namespace DRRCore.Application.Main
         private readonly IWebDataDomain _webDataDomain;
         private readonly ILogger _logger;
         private IMapper _mapper { get; }
-        public WebDataApplication(IWebDataDomain webDataDomain, ILogger logger,IMapper mapper)
+        public WebDataApplication(IWebDataDomain webDataDomain, ILogger logger, IMapper mapper)
         {
 
             _webDataDomain = webDataDomain;
@@ -40,11 +41,11 @@ namespace DRRCore.Application.Main
         public async Task<Response<WebDataDto>> GetByCodeAsync(string code)
         {
             var response = new Response<WebDataDto>();
-            
+
             try
             {
                 var data = await _webDataDomain.GetByCodeAsync(code);
-                if(data != null)
+                if (data != null)
                 {
                     response.Data = _mapper.Map<WebDataDto>(data);
                 }
@@ -55,7 +56,7 @@ namespace DRRCore.Application.Main
                     _logger.LogError(response.Message);
                     return response;
                 }
-               
+
 
             }
             catch (Exception exception)
@@ -78,7 +79,7 @@ namespace DRRCore.Application.Main
                 return response;
 
             }
-            if (param.Trim().Length<3)
+            if (param.Trim().Length < 3)
             {
                 response.IsSuccess = false;
                 response.Message = Messages.ParameterIsNotTooLonger;
@@ -88,8 +89,8 @@ namespace DRRCore.Application.Main
             }
             try
             {
-                var data= await _webDataDomain.GetByParamAsync(param.ToUpper(),page);                
-                response.Data =  _mapper.Map<List<WebDataDto>>(data);
+                var data = await _webDataDomain.GetByParamAsync(param.ToUpper(), page);
+                response.Data = _mapper.Map<List<WebDataDto>>(data);
 
             }
             catch (Exception exception)
@@ -99,6 +100,67 @@ namespace DRRCore.Application.Main
                 _logger.LogError(response.Message, exception);
             }
             return response;
+        }
+
+        public async Task<Response<List<WebDataDto>>> GetByCountryAndBranchAsync(int country, string branch, int page)
+        {
+            var response = new Response<List<WebDataDto>>();
+            try
+            {
+                if (country > 0 && !string.IsNullOrEmpty(branch) && page > 0)
+                {
+                    var data = await _webDataDomain.GetByCountryAndBranchAsync(country, branch, page);
+                    response.Data = _mapper.Map<List<WebDataDto>>(data);
+                    response.IsSuccess = true;
+                    response.IsWarning = false;
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.IsWarning = true;
+                    response.Message = "Error al listar: parametros invalidos";
+                    _logger.LogError(response.Message);
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.IsWarning = true;
+                response.Message = "Error al listar: " + ex.Message;
+                _logger.LogError(response.Message, ex);
+                return response;
+            }
+        }
+
+        public async Task<Response<List<WebDataDto>>> GetSimilarBrunchAsync(string code)
+        {
+            var response = new Response<List<WebDataDto>>();
+            try
+            {
+                if (!string.IsNullOrEmpty(code))
+                {
+                    var data = await _webDataDomain.GetSimilarBrunchAsync(code);
+                    response.Data = _mapper.Map<List<WebDataDto>>(data);
+                    response.IsSuccess = true;
+                    response.IsWarning = false;
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.IsWarning = true;
+                    response.Message = "Error al listar: parametros invalidos";
+                    _logger.LogError(response.Message);
+                }
+                return response;
+            }catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.IsWarning = true;
+                response.Message = "Error al listar: " + ex.Message;
+                _logger.LogError(response.Message, ex);
+                return response;
+            }
         }
     }
 }

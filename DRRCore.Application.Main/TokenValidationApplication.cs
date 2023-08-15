@@ -126,9 +126,9 @@ namespace DRRCore.Application.Main
             }
         }
 
-        private byte[] Encrypt(byte[] bytesToBeEncrypted, byte[] jwtKeyBytes)
+        private static byte[] Encrypt(byte[] bytesToBeEncrypted, byte[] jwtKeyBytes)
         {
-            byte[] encryptedBytes = null;
+            byte[]? encryptedBytes = null;
             var saltBytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 };
 
             using (MemoryStream stream = new MemoryStream())
@@ -156,7 +156,7 @@ namespace DRRCore.Application.Main
 
         private static byte[] Decrypt(byte[] bytesToBeDecrypted, byte[] jwtKeyBytes)
         {
-            byte[] decryptedBytes = null;
+            byte[]? decryptedBytes = null;
             var saltBytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 };
 
             using (MemoryStream stream = new MemoryStream())
@@ -183,8 +183,7 @@ namespace DRRCore.Application.Main
         public string GetTokenByHeader()
         {
             var rqt = _httpContextAccessor.HttpContext.Request;
-            string token = string.Empty;
-
+            string token;
             if (rqt.Headers.TryGetValue("Authorization", out var authHeaders) &&
                 authHeaders.ToString().StartsWith("Bearer "))
             {

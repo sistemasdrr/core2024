@@ -8,26 +8,22 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
     {
         public async Task<bool> DeleteApiUserAsync(int id)
         {
-            using (var context = new SqlContext())
+            using var context = new SqlContext();
+            var apiUser = await context.ApiUsers.FindAsync(id);
+            if (apiUser != null)
             {
-                var apiUser = await context.ApiUsers.FindAsync(id);
-                if (apiUser != null)
-                {
-                    apiUser.Enable = false;
-                    await context.SaveChangesAsync();
-                }
-                return true;
+                apiUser.Enable = false;
+                await context.SaveChangesAsync();
             }
+            return true;
         }
 
         public async Task<ApiUser> GetApiUserByAbonadoAndEnvironmentAsync(string codigoabonado, string environment)
         {
             try
             {
-                using (var context = new SqlContext())
-                {
-                    return await context.ApiUsers.FirstOrDefaultAsync(x => x.CodigoAbonado == codigoabonado && x.Environment == environment);
-                }
+                using var context = new SqlContext();
+                return await context.ApiUsers.FirstOrDefaultAsync(x => x.CodigoAbonado == codigoabonado && x.Environment == environment);
             }
             catch (Exception ex)
             {
@@ -39,10 +35,8 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
         {
             try
             {
-                using (var context = new SqlContext())
-                {
-                    return await context.ApiUsers.FirstOrDefaultAsync(x => x.CodigoAbonado == code);
-                }
+                using var context = new SqlContext();
+                return await context.ApiUsers.FirstOrDefaultAsync(x => x.CodigoAbonado == code);
             }
             catch (Exception ex)
             {
@@ -54,10 +48,8 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
         {
             try
             {
-                using (var context = new SqlContext())
-                {
-                    return await context.ApiUsers.FirstOrDefaultAsync(x => x.Token == Guid.Parse(token));
-                }
+                using var context = new SqlContext();
+                return await context.ApiUsers.FirstOrDefaultAsync(x => x.Token == Guid.Parse(token));
             }
             catch (Exception ex)
             {
@@ -70,10 +62,8 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
         {
             try
             {
-                using (var context = new SqlContext())
-                {
-                    return await context.ApiUsers.ToListAsync();
-                }
+                using var context = new SqlContext();
+                return await context.ApiUsers.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -85,11 +75,9 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
         {
             try
             {
-                using(var context = new SqlContext())
-                {
-                    await context.AddAsync(obj);
-                    await context.SaveChangesAsync();
-                }
+                using var context = new SqlContext();
+                await context.AddAsync(obj);
+                await context.SaveChangesAsync();
                 return true;
             }catch (Exception ex)
             {
@@ -102,11 +90,9 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
         {
             try
             {
-                using (var context = new SqlContext())
-                {
-                    context.Update(obj);
-                    await context.SaveChangesAsync();
-                }
+                using var context = new SqlContext();
+                context.Update(obj);
+                await context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)

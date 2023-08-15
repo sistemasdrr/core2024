@@ -1,5 +1,4 @@
-﻿using DRRCore.Domain.Entities.SQLContext;
-using DRRCore.Transversal.Common;
+﻿using DRRCore.Transversal.Common;
 
 namespace DRRCore.Application.Interfaces
 {

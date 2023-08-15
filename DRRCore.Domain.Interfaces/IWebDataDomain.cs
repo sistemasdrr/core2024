@@ -9,5 +9,7 @@ namespace DRRCore.Domain.Interfaces
         Task<bool> AddOrUpdateWebDataAsync();
         Task<List<WebQuery>> GetByParamAsync(string param,int page);
         Task<WebQuery> GetByCodeAsync(string code);
+        Task<List<WebQuery>> GetByCountryAndBranchAsync(int country, string branch, int page);
+        Task<List<WebQuery>> GetSimilarBrunchAsync(string code);
     }
 }

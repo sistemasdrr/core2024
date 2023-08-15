@@ -9,41 +9,39 @@ namespace DRRCore.Services.ApiWeb.Controllers
 {
     public class PruebasController : Controller
     {
-        private readonly IApiUserDomain _userDomain;
         private readonly ITokenValidationApplication _tokenValidation;
         private readonly IApiUserApplication _apiUserApplication;
 
-        public PruebasController(IApiUserDomain userDomain, ITokenValidationApplication tokenValidation, IApiUserApplication apiUserApplication)
+        public PruebasController(ITokenValidationApplication tokenValidation, IApiUserApplication apiUserApplication)
         {
-            _userDomain = userDomain;
             _tokenValidation = tokenValidation;
             _apiUserApplication = apiUserApplication;
         }
         [AllowAnonymous]
         [HttpGet]
         [Route("validarToken")]
-        public async Task<ActionResult> validationTokenAsync()
+        public async Task<ActionResult> ValidationTokenAsync()
         {
             return Ok(await _tokenValidation.ValidationTokenAsync());
         }
         [AllowAnonymous]
         [HttpPost]
         [Route("encriptarToken")]
-        public async Task<ActionResult> encryptTokenAsync(string token)
+        public async Task<ActionResult> EncryptTokenAsync(string token)
         {
             return Ok(await _tokenValidation.EncryptTokenAsync(token));
         }
         [AllowAnonymous]
         [HttpPost]
         [Route("desencriptarToken")]
-        public async Task<ActionResult> decryptTokenAsync(string tokenEncriptado)
+        public async Task<ActionResult> DecryptTokenAsync(string tokenEncriptado)
         {
             return Ok(await _tokenValidation.decryptTokenAsync(tokenEncriptado));
         }
         [AllowAnonymous]
         [HttpPost]
-        [Route("insertUser")]
-        public async Task<ActionResult> insertUserAsync(ApiUserDataDto dto)
+        [Route("insertarUser")]
+        public async Task<ActionResult> InsertUserAsync(ApiUserDataDto dto)
         {
             return Ok(await _apiUserApplication.AddApiUserAsync(dto));
         }

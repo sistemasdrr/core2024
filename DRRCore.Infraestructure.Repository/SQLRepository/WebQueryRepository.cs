@@ -53,14 +53,38 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
                 return list;                
             }
         }
+        public async Task<List<WebQuery>> GetByCountryAndBranchAsync(int country, string branch,int page)
+        {
+            var skip = (page - 1) * 10;
+            using (var context = new SqlContext())
+            {
+                var list = await context.WebQueries.Where(x => x.PaisCodigo== country.ToString("D3") && x.RamoCodigo==branch)
+                                                   .OrderBy(x => x.NombreEmpresa)
+                                                   .Skip(skip)
+                                                   .Take(10)
+                                                   .ToListAsync();
+                return list;
+            }
+        }
+        public async Task<List<WebQuery>> GetSimilarBrunchAsync(string code)
+        {           
+            using (var context = new SqlContext())
+            {
+                var obj= await context.WebQueries.Where(x => x.CodigoEmpresaWeb == code).FirstOrDefaultAsync();
+
+                var list = await context.WebQueries.Where(x => x.Sector == obj.Sector && x.RamoCodigo == obj.RamoCodigo)
+                                                   .OrderBy(x => x.NombreEmpresa)                                                  
+                                                   .Take(10)
+                                                   .ToListAsync();
+                return list;
+            }
+        }
+
 
         public async Task<WebQuery> GetByCodeAsync(string code)
         {
-            using (var context = new SqlContext())
-            {
-                return await context.WebQueries.Where(x => x.CodigoEmpresaWeb==code).FirstOrDefaultAsync();
-                
-            }
+            using var context = new SqlContext();
+            return await context.WebQueries.Where(x => x.CodigoEmpresaWeb == code).FirstOrDefaultAsync();
         }
     }
 }
