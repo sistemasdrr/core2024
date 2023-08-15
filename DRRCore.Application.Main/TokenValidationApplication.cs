@@ -30,9 +30,6 @@ namespace DRRCore.Application.Main
             string tokenEncriptado = GetTokenByHeader();
             try
             {
-                response.IsWarning = true;
-                response.IsSuccess = false;
-
                 if (tokenEncriptado == Messages.TokenNotSend)
                 {
                     response.Message = Messages.TokenNotSend;

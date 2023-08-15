@@ -110,9 +110,7 @@ namespace DRRCore.Application.Main
                 if (country > 0 && !string.IsNullOrEmpty(branch) && page > 0)
                 {
                     var data = await _webDataDomain.GetByCountryAndBranchAsync(country, branch, page);
-                    response.Data = _mapper.Map<List<WebDataDto>>(data);
-                    response.IsSuccess = true;
-                    response.IsWarning = false;
+                    response.Data = _mapper.Map<List<WebDataDto>>(data);                   
                 }
                 else
                 {
@@ -141,9 +139,7 @@ namespace DRRCore.Application.Main
                 if (!string.IsNullOrEmpty(code))
                 {
                     var data = await _webDataDomain.GetSimilarBrunchAsync(code);
-                    response.Data = _mapper.Map<List<WebDataDto>>(data);
-                    response.IsSuccess = true;
-                    response.IsWarning = false;
+                    response.Data = _mapper.Map<List<WebDataDto>>(data);                  
                 }
                 else
                 {

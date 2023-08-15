@@ -21,7 +21,7 @@ namespace DRRCore.Services.ApiWeb.Controllers
         }
 
         [HttpGet()]
-        [Route("uploadData")]
+        [Route("post/uploadData")]
         public async Task<ActionResult> AddOrUpdateWebData()
         {
             return Ok(await _webDataApplication.AddOrUpdateWebDataAsync());
@@ -39,13 +39,13 @@ namespace DRRCore.Services.ApiWeb.Controllers
             return Ok(await _webDataApplication.GetByCodeAsync(code));
         }
         [HttpGet()]
-        [Route("getByCountryAndBranch/country/{country}/{branch}/{page}")]
+        [Route("get/countryandbranch/{country}/{branch}/{page}")]
         public async Task<ActionResult> GetByCountryAndBranch(int country, string branch, int page = 1)
         {
             return Ok(await _webDataApplication.GetByCountryAndBranchAsync(country, branch, page));
         }
         [HttpGet()]
-        [Route("getSimilarBranch/code/{code}")]
+        [Route("get/similar/{code}")]
         public async Task<ActionResult> GetByCountryAndBranch(string code)
         {
             return Ok(await _webDataApplication.GetSimilarBrunchAsync(code));
