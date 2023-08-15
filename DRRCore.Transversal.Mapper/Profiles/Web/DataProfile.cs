@@ -21,12 +21,19 @@ namespace DRRCore.Transversal.Mapper.Profiles.Web
                 .ForMember(dest => dest.DepartamentoEmpresa, opt => opt?.MapFrom(src => src.Ciudad))
                 .ForMember(dest => dest.SectorEmpresa, opt => opt?.MapFrom(src => src.RamoActividad ?? string.Empty))
                 .ForMember(dest => dest.SectorEmpresaIngles, opt => opt?.MapFrom(src => src.RamoActividadIngles ?? string.Empty))
-                .ForMember(dest => dest.CeoEmpresa, opt => opt?.MapFrom(src => string.Format(Constants.CeoWebEstructure,src.Persona.Substring(0,12)) ?? string.Empty))
+                .ForMember(dest => dest.CeoEmpresa, opt => opt?.MapFrom(src => GetCeoName(src.Persona??string.Empty)))
                 .ForMember(dest => dest.CalidadDisponibleEsp, opt => opt?.MapFrom(src => GetQualityDescription(src.CalidadCodigo)))
                 .ForMember(dest => dest.CalidadDisponibleEng, opt => opt?.MapFrom(src => GetQualityDescription(src.CalidadCodigo)))
                 .ForMember(dest => dest.UltimobalanceEmpresa, opt => opt?.MapFrom(src => GetLastBalance(src.FechaBalance1, src.FechaBalance2, src.FechaBalance3))).ReverseMap();
                 
 
+        }
+        private static string GetCeoName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return string.Empty;
+
+            var length=name.Length;           
+            return name.Substring(0, length/3).ToString() + "***";
         }
         private static string GetQualityDescription(int? calidadCodigo)
         {
