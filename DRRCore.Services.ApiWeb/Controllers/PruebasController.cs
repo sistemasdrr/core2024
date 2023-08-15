@@ -22,6 +22,11 @@ namespace DRRCore.Services.ApiWeb.Controllers
         [Route("validarToken")]
         public async Task<ActionResult> ValidationTokenAsync()
         {
+            var response = await _tokenValidation.ValidationTokenAsync();
+            if (!response.IsSuccess)
+            {
+                return Unauthorized();
+            }
             return Ok(await _tokenValidation.ValidationTokenAsync());
         }
         [AllowAnonymous]
