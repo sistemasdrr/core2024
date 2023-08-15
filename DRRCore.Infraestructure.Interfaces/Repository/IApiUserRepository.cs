@@ -4,6 +4,7 @@ namespace DRRCore.Infraestructure.Interfaces.Repository
 {
     public interface IApiUserRepository
     {
+        Task <ApiUser> GetApiUserByAbonadoAndEnvironmentAsync(string codigoabonado, string environment);
         Task <ApiUser> GetApiUserByTokenAsync(string token);
         Task<ApiUser> GetApiUserByCodeAsync(string code);
         Task<List<ApiUser>> GetApiUserListAllAsync();

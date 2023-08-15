@@ -35,10 +35,19 @@ namespace DRRCore.Domain.Main
             return await _webQueryRepository.GetByCodeAsync(code);
         }
 
+        public async Task<List<WebQuery>> GetByCountryAndBranchAsync(int country, string branch, int page)
+        {
+            return await _webQueryRepository.GetByCountryAndBranchAsync(country,branch, page);
+        }
+
         public async Task<List<WebQuery>> GetByParamAsync(string param, int page)
         {
             return await _webQueryRepository.GetByParamAsync(param,page);           
         }
-       
+
+        public async Task<List<WebQuery>> GetSimilarBrunchAsync(string code)
+        {
+            return await _webQueryRepository.GetSimilarBrunchAsync(code);
+        }
     }
 }

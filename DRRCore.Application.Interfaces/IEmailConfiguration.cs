@@ -10,10 +10,10 @@ namespace DRRCore.Application.Interfaces
 {
     public interface IEmailConfiguration
     {
-        Response<bool> AddAsync(EmailConfiguration obj);
-        Response<bool> DeleteAsync(int id);
-        Response<bool> UpdateAsync(EmailConfiguration obj);
-        Response<List<EmailConfiguration>> GetByNameAsync(string name);
-        Response<List<EmailConfiguration>> GetAllAsync();
+        Task<Response<bool>> AddAsync(EmailConfiguration obj);
+        Task<Response<bool>> DeleteAsync(int id);
+        Task<Response<bool>> UpdateAsync(EmailConfiguration obj);
+        Task<Response<List<EmailConfiguration>>> GetByNameAsync(string name);
+        Task<Response<List<EmailConfiguration>>> GetAllAsync();
     }
 }
