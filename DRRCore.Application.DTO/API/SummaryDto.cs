@@ -6,30 +6,20 @@ namespace DRRCore.Application.DTO.API
     public class SummaryDto
     {
         public string InscriptionYear { get; set; } = string.Empty;
-        public CapitalStockDto CapitalStock { get; set; } = new CapitalStockDto();
-        public SummaryAmountDto ShareholdersEquity { get; set; } = new SummaryAmountDto();
-        public SummaryAmountDto AnnRevenues { get; set; } = new SummaryAmountDto();
-        public SummaryAmountDto Profits { get; set; } = new SummaryAmountDto();
+        public CurrencyAmountDto CapitalStock { get; set; } = new CurrencyAmountDto();
+        public CurrencyAmountWithDateDto ShareholdersEquity { get; set; } = new CurrencyAmountWithDateDto();
+        public CurrencyAmountWithDateDto AnnRevenues { get; set; } = new CurrencyAmountWithDateDto();
+        public CurrencyAmountWithDateDto Profits { get; set; } = new CurrencyAmountWithDateDto();
         public int Employees { get; set; } = 0;
         public string ChiefExecutive { get; set; } = string.Empty;
         public SummaryValueDetailDto FinalSituation { get; set; } = new SummaryValueDetailDto();
         public SummaryValueDetailDto Disposition { get; set; } = new SummaryValueDetailDto();
         public SummaryValueDetailDto PaymentsPolicy { get; set; } = new SummaryValueDetailDto();
         public SummaryValueDetailDto Credit { get; set; } = new SummaryValueDetailDto();
+        public string Description { get; set; } = string.Empty; 
     }
-    public class CapitalStockDto
-    {
-        public string IsoCurrency { get; set; } = string.Empty;
-        public double Amount { get; set; }
-        public string Comment { get; set; } = string.Empty;
-
-    }
-    public class SummaryAmountDto
-    {
-        public string IsoCurrency { get; set; } = string.Empty;
-        public double Amount { get; set; }
-        public string LastInformationDate { get; set; } = string.Empty;
-    }
+    
+   
     public class SummaryValueDetailDto
     {
         public string Code { get; set; } = string.Empty;

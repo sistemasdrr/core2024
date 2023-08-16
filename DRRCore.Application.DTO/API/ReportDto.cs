@@ -5,6 +5,7 @@
         public RequestClientDto RequestClient { get; set; }=new RequestClientDto();
         public InformationDto Information { get; set; } =new InformationDto();
         public SummaryDto Summary { get; set; } = new SummaryDto();
+        public LegalBackgroundDto LegalBackground { get; set; }= new LegalBackgroundDto();
 
     }
 }
