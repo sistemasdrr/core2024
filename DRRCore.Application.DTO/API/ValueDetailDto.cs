@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace DRRCore.Application.DTO.API
 {
-    internal class ValueDetailDto
+    public class ValueDetailDto
     {
+        [JsonPropertyName("DRR_VARDET_CODDEE")]
+        public string Code { get; set; } = string.Empty;
+        [JsonPropertyName("DRR_VARDET_DESCRI")]
+        public string Description { get; set; } = string.Empty;
     }
+   
 }

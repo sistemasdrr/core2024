@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace DRRCore.Application.DTO.API
 {
-    internal class ExcutiveShareholderDto
+    public class ExecutiveShareholderDto
     {
+        [JsonPropertyName("DRR_EXECUT_NAAMEE")]
+        public string Name { get; set; }= string.Empty;
+        [JsonPropertyName("DRR_EXECUT_TITTLE")]
+        public string Title { get;set; }= string.Empty;
+        [JsonPropertyName("DRR_EXECUT_SINDAT")]
+        public string SinceDate { get; set; } = string.Empty;
     }
 }
