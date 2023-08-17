@@ -147,7 +147,8 @@ namespace DRRCore.Transversal.Common
                 }
                
             }
-           
+            message.Headers.Add("Disposition-Notification-To", message.From.Address);
+            message.DeliveryNotificationOptions = DeliveryNotificationOptions.OnSuccess;
             return message;
         }
 

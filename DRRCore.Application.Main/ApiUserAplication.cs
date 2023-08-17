@@ -19,7 +19,7 @@ namespace DRRCore.Application.Main
             _mapper = mapper;
             _tokenValidationApplication = tokenValidationApplication;
         }
-        public async Task<Response<string>> AddApiUserAsync(ApiUserDataDto obj)
+        public async Task<Response<string>> AddApiUserAsync(ApiUserDto obj)
         {
             var response = new Response<string>();
             try
@@ -41,7 +41,7 @@ namespace DRRCore.Application.Main
             }
         }
 
-        public async Task<Response<string>> GetTokenByInsertApiUser(ApiUserDataDto obj)
+        public async Task<Response<string>> GetTokenByInsertApiUser(ApiUserDto obj)
         {
             var response = new Response<string>();
             try

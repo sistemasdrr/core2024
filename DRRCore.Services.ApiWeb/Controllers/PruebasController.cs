@@ -46,7 +46,7 @@ namespace DRRCore.Services.ApiWeb.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("insertarUser")]
-        public async Task<ActionResult> InsertUserAsync(ApiUserDataDto dto)
+        public async Task<ActionResult> InsertUserAsync(ApiUserDto dto)
         {
             return Ok(await _apiUserApplication.AddApiUserAsync(dto));
         }

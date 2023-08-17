@@ -9,7 +9,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Api
     {
         public ApiUserProfile()
         {
-            CreateMap<ApiUserDataDto, ApiUser>()
+            CreateMap<ApiUserDto, ApiUser>()
                 .ForMember(dest => dest.CodigoAbonado, opt => opt?.MapFrom(src => src.CodigoAbonado))
                 .ForMember(dest => dest.Environment, opt => opt?.MapFrom(src => src.Environment))
                .ReverseMap();

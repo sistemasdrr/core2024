@@ -6,7 +6,7 @@ namespace DRRCore.Application.Interfaces
 {
     public interface IApiUserApplication
     {
-        Task<Response<string>> AddApiUserAsync(ApiUserDataDto obj);
-        Task<Response<string>> GetTokenByInsertApiUser(ApiUserDataDto obj);
+        Task<Response<string>> AddApiUserAsync(ApiUserDto obj);
+        Task<Response<string>> GetTokenByInsertApiUser(ApiUserDto obj);
     }
 }

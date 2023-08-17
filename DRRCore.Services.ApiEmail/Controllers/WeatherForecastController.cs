@@ -36,7 +36,7 @@ namespace DRRCore.Services.ApiEmail.Controllers
         [Route("api/send")]
         public async Task<ActionResult> Send()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 2; i++)
             {
                 await _mailSender.SendMailAsync(new Transversal.Common.EmailValues
                 {
