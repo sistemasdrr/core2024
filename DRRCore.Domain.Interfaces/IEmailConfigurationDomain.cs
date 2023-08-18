@@ -9,5 +9,6 @@ namespace DRRCore.Domain.Interfaces
         Task<bool> UpdateAsync(EmailConfiguration obj);
         Task<List<EmailConfiguration>> GetByNameAsync(string name);
         Task<List<EmailConfiguration>> GetAllAsync();
+        Task<EmailConfiguration> GetValueByName(string name);
     }
 }

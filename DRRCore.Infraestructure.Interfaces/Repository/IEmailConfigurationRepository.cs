@@ -14,5 +14,6 @@ namespace DRRCore.Infraestructure.Interfaces.Repository
         Task<bool> UpdateAsync(EmailConfiguration obj);
         Task<List<EmailConfiguration>> GetByNameAsync(string name);
         Task<List<EmailConfiguration>> GetAllAsync();
+        Task<EmailConfiguration> GetValueByNameAsync(string name);
     }
 }
