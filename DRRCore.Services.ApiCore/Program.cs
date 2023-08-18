@@ -1,15 +1,15 @@
-using DRRCore.Transversal.Common.Interface;
-using DRRCore.Transversal.Common;
-using DRRCore.Transversal.Common.JsonReader;
-using DRRCore.Transversal.Mapper.Profiles.Web;
-using DRRCore.Infraestructure.Interfaces.MySqlRepository;
-using DRRCore.Infraestructure.Repository.MYSQLRepository;
-using DRRCore.Infraestructure.Interfaces.Repository;
-using DRRCore.Infraestructure.Repository.SQLRepository;
-using DRRCore.Domain.Interfaces;
-using DRRCore.Domain.Main;
 using DRRCore.Application.Interfaces;
 using DRRCore.Application.Main;
+using DRRCore.Domain.Interfaces;
+using DRRCore.Domain.Main;
+using DRRCore.Infraestructure.Interfaces.MySqlRepository;
+using DRRCore.Infraestructure.Interfaces.Repository;
+using DRRCore.Infraestructure.Repository.MYSQLRepository;
+using DRRCore.Infraestructure.Repository.SQLRepository;
+using DRRCore.Transversal.Common;
+using DRRCore.Transversal.Common.Interface;
+using DRRCore.Transversal.Common.JsonReader;
+using DRRCore.Transversal.Mapper.Profiles.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
