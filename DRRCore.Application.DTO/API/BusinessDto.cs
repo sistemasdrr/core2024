@@ -30,7 +30,7 @@ namespace DRRCore.Application.DTO.API
     public class PercentageValue
     {
         [JsonPropertyName("DRR_PERCGE_VALUEE")]
-        public int Value { get; set; }
+        public string Value { get; set; }
         [JsonPropertyName("DRR_PERCGE_DESCRI")]
         public string Description { get; set; } = string.Empty;
     }
@@ -39,23 +39,17 @@ namespace DRRCore.Application.DTO.API
         [JsonPropertyName("DRR_BUSIMP_HASIMP")]
         public bool HasImportedOrExported { get; set; }=false;
         [JsonPropertyName("DRR_BUSIMP_COUNTS")]
-        public List<BussinessCountryDto> Countries { get; set;}=new List<BussinessCountryDto>();
+        public List<string> Countries { get; set;}=new List<string>();
         [JsonPropertyName("DRR_BUSIMP_DETAIL")]
         public List<BussinessAmountDetailDto> Details { get; set; } = new List<BussinessAmountDetailDto>();
 
     }
-    public class BussinessCountryDto
-    {
-        [JsonPropertyName("DRR_BUSCOU_COUNTR")]
-        public string Country { get; set; } = string.Empty;
-        [JsonPropertyName("DRR_BUSCOU_ISOCOU")]
-        public string IsoCountry { get; set; }= string.Empty;
-    }
+   
     public class BussinessAmountDetailDto
     {
         [JsonPropertyName("DRR_BUSAMO_YEEARR")]
         public string Year { get; set; } = string.Empty;
         [JsonPropertyName("DRR_BUSAMO_AMOUNT")]
-        public string Amount { get; set; } = string.Empty;
+        public double Amount { get; set; } 
     }       
 }

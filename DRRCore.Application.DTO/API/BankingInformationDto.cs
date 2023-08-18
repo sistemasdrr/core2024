@@ -26,8 +26,8 @@ namespace DRRCore.Application.DTO.API
         public string Bank { get; set; } = string.Empty;
         [JsonPropertyName("DRR_BANKKS_DEBRAT")]
         public ValueDetailDto DebtRating { get; set; }= new ValueDetailDto();
-        [JsonPropertyName("DRR_BANKKS_TYPCUR")]
-        public string TypeCurrency { get; set; } = string.Empty;
+        [JsonPropertyName("DRR_BANKKS_ISOCUR")]
+        public string IsoCurrency { get; set; } = string.Empty;
         [JsonPropertyName("DRR_BANKKS_AMOUNT")]
         public double Amount { get; set; }
     }

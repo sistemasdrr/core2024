@@ -6,8 +6,7 @@ namespace DRRCore.Application.DTO.API
     {
         [JsonPropertyName("DRR_RELCOM_NAAMEE")]
         public string Name { get; set; } = string.Empty;
-        [JsonPropertyName("DRR_RELCOM_COUNTR")]
-        public string Country { get; set; }= string.Empty;
+        
         [JsonPropertyName("DRR_RELCOM_ISOCOU")]
         public string IsoCountry { get; set; } = string.Empty;
         [JsonPropertyName("DRR_RELCOM_SITCOM")]

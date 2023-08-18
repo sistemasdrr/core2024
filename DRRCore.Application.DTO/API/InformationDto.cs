@@ -9,7 +9,7 @@ namespace DRRCore.Application.DTO.API
         [JsonPropertyName("DRR_INFORM_TRANAM")]
         public string TradeName { get; set; }=string.Empty;
         [JsonPropertyName("DRR_INFORM_NUMREG")]
-        public string TaxpayerRegistration { get; set;}=string.Empty;
+        public DocumentTypeDto TaxpayerRegistration { get; set;}= new DocumentTypeDto();
         [JsonPropertyName("DRR_INFORM_MAINAD")]
         public string Main_Address { get; set; }=string.Empty;
         [JsonPropertyName("DRR_INFORM_CITPRV")]

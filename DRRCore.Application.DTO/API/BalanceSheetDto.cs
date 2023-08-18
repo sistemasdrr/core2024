@@ -10,10 +10,12 @@ namespace DRRCore.Application.DTO.API
         public string Date { get; set; } = string.Empty;
         [JsonPropertyName("DRR_BALSHE_TYBALS")]
         public string TypeBalanceSheet { get; set; } = string.Empty;
+        [JsonPropertyName("DRR_BALSHE_PERIOD")]
+        public string Period { get; set; } = string.Empty;
         [JsonPropertyName("DRR_BALSHE_ISOCUR")]
         public string IsoCurrency { get; set; } = string.Empty;
         [JsonPropertyName("DRR_BALSHE_EXCRAN")]
-        public decimal ExchangeRate { get; set; }
+        public string ExchangeRate { get; set; } = string.Empty;
         [JsonPropertyName("DRR_BALSHE_ASSETS")]
         public AssetsDto Assets { get; set; } = new AssetsDto();
         [JsonPropertyName("DRR_BALSHE_LIABIL")]

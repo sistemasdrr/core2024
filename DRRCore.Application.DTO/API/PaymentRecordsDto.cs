@@ -17,8 +17,7 @@ namespace DRRCore.Application.DTO.API
         [JsonPropertyName("DRR_PROVID_ISOCOU")]
         public string IsoCountry { get; set; } = string.Empty;
         [JsonPropertyName("DRR_PROVID_COUNTR")]
-        public string Country { get; set; } = string.Empty;
-        [JsonPropertyName("DRR_PROVID_PHONEE")]
+        
         public string Phone { get; set; } = string.Empty;
         [JsonPropertyName("DRR_PROVID_PRSERQ")]
         public string ProductsOrServicesRequires { get; set; } = string.Empty;
@@ -26,6 +25,8 @@ namespace DRRCore.Application.DTO.API
         public string ClientSince { get; set; } = string.Empty;
         [JsonPropertyName("DRR_PROVID_TERMSS")]
         public string Terms { get; set; } = string.Empty;
+        [JsonPropertyName("DRR_PROVID_PERFOR")]
+        public string Performance { get; set; } = string.Empty;
         [JsonPropertyName("DRR_PROVID_COMMEN")]
         public string Comments { get; set; } = string.Empty;
     }

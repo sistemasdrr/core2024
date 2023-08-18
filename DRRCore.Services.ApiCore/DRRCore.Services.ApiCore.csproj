@@ -7,7 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DRRCore.Application.Interfaces\DRRCore.Application.Interfaces.csproj" />
+    <ProjectReference Include="..\DRRCore.Application.Main\DRRCore.Application.Main.csproj" />
+    <ProjectReference Include="..\DRRCore.Domain.Interfaces\DRRCore.Domain.Interfaces.csproj" />
+    <ProjectReference Include="..\DRRCore.Domain.Main\DRRCore.Domain.Main.csproj" />
+    <ProjectReference Include="..\DRRCore.Infraestructure.Interfaces\DRRCore.Infraestructure.Interfaces.csproj" />
+    <ProjectReference Include="..\DRRCore.Infraestructure.Repository\DRRCore.Infraestructure.Repository.csproj" />
+    <ProjectReference Include="..\DRRCore.Transversal.Common\DRRCore.Transversal.Common.csproj" />
+    <ProjectReference Include="..\DRRCore.Transversal.Mapper\DRRCore.Transversal.Mapper.csproj" />
   </ItemGroup>
 
 </Project>

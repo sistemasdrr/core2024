@@ -18,6 +18,8 @@ namespace DRRCore.Application.DTO.API
         [JsonPropertyName("DRR_REQCLI_PRIORI")]
         public string Priority { get; set; }=string.Empty;
         [JsonPropertyName("DRR_REQCLI_REQUES")]
-        public string Request { get; set; }=string.Empty;   
+        public string Request { get; set; }=string.Empty;
+        [JsonPropertyName("DRR_REQCLI_ENVIRO")]
+        public string Environment { get; set; } = string.Empty;
     }
 }

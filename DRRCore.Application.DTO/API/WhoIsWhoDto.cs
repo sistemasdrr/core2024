@@ -13,7 +13,7 @@ namespace DRRCore.Application.DTO.API
         [JsonPropertyName("DRR_WISWHO_BIRTHD")]
         public string Birthday { get; set;} = string.Empty;
         [JsonPropertyName("DRR_WISWHO_DOCTYP")]
-        public DocumentTypeDto DocumentType { get; set; } = new DocumentTypeDto();
+        public DocumentTypeDto Document { get; set; } = new DocumentTypeDto();
         [JsonPropertyName("DRR_WISWHO_CIVSTA")]
         public string CivilStatus { get; set; }=string.Empty;
         [JsonPropertyName("DRR_WISWHO_ADRESE")]
@@ -44,18 +44,16 @@ namespace DRRCore.Application.DTO.API
         public string RegistrationNumber { get; set; } = string.Empty;
         [JsonPropertyName("DRR_ASSOCI_ISOCOU")]
         public string IsoCountry { get; set; } = string.Empty;
-        [JsonPropertyName("DRR_ASSOCI_COUNTR")]
-        public string Country { get; set; } = string.Empty;
+       
     }
     public class Participate
     {
         [JsonPropertyName("DRR_PARTIC_NAAMEE")]
         public string Name { get; set; } = string.Empty;
-        [JsonPropertyName("DRR_PARTIC_YEEAAR")]
-        public string Year { get; set; } = string.Empty;
+        [JsonPropertyName("DRR_PARTIC_SINDAT")]
+        public string SinceDate { get; set; } = string.Empty;
         [JsonPropertyName("DRR_PARTIC_ISOCOU")]
         public string IsoCountry { get; set; } = string.Empty;
-        [JsonPropertyName("DRR_PARTIC_COUNTR")]
-        public string Country { get; set; } = string.Empty;
+       
     }
 }
