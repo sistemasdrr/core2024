@@ -26,9 +26,14 @@ namespace DRRCore.Domain.Main
             return await _repository.GetAllAsync();
         }
 
-        public Task<EmailConfiguration> GetByNameAsync(string name)
+        public async Task<List<EmailConfiguration>> GetByNameAsync(string name)
         {
-            return _repository.GetByNameAsync(name);
+            return await _repository.GetByNameAsync(name);
+        }
+
+        public async Task<EmailConfiguration> GetValueByName(string name)
+        {
+            return await _repository.GetValueByNameAsync(name);
         }
 
         public Task<bool> UpdateAsync(EmailConfiguration obj)

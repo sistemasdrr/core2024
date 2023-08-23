@@ -10,16 +10,16 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
         {
             try
             {
-                using(var context = new SqlContext())
+                using (var context = new SqlContext())
                 {
                     await context.AddAsync(obj);
                     await context.SaveChangesAsync();
                     return true;
                 }
-            }catch
+            } catch
             {
                 return false;
-            }   
+            }
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -29,7 +29,7 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
                 using (var context = new SqlContext())
                 {
                     var obj = await context.EmailConfigurations.FindAsync(id);
-                    if(obj != null) 
+                    if (obj != null)
                     {
                         context.EmailConfigurations.Remove(obj);
                         await context.SaveChangesAsync();
@@ -60,6 +60,14 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
             }
         }
 
+        public async Task<EmailConfiguration> GetValueByNameAsync(string name)
+        {
+            using (var context = new SqlContext())
+            {
+                return await context.EmailConfigurations.FirstOrDefaultAsync(x => x.Name == name);
+            }; 
+        }
+    
         public async Task<bool> UpdateAsync(EmailConfiguration obj)
         {
             try

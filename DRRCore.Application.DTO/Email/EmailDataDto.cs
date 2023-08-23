@@ -10,7 +10,7 @@
         public List<string> To { get; set; } = new List<string>();
         public List<string> CC { get; set; } = new List<string>();
         public List<string> CCO { get; set; } = new List<string>();
-        public string Subject { get; set; }=string.Empty;
+        public string Subject { get; set; } = string.Empty;
         public string BodyHTML { get; set; } = string.Empty;
         public bool IsBodyHTML { get;set; }
         public List<string> Parameters { get; set; } = new List<string>();
