@@ -13,7 +13,7 @@ public partial class ApiUser
 
     public string Environment { get; set; } = null!;
 
-    public bool Active { get; set; }
+    public bool? Active { get; set; }
 
     public bool? Enable { get; set; }
 

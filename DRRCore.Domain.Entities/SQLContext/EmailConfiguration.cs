@@ -17,9 +17,11 @@ public partial class EmailConfiguration
 
     public DateTime? UpdateDate { get; set; }
 
-    public string InsertUser { get; set; } = null!;
-
-    public string? UpdateUser { get; set; }
-
     public bool? Enable { get; set; }
+
+    public bool? HasParameter { get; set; }
+
+    public bool? HasTable { get; set; }
+
+    public bool? HasAttachment { get; set; }
 }

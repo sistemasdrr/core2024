@@ -208,3 +208,17 @@
 /DRRCore.Transversal.Common/obj/Release/net6.0/refint
 /DRRCore.Transversal.Common/obj/Release/net6.0/DRRCore.Transversal.Common.csproj.AssemblyReference.cache
 /DRRCore.Transversal.Common/obj/Release/net6.0
+/DRRCore.Transversal.Mapper/obj/Release/net6.0/DRRCore.Transversal.Mapper.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Services.ApiCore/obj/Release/net6.0/DRRCore.Services.ApiCore.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Transversal.Common/obj/Release/net6.0/DRRCore.Transversal.Common.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Services.ApiWeb/obj/Release/net6.0/DRRCore.Services.ApiWeb.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Domain.Main/obj/Release/net6.0/DRRCore.Domain.Main.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Domain.Interfaces/obj/Release/net6.0/DRRCore.Domain.Interfaces.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Services.ApiEmail/obj/Release/net6.0/DRRCore.Services.ApiEmail.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Infraestructure.Interfaces/obj/Release/net6.0/DRRCore.Infraestructure.Interfaces.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Domain.Entities/obj/Release/net6.0/DRRCore.Domain.Entities.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Application.Interfaces/obj/Release/net6.0/DRRCore.Application.Interfaces.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Application.DTO/obj/Release/net6.0/DRRCore.Application.DTO.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Application.Main/obj/Release/net6.0/DRRCore.Application.Main.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Infraestructure.Configuration/obj/Release/net6.0/DRRCore.Infraestructure.Configuration.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Infraestructure.Repository/obj/Release/net6.0/DRRCore.Infraestructure.Repository.GeneratedMSBuildEditorConfig.editorconfig

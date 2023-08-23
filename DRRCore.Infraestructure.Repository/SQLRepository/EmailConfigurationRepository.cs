@@ -51,11 +51,11 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
             }
         }
 
-        public async Task<List<EmailConfiguration>> GetByNameAsync(string name)
+        public async Task<EmailConfiguration> GetByNameAsync(string name)
         {
             using (var context = new SqlContext())
             {
-                return await context.EmailConfigurations.Where(e => e.Name == name).ToListAsync();
+                return await context.EmailConfigurations.Where(e => e.Name == name && e.Enable.Value).FirstOrDefaultAsync();
                 
             }
         }

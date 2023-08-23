@@ -5,10 +5,8 @@ using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
-using Microsoft.EntityFrameworkCore;
-using MySqlX.XDevAPI.Common;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http.Features;
+using System.Globalization;
 
 namespace DRRCore.Application.Main
 {
@@ -18,10 +16,13 @@ namespace DRRCore.Application.Main
         private readonly IMailSender _mailSender;
         private readonly IFileManager _fileManager;
         private readonly IAttachmentsNotSendDomain _attachmentsNotSendDomain;
+        private readonly IEmailConfigurationDomain _emailConfigurationDomain;
         private IMapper _mapper { get; }
         private IEmailHistoryDomain _emailHistoryDomain;
 
-        public EmailApplication(ILogger logger, IMailSender mailSender, IMapper mapper, IEmailHistoryDomain emailHistoryDomain, IFileManager fileManager, IAttachmentsNotSendDomain attachmentsNotSendDomain)
+        public EmailApplication(ILogger logger, IMailSender mailSender, IMapper mapper,
+            IEmailHistoryDomain emailHistoryDomain, IFileManager fileManager, 
+            IAttachmentsNotSendDomain attachmentsNotSendDomain, IEmailConfigurationDomain emailConfigurationDomain)
         {
             _logger = logger;
             _mailSender = mailSender;
@@ -29,14 +30,21 @@ namespace DRRCore.Application.Main
             _emailHistoryDomain = emailHistoryDomain;
             _fileManager = fileManager;
             _attachmentsNotSendDomain = attachmentsNotSendDomain;
+            _emailConfigurationDomain = emailConfigurationDomain;
+           
         }
 
         public async Task<Response<bool>> SendMailAsync(EmailDataDTO emailDataDto)
         {
+            string body = string.Empty;
             var response = new Response<bool>();
-
             try
             {
+                if (emailDataDto.IsBodyHTML)
+                {
+                    body =await GetBodyHtml(emailDataDto);
+                }
+                emailDataDto.BodyHTML = body;
                 var result = await _mailSender.SendMailAsync(_mapper.Map<EmailValues>(emailDataDto));
 
                 if (!result)
@@ -64,6 +72,12 @@ namespace DRRCore.Application.Main
 
             }
             return response;
+        }
+
+        private async Task<string> GetBodyHtml(EmailDataDTO emailDataDto)
+        {
+            var emailConfiguration = await _emailConfigurationDomain.GetByNameAsync(emailDataDto.EmailKey);
+            return string.Empty;
         }
 
         /*Reenvio de mail*/

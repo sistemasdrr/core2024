@@ -75,7 +75,10 @@ public partial class SqlContext : DbContext
             entity.ToTable("ApiUser");
 
             entity.Property(e => e.IdApiUser).HasColumnName("idApiUser");
-            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.Active)
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("active");
             entity.Property(e => e.CodigoAbonado)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -126,7 +129,7 @@ public partial class SqlContext : DbContext
 
         modelBuilder.Entity<EmailConfiguration>(entity =>
         {
-            entity.HasKey(e => e.IdEmailConfiguration).HasName("PK__EmailCon__23D609DB078E2200");
+            entity.HasKey(e => e.IdEmailConfiguration).HasName("PK__EmailCon__23D609DB92657426");
 
             entity.ToTable("EmailConfiguration");
 
@@ -135,25 +138,20 @@ public partial class SqlContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("description");
-            entity.Property(e => e.Enable).HasColumnName("enable");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
             entity.Property(e => e.InsertDate)
+                .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("insertDate");
-            entity.Property(e => e.InsertUser)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("insertUser");
             entity.Property(e => e.Name)
-                .HasMaxLength(30)
+                .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("name");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
-            entity.Property(e => e.UpdateUser)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("updateUser");
             entity.Property(e => e.Value)
                 .IsUnicode(false)
                 .HasColumnName("value");

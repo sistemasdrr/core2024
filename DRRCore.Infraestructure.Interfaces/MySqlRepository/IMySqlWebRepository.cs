@@ -5,7 +5,7 @@ namespace DRRCore.Infraestructure.Interfaces.MySqlRepository
     public interface IMySqlWebRepository
     {
         Task<int> Count();
-        Task<List<ViewConsultaWeb>> Get(int i);       
+        Task<List<ViewConsultaWeb>> Get();       
 
     }
 }
