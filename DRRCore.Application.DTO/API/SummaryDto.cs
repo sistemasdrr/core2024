@@ -17,7 +17,7 @@ namespace DRRCore.Application.DTO.API
         [JsonPropertyName("DRR_SUMMAR_PROFIT")]
         public CurrencyAmountWithDateDto Profits { get; set; } = new CurrencyAmountWithDateDto();
         [JsonPropertyName("DRR_SUMMAR_EMPLOY")]
-        public int DRR_SUMMAR_EMPLOY { get; set; } = 0;
+        public int Employees { get; set; } = 0;
         [JsonPropertyName("DRR_SUMMAR_CHIEEX")]
         public string ChiefExecutive { get; set; } = string.Empty;
         [JsonPropertyName("DRR_SUMMAR_FINSIT")]
