@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using DRRCore.Application.Interfaces;
 using DRRCore.Application.Main;
 using DRRCore.Domain.Interfaces;
@@ -13,17 +15,17 @@ using DRRCore.Transversal.Mapper.Profiles.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.Configure<SftpSettings>(builder.Configuration.GetSection("SftpSettings"));
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAutoMapper(typeof(DataProfile).Assembly);
+
+builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.AddScoped<IMySqlUserRepository, MySqlUserRepository>();
 builder.Services.AddScoped<IMySqlWebRepository, MySqlWebRepository>();
@@ -31,33 +33,29 @@ builder.Services.AddScoped<IWebQueryRepository, WebQueryRepository>();
 builder.Services.AddScoped<IAttachmentsNotSendRepository, AttachmentsNotSendRepository>();
 builder.Services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
 builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
+builder.Services.AddScoped<IApiUserRepository, ApiUserRepository>();
 
-//Injection Domain
 builder.Services.AddScoped<IWebDataDomain, WebDataDomain>();
 builder.Services.AddScoped<IAttachmentsNotSendDomain, AttachmentsNotSendDomain>();
 builder.Services.AddScoped<IEmailConfigurationDomain, EmailConfigurationDomain>();
 builder.Services.AddScoped<IEmailHistoryDomain, EmailHistoryDomain>();
-
-//Injection Application
+builder.Services.AddScoped<IApiUserDomain, ApiUserDomain>();
 
 builder.Services.AddScoped<IWebDataApplication, WebDataApplication>();
 builder.Services.AddScoped<IEmailApplication, EmailApplication>();
 builder.Services.AddScoped<IApiApplication, ApiApplication>();
-//Injection Common
+builder.Services.AddScoped<ITokenValidationApplication, TokenValidationApplication>();
+
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
 builder.Services.AddScoped<DRRCore.Transversal.Common.Interface.ILogger, LoggerManager>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

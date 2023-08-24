@@ -4,6 +4,7 @@ using DRRCore.Domain.Interfaces;
 using DRRCore.Transversal.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using MySqlX.XDevAPI.Common;
 using System.IO;
 using System.Security.Cryptography;
@@ -30,7 +31,7 @@ namespace DRRCore.Application.Main
             string tokenEncriptado = GetTokenByHeader();
             try
             {
-                if (tokenEncriptado == Messages.TokenNotSend)
+                if (tokenEncriptado.IsNullOrEmpty())
                 {
                     response.Message = Messages.TokenNotSend;
                     return response;
@@ -38,9 +39,11 @@ namespace DRRCore.Application.Main
                 else
                 {
                     var tokenDesencriptado = Decrypt(tokenEncriptado);//Desencripta el token
-                    if (tokenDesencriptado == Messages.UnauthorizedUser)
+                    if (tokenDesencriptado.IsNullOrEmpty())
                     {
-                        response.Message = Messages.UnauthorizedUser;
+                        response.IsSuccess = false;
+                        response.IsWarning = true;
+                        response.Message = "Ocurrio un error al desencriptar el token.";
                         return response;
                     }
                     else
@@ -54,7 +57,54 @@ namespace DRRCore.Application.Main
                         }
                         else
                         {
-                            response.Message = Messages.UserNotActive;
+                            response.Message = Messages.UserNotFound;
+                        }
+                        return response;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                response.IsWarning = true;
+                response.IsSuccess = false;
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<Response<bool>> ValidationTokenAndEnvironmentAsync(string environment)
+        {
+            var response = new Response<bool>();
+            string tokenEncriptado = GetTokenByHeader();
+            try
+            {
+                if (tokenEncriptado.IsNullOrEmpty())
+                {
+                    response.Message = Messages.TokenNotSend;
+                    return response;
+                }
+                else
+                {
+                    var tokenDesencriptado = Decrypt(tokenEncriptado);//Desencripta el token
+                    if (tokenDesencriptado.IsNullOrEmpty())
+                    {
+                        response.IsSuccess = false;
+                        response.IsWarning = true;
+                        response.Message = "Ocurrio un error al desencriptar el token.";
+                        return response;
+                    }
+                    else
+                    {
+                        var comprobarToken = await _apiUserDomain.GetApiUserByTokenAsync(tokenDesencriptado); //obtiene el apiuser mediante el token
+                        if (comprobarToken != null && comprobarToken.Enable == true && comprobarToken.Active == true && comprobarToken.Environment == environment) //comprueba si existe
+                        {
+                            response.IsWarning = false;
+                            response.IsSuccess = true;
+                            response.Message = Messages.AuthorizedUser;
+                        }
+                        else
+                        {
+                            response.Message = Messages.UserNotFound;
                         }
                         return response;
                     }
@@ -103,9 +153,9 @@ namespace DRRCore.Application.Main
 
         public string Decrypt(string encryptedToken)
         {
-            if (encryptedToken == null)
+            if (encryptedToken.IsNullOrEmpty())
             {
-                return Messages.UnauthorizedUser;
+                return "";
             }
 
             try
@@ -118,7 +168,6 @@ namespace DRRCore.Application.Main
             }
             catch (Exception ex)
             {
-                return Messages.UnauthorizedUser;
                 throw new Exception(ex.Message, ex);
             }
         }
@@ -188,7 +237,7 @@ namespace DRRCore.Application.Main
             }
             else
             {
-                token = Messages.TokenNotSend;
+                token = "";
             }
             return token;
         }
@@ -206,53 +255,6 @@ namespace DRRCore.Application.Main
             return response;
         }
 
-        public async Task<Response<bool>> ValidationTokenAsync(string token)
-        {
-            var response = new Response<bool>();
-            string tokenEncriptado = GetTokenByHeader();
-            try
-            {
-                response.IsWarning = true;
-                response.IsSuccess = false;
-
-                if (tokenEncriptado == Messages.TokenNotSend)
-                {
-                    response.Message = Messages.TokenNotSend;
-                    return response;
-                }
-                else
-                {
-                    var tokenDesencriptado = Decrypt(tokenEncriptado);//Desencripta el token
-                    if (tokenDesencriptado == Messages.UnauthorizedUser)
-                    {
-                        response.Message = Messages.UnauthorizedUser;
-                        return response;
-                    }
-                    else
-                    {
-                        var comprobarToken = await _apiUserDomain.GetApiUserByTokenAsync(tokenDesencriptado); //obtiene el apiuser mediante el token
-                        if (comprobarToken != null && comprobarToken.Enable == true && comprobarToken.Active == true) //comprueba si existe
-                        {
-                            response.IsWarning = false;
-                            response.IsSuccess = true;
-                            response.Message = Messages.AuthorizedUser;
-                        }
-                        else
-                        {
-                            response.Message = Messages.UserNotActive;
-                        }
-                        return response;
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-                response.IsWarning = true;
-                response.IsSuccess = false;
-                throw new Exception(ex.Message, ex);
-            }
-        }
 
         public async Task<Response<string>> EncriptTokenAsync(string token)
         {
@@ -270,6 +272,8 @@ namespace DRRCore.Application.Main
                 throw new Exception(ex.Message, ex);
             }
         }
+
+       
     }
 }
 

@@ -8,5 +8,6 @@ namespace DRRCore.Application.Interfaces
     {
         Task<Response<string>> AddApiUserAsync(ApiUserDto obj);
         Task<Response<string>> GetTokenByInsertApiUser(ApiUserDto obj);
+
     }
 }

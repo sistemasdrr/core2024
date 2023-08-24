@@ -10,5 +10,9 @@ namespace DRRCore.Application.Main
         {
             return ApiDummy.Report();
         }
+        public async Task<ReportDto> GetReportByCodeAndEnvironmentAsync(string code, string environment)
+        {
+            return ApiDummy.Report();
+        }
     }
 }
