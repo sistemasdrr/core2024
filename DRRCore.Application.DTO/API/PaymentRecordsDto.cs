@@ -16,7 +16,7 @@ namespace DRRCore.Application.DTO.API
         public string Name { get; set; } = string.Empty;
         [JsonPropertyName("DRR_PROVID_ISOCOU")]
         public string IsoCountry { get; set; } = string.Empty;
-        [JsonPropertyName("DRR_PROVID_COUNTR")]
+        [JsonPropertyName("DRR_PROVID_PHONEE")]
         
         public string Phone { get; set; } = string.Empty;
         [JsonPropertyName("DRR_PROVID_PRSERQ")]
