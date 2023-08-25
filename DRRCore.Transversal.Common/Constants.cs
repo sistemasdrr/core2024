@@ -24,6 +24,11 @@ namespace DRRCore.Transversal.Common
 
         public const string CeoWebEstructure = "{0}***";
 
+        public const string DevelopmenteEnvironment = "D";
+        public const string ProductionEnvironment = "P";
+        public const string QualityEnvironment = "Q";
+
+
         public const string TABLEBODY = "TABLEBODY";
         public const string DRR_SYS_ENG_0003 = "DRR_SYS_ENG_0003";
         public const string DRR_SYS_ESP_0003 = "DRR_SYS_ESP_0003";

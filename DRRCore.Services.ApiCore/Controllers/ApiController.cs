@@ -1,4 +1,6 @@
-﻿using DRRCore.Application.Interfaces;
+﻿using CoreFtp.Infrastructure;
+using DRRCore.Application.Interfaces;
+using DRRCore.Transversal.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DRRCore.Services.ApiCore.Controllers
@@ -16,25 +18,36 @@ namespace DRRCore.Services.ApiCore.Controllers
         }
         [HttpGet()]
         [Route("get/dev/code/{code}")]
-        public async Task<ActionResult> GetCodeByDevelopmentEnvironment()
+        public async Task<ActionResult> GetCodeByDevelopmentEnvironment(string code)
         {
-            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync("D");
-            if (!response.IsSuccess)
-            {
-                return Unauthorized();
-            }
-            return Ok(await _tokenValidation.ValidationTokenAsync());
-        }
-        [HttpGet()]
-        [Route("get/code/{code}")]
-        public async Task<ActionResult> GetCodeByProductionEnvironment()
-        {
-            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync("D");
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.DevelopmenteEnvironment);
             if (!response.IsSuccess)
             {
                 return Unauthorized();
             }
             return Ok(await _apiApplication.GetDummyReportAsync());
+        }
+        [HttpGet()]
+        [Route("get/qa/code/{code}")]
+        public async Task<ActionResult> GetCodeByQualityEnvironment(string code)
+        {
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.QualityEnvironment);
+            if (!response.IsSuccess)
+            {
+                return Unauthorized();
+            }
+            return Ok(response);
+        }
+        [HttpGet()]
+        [Route("get/code/{code}")]
+        public async Task<ActionResult> GetCodeByProductionEnvironment(string code)
+        {
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.ProductionEnvironment);
+            if (!response.IsSuccess)
+            {
+                return Unauthorized();
+            }
+            return Ok(response);
         }
         [HttpGet()]
         [Route("dummy")]

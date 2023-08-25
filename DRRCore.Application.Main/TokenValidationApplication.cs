@@ -1,12 +1,9 @@
 ﻿using DRRCore.Application.Interfaces;
-using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Transversal.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using MySqlX.XDevAPI.Common;
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -168,7 +165,7 @@ namespace DRRCore.Application.Main
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message, ex);
+                return "";
             }
         }
 
