@@ -29,7 +29,7 @@ namespace DRRCore.Application.DTO.API
     {
         [JsonPropertyName("DRR_RATSIT_LIQRAT")]
         public double LiquidityRatio { get; set; }
-        [JsonPropertyName("DRR_RATSIT_LIQRAT")]
+        [JsonPropertyName("DRR_RATSIT_EQUIRA")]
         public double DebtToEquityRatio { get; set; }
         [JsonPropertyName("DRR_RATSIT_PROMAR")]
         public double ProfitabilityMargin { get; set; }

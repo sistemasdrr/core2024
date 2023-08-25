@@ -5,8 +5,6 @@ using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
-using Microsoft.AspNetCore.Http.Features;
-using System.Globalization;
 
 namespace DRRCore.Application.Main
 {
