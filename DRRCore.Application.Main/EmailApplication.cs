@@ -13,6 +13,7 @@ namespace DRRCore.Application.Main
     public class EmailApplication : IEmailApplication
     {
         private readonly ILogger _logger;
+        private readonly IMailFormatter _mailFormatter;
         private readonly IMailSender _mailSender;
         private readonly IFileManager _fileManager;
         private readonly IAttachmentsNotSendDomain _attachmentsNotSendDomain;
@@ -22,7 +23,8 @@ namespace DRRCore.Application.Main
 
         public EmailApplication(ILogger logger, IMailSender mailSender, IMapper mapper,
             IEmailHistoryDomain emailHistoryDomain, IFileManager fileManager, 
-            IAttachmentsNotSendDomain attachmentsNotSendDomain, IEmailConfigurationDomain emailConfigurationDomain)
+            IAttachmentsNotSendDomain attachmentsNotSendDomain,
+            IEmailConfigurationDomain emailConfigurationDomain, IMailFormatter mailFormatter)
         {
             _logger = logger;
             _mailSender = mailSender;
@@ -31,20 +33,16 @@ namespace DRRCore.Application.Main
             _fileManager = fileManager;
             _attachmentsNotSendDomain = attachmentsNotSendDomain;
             _emailConfigurationDomain = emailConfigurationDomain;
-           
+            _mailFormatter = mailFormatter;
         }
 
         public async Task<Response<bool>> SendMailAsync(EmailDataDTO emailDataDto)
-        {
-            string body = string.Empty;
+        {           
             var response = new Response<bool>();
             try
-            {
-                if (emailDataDto.IsBodyHTML)
-                {
-                    body =await GetBodyHtml(emailDataDto);
-                }
-                emailDataDto.BodyHTML = body;
+            {             
+                emailDataDto.BodyHTML = emailDataDto.IsBodyHTML? await GetBodyHtml(emailDataDto): emailDataDto.BodyHTML;
+               
                 var result = await _mailSender.SendMailAsync(_mapper.Map<EmailValues>(emailDataDto));
 
                 if (!result)
@@ -77,7 +75,10 @@ namespace DRRCore.Application.Main
         private async Task<string> GetBodyHtml(EmailDataDTO emailDataDto)
         {
             var emailConfiguration = await _emailConfigurationDomain.GetByNameAsync(emailDataDto.EmailKey);
-            return string.Empty;
+            var emailConfigurationFooter = await _emailConfigurationDomain.GetByNameAsync(Constants.DRR_WORKFLOW_FOOTER);
+            var stringBody= await _mailFormatter.GetEmailBody(emailConfiguration.Name, emailConfiguration.Value, emailDataDto.Parameters, emailDataDto.Table);
+            return stringBody.Replace(Constants.FOOTER, emailConfigurationFooter.Value);
+            
         }
 
         /*Reenvio de mail*/

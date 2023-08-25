@@ -15,9 +15,9 @@ namespace DRRCore.Transversal.Common
 {
     public class EmailValues{
         public string FromEmail { get; set; }= string.Empty;
-        public string ToEmail { get; set; } = string.Empty;
-        public string CcEmail { get; set; } = string.Empty;
-        public string BccEmail { get; set; } = string.Empty;
+        public List<string> ToEmail { get; set; } = new List<string>();
+        public List<string> CcEmail { get; set; } = new List<string>();
+        public List<string> BccEmail { get; set; } = new List<string>();
         public string? Subject { get; set; } = string.Empty;
         public string? Body { get; set; } = string.Empty;
         public bool IsHtml { get; set; } = true;
@@ -123,18 +123,26 @@ namespace DRRCore.Transversal.Common
         private MailMessage mailMessage(EmailValues values)
         {
             MailAddress from = new(values.FromEmail);
-            MailAddress to = new(values.ToEmail);
+            
+            MailAddress to = new(values.ToEmail[0]);
            
             MailMessage message = new(from, to);           
             message.Subject = values.Subject;
             message.Body = values.Body;
-            if (!string.IsNullOrEmpty(values.CcEmail))
+            if (values.CcEmail.Count>0)
             {
-                message.Bcc.Add(values.CcEmail);
+                foreach (var item in values.CcEmail)
+                {
+                    message.CC.Add(item);
+                }
+                
             }
-            if (!string.IsNullOrEmpty(values.BccEmail))
+            if (values.BccEmail.Count > 0)
             {
-                message.Bcc.Add(values.BccEmail);
+                foreach (var item in values.BccEmail)
+                {
+                    message.Bcc.Add(item);
+                }
             }
            
             message.IsBodyHtml = values.IsHtml;
@@ -147,8 +155,7 @@ namespace DRRCore.Transversal.Common
                 }
                
             }
-            message.Headers.Add("Disposition-Notification-To", message.From.Address);
-            message.DeliveryNotificationOptions = DeliveryNotificationOptions.OnSuccess;
+          
             return message;
         }
 

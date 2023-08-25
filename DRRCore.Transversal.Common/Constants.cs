@@ -25,6 +25,8 @@ namespace DRRCore.Transversal.Common
         public const string CeoWebEstructure = "{0}***";
 
         public const string TABLEBODY = "TABLEBODY";
+        public const string FOOTER = "FOOTERTEMPLATE";
+        public const string DRR_WORKFLOW_FOOTER = "DRR_WORKFLOW_FOOTER";
         public const string DRR_SYS_ENG_0003 = "DRR_SYS_ENG_0003";
         public const string DRR_SYS_ESP_0003 = "DRR_SYS_ESP_0003";
         public const string DRR_SYS_0001 = "DRR_SYS_0001";
