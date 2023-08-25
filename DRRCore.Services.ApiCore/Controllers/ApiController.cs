@@ -1,4 +1,6 @@
-﻿using DRRCore.Application.Interfaces;
+﻿using CoreFtp.Infrastructure;
+using DRRCore.Application.Interfaces;
+using DRRCore.Transversal.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DRRCore.Services.ApiCore.Controllers
@@ -8,11 +10,45 @@ namespace DRRCore.Services.ApiCore.Controllers
     public class ApiController : Controller
     {
         private readonly IApiApplication _apiApplication;
-        public ApiController(IApiApplication apiApplication)
+        private readonly ITokenValidationApplication _tokenValidation;
+        public ApiController(IApiApplication apiApplication, ITokenValidationApplication tokenValidationApplication)
         {
             _apiApplication = apiApplication;
+            _tokenValidation = tokenValidationApplication;
         }
-       
+        [HttpGet()]
+        [Route("get/dev/code/{code}")]
+        public async Task<ActionResult> GetCodeByDevelopmentEnvironment(string code)
+        {
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.DevelopmenteEnvironment);
+            if (!response.IsSuccess)
+            {
+                return Unauthorized();
+            }
+            return Ok(await _apiApplication.GetDummyReportAsync());
+        }
+        [HttpGet()]
+        [Route("get/qa/code/{code}")]
+        public async Task<ActionResult> GetCodeByQualityEnvironment(string code)
+        {
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.QualityEnvironment);
+            if (!response.IsSuccess)
+            {
+                return Unauthorized();
+            }
+            return Ok(response);
+        }
+        [HttpGet()]
+        [Route("get/code/{code}")]
+        public async Task<ActionResult> GetCodeByProductionEnvironment(string code)
+        {
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.ProductionEnvironment);
+            if (!response.IsSuccess)
+            {
+                return Unauthorized();
+            }
+            return Ok(response);
+        }
         [HttpGet()]
         [Route("dummy")]
         public async Task<ActionResult> DummyReport()

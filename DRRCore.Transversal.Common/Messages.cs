@@ -14,7 +14,7 @@
 
         public static readonly string UnauthorizedUser = "Usuario no autorizado";
         public static readonly string AuthorizedUser = "Usuario Autorizado";
-        public static readonly string UserNotActive = "Usuario no activo";
+        public static readonly string UserNotFound = "Usuario no encontrado ";
         public static readonly string TokenNotSend = "Token no enviado";
 
         public static readonly string InsertedUser = "Usuario insertado con codigo de abonado: {0}";
