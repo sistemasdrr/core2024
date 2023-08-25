@@ -82,18 +82,24 @@ namespace DRRCore.Transversal.Common
             body = StringFormat(body, parameters);
             
             string tableString=string.Empty;
+            int i = 0;
+            string rowStyle = "";
             foreach (var tableItem in table)
             {
+                if ((i % 2) == 0) rowStyle = "  ";
+                else rowStyle = " background-color: #FAF7F7; ";
+
+                i++;
                 var rowString = string.Empty;
-                rowString = "<tr>" +
-                    "<td style='padding:5px;Margin:0;font-size:13px;'> {0}</td>+" +
+                rowString = "<tr style='" + rowStyle + "'>" +
+                    "<td style='padding:5px;Margin:0;font-size:13px;'> {0}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{1}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{2}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{3}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{4}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{5}</td>" +
                     "</tr>";
-                rowString=string.Format(rowString,tableItem);
+                rowString= StringFormat(rowString, tableItem);
                 tableString += rowString;
             }
             return body.Replace(Constants.TABLEBODY, tableString);
@@ -104,8 +110,14 @@ namespace DRRCore.Transversal.Common
             body = StringFormat(body, parameters);
 
             string tableString = string.Empty;
+            int i = 0;
+            string rowStyle = "";
             foreach (var tableItem in table)
             {
+                if ((i % 2) == 0) rowStyle = "  ";
+                else rowStyle = " background-color: #FAF7F7; ";
+
+                i++;
                 var rowString = string.Empty;
                 rowString = "<tr>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;'> {0}</td>+" +
@@ -114,7 +126,7 @@ namespace DRRCore.Transversal.Common
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{3}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{4}</td>" +                  
                     "</tr>";
-                rowString = string.Format(rowString, tableItem);
+                rowString = StringFormat(rowString, tableItem);
                 tableString += rowString;
             }
             return body.Replace(Constants.TABLEBODY, tableString);
@@ -125,8 +137,14 @@ namespace DRRCore.Transversal.Common
             body = StringFormat(body, parameters);
 
             string tableString = string.Empty;
+            int i = 0;
+            string rowStyle = "";
             foreach (var tableItem in table)
             {
+                if ((i % 2) == 0) rowStyle = "  ";
+                else rowStyle = " background-color: #FAF7F7; ";
+
+                i++;
                 var rowString = string.Empty;
                 rowString = "<tr>" +
                      "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{0}</td>" +
@@ -136,7 +154,7 @@ namespace DRRCore.Transversal.Common
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{4}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{5}</td>" +
                     "</tr>";
-                rowString = string.Format(rowString, tableItem);
+                rowString = StringFormat(rowString, tableItem);
                 tableString += rowString;
             }
             return body.Replace(Constants.TABLEBODY, tableString);
@@ -147,8 +165,14 @@ namespace DRRCore.Transversal.Common
             body = StringFormat(body, parameters);
 
             string tableString = string.Empty;
+            int i = 0;
+            string rowStyle = "";
             foreach (var tableItem in table)
             {
+                if ((i % 2) == 0) rowStyle = "  ";
+                else rowStyle = " background-color: #FAF7F7; ";
+
+                i++;
                 var rowString = string.Empty;
                 rowString = "<tr>" +                    
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{0}</td>" +
@@ -156,7 +180,7 @@ namespace DRRCore.Transversal.Common
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{2}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{3}</td>" +
                     "</tr>";
-                rowString = string.Format(rowString, tableItem);
+                rowString = StringFormat(rowString, tableItem);
                 tableString += rowString;
             }
             return body.Replace(Constants.TABLEBODY, tableString);
@@ -167,8 +191,14 @@ namespace DRRCore.Transversal.Common
 
             
             string tableString = string.Empty;
+            int i = 0;
+            string rowStyle = "";
             foreach (var tableItem in table)
             {
+                if ((i % 2) == 0) rowStyle = "  ";
+                else rowStyle = " background-color: #FAF7F7; ";
+
+                i++;
                 var rowString = string.Empty;
                 rowString = "<tr>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{0}</td>" +
