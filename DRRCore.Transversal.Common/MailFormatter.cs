@@ -119,8 +119,8 @@ namespace DRRCore.Transversal.Common
 
                 i++;
                 var rowString = string.Empty;
-                rowString = "<tr>" +
-                    "<td style='padding:5px;Margin:0;font-size:13px;'> {0}</td>+" +
+                rowString = "<tr style='" + rowStyle + "'>" +
+                    "<td style='padding:5px;Margin:0;font-size:13px;'> {0}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{1}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{2}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{3}</td>" +
@@ -146,9 +146,9 @@ namespace DRRCore.Transversal.Common
 
                 i++;
                 var rowString = string.Empty;
-                rowString = "<tr>" +
-                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{0}</td>" +
-                    "<td style='padding:5px;Margin:0;font-size:13px;'> {1}</td>+" +
+                rowString = "<tr style='" + rowStyle + "'>" +
+                    "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{0}</td>" +
+                    "<td style='padding:5px;Margin:0;font-size:13px;'> {1}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{2}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{3}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{4}</td>" +
@@ -174,7 +174,7 @@ namespace DRRCore.Transversal.Common
 
                 i++;
                 var rowString = string.Empty;
-                rowString = "<tr>" +                    
+                rowString = "<tr style='" + rowStyle + "'>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{0}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{1}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{2}</td>" +
@@ -200,7 +200,7 @@ namespace DRRCore.Transversal.Common
 
                 i++;
                 var rowString = string.Empty;
-                rowString = "<tr>" +
+                rowString = "<tr style='" + rowStyle + "'>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{0}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{1}</td>" +
                     "<td style='padding:5px;Margin:0;font-size:13px;text-align: center;'>{2}</td>" +
