@@ -61,6 +61,8 @@ builder.Services.AddAutoMapper(typeof(DataProfile).Assembly);
 builder.Services.AddScoped<IMySqlApiRepository, MySqlApiRepository>();
 builder.Services.AddScoped<IMySqlUserRepository, MySqlUserRepository>();
 builder.Services.AddScoped<IMySqlWebRepository, MySqlWebRepository>();
+builder.Services.AddScoped<IApiHistoryRepository, ApiHistoryRepository>();
+
 //builder.Services.AddScoped<IEmailUserRepository, EmailUserRepository>();
 builder.Services.AddScoped<IWebQueryRepository, WebQueryRepository>();
 builder.Services.AddScoped<IApiUserRepository, ApiUserRepository>();

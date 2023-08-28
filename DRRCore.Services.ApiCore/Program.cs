@@ -74,6 +74,7 @@ builder.Services.AddScoped<IEmailConfigurationDomain, EmailConfigurationDomain>(
 builder.Services.AddScoped<IEmailHistoryDomain, EmailHistoryDomain>();
 builder.Services.AddScoped<IApiUserDomain, ApiUserDomain>();
 
+
 builder.Services.AddScoped<IWebDataApplication, WebDataApplication>();
 builder.Services.AddScoped<IApiApplication, ApiApplication>();
 builder.Services.AddScoped<ITokenValidationApplication, TokenValidationApplication>();

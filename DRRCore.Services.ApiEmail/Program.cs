@@ -37,6 +37,7 @@ builder.Services.AddScoped<IAttachmentsNotSendRepository, AttachmentsNotSendRepo
 builder.Services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
 builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
 
+
 //Injection Domain
 builder.Services.AddScoped<IWebDataDomain, WebDataDomain>();
 builder.Services.AddScoped<IAttachmentsNotSendDomain, AttachmentsNotSendDomain>();

@@ -50,6 +50,7 @@ namespace DRRCore.Application.Main
                         {
                             response.IsWarning = false;
                             response.Message = Messages.AuthorizedUser;
+
                         }
                         else
                         {
