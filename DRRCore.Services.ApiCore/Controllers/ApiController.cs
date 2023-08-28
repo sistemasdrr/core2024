@@ -52,7 +52,7 @@ namespace DRRCore.Services.ApiCore.Controllers
         [Route("get/dev/code/{code}")]
         public async Task<ActionResult> GetCodeByDevelopmentEnvironment(string code)
         {
-            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.DevelopmenteEnvironment);
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.DevelopmenteEnvironment, code);
             if (!response.IsSuccess)
             {
                 return Unauthorized();
@@ -63,7 +63,7 @@ namespace DRRCore.Services.ApiCore.Controllers
         [Route("get/qa/code/{code}")]
         public async Task<ActionResult> GetCodeByQualityEnvironment(string code)
         {
-            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.QualityEnvironment);
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.QualityEnvironment, code);
             if (!response.IsSuccess)
             {
                 return Unauthorized();
@@ -74,12 +74,12 @@ namespace DRRCore.Services.ApiCore.Controllers
         [Route("get/code/{code}")]
         public async Task<ActionResult> GetCodeByProductionEnvironment(string code)
         {
-            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.ProductionEnvironment);
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.ProductionEnvironment, code);
             if (!response.IsSuccess)
             {
                 return Unauthorized();
             }
-            return Ok(response);
+            return Ok(await _apiApplication.GetDummyReportAsync());
         }
         //[HttpGet()]
        

@@ -44,8 +44,8 @@ namespace DRRCore.Application.Main
                         if (comprobarToken != null && comprobarToken.Enable == true && comprobarToken.Active == true) //comprueba si existe
                         {
                             response.IsWarning = false;
-                            response.IsSuccess = true;
                             response.Message = Messages.AuthorizedUser;
+
                         }
                         else
                         {
@@ -64,7 +64,7 @@ namespace DRRCore.Application.Main
             }
         }
 
-        public async Task<Response<bool>> ValidationTokenAndEnvironmentAsync(string environment)
+        public async Task<Response<bool>> ValidationTokenAndEnvironmentAsync(string environment, string code)
         {
             var response = new Response<bool>();
             string tokenEncriptado = await _function.GetTokenByHeader();
@@ -90,14 +90,15 @@ namespace DRRCore.Application.Main
                     else
                     {
                         var comprobarToken = await _apiUserDomain.GetApiUserByTokenAsync(tokenDesencriptado); //obtiene el apiuser mediante el token
-                        if (comprobarToken != null && comprobarToken.Enable == true && comprobarToken.Active == true && comprobarToken.Environment == environment) //comprueba si existe
+                        if (comprobarToken != null && comprobarToken.Enable == true && comprobarToken.Active == true && comprobarToken.Environment == environment && comprobarToken.CodigoAbonado == code) //comprueba si existe
                         {
                             response.IsWarning = false;
-                            response.IsSuccess = true;
                             response.Message = Messages.AuthorizedUser;
                         }
                         else
                         {
+                            response.IsSuccess = false;
+                            response.IsWarning = true;
                             response.Message = Messages.UserNotFound;
                         }
                         return response;
