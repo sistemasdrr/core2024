@@ -1,13 +1,8 @@
 ﻿using AutoMapper;
-using DRRCore.Application.DTO.Web;
-using DRRCore.Domain.Entities;
 using DRRCore.Domain.Entities.MYSQLContext;
 using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Infraestructure.Interfaces.Repository;
-using DRRCore.Transversal.Common;
 using Microsoft.EntityFrameworkCore;
-using MySqlX.XDevAPI.Common;
-using System.Drawing.Printing;
 
 namespace DRRCore.Infraestructure.Repository.SQLRepository
 {
@@ -52,6 +47,17 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
                                                    .Take(10)
                                                    .ToListAsync();
                 return list;                
+            }
+        }
+        public async Task<List<WebQuery>> GetByParamAndCountryAsync(string param,string country)
+        {
+            using (var context = new SqlContext())
+            {
+                var list = await context.WebQueries.Where(x => x.NombreEmpresa.Contains(param) && x.PaisAbreviatura==country)
+                                                   .OrderBy(x => x.NombreEmpresa)
+                                                   .Take(10)
+                                                   .ToListAsync();
+                return list;
             }
         }
         public async Task<List<WebQuery>> GetByCountryAndBranchAsync(int country, string branch,int page)

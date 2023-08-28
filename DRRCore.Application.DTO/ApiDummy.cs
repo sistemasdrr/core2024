@@ -31,13 +31,10 @@ namespace DRRCore.Application.DTO
         {
             return new RequestClientDto
             {
-                Subscriber = "1026",
+               
                 RequestDate = DateTime.Now.ToString("MM/dd/yyyy"),
-                ClientReference = "84737/22",
                 Priority = "T3",
-                LastReportDate = "01/28/2022",
                 Request = "ALICORP SAA",
-                Token = "gVXRNq5oIeYq50i8wWm0SkeVv40O1YGJHDE7mQ+RNskEtF03GU7uKLL+7qIiApOO",
                 Environment = "Develop"
             };
         }

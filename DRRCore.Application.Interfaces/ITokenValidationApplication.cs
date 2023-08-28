@@ -8,7 +8,6 @@ namespace DRRCore.Application.Interfaces
         Task<Response<bool>> ValidationTokenAndEnvironmentAsync(string environment);
         Task<Response<string>> EncryptTokenAsync(string token);
         Task<Response<string>> decryptTokenAsync(string token);
-        string Encrypt(string token);
-        string GetTokenByHeader();
+      
     }
 }

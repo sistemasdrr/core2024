@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DRRCore.Transversal.Common
+﻿namespace DRRCore.Transversal.Common
 {
     public class Constants
     {
@@ -17,16 +11,21 @@ namespace DRRCore.Transversal.Common
         public const string OriginKey = "Access-Control-Allow-Origin";
         public const char Coma = ',';
         public const char Pipe = '|';
+        public const string DateFormatEnglish = "MM/dd/yyyy";
+        public const string DateFormatSpanish = "dd/MM/yyyy";
 
         public const string CodeSituation= "03|07|04|09|05";
         public const string Asterisco = "*";
         public const string EspacioBlanco = " ";
+        public const string OLetter = " ó ";
 
         public const string CeoWebEstructure = "{0}***";
 
         public const string DevelopmenteEnvironment = "D";
         public const string ProductionEnvironment = "P";
         public const string QualityEnvironment = "Q";
+
+        public const string PriorityLow = "L";
 
 
         public const string TABLEBODY = "TABLEBODY";

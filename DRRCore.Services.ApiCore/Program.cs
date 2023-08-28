@@ -57,6 +57,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAutoMapper(typeof(DataProfile).Assembly);
 
+
 builder.Services.AddHttpContextAccessor();
 
 
@@ -81,6 +82,8 @@ builder.Services.AddScoped<ITokenValidationApplication, TokenValidationApplicati
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
+builder.Services.AddScoped<IMailFormatter, MailFormatter>();
+builder.Services.AddScoped<IFunction, Functions>();
 builder.Services.AddScoped<DRRCore.Transversal.Common.Interface.ILogger, LoggerManager>();
 
 /*

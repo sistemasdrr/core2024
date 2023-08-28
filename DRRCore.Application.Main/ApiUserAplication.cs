@@ -4,6 +4,7 @@ using DRRCore.Application.Interfaces;
 using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Transversal.Common;
+using DRRCore.Transversal.Common.Interface;
 
 namespace DRRCore.Application.Main
 {
@@ -11,13 +12,15 @@ namespace DRRCore.Application.Main
     {
         public readonly IApiUserDomain _apiUserDomain;
         private readonly ITokenValidationApplication _tokenValidationApplication;
+        private readonly IFunction _function;
         private IMapper _mapper { get; }
 
-        public ApiUserAplication(IApiUserDomain apiUserDomain, IMapper mapper, ITokenValidationApplication tokenValidationApplication)
+        public ApiUserAplication(IApiUserDomain apiUserDomain,IFunction function, IMapper mapper, ITokenValidationApplication tokenValidationApplication)
         {
             _apiUserDomain = apiUserDomain;
             _mapper = mapper;
             _tokenValidationApplication = tokenValidationApplication;
+            _function = function;
         }
         public async Task<Response<string>> AddApiUserAsync(ApiUserDto obj)
         {
@@ -28,7 +31,7 @@ namespace DRRCore.Application.Main
                 if (result)
                 {
                     var apiUser = await _apiUserDomain.GetApiUserByAbonadoAndEnvironmentAsync(obj.CodigoAbonado, obj.Environment);
-                    var tokenEncriptado = _tokenValidationApplication.Encrypt(apiUser.Token.ToString());
+                    var tokenEncriptado =await _function.Encrypt(apiUser.Token.ToString());
                     response.Data = tokenEncriptado;
                     response.IsSuccess = true;
                     response.IsWarning = false;

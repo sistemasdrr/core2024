@@ -11,5 +11,6 @@ namespace DRRCore.Domain.Interfaces
         Task<WebQuery> GetByCodeAsync(string code);
         Task<List<WebQuery>> GetByCountryAndBranchAsync(int country, string branch, int page);
         Task<List<WebQuery>> GetSimilarBrunchAsync(string code);
+        Task<List<WebQuery>> GetByParamAndCountryAsync(string param, string country);
     }
 }

@@ -83,6 +83,7 @@ builder.Services.AddScoped<IApiUserApplication, ApiUserAplication>();
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
 builder.Services.AddScoped<DRRCore.Transversal.Common.Interface.ILogger, LoggerManager>();
+builder.Services.AddScoped<IFunction, Functions>();
 builder.Services.AddHttpContextAccessor();
 
 /*

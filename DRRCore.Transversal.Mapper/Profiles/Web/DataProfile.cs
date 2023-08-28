@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DRRCore.Application.DTO.API;
 using DRRCore.Application.DTO.Web;
 using DRRCore.Domain.Entities;
 using DRRCore.Domain.Entities.SQLContext;
@@ -8,8 +9,18 @@ namespace DRRCore.Transversal.Mapper.Profiles.Web
 {
     public class DataProfile:Profile 
     {
+
         public DataProfile()
         {
+            CreateMap<WebQuery, ReportDataDto>()
+               .ForMember(dest => dest.Code, opt => opt?.MapFrom(src => src.CodigoEmpresaWeb))
+               .ForMember(dest => dest.TaxId, opt => opt?.MapFrom(src => src.NumeroRegistro))
+               .ForMember(dest => dest.BussinessName, opt => opt?.MapFrom(src => src.NombreEmpresa))
+               .ForMember(dest => dest.IsoCountry, opt => opt?.MapFrom(src => src.PaisAbreviatura))
+               .ForMember(dest => dest.LastReport, opt => opt?.MapFrom(src => src.FechaInforme.Value.ToString(Constants.DateFormatEnglish)))
+               .ReverseMap();
+
+
             CreateMap<WebQuery, WebDataDto>()
                 .ForMember(dest => dest.CodigoEmpresaWeb, opt => opt?.MapFrom(src => src.CodigoEmpresaWeb))
                 .ForMember(dest => dest.TaxId, opt => opt?.MapFrom(src => src.NumeroRegistro))

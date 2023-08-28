@@ -1,6 +1,5 @@
-﻿using CoreFtp.Infrastructure;
+﻿using DRRCore.Application.DTO.API;
 using DRRCore.Application.Interfaces;
-using DRRCore.Transversal.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DRRCore.Services.ApiCore.Controllers
@@ -15,6 +14,39 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             _apiApplication = apiApplication;
             _tokenValidation = tokenValidationApplication;
+        }
+        [HttpPost()]
+        [Route("search")]
+        public async Task<ActionResult> SearchByParamAndCountry(SearchRequestDto request)
+        {
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.ProductionEnvironment);
+            if (!response.IsSuccess)
+            {
+                return Unauthorized();
+            }
+            return Ok(await _apiApplication.Search(request, Transversal.Common.Constants.ProductionEnvironment));
+        }
+        [HttpPost()]
+        [Route("qa/search")]
+        public async Task<ActionResult> SearchByParamAndCountryQuality(SearchRequestDto request)
+        {
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.QualityEnvironment);
+            if (!response.IsSuccess)
+            {
+                return Unauthorized();
+            }
+            return Ok(await _apiApplication.Search(request, Transversal.Common.Constants.QualityEnvironment));
+        }
+        [HttpPost()]
+        [Route("dev/search")]
+        public async Task<ActionResult> SearchByParamAndCountryDevelop(SearchRequestDto request)
+        {
+            //var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.DevelopmenteEnvironment);
+            //if (!response.IsSuccess)
+            //{
+            //    return Unauthorized();
+            //}
+            return Ok(await _apiApplication.Search(request, Transversal.Common.Constants.DevelopmenteEnvironment));
         }
         [HttpGet()]
         [Route("get/dev/code/{code}")]
@@ -49,11 +81,12 @@ namespace DRRCore.Services.ApiCore.Controllers
             }
             return Ok(response);
         }
-        [HttpGet()]
-        [Route("dummy")]
-        public async Task<ActionResult> DummyReport()
-        {
-            return Ok(await _apiApplication.GetDummyReportAsync());
-        }
+        //[HttpGet()]
+       
+        //[Route("dummy")]
+        //public async Task<ActionResult> DummyReport()
+        //{
+        //    return Ok(await _apiApplication.GetDummyReportAsync());
+        //}
     }
 }

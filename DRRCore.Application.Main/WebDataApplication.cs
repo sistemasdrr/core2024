@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using DRRCore.Application.DTO.Web;
 using DRRCore.Application.Interfaces;
-using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
-using System;
 
 namespace DRRCore.Application.Main
 {
@@ -13,13 +11,13 @@ namespace DRRCore.Application.Main
     {
         private readonly IWebDataDomain _webDataDomain;
         private readonly ILogger _logger;
-        private IMapper _mapper { get; }
+        private IMapper Mapper { get; }
         public WebDataApplication(IWebDataDomain webDataDomain, ILogger logger, IMapper mapper)
         {
 
             _webDataDomain = webDataDomain;
             _logger = logger;
-            _mapper = mapper;
+            Mapper = mapper;
         }
         public async Task<Response<bool>> AddOrUpdateWebDataAsync()
         {
@@ -47,7 +45,7 @@ namespace DRRCore.Application.Main
                 var data = await _webDataDomain.GetByCodeAsync(code);
                 if (data != null)
                 {
-                    response.Data = _mapper.Map<WebDataDto>(data);
+                    response.Data = Mapper.Map<WebDataDto>(data);
                 }
                 else
                 {
@@ -74,7 +72,7 @@ namespace DRRCore.Application.Main
             if (string.IsNullOrEmpty(param))
             {
                 response.IsSuccess = false;
-                response.Message = Messages.WhiteParameter;
+                response.Message = Messages.WrongParameter;
                 _logger.LogAdvertencia(response.Message);
                 return response;
 
@@ -90,7 +88,7 @@ namespace DRRCore.Application.Main
             try
             {
                 var data = await _webDataDomain.GetByParamAsync(param.ToUpper(), page);
-                response.Data = _mapper.Map<List<WebDataDto>>(data);
+                response.Data = Mapper.Map<List<WebDataDto>>(data);
 
             }
             catch (Exception exception)
@@ -110,7 +108,7 @@ namespace DRRCore.Application.Main
                 if (country > 0 && !string.IsNullOrEmpty(branch) && page > 0)
                 {
                     var data = await _webDataDomain.GetByCountryAndBranchAsync(country, branch, page);
-                    response.Data = _mapper.Map<List<WebDataDto>>(data);                   
+                    response.Data = Mapper.Map<List<WebDataDto>>(data);                   
                 }
                 else
                 {
@@ -139,7 +137,7 @@ namespace DRRCore.Application.Main
                 if (!string.IsNullOrEmpty(code))
                 {
                     var data = await _webDataDomain.GetSimilarBrunchAsync(code);
-                    response.Data = _mapper.Map<List<WebDataDto>>(data);                  
+                    response.Data = Mapper.Map<List<WebDataDto>>(data);                  
                 }
                 else
                 {
