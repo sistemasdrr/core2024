@@ -64,7 +64,7 @@ namespace DRRCore.Application.Main
             }
         }
 
-        public async Task<Response<bool>> ValidationTokenAndEnvironmentAsync(string environment, string code)
+        public async Task<Response<bool>> ValidationTokenAndEnvironmentAsync(string environment)
         {
             var response = new Response<bool>();
             string tokenEncriptado = await _function.GetTokenByHeader();
@@ -90,7 +90,7 @@ namespace DRRCore.Application.Main
                     else
                     {
                         var comprobarToken = await _apiUserDomain.GetApiUserByTokenAsync(tokenDesencriptado); //obtiene el apiuser mediante el token
-                        if (comprobarToken != null && comprobarToken.Enable == true && comprobarToken.Active == true && comprobarToken.Environment == environment && comprobarToken.CodigoAbonado == code) //comprueba si existe
+                        if (comprobarToken != null && comprobarToken.Enable == true && comprobarToken.Active == true && comprobarToken.Environment == environment) //comprueba si existe
                         {
                             response.IsWarning = false;
                             response.Message = Messages.AuthorizedUser;
