@@ -26,5 +26,11 @@ namespace DRRCore.Services.ApiEmail.Controllers
         {
             return Ok(await _emailApplication.ReSendMailAsync());
         }
+        [HttpGet()]
+        [Route("FileToBase64")]
+        public async Task<ActionResult> FileToBase64(string path)
+        {
+            return Ok(await _emailApplication.ConvertFileToBase64(path));
+        }
     }
 }

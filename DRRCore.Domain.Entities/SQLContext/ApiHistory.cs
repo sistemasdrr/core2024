@@ -9,7 +9,7 @@ public partial class ApiHistory
 
     public int IdApiUser { get; set; }
 
-    public string Empress { get; set; } = null!;
+    public string Search { get; set; } = null!;
 
     public bool Success { get; set; }
 
@@ -20,6 +20,8 @@ public partial class ApiHistory
     public DateTime? InsertDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
+
+    public bool? Enable { get; set; }
 
     public virtual ApiUser IdApiUserNavigation { get; set; } = null!;
 }

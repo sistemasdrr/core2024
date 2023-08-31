@@ -73,9 +73,10 @@ namespace DRRCore.Application.Main
         private async Task<string> GetBodyHtml(EmailDataDTO emailDataDto)
         {
             var emailConfiguration = await _emailConfigurationDomain.GetByNameAsync(emailDataDto.EmailKey);
+       
             var emailConfigurationFooter = await _emailConfigurationDomain.GetByNameAsync(Constants.DRR_WORKFLOW_FOOTER);
             var stringBody= await _mailFormatter.GetEmailBody(emailConfiguration.Name, emailConfiguration.Value, emailDataDto.Parameters, emailDataDto.Table);
-            return stringBody.Replace(Constants.FOOTER, emailConfigurationFooter.Value);
+            return stringBody.Replace(Constants.FOOTER,emailConfiguration.FlagFooter.Value? emailConfigurationFooter.Value : string.Empty);
             
         }
 
@@ -137,6 +138,25 @@ namespace DRRCore.Application.Main
         private async Task<bool> DeleteFile(string path)
         {
             return await _fileManager.DeleteFile(path);
+        }
+
+        public async Task<Response<string>> ConvertFileToBase64(string path)
+        {
+            var response = new Response<string>();
+            try
+            {
+                byte[] archivoBytes = System.IO.File.ReadAllBytes(path);
+                string archivoBase64 = Convert.ToBase64String(archivoBytes);
+                response.Data = archivoBase64;
+                response.IsWarning = false;
+            }
+            catch(Exception ex)
+            {
+                response.IsWarning = true;
+                response.IsSuccess = false;
+                response.Data = ex.Message;
+            }
+            return response;
         }
     }
 }

@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Domain.Entities.SQLContext;
 
-public partial class SqlContext : DbContext
+public partial class DbA9ccf0AdmindrrContext : DbContext
 {
-    public SqlContext()
+    public DbA9ccf0AdmindrrContext()
     {
     }
 
-    public SqlContext(DbContextOptions<SqlContext> options)
+    public DbA9ccf0AdmindrrContext(DbContextOptions<DbA9ccf0AdmindrrContext> options)
         : base(options)
     {
     }
@@ -40,10 +40,9 @@ public partial class SqlContext : DbContext
             entity.ToTable("ApiHistory");
 
             entity.Property(e => e.IdApiHistory).HasColumnName("idApiHistory");
-            entity.Property(e => e.Empress)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("empress");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
             entity.Property(e => e.IdApiUser).HasColumnName("idApiUser");
             entity.Property(e => e.InsertDate)
                 .HasDefaultValueSql("(getdate())")
@@ -57,6 +56,10 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.OrderDate)
                 .HasColumnType("datetime")
                 .HasColumnName("orderDate");
+            entity.Property(e => e.Search)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("search");
             entity.Property(e => e.Success).HasColumnName("success");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
@@ -141,6 +144,7 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
+            entity.Property(e => e.FlagFooter).HasColumnName("flagFooter");
             entity.Property(e => e.InsertDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")

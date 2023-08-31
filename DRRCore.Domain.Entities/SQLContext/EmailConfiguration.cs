@@ -24,4 +24,6 @@ public partial class EmailConfiguration
     public bool? HasTable { get; set; }
 
     public bool? HasAttachment { get; set; }
+
+    public bool? FlagFooter { get; set; }
 }

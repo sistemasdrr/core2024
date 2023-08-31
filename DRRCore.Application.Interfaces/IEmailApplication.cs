@@ -7,5 +7,6 @@ namespace DRRCore.Application.Interfaces
     {
         Task<Response<bool>> SendMailAsync(EmailDataDTO emailDataDto);
         Task<Response<bool>> ReSendMailAsync();
+        Task<Response<string>> ConvertFileToBase64(string path);
     }
 }
