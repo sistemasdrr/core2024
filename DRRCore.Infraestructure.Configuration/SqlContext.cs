@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Domain.Entities.SQLContext;
 
-public partial class DbA9ccf0AdmindrrContext : DbContext
+public partial class SqlContext : DbContext
 {
-    public DbA9ccf0AdmindrrContext()
+    public SqlContext()
     {
     }
 
-    public DbA9ccf0AdmindrrContext(DbContextOptions<DbA9ccf0AdmindrrContext> options)
+    public SqlContext(DbContextOptions<SqlContext> options)
         : base(options)
     {
     }
@@ -177,6 +177,7 @@ public partial class DbA9ccf0AdmindrrContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ccoMails");
             entity.Property(e => e.Date)
+                .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("date");
             entity.Property(e => e.Domain)

@@ -222,3 +222,6 @@
 /DRRCore.Application.Main/obj/Release/net6.0/DRRCore.Application.Main.GeneratedMSBuildEditorConfig.editorconfig
 /DRRCore.Infraestructure.Configuration/obj/Release/net6.0/DRRCore.Infraestructure.Configuration.GeneratedMSBuildEditorConfig.editorconfig
 /DRRCore.Infraestructure.Repository/obj/Release/net6.0/DRRCore.Infraestructure.Repository.GeneratedMSBuildEditorConfig.editorconfig
+/DRRCore.Services.ApiEmail/bin/Release/net6.0
+/DRRCore.Services.ApiEmail/obj
+/DRRCore.Services.ApiEmail/Properties/PublishProfiles
