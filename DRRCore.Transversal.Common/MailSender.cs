@@ -19,6 +19,7 @@ namespace DRRCore.Transversal.Common
         public List<string> CcEmail { get; set; } = new List<string>();
         public List<string> BccEmail { get; set; } = new List<string>();
         public string? Subject { get; set; } = string.Empty;
+        public string DisplayName { get; set; }= string.Empty;
         public string? Body { get; set; } = string.Empty;
         public bool IsHtml { get; set; } = true;
         public List<Attachment> Attachments { get; set; }= new List<Attachment>();
@@ -124,7 +125,7 @@ namespace DRRCore.Transversal.Common
         {
             MailAddress from = new(values.FromEmail);
             
-            MailAddress to = new(values.ToEmail[0]);
+            MailAddress to = new(values.ToEmail[0],values.DisplayName);
            
             MailMessage message = new(from, to);           
             message.Subject = values.Subject;
@@ -133,7 +134,19 @@ namespace DRRCore.Transversal.Common
             {
                 foreach (var item in values.CcEmail)
                 {
-                    message.CC.Add(item);
+                    if (item.Contains(';'))
+                    {
+                        var split = item.Split(';');
+                        for (int i = 0; i < split.Length; i++)
+                        {
+                            message.CC.Add(split[i]);
+                        }
+                    }
+                    else
+                    {
+                        message.CC.Add(item);
+                    }
+                    
                 }
                 
             }
@@ -141,7 +154,18 @@ namespace DRRCore.Transversal.Common
             {
                 foreach (var item in values.BccEmail)
                 {
-                    message.Bcc.Add(item);
+                    if (item.Contains(';'))
+                    {
+                        var split = item.Split(';');
+                        for (int i = 0; i < split.Length; i++)
+                        {
+                            message.Bcc.Add(split[i]);
+                        }
+                    }
+                    else
+                    {
+                        message.Bcc.Add(item);
+                    }
                 }
             }
            

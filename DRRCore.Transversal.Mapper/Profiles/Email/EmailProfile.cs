@@ -15,6 +15,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Email
                 .ForMember(dest => dest.ToEmail, opt => opt?.MapFrom(src => src.To))
                 .ForMember(dest => dest.CcEmail, opt => opt?.MapFrom(src => src.CC))
                 .ForMember(dest => dest.BccEmail, opt => opt?.MapFrom(src =>  src.CCO))
+                 .ForMember(dest => dest.DisplayName, opt => opt?.MapFrom(src => src.DisplayName))
                 .ForMember(dest => dest.Subject, opt => opt?.MapFrom(src => src.Subject))
                 .ForMember(dest => dest.IsHtml, opt => opt?.MapFrom(src => src.IsBodyHTML))
                 .ForMember(dest => dest.Body, opt => opt?.MapFrom(src => src.BodyHTML))
