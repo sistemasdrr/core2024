@@ -5,6 +5,7 @@ using DRRCore.Application.Interfaces;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.Identity.Client;
 
 namespace DRRCore.Application.Main
 {
@@ -20,9 +21,31 @@ namespace DRRCore.Application.Main
          
             _mapper = mapper;
         }
-        public async Task<ReportDto> GetDummyReportAsync()
+        public async Task<Response<ReportDto>> GetDummyReportAsync(GetRequestDto request)
         {
-            return ApiDummy.Report();
+            var response = new Response<ReportDto>();
+            if (string.IsNullOrEmpty(request.Code) || request.Code.Length != 17)
+            {
+                response.IsSuccess = false;
+                response.Message =string.Format(Messages.WrongParameterId, "DRR_CODEID");
+                response.IsWarning = true;
+                _logger.LogError(response.Message);
+                return response;
+            }
+            if (string.IsNullOrEmpty(request.Language) || request.Language.Length != 3)
+            {
+                response.IsSuccess = false;
+                response.IsWarning = true;
+                response.Message = string.Format(Messages.WrongParameterId, "DRR_LANGUA");
+                _logger.LogError(response.Message);
+                return response;
+            }
+            
+            var data = ApiDummy.Report(); 
+            
+            response.Data= data;
+           
+            return response;
         }
         public async Task<ReportDto> GetReportByCodeAndEnvironmentAsync(string code, string environment)
         {
@@ -63,6 +86,7 @@ namespace DRRCore.Application.Main
                         if (data != null)
                         {                          
                             var reportData = _mapper.Map<List<ReportDataDto>>(data);
+                            
                             response.Data = new SearchResponseDto
                             {
                                 Data = reportData,

@@ -41,45 +41,45 @@ namespace DRRCore.Services.ApiCore.Controllers
         [Route("dev/search")]
         public async Task<ActionResult> SearchByParamAndCountryDevelop(SearchRequestDto request)
         {
-            //var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.DevelopmenteEnvironment);
-            //if (!response.IsSuccess)
-            //{
-            //    return Unauthorized();
-            //}
+            var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.DevelopmenteEnvironment);
+            if (!response.IsSuccess)
+            {
+                return Unauthorized();
+            }
             return Ok(await _apiApplication.Search(request, Transversal.Common.Constants.DevelopmenteEnvironment));
         }
-        [HttpGet()]
-        [Route("get/dev/code/{code}")]
-        public async Task<ActionResult> GetCodeByDevelopmentEnvironment()
+        [HttpPost()]
+        [Route("dev/get")]
+        public async Task<ActionResult> GetCodeByDevelopmentEnvironment(GetRequestDto requestDto)
         {
             var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.DevelopmenteEnvironment);
             if (!response.IsSuccess)
             {
                 return Unauthorized();
             }
-            return Ok(await _apiApplication.GetDummyReportAsync());
+            return Ok(await _apiApplication.GetDummyReportAsync(requestDto));
         }
-        [HttpGet()]
-        [Route("get/qa/code/{code}")]
-        public async Task<ActionResult> GetCodeByQualityEnvironment()
+        [HttpPost()]
+        [Route("qa/get")]
+        public async Task<ActionResult> GetCodeByQualityEnvironment(GetRequestDto requestDto)
         {
             var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.QualityEnvironment);
             if (!response.IsSuccess)
             {
                 return Unauthorized();
             }
-            return Ok(response);
+            return Ok(await _apiApplication.GetDummyReportAsync(requestDto));
         }
-        [HttpGet()]
-        [Route("get/code/{code}")]
-        public async Task<ActionResult> GetCodeByProductionEnvironment()
+        [HttpPost()]
+        [Route("get")]
+        public async Task<ActionResult> GetCodeByProductionEnvironment(GetRequestDto requestDto)
         {
             var response = await _tokenValidation.ValidationTokenAndEnvironmentAsync(Transversal.Common.Constants.ProductionEnvironment);
             if (!response.IsSuccess)
             {
                 return Unauthorized();
             }
-            return Ok(await _apiApplication.GetDummyReportAsync());
+            return Ok(await _apiApplication.GetDummyReportAsync(requestDto));
         }
         //[HttpGet()]
        

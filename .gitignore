@@ -225,3 +225,7 @@
 /DRRCore.Services.ApiEmail/bin/Release/net6.0
 /DRRCore.Services.ApiEmail/obj
 /DRRCore.Services.ApiEmail/Properties/PublishProfiles
+/DRRCore.Services.ApiCore/bin/Release/net6.0
+/DRRCore.Services.ApiCore/obj/Release/net6.0
+*.pubxml
+*.user

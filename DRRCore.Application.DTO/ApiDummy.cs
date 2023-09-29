@@ -44,6 +44,7 @@ namespace DRRCore.Application.DTO
             {
                 CorrectCompanyName = "ALICORP S.A.A.",
                 TradeName = "ALICORP",
+                QualityInformation="A",
                 TaxpayerRegistration = new DocumentTypeDto
                 {
                     TypeDocument = "RUC",
@@ -52,7 +53,7 @@ namespace DRRCore.Application.DTO
                 Main_Address = "Argentina, 4793, ****",
                 CityProvincie = "Callao",
                 PostalCode = "Callao, 3",
-                Country = "PE",
+                Country = "PER",
                 Phone = "+511  3150800 - 2154130-11054",
                 Email = "******@alicorp.com.pe ; ******@alicorp.com.pe",
                 WebUrl = "www.alicorp.com.pe",
@@ -63,52 +64,62 @@ namespace DRRCore.Application.DTO
         {
             return new SummaryDto()
             {
+                Sector= new ValueDetailDto
+                {
+                    Code="SC2",
+                    Description= "Industry, Manufacturing, Clothing, Production, Manufacturing, Construction\r\n"
+                },
+                Branch=new ValueDetailDto
+                {
+                    Code="BR6",
+                    Description= "Food in general, solid and liquid food, stores.\r\n"
+                },
                 InscriptionYear = "1956",
                 CapitalStock = new CurrencyAmountDto
                 {
                     IsoCurrency = "PEN",
-                    Amount = 4,
+                    Amount = 555666664,
                     Comment = "Soles"
                 },
                 ShareholdersEquity = new CurrencyAmountWithDateDto
                 {
                     IsoCurrency = "PEN",
-                    Amount = 5,
+                    Amount = 4555555555,
                     LastInformationDate = "12/31/2020"
                 },
                 AnnualRevenues = new CurrencyAmountWithDateDto
                 {
                     IsoCurrency = "PEN",
-                    Amount = 6,
+                    Amount = 66665989,
                     LastInformationDate = "12/31/2020"
 
                 },
                 Profits = new CurrencyAmountWithDateDto
                 {
                     IsoCurrency = "PEN",
-                    Amount = 7,
+                    Amount = 7655654654,
                     LastInformationDate = "12/31/2020"
                 },
                 Employees = 5000,
                 ChiefExecutive = "PEREZ GUBBINS, ALFREDO *****",
-                FinalSituation = new ValueDetailDto
-                {
-                    Code = "TF",
-                    Description = "Report prepared exclusively from outside sources."
-                },
                 Disposition = new ValueDetailDto
                 {
-                    Code = "B",
+                    Code = "DI13",
+                    Description = "Report prepared exclusively from outside sources."
+                },
+                FinalSituation = new ValueDetailDto
+                {
+                    Code = "SF3",
                     Description = "ACCEPTABLE Financial Situation"
                 },
                 PaymentsPolicy = new ValueDetailDto
                 {
-                    Code = "3",
+                    Code = "PP3",
                     Description = "IRREGULAR (Prompt and sometimes delayed payments)"
                 },
                 Credit = new ValueDetailDto
                 {
-                    Code = "B",
+                    Code = "RC3",
                     Description = "MODERATE RISK. (Slightly fair Financial Situation)"
                 }
 
@@ -125,7 +136,7 @@ namespace DRRCore.Application.DTO
                 NotaryOffice = "Julio César*****",
                 DurationTime = "Indefinite",
                 RegistrationFolio = "Entry 1, Page 351, *****",
-                CurrencyPaidInCapital = new CurrencyAmountDto
+                PaidInCapital = new CurrencyAmountDto
                 {
                     IsoCurrency = "PEN",
                     Amount = 23156421,
@@ -200,7 +211,7 @@ namespace DRRCore.Application.DTO
                     Profession="MBA - Economist",
                     PaymentPolitic=new ValueDetailDto
                     {
-                        Code="2",
+                        Code="PP3",
                         Description="PROMPT (Payments always on time. Several years)"
                     },
                     FatherName="Dionisio Romero ****",
@@ -255,7 +266,7 @@ namespace DRRCore.Application.DTO
                     Profession="MBA - Economist",
                     PaymentPolitic=new ValueDetailDto
                     {
-                        Code="2",
+                        Code="PP3",
                         Description="PROMPT (Payments always on time. Several years)"
                     },
                     FatherName="Dionisio Romero ****",
@@ -342,6 +353,16 @@ namespace DRRCore.Application.DTO
             return new BusinessDto
             {
                 MainActivity = "Subject is engaged in manufacturing and sale of fatty-type food....",
+                Sector = new ValueDetailDto
+                {
+                    Code = "SC2",
+                    Description = "Industry, Manufacturing, Clothing, Production, Manufacturing, Construction\r\n"
+                },
+                Branch = new ValueDetailDto
+                {
+                    Code = "BR6",
+                    Description = "Food in general, solid and liquid food, stores.\r\n"
+                },
                 Import = new BussinessImportExportDto
                 {
                     HasImportedOrExported = true,
@@ -394,26 +415,26 @@ namespace DRRCore.Application.DTO
                 },
                 CashSalesPercentage = new PercentageValue
                 {
-                    Value = "15"
+                    Value = 15
                 },
                 CreditSalesPercentage = new PercentageValue
                 {
-                    Value = "50",
+                    Value = 50,
                     Description = "15 days"
                 },
                 ForeignSalePercentage = new PercentageValue
                 {
-                    Value = "50",
+                    Value =50,
                     Description = "YES"
                 },
                 DomesticPourchasesPercentage = new PercentageValue
                 {
-                    Value = "30",
+                    Value = 30,
                     Description = "YES"
                 },
                 ForeignPourchasesPercentage = new PercentageValue
                 {
-                    Value = "80"
+                    Value = 80
                 },
                 SellingTerritoryPercentage = new PercentageValue
                 {
@@ -429,7 +450,7 @@ namespace DRRCore.Application.DTO
             {
                 Disposition = new ValueDetailDto
                 {
-                    Code = "TF",
+                    Code = "DI13",
                     Description = "Report prepared exclusively from outside sources."
                 },
                 InformationProvided = "Directly personnel did not allow the coordination of an interview....",
@@ -480,7 +501,7 @@ namespace DRRCore.Application.DTO
                 },
                 SituationalFinancial = new ValueDetailDto
                 {
-                    Code = "B",
+                    Code = "SF3",
                     Description = "ACCEPTABLE Financial Situation"
                 },
                 Comments = "Land\r\nBuildings, plants and other constructions\r\nMachinery and equipment...",

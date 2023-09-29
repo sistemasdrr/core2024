@@ -8,6 +8,8 @@ namespace DRRCore.Application.DTO.API
         public string CorrectCompanyName { get; set; }=string.Empty;
         [JsonPropertyName("DRR_INFORM_TRANAM")]
         public string TradeName { get; set; }=string.Empty;
+        [JsonPropertyName("DRR_INFORM_QAINFO")]
+        public string QualityInformation { get; set; } = string.Empty;
         [JsonPropertyName("DRR_INFORM_NUMREG")]
         public DocumentTypeDto TaxpayerRegistration { get; set;}= new DocumentTypeDto();
         [JsonPropertyName("DRR_INFORM_MAINAD")]

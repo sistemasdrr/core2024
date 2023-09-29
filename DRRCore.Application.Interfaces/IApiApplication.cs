@@ -6,7 +6,7 @@ namespace DRRCore.Application.Interfaces
     public interface IApiApplication
     {
         Task<Response<SearchResponseDto>> Search(SearchRequestDto request, string environment);
-        Task<ReportDto> GetDummyReportAsync();
+        Task<Response<ReportDto>> GetDummyReportAsync(GetRequestDto request);
         Task<ReportDto> GetReportByCodeAndEnvironmentAsync(string code, string environment);
 
     }

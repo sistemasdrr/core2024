@@ -28,7 +28,11 @@ namespace DRRCore.Application.DTO.API
         public ValueDetailDto PaymentsPolicy { get; set; } = new ValueDetailDto();
         [JsonPropertyName("DRR_SUMMAR_CREDIT")]
         public ValueDetailDto Credit { get; set; } = new ValueDetailDto();
-       
+        [JsonPropertyName("DRR_SUMMAR_SECTOR")]
+        public ValueDetailDto Sector { get; set; } = new ValueDetailDto();
+        [JsonPropertyName("DRR_SUMMAR_BRANCH")]
+        public ValueDetailDto Branch { get; set; } = new ValueDetailDto();
+
     }
     
    

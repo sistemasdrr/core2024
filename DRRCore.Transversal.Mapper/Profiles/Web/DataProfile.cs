@@ -17,6 +17,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Web
                .ForMember(dest => dest.TaxId, opt => opt?.MapFrom(src => src.NumeroRegistro))
                .ForMember(dest => dest.BussinessName, opt => opt?.MapFrom(src => src.NombreEmpresa))
                .ForMember(dest => dest.IsoCountry, opt => opt?.MapFrom(src => src.PaisAbreviatura))
+               .ForMember(dest => dest.QualityInformationAvailable, opt => opt?.MapFrom(src => GetQualityReportsAvaliable()))
                .ForMember(dest => dest.LastReport, opt => opt?.MapFrom(src => src.FechaInforme.Value.ToString(Constants.DateFormatEnglish)))
                .ReverseMap();
 
@@ -38,6 +39,13 @@ namespace DRRCore.Transversal.Mapper.Profiles.Web
                 .ForMember(dest => dest.UltimobalanceEmpresa, opt => opt?.MapFrom(src => GetLastBalance(src.FechaBalance1, src.FechaBalance2, src.FechaBalance3))).ReverseMap();
                 
 
+        }
+        private List<string> GetQualityReportsAvaliable()
+        {
+            return new List<string>
+            {
+                "A","B","C"
+            };
         }
         private static string GetCeoName(string name)
         {

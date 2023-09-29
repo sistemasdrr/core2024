@@ -19,7 +19,7 @@ namespace DRRCore.Application.DTO.API
         [JsonPropertyName("DRR_LEGBAC_REGFOL")]
         public string RegistrationFolio { get; set; }=string.Empty;
         [JsonPropertyName("DRR_LEGBAC_CURPCA")]
-        public CurrencyAmountDto CurrencyPaidInCapital { get; set; } = new CurrencyAmountDto();
+        public CurrencyAmountDto PaidInCapital { get; set; } = new CurrencyAmountDto();
         [JsonPropertyName("DRR_LEGBAC_LASCID")]
         public string LastCapitalIncreaseDate { get; set; }=string.Empty;
         [JsonPropertyName("DRR_LEGBAC_SHOEQU")]

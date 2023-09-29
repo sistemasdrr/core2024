@@ -30,6 +30,9 @@ namespace DRRCore.Application.DTO.API
         [JsonPropertyName("DRR_REPDAT_LASREP")]
         [JsonPropertyOrder(4)]
         public string LastReport { get; set; } = string.Empty;
-       
+        [JsonPropertyName("DRR_REPDAT_QAINFO")]
+        [JsonPropertyOrder(5)]
+        public List<string> QualityInformationAvailable { get; set; } = new List<string>();
+
     }
 }

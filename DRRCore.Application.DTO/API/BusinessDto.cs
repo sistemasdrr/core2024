@@ -6,6 +6,10 @@ namespace DRRCore.Application.DTO.API
     {
         [JsonPropertyName("DRR_BUSINE_MAIACT")]
         public string MainActivity { get; set; }=string.Empty;
+        [JsonPropertyName("DRR_BUSINE_SECTOR")]
+        public ValueDetailDto Sector { get; set; } = new ValueDetailDto();
+        [JsonPropertyName("DRR_BUSINE_BRANCH")]
+        public ValueDetailDto Branch { get; set; } = new ValueDetailDto();
         [JsonPropertyName("DRR_BUSINE_IMPORT")]
         public BussinessImportExportDto Import { get; set; } = new BussinessImportExportDto();
         [JsonPropertyName("DRR_BUSINE_EXPORT")]
@@ -30,7 +34,7 @@ namespace DRRCore.Application.DTO.API
     public class PercentageValue
     {
         [JsonPropertyName("DRR_PERCGE_VALUEE")]
-        public string Value { get; set; }
+        public int Value { get; set; }
         [JsonPropertyName("DRR_PERCGE_DESCRI")]
         public string Description { get; set; } = string.Empty;
     }
