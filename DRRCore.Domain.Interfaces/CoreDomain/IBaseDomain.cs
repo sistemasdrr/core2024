@@ -1,8 +1,12 @@
-﻿using DRRCore.Domain.Entities.SqlCoreContext;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DRRCore.Infraestructure.Interfaces.CoreRepository
+namespace DRRCore.Domain.Interfaces.CoreDomain
 {
-    public interface IBaseRepository<T> where T : class
+    public interface IBaseDomain<T> where T : class
     {
         Task<T> GetByIdAsync(int id);
         Task<List<T>> GetAllAsync();

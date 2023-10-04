@@ -2,7 +2,7 @@
 
 namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
-    public interface IUserPermission : IBaseRepository<UserPermission>
+    public interface IUserPermissionRepository : IBaseRepository<UserPermission>
     {
     }
 }

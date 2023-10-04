@@ -2,7 +2,7 @@
 
 namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
-    internal interface IUserLoginRepository : IBaseRepository<UserLogin>
+    public interface IUserLoginRepository : IBaseRepository<UserLogin>
     {
     }
 }

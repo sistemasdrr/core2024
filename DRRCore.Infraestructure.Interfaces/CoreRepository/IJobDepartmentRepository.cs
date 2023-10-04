@@ -2,7 +2,7 @@
 
 namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
-    internal interface IJobDepartmentRepository:IBaseRepository<JobDepartment>
+    public interface IJobDepartmentRepository:IBaseRepository<JobDepartment>
     {
     }
 }

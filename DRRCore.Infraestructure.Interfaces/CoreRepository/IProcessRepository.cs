@@ -2,7 +2,7 @@
 
 namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
-    internal interface IProcessRepository : IBaseRepository<Process>
+    public interface IProcessRepository : IBaseRepository<Process>
     {
     }
 }

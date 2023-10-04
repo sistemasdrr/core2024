@@ -2,7 +2,7 @@
 
 namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
-    internal interface IEmployeeRepository : IBaseRepository<Employee>
+    public interface IEmployeeRepository : IBaseRepository<Employee>
     {
     }
 }

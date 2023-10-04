@@ -2,7 +2,7 @@
 
 namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
-    internal interface IRolRepository : IBaseRepository<Rol>
+    public interface IRolRepository : IBaseRepository<Rol>
     {
     }
 }
