@@ -260,3 +260,5 @@
 /DRRCore.Application.Interfaces/obj/Debug/net6.0/DRRCore.Application.Interfaces.AssemblyInfo.cs
 /DRRCore.Application.Main/obj/Debug/net6.0/DRRCore.Application.Main.AssemblyInfoInputs.cache
 /DRRCore.Application.Main/obj/Debug/net6.0/DRRCore.Application.Main.AssemblyInfo.cs
+/DRRCore.Services.ApiCore/bin/Release/net6.0
+/DRRCore.Services.ApiCore/obj/Release/net6.0
