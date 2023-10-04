@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Domain.Entities.SqlCoreContext;
 
-public partial class DbA9ccf0EecoreContext : DbContext
+public partial class SqlCoreContext : DbContext
 {
-    public DbA9ccf0EecoreContext()
+    public SqlCoreContext()
     {
     }
 
-    public DbA9ccf0EecoreContext(DbContextOptions<DbA9ccf0EecoreContext> options)
+    public SqlCoreContext(DbContextOptions<SqlCoreContext> options)
         : base(options)
     {
     }

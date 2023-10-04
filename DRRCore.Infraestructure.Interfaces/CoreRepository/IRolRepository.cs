@@ -2,8 +2,7 @@
 
 namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
-    public interface ICountryRepository:IBaseRepository<Country>
+    internal interface IRolRepository : IBaseRepository<Rol>
     {
-
     }
 }
