@@ -14,4 +14,6 @@ public partial class TFactura
     public string? FacDetalle { get; set; }
 
     public double? FacMonto { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

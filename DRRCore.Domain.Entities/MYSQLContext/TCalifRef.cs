@@ -12,4 +12,6 @@ public partial class TCalifRef
     public string? CarValor { get; set; }
 
     public sbyte? CarActivo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

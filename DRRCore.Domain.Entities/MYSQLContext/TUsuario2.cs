@@ -53,4 +53,6 @@ public partial class TUsuario2
     public int? UsCuadro { get; set; }
 
     public int? UsAnalis { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

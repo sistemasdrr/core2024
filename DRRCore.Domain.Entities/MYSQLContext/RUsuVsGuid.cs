@@ -14,4 +14,6 @@ public partial class RUsuVsGuid
     public string UsGuid { get; set; } = null!;
 
     public int? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

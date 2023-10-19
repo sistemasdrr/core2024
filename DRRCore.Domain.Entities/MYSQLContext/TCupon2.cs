@@ -127,4 +127,6 @@ public partial class TCupon2
     public string? CalAge { get; set; }
 
     public string? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

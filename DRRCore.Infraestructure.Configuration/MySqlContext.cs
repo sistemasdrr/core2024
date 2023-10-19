@@ -441,7 +441,7 @@ public partial class MySqlContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySQL("server=192.168.250.4;TLS Version=TLS 1.2;user id=dbrisre;password=K31@78va,.;database=DBSystemDelRisco;persist security info=True;SSL Mode=None;Convert Zero Datetime=True; Connection Timeout=12000000");
+        => optionsBuilder.UseMySQL("server=192.168.250.4;TLS Version=TLS 1.2;user id=dbrisre;password=K31@78va,.;database=DBSystemDelRisco;persist security info=True;SSL Mode=None;Convert Zero Datetime=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -493,6 +493,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(6)
                 .IsFixedLength()
                 .HasColumnName("inc_US_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<IntranetValore>(entity =>
@@ -502,6 +506,10 @@ public partial class MySqlContext : DbContext
                 .ToTable("Intranet_Valores");
 
             entity.Property(e => e.Flag).HasColumnType("int(11)");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.ValCodigo)
                 .HasColumnType("int(11)")
                 .HasColumnName("val_Codigo");
@@ -650,6 +658,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.IdiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("IDI_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("MON_CODIGO");
@@ -708,6 +720,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.IdiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("IDI_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_CODIGO");
@@ -722,6 +738,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Accion).HasMaxLength(6);
             entity.Property(e => e.Fecha).HasColumnType("datetime");
             entity.Property(e => e.Flag).HasMaxLength(50);
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.UsLogin)
                 .HasMaxLength(20)
                 .HasColumnName("Us_Login");
@@ -744,6 +764,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.BanNombre)
                 .HasMaxLength(100)
                 .HasColumnName("BAN_NOMBRE");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<MCliente>(entity =>
@@ -877,6 +901,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.IdiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("IDI_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("MON_CODIGO");
@@ -906,6 +934,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.ErCodigo)
                 .HasColumnType("int(11)")
                 .HasColumnName("ER_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<MEmpresa>(entity =>
@@ -1926,6 +1958,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.ImpMonto)
                 .HasMaxLength(17)
                 .HasColumnName("IMP_MONTO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.OpcionSitfin)
                 .HasMaxLength(1)
                 .HasDefaultValueSql("''")
@@ -2091,6 +2127,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.MemoSunatIng)
                 .HasColumnType("text")
                 .HasColumnName("MEMO_SUNAT_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MorComent)
                 .HasMaxLength(400)
                 .HasColumnName("MOR_COMENT");
@@ -2180,6 +2220,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("ID");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Usuario).HasMaxLength(100);
         });
 
@@ -2248,6 +2292,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.ErTrabaj)
                 .HasMaxLength(50)
                 .HasColumnName("ER_TRABAJ");
+            entity.Property(e => e.Migra)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<MPersona>(entity =>
@@ -2316,6 +2363,10 @@ public partial class MySqlContext : DbContext
                 .HasDefaultValueSql("'0'")
                 .HasColumnType("int(2)")
                 .HasColumnName("IDI_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaCodigo)
                 .HasMaxLength(2)
                 .IsFixedLength()
@@ -2864,6 +2915,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.PerCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("PER_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PerActdig)
                 .HasColumnType("int(2)")
                 .HasColumnName("PER_ACTDIG");
@@ -3015,6 +3070,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmDatoInt)
                 .HasColumnType("int(11)")
                 .HasColumnName("em_dato_int");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Tabla)
                 .HasMaxLength(50)
                 .HasColumnName("tabla");
@@ -3048,6 +3107,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.InfTipo)
                 .HasMaxLength(10)
                 .HasColumnName("inf_Tipo");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Proveedor).HasMaxLength(10);
             entity.Property(e => e.TxCantidad)
                 .HasColumnType("int(11)")
@@ -3093,6 +3156,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.UeFecdes)
                 .HasColumnType("datetime")
                 .HasColumnName("UE_FECDES");
@@ -3110,6 +3177,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.UrCodigo)
                 .HasMaxLength(6)
                 .HasColumnName("UR_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.UrActivo)
                 .HasDefaultValueSql("'0'")
                 .HasComment("1- Inactivo")
@@ -4897,6 +4968,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(4)
                 .IsFixedLength()
                 .HasColumnName("BAN_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonCodigo)
                 .HasMaxLength(3)
                 .IsFixedLength()
@@ -4929,6 +5004,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.AcFecha)
                 .HasColumnType("datetime")
                 .HasColumnName("AC_FECHA");
+            entity.Property(e => e.Migra)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<RAboVsIng>(entity =>
@@ -4951,6 +5029,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.AiFecsal)
                 .HasColumnType("datetime")
                 .HasColumnName("AI_FECSAL");
+            entity.Property(e => e.Migra)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<RCupVsAbo>(entity =>
@@ -5014,6 +5095,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EpCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EP_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonNombre)
                 .HasMaxLength(17)
                 .HasColumnName("MON_NOMBRE");
@@ -5061,6 +5146,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Flag)
                 .HasColumnType("int(11)")
                 .HasColumnName("FLAG");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Url)
                 .HasMaxLength(50)
                 .HasColumnName("URL");
@@ -5079,6 +5168,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PrCremax)
                 .HasMaxLength(50)
                 .HasColumnName("PR_CREMAX");
@@ -5108,6 +5201,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EvVentas)
                 .HasColumnType("double(15,2)")
                 .HasColumnName("EV_VENTAS");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsAct>(entity =>
@@ -5127,6 +5224,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(3) unsigned")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.RamBCodigo)
                 .HasColumnType("int(11) unsigned")
                 .HasColumnName("ramB_Codigo");
@@ -5283,6 +5384,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmVtatipcam)
                 .HasDefaultValueSql("'0'")
                 .HasColumnName("EM_VTATIPCAM");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiMone)
                 .HasMaxLength(6)
                 .HasColumnName("Pai_Mone");
@@ -5647,6 +5752,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.BsVentas4)
                 .HasDefaultValueSql("'0'")
                 .HasColumnName("BS_VENTAS4");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsBa>(entity =>
@@ -6022,6 +6131,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.BaVentas4)
                 .HasDefaultValueSql("'0'")
                 .HasColumnName("BA_VENTAS4");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsBc>(entity =>
@@ -6059,6 +6172,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.BcTelefo)
                 .HasMaxLength(15)
                 .HasColumnName("Bc_Telefo");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsBi>(entity =>
@@ -6088,6 +6205,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("BI_TIPO_ING");
             entity.Property(e => e.BiValor).HasColumnName("BI_VALOR");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsEmp>(entity =>
@@ -6139,6 +6260,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EePorAccIng)
                 .HasMaxLength(12)
                 .HasColumnName("EE_PorAcc_Ing");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.ReCodigo)
                 .HasMaxLength(2)
                 .IsFixedLength()
@@ -6171,6 +6296,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.ExMonto)
                 .HasMaxLength(17)
                 .HasColumnName("EX_Monto");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsImp>(entity =>
@@ -6192,6 +6321,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EiMonto)
                 .HasMaxLength(17)
                 .HasColumnName("EI_Monto");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsInfFin>(entity =>
@@ -6281,6 +6414,10 @@ public partial class MySqlContext : DbContext
                 .HasDefaultValueSql("'0'")
                 .HasColumnType("int(2)")
                 .HasColumnName("GC_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.SfCodigo)
                 .HasMaxLength(2)
                 .IsFixedLength()
@@ -6323,6 +6460,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.LiFechaIng)
                 .HasMaxLength(8)
                 .HasColumnName("Li_Fecha_Ing");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsMorCom>(entity =>
@@ -6357,6 +6498,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.McNrodoc)
                 .HasMaxLength(10)
                 .HasColumnName("MC_NRODOC");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsPe>(entity =>
@@ -6442,6 +6587,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EpTitulo8)
                 .HasMaxLength(15)
                 .HasColumnName("EP_TITULO8");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PeCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("PE_CODIGO");
@@ -6527,6 +6676,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EpTitulo8)
                 .HasMaxLength(15)
                 .HasColumnName("EP_TITULO8");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PeCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("PE_CODIGO");
@@ -6604,6 +6757,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EpTitulo8)
                 .HasMaxLength(15)
                 .HasColumnName("EP_TITULO8");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PeCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("PE_CODIGO");
@@ -6621,6 +6778,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaBoletin)
                 .HasMaxLength(10)
                 .HasColumnName("PA_BOLETIN");
@@ -6665,6 +6826,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaFecpro)
                 .HasMaxLength(50)
                 .HasColumnName("PA_FECPRO");
@@ -6718,6 +6883,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("Em_Codigo");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_CODIGO");
@@ -6828,6 +6997,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("Em_Codigo");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_CODIGO");
@@ -7061,6 +7234,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmVtaextIng)
                 .HasMaxLength(50)
                 .HasColumnName("EM_VTAEXT_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.RamCodigo)
                 .HasMaxLength(2)
                 .IsFixedLength()
@@ -7096,6 +7273,9 @@ public partial class MySqlContext : DbContext
                 .IsFixedLength()
                 .HasComment("Codigo de la Reputacion Comercial")
                 .HasColumnName("RC_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsSb>(entity =>
@@ -7141,6 +7321,10 @@ public partial class MySqlContext : DbContext
                 .HasDefaultValueSql("'0.00'")
                 .HasColumnType("double(15,2)")
                 .HasColumnName("EM_TOTDEU");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.SbAbme)
                 .HasMaxLength(17)
                 .HasColumnName("SB_ABME");
@@ -7278,6 +7462,10 @@ public partial class MySqlContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnType("int(2)")
                 .HasColumnName("SBD_Orden");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.SbdCalifi)
                 .HasMaxLength(100)
                 .HasColumnName("SBD_CALIFI");
@@ -7330,6 +7518,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("Em_Codigo");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaNumero2)
                 .HasColumnType("int(11)")
                 .HasColumnName("PA_NUMERO2");
@@ -7362,6 +7554,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("Em_Codigo");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaNumero2)
                 .HasColumnType("int(11)")
                 .HasColumnName("PA_NUMERO2");
@@ -7420,6 +7616,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EsVenceIng)
                 .HasMaxLength(10)
                 .HasColumnName("ES_Vence_Ing");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<REmpVsVenta>(entity =>
@@ -7434,6 +7634,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiMone)
                 .HasMaxLength(6)
                 .IsFixedLength()
@@ -7457,6 +7660,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(50)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiMone)
                 .HasMaxLength(6)
                 .IsFixedLength()
@@ -7507,6 +7714,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.BcTelefo)
                 .HasMaxLength(15)
                 .HasColumnName("Bc_Telefo");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<RPerVsBi>(entity =>
@@ -7536,6 +7747,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("Bi_Tipo_Ing");
             entity.Property(e => e.BiValor).HasColumnName("BI_VALOR");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<RPerVsEr>(entity =>
@@ -7565,6 +7780,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(50)
                 .HasDefaultValueSql("''")
                 .HasColumnName("HASTA");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("Pai_Codigo");
@@ -7627,6 +7846,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.LiFechaIng)
                 .HasMaxLength(8)
                 .HasColumnName("Li_Fecha_Ing");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<RPerVsMorCom>(entity =>
@@ -7658,6 +7881,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.McNrodoc)
                 .HasMaxLength(10)
                 .HasColumnName("MC_NRODOC");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PeCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("PE_CODIGO");
@@ -7672,6 +7899,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.PaNumero)
                 .HasColumnType("int(10)")
                 .HasColumnName("PA_NUMERO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaBoletin)
                 .HasMaxLength(10)
                 .HasColumnName("PA_BOLETIN");
@@ -7721,6 +7952,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CumCodigo)
                 .HasMaxLength(2)
                 .HasColumnName("CUM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_CODIGO");
@@ -7840,6 +8075,10 @@ public partial class MySqlContext : DbContext
                 .IsFixedLength()
                 .HasComment("Codigo de la Reputacion Comercial")
                 .HasColumnName("RC_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<RPerVsSbd>(entity =>
@@ -7857,6 +8096,10 @@ public partial class MySqlContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnType("int(2)")
                 .HasColumnName("SBD_Orden");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.SbdCalifi)
                 .HasMaxLength(100)
                 .HasColumnName("SBD_CALIFI");
@@ -7914,6 +8157,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PtCentra)
                 .HasMaxLength(100)
                 .HasColumnName("PT_CENTRA");
@@ -7970,6 +8217,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Flag)
                 .HasColumnType("int(11)")
                 .HasColumnName("FLAG");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.UsCodigo)
                 .HasMaxLength(4)
                 .IsFixedLength()
@@ -7985,6 +8236,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.UiCodigo)
                 .HasColumnType("int(5)")
                 .HasColumnName("UI_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.UiFecing)
                 .HasColumnType("datetime")
                 .HasColumnName("UI_FECING");
@@ -8018,6 +8273,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Mes)
                 .HasColumnType("tinyint(4)")
                 .HasColumnName("mes");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Pais)
                 .HasMaxLength(3)
                 .HasColumnName("pais");
@@ -8038,6 +8297,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Mes)
                 .HasColumnType("int(11)")
                 .HasColumnName("mes");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Valor)
                 .HasPrecision(10)
                 .HasColumnName("valor");
@@ -8087,6 +8350,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.AcPrecio)
                 .HasColumnType("double(10,2)")
                 .HasColumnName("AC_PRECIO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TAbonadoCuponera>(entity =>
@@ -8125,6 +8392,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.AcPrecio)
                 .HasColumnType("double(10,3)")
                 .HasColumnName("AC_PRECIO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TAbonadoTalonario>(entity =>
@@ -8160,6 +8431,10 @@ public partial class MySqlContext : DbContext
                 .HasDefaultValueSql("'0.000'")
                 .HasColumnType("double(10,3)")
                 .HasColumnName("AT_MONTO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TActCom>(entity =>
@@ -8181,6 +8456,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCiiu)
                 .HasMaxLength(1)
                 .HasColumnName("EM_CIIU");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TAlerta>(entity =>
@@ -8195,6 +8474,7 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CupNomsol)
                 .HasMaxLength(150)
                 .HasColumnName("CUP_NOMSOL");
+            entity.Property(e => e.Migra).HasColumnName("MIGRA");
             entity.Property(e => e.PerCodigo1)
                 .HasMaxLength(3)
                 .HasColumnName("PER_CODIGO_1");
@@ -8264,6 +8544,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CupCodigo)
                 .HasMaxLength(20)
                 .HasColumnName("CUP_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PerCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("PER_CODIGO");
@@ -8314,6 +8597,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CupCodigo)
                 .HasMaxLength(20)
                 .HasColumnName("CUP_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PerCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("PER_CODIGO");
@@ -8373,6 +8659,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CupCodigo)
                 .HasMaxLength(20)
                 .HasColumnName("CUP_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PerCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("PER_CODIGO");
@@ -8405,6 +8695,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CupCodigo)
                 .HasMaxLength(20)
                 .HasColumnName("CUP_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PerCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("PER_CODIGO");
@@ -8450,6 +8744,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CupCodigo)
                 .HasMaxLength(20)
                 .HasColumnName("CUP_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PerCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("PER_CODIGO");
@@ -8475,6 +8773,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Guid)
                 .HasMaxLength(50)
                 .HasColumnName("GUID");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.NumPedido)
                 .HasColumnType("bigint(10)")
                 .HasColumnName("num_Pedido");
@@ -8520,6 +8822,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.AudValor2)
                 .HasMaxLength(50)
                 .HasColumnName("audValor2");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PerCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("perCodigo");
@@ -8540,6 +8846,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.AvObservacionIng)
                 .HasMaxLength(2000)
                 .HasColumnName("AV_OBSERVACION_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TCabFactAbonado>(entity =>
@@ -8599,6 +8909,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.FacValor)
                 .HasColumnType("double(10,3)")
                 .HasColumnName("FAC_VALOR");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("MON_CODIGO");
@@ -8637,6 +8951,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.FacObserv)
                 .HasMaxLength(20)
                 .HasColumnName("FAC_OBSERV");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("MON_CODIGO");
@@ -8657,6 +8975,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.FacCodigo)
                 .HasMaxLength(15)
                 .HasColumnName("FAC_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonCodigo)
                 .HasMaxLength(30)
                 .HasColumnName("MON_CODIGO");
@@ -8701,6 +9023,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CupCodigo)
                 .HasColumnType("bigint(20)")
                 .HasColumnName("CUP_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.ObCampo)
                 .HasMaxLength(4)
                 .IsFixedLength()
@@ -8780,6 +9106,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CalPreT3)
                 .HasColumnType("double(5,2)")
                 .HasColumnName("CAL_PRE_T3");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TCalifRef>(entity =>
@@ -8804,6 +9134,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(1)
                 .IsFixedLength()
                 .HasColumnName("CAR_VALOR");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TCalifSic>(entity =>
@@ -8834,6 +9168,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CsSector)
                 .HasMaxLength(3)
                 .HasColumnName("CS_SECTOR");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TCampoValidacion>(entity =>
@@ -8854,6 +9192,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CamEstado)
                 .HasColumnType("int(11)")
                 .HasColumnName("CAM_ESTADO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TCargo>(entity =>
@@ -8880,6 +9222,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CaNombreIng)
                 .HasMaxLength(40)
                 .HasColumnName("CA_NOMBRE_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TCatCiiu>(entity =>
@@ -8905,6 +9251,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CcNombreIng)
                 .HasMaxLength(250)
                 .HasColumnName("CC_NOMBRE_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TCiiu>(entity =>
@@ -8927,6 +9277,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CiNombre)
                 .HasMaxLength(200)
                 .HasColumnName("CI_NOMBRE");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TClaSoc>(entity =>
@@ -8948,6 +9302,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CsoNombreIng)
                 .HasMaxLength(50)
                 .HasColumnName("CSO_NOMBRE_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TClasif>(entity =>
@@ -8992,6 +9350,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(2)
                 .IsFixedLength()
                 .HasColumnName("CR_ORDEN_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TComentProv>(entity =>
@@ -9013,6 +9375,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CpOrden)
                 .HasColumnType("int(11)")
                 .HasColumnName("CP_ORDEN");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TComentProvVario>(entity =>
@@ -9030,6 +9396,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TComplemento>(entity =>
@@ -9048,6 +9418,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(1)
                 .IsFixedLength()
                 .HasColumnName("FLAG");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Monto)
                 .HasColumnType("double(7,2)")
                 .HasColumnName("MONTO");
@@ -9062,6 +9436,10 @@ public partial class MySqlContext : DbContext
                 .HasNoKey()
                 .ToTable("tConGen");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.TgCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("tg_codigo");
@@ -9120,6 +9498,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CdTipo)
                 .HasMaxLength(1)
                 .HasColumnName("CD_TIPO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TConclusion>(entity =>
@@ -9141,6 +9523,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CoOrden)
                 .HasColumnType("tinyint(2)")
                 .HasColumnName("CO_ORDEN");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(2)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TConsulta>(entity =>
@@ -9183,6 +9569,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(5)
                 .HasColumnName("con_Usuario_3");
             entity.Property(e => e.Flag).HasColumnType("tinyint(4)");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TConsultasTipo>(entity =>
@@ -9198,6 +9588,10 @@ public partial class MySqlContext : DbContext
                 .HasColumnType("tinyint(4)")
                 .HasColumnName("con_Tipo");
             entity.Property(e => e.Flag).HasColumnType("tinyint(4)");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TContinente>(entity =>
@@ -9221,6 +9615,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.ConObserv)
                 .HasMaxLength(150)
                 .HasColumnName("CON_OBSERV");
+            entity.Property(e => e.Migra)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TControlAsignacione>(entity =>
@@ -9233,6 +9630,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Codigo).HasColumnType("int(11)");
             entity.Property(e => e.Fecha).HasColumnType("date");
             entity.Property(e => e.Flag).HasColumnType("int(11)");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Usuario).HasMaxLength(20);
         });
 
@@ -9245,6 +9646,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Opinion).HasMaxLength(4);
         });
 
@@ -9264,6 +9669,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CumNombreIng)
                 .HasMaxLength(50)
                 .HasColumnName("CUM_NOMBRE_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.TgDesrdc)
                 .HasMaxLength(16)
                 .HasColumnName("tg_desrdc");
@@ -9431,6 +9840,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.IdiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("IDI_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_CODIGO");
@@ -9617,6 +10030,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.IdiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("IDI_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_CODIGO");
@@ -9803,6 +10220,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.IdiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("IDI_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_CODIGO");
@@ -9860,6 +10281,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmTelefono)
                 .HasMaxLength(100)
                 .HasColumnName("EM_TELEFONO");
+            entity.Property(e => e.Migra)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TCuponTiendum>(entity =>
@@ -10011,6 +10435,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.IdiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("IDI_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_CODIGO");
@@ -10079,6 +10507,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmCodigo)
                 .HasMaxLength(11)
                 .HasColumnName("EM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TDetFactAbonado>(entity =>
@@ -10100,6 +10532,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.FacCodigo)
                 .HasMaxLength(15)
                 .HasColumnName("FAC_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TDetFactAgente>(entity =>
@@ -10122,6 +10558,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.FacCodigo)
                 .HasMaxLength(15)
                 .HasColumnName("FAC_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TDetObservacion>(entity =>
@@ -10134,6 +10574,10 @@ public partial class MySqlContext : DbContext
 
             entity.HasIndex(e => e.PerCodigo, "PER_CODIGO");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.ObCodigo)
                 .HasColumnType("bigint(20)")
                 .HasColumnName("OB_CODIGO");
@@ -10165,6 +10609,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.DiOrden)
                 .HasColumnType("tinyint(2)")
                 .HasColumnName("DI_ORDEN");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(2)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TEmpresaExc>(entity =>
@@ -10173,6 +10621,10 @@ public partial class MySqlContext : DbContext
                 .HasNoKey()
                 .ToTable("tEmpresaExc");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(500)
                 .HasColumnName("nombre");
@@ -10320,6 +10772,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.JuNombre)
                 .HasMaxLength(100)
                 .HasColumnName("JU_NOMBRE");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaCodigo)
                 .HasMaxLength(100)
                 .HasColumnName("PA_CODIGO");
@@ -10362,6 +10818,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EcNombreIng)
                 .HasMaxLength(20)
                 .HasColumnName("EC_NOMBRE_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TEstLitigio>(entity =>
@@ -10380,6 +10840,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.ElDescriIng)
                 .HasMaxLength(10)
                 .HasColumnName("EL_DESCRI_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TEstOpiCred>(entity =>
@@ -10392,6 +10856,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(3)
                 .IsFixedLength()
                 .HasColumnName("OC_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.OcDescri)
                 .HasMaxLength(400)
                 .HasColumnName("OC_DESCRI");
@@ -10420,6 +10888,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EsNombreIng)
                 .HasMaxLength(50)
                 .HasColumnName("ES_NOMBRE_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TEstRegTribPer>(entity =>
@@ -10439,6 +10911,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.ErNombreIng)
                 .HasMaxLength(50)
                 .HasColumnName("ER_NOMBRE_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TEstado>(entity =>
@@ -10461,6 +10937,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EstOrden)
                 .HasColumnType("int(10)")
                 .HasColumnName("EST_ORDEN");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TEstadoCupon>(entity =>
@@ -10482,6 +10961,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EcObserv)
                 .HasMaxLength(300)
                 .HasColumnName("EC_OBSERV");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TFactura>(entity =>
@@ -10505,6 +10987,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.FacMonto)
                 .HasColumnType("double(15,2)")
                 .HasColumnName("FAC_MONTO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TGasAdmi>(entity =>
@@ -10516,6 +11002,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.GaMonto)
                 .HasColumnType("double(10,3)")
                 .HasColumnName("GA_MONTO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TGraCol>(entity =>
@@ -10539,6 +11029,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.GcOrden)
                 .HasColumnType("int(1)")
                 .HasColumnName("GC_ORDEN");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<THistorico>(entity =>
@@ -10568,6 +11062,9 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(50)
                 .HasDefaultValueSql("'0'")
                 .HasColumnName("lblIPBehindProxy");
+            entity.Property(e => e.Migra)
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TIdioma>(entity =>
@@ -10592,6 +11089,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.IdiObserv)
                 .HasMaxLength(150)
                 .HasColumnName("IDI_OBSERV");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TJuridi>(entity =>
@@ -10628,6 +11128,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.JuSiglaIng)
                 .HasMaxLength(10)
                 .HasColumnName("JU_SIGLA_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TKardex>(entity =>
@@ -10646,6 +11150,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CuponesCompra)
                 .HasDefaultValueSql("'0.00'")
                 .HasColumnType("double(10,2)");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiNombre)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_NOMBRE");
@@ -10691,6 +11199,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CuponesCompra)
                 .HasDefaultValueSql("'0.00'")
                 .HasColumnType("double(10,2)");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiNombre)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_NOMBRE");
@@ -10736,6 +11248,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.LoNombreIng)
                 .HasMaxLength(50)
                 .HasColumnName("LO_NOMBRE_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TMatSub>(entity =>
@@ -10754,6 +11270,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.MatNombreIng)
                 .HasMaxLength(50)
                 .HasColumnName("MAT_NOMBRE_ING");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         modelBuilder.Entity<TMonedum>(entity =>
@@ -10765,6 +11285,9 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.MonCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("MON_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonAbrevi)
                 .HasMaxLength(4)
                 .HasColumnName("MON_ABREVI");
@@ -10788,6 +11311,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.NovNumero)
                 .HasColumnType("int(5)")
                 .HasColumnName("NOV_NUMERO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.NovDescrip)
                 .HasColumnType("text")
                 .HasColumnName("NOV_DESCRIP");
@@ -10808,6 +11335,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Flag)
                 .HasColumnType("tinyint(4)")
                 .HasColumnName("FLAG");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.ObNombre)
                 .HasMaxLength(50)
                 .HasColumnName("OB_NOMBRE");
@@ -10826,6 +11357,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(50)
                 .IsFixedLength()
                 .HasColumnName("OF_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.OfDescri1)
                 .HasColumnType("text")
                 .HasColumnName("OF_DESCRI1");
@@ -10854,6 +11389,10 @@ public partial class MySqlContext : DbContext
 
             entity.HasIndex(e => e.OrdTabla, "Ord_Tabla");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.OrdNumero)
                 .HasColumnType("int(11)")
                 .HasColumnName("Ord_Numero");
@@ -10896,6 +11435,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(2)
                 .IsFixedLength()
                 .HasColumnName("PA_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaActivo)
                 .HasDefaultValueSql("'1'")
                 .HasColumnType("int(1)")
@@ -10932,6 +11475,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.ConCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("CON_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiAbreviatura)
                 .HasMaxLength(3)
                 .HasColumnName("Pai_Abreviatura");
@@ -10998,6 +11545,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(1)
                 .IsFixedLength()
                 .HasColumnName("flag3");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.Numero1)
                 .HasPrecision(10)
                 .HasColumnName("numero1");
@@ -11039,6 +11590,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.PpCodigo)
                 .HasColumnType("int(2)")
                 .HasColumnName("PP_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PpAbrevi)
                 .HasMaxLength(5)
                 .HasColumnName("PP_ABREVI");
@@ -11063,6 +11618,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.AboCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("ABO_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("MON_CODIGO");
@@ -11107,6 +11666,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.AgeCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("AGE_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("MON_CODIGO");
@@ -11166,6 +11729,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.CalCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("CAL_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaiCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("PAI_CODIGO");
@@ -11187,6 +11754,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(3)
                 .HasDefaultValueSql("''")
                 .HasColumnName("PAI_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PerCodigoRep)
                 .HasMaxLength(3)
                 .HasColumnName("PER_CODIGO_REP");
@@ -11224,6 +11795,10 @@ public partial class MySqlContext : DbContext
 
             entity.HasIndex(e => e.TramCodigo, "TRAM_CODIGO");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PreAux1)
                 .HasMaxLength(100)
                 .HasColumnName("PRE_AUX1");
@@ -11268,6 +11843,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.PfCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("PF_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PfCodigoIng)
                 .HasMaxLength(4)
                 .HasColumnName("PF_CODIGO_ING");
@@ -11291,6 +11870,10 @@ public partial class MySqlContext : DbContext
                 .HasNoKey()
                 .ToTable("tRamo");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.RamCodigo)
                 .HasMaxLength(2)
                 .IsFixedLength()
@@ -11313,6 +11896,10 @@ public partial class MySqlContext : DbContext
                 .HasNoKey()
                 .ToTable("tRamoA");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.RamCodigo)
                 .HasMaxLength(2)
                 .IsFixedLength()
@@ -11335,6 +11922,10 @@ public partial class MySqlContext : DbContext
                 .HasNoKey()
                 .ToTable("tRamoB");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.RamBCodigo)
                 .HasColumnType("int(11)")
                 .HasColumnName("ramB_Codigo");
@@ -11365,6 +11956,10 @@ public partial class MySqlContext : DbContext
                 .HasDefaultValueSql("''")
                 .IsFixedLength()
                 .HasColumnName("RE_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.ReActivo)
                 .HasDefaultValueSql("'1'")
                 .HasColumnType("int(1)")
@@ -11406,6 +12001,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(3)
                 .IsFixedLength()
                 .HasColumnName("RC_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.RcActivo)
                 .HasDefaultValueSql("'1'")
                 .HasComment("Estado (1 Activo 2 Desactivado)")
@@ -11444,6 +12043,7 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.RubCodigo)
                 .HasMaxLength(4)
                 .HasColumnName("RUB_CODIGO");
+            entity.Property(e => e.Migra).HasColumnName("MIGRA");
             entity.Property(e => e.RubAbrevi)
                 .HasMaxLength(4)
                 .HasColumnName("RUB_ABREVI");
@@ -11465,6 +12065,10 @@ public partial class MySqlContext : DbContext
                 .HasNoKey()
                 .ToTable("tSector");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.SecCodigo)
                 .HasMaxLength(1)
                 .IsFixedLength()
@@ -11487,6 +12091,10 @@ public partial class MySqlContext : DbContext
                 .HasNoKey()
                 .ToTable("tSectorEconomico");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.SeActividades)
                 .HasMaxLength(500)
                 .HasColumnName("SE_ACTIVIDADES");
@@ -11514,6 +12122,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(2)
                 .HasDefaultValueSql("''")
                 .HasColumnName("SEX_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.SexDescri)
                 .HasMaxLength(15)
                 .HasColumnName("SEX_DESCRI");
@@ -11532,6 +12144,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(2)
                 .IsFixedLength()
                 .HasColumnName("SN_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.SnNombre)
                 .HasMaxLength(2)
                 .HasColumnName("SN_NOMBRE");
@@ -11554,6 +12170,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(2)
                 .IsFixedLength()
                 .HasColumnName("SF_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.SfComen)
                 .HasColumnType("text")
                 .HasColumnName("SF_COMEN");
@@ -11578,6 +12198,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(2)
                 .IsFixedLength()
                 .HasColumnName("SIT_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.SitAbrevia)
                 .HasMaxLength(2)
                 .HasColumnName("SIT_ABREVIA");
@@ -11601,6 +12225,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.FechaPago)
                 .HasColumnType("datetime")
                 .HasColumnName("Fecha_Pago");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.MonCodigo)
                 .HasMaxLength(3)
                 .HasColumnName("MON_CODIGO");
@@ -11616,6 +12244,10 @@ public partial class MySqlContext : DbContext
                 .HasNoKey()
                 .ToTable("tTamano");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.TaCodigo)
                 .HasMaxLength(2)
                 .HasColumnName("TA_CODIGO");
@@ -13063,6 +13695,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(2)
                 .HasDefaultValueSql("''")
                 .HasColumnName("Td_Codigo");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.TdActivo)
                 .HasDefaultValueSql("'1'")
                 .HasColumnType("int(1)")
@@ -13087,6 +13723,10 @@ public partial class MySqlContext : DbContext
                 .HasNoKey()
                 .ToTable("tTipDocIden");
 
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.TiAbrevia)
                 .HasMaxLength(10)
                 .HasColumnName("TI_ABREVIA");
@@ -13118,6 +13758,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(2)
                 .IsFixedLength()
                 .HasColumnName("TL_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.TlNombre)
                 .HasMaxLength(50)
                 .HasColumnName("TL_NOMBRE");
@@ -13135,6 +13779,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.TramCodigo)
                 .HasMaxLength(2)
                 .HasColumnName("TRAM_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.TramAbrev)
                 .HasMaxLength(15)
                 .HasColumnName("TRAM_ABREV");
@@ -13522,6 +14170,10 @@ public partial class MySqlContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("EM_TRABAJ");
             entity.Property(e => e.EmVentas).HasColumnName("EM_VENTAS");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.PaNombre)
                 .HasMaxLength(200)
                 .HasColumnName("PA_NOMBRE");
@@ -13543,6 +14195,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.IdPersonal)
                 .HasMaxLength(4)
                 .HasColumnName("Id_Personal");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.UsAnalis)
                 .HasDefaultValueSql("'0'")
                 .HasColumnType("int(1)")
@@ -13639,6 +14295,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.IdPersonal)
                 .HasMaxLength(4)
                 .HasColumnName("Id_Personal");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.UsAnalis)
                 .HasDefaultValueSql("'0'")
                 .HasColumnType("int(1)")
@@ -13718,6 +14378,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.UwCodigo)
                 .HasColumnType("int(3)")
                 .HasColumnName("UW_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.UwLogin)
                 .HasMaxLength(50)
                 .HasComment("Nombre por el cual se va a Logear")
@@ -13745,6 +14409,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.EmNombre)
                 .HasMaxLength(120)
                 .HasColumnName("EM_NOMBRE");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.ViCadena)
                 .HasMaxLength(50)
                 .HasColumnName("VI_CADENA");
@@ -13773,6 +14441,10 @@ public partial class MySqlContext : DbContext
                 .HasDefaultValueSql("''")
                 .IsFixedLength()
                 .HasColumnName("VIV_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.VivNombre)
                 .HasMaxLength(25)
                 .HasColumnName("VIV_NOMBRE");
@@ -13916,6 +14588,10 @@ public partial class MySqlContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("ID");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
         });
 
         OnModelCreatingPartial(modelBuilder);

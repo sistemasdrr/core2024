@@ -16,4 +16,6 @@ public partial class TTenden
     public byte[]? TdImagen { get; set; }
 
     public int? TdActivo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

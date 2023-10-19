@@ -16,4 +16,6 @@ public partial class TConciliacionDeCuentum
     public double? CdFacmon { get; set; }
 
     public string? CdTipo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

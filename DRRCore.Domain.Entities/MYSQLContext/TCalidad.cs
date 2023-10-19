@@ -22,4 +22,6 @@ public partial class TCalidad
     public bool? CalActivo { get; set; }
 
     public int? CalOrden { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

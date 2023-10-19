@@ -10,4 +10,6 @@ public partial class TEstPer
     public string? EsNombre { get; set; }
 
     public string? EsNombreIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

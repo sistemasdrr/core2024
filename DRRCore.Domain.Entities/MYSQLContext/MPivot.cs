@@ -18,4 +18,6 @@ public partial class MPivot
     public string? EmDatoCad1 { get; set; }
 
     public string? EmDatoCad2 { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

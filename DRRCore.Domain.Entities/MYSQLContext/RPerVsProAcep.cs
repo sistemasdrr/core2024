@@ -29,4 +29,6 @@ public partial class RPerVsProAcep
     public string? PaFecpro { get; set; }
 
     public string? PaFecreg { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

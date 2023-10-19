@@ -22,4 +22,6 @@ public partial class TAuditorium
     public string? AudComentario { get; set; }
 
     public string? AudFlag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

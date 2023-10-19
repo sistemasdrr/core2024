@@ -56,4 +56,6 @@ public partial class TTop
     public string? CrNombre { get; set; }
 
     public string? PaNombre { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

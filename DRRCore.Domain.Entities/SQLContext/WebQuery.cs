@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DRRCore.Domain.Entities.SQLContext;
+﻿namespace DRRCore.Domain.Entities.SQLContext;
 
 public partial class WebQuery
 {

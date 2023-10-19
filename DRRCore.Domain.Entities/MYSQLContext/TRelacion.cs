@@ -16,4 +16,6 @@ public partial class TRelacion
     public int? ReOrden { get; set; }
 
     public string? ReTipo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

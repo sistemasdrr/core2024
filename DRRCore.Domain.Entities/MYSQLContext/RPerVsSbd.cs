@@ -28,4 +28,6 @@ public partial class RPerVsSbd
     public double? SbdMonmn { get; set; }
 
     public double? SbdMonme { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

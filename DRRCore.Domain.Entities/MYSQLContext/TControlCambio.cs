@@ -8,4 +8,6 @@ public partial class TControlCambio
     public string? EmCodigo { get; set; }
 
     public string? Opinion { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

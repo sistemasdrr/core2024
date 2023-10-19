@@ -14,4 +14,6 @@ public partial class REmpBvsPro
     public string? PrCremaxIng { get; set; }
 
     public string? CumCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

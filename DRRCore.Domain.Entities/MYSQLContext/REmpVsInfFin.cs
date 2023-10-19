@@ -69,4 +69,6 @@ public partial class REmpVsInfFin
     public string? EmAnalistaVb { get; set; }
 
     public int? EmChkBal { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

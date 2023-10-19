@@ -42,4 +42,6 @@ public partial class MTiendaDrr
     public string? InfTipo { get; set; }
 
     public int? InfFlag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

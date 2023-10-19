@@ -395,4 +395,6 @@ public partial class MPersona
     public string? PeNombreCome { get; set; }
 
     public string? CalCodigoPer { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -20,4 +20,6 @@ public partial class TAsigVirtual
     public int? Flag { get; set; }
 
     public DateTime? Fecha { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

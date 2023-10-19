@@ -10,4 +10,6 @@ public partial class RAboBan
     public string? BanCodigo { get; set; }
 
     public string? MonCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

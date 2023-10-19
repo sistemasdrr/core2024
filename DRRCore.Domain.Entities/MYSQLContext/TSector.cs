@@ -12,4 +12,6 @@ public partial class TSector
     public string? SecNombreIng { get; set; }
 
     public string? SecFlag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

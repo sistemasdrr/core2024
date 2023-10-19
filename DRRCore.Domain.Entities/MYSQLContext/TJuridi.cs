@@ -16,4 +16,6 @@ public partial class TJuridi
     public string? JuNombreIng { get; set; }
 
     public string? JuSiglaIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -68,4 +68,6 @@ public partial class RPerVsProv
     public string? ProvLlamo { get; set; }
 
     public string? ProvTexto { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

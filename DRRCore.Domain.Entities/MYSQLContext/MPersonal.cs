@@ -87,4 +87,6 @@ public partial class MPersonal
     public int? PerActtra { get; set; }
 
     public int? PerAgrrep { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

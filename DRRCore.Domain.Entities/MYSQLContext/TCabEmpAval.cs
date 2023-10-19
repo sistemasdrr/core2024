@@ -10,4 +10,6 @@ public partial class TCabEmpAval
     public string? AvObservacion { get; set; }
 
     public string? AvObservacionIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

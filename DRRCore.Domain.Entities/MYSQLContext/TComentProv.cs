@@ -12,4 +12,6 @@ public partial class TComentProv
     public string? CpNombreIng { get; set; }
 
     public int? CpOrden { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

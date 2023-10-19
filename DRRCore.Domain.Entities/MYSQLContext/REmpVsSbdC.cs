@@ -20,4 +20,6 @@ public partial class REmpVsSbdC
     public string? SbdCalifi { get; set; }
 
     public string? SbdCalifiIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -24,4 +24,6 @@ public partial class TPrecioRepEspecial
     public double? PrPrecioD { get; set; }
 
     public double? PrPrecioX { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

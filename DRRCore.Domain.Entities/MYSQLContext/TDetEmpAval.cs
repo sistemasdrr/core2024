@@ -20,4 +20,6 @@ public partial class TDetEmpAval
     public DateTime? AvFecha { get; set; }
 
     public string? AvEntidad { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

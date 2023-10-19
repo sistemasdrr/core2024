@@ -106,4 +106,6 @@ public partial class TEmpresaTipoB
     public string? SfNombre { get; set; }
 
     public string? Situacion { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

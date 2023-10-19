@@ -15,4 +15,6 @@ public partial class TUsuarioWeb
     public string? UwLogin { get; set; }
 
     public string? UwPassword { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

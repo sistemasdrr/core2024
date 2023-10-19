@@ -12,4 +12,6 @@ public partial class TClaSoc
     public string? CsoNombreIng { get; set; }
 
     public string? CsoActivo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

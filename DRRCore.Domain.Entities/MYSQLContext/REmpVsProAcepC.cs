@@ -22,4 +22,6 @@ public partial class REmpVsProAcepC
     public string? PaFecpro { get; set; }
 
     public string? PaFecreg { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -12,4 +12,6 @@ public partial class TCuponDatoAdicional
     public string? EmFax { get; set; }
 
     public string EmCorreo { get; set; } = null!;
+
+    public sbyte Migra { get; set; }
 }

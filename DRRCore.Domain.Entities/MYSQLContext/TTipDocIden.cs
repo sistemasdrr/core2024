@@ -16,4 +16,6 @@ public partial class TTipDocIden
     public string? TiNombreIng { get; set; }
 
     public string? TiAbreviaIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

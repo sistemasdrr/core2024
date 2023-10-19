@@ -21,4 +21,6 @@ public partial class MUsuarioRegistrado
     /// 1- Inactivo
     /// </summary>
     public int? UrActivo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

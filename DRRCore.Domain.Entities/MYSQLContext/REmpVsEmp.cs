@@ -39,4 +39,6 @@ public partial class REmpVsEmp
     public string? EePorAcc2 { get; set; }
 
     public string? EePorAcc2Ing { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

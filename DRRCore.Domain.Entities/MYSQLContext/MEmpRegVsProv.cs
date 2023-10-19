@@ -12,4 +12,6 @@ public partial class MEmpRegVsProv
     public string? EpNombre { get; set; }
 
     public string? EpCodigoPai { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

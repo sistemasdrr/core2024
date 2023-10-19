@@ -97,4 +97,6 @@ public partial class MAbonado
     /// Si - Precio Online 
     /// </summary>
     public string? AboPnonli { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

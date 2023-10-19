@@ -10,4 +10,6 @@ public partial class TTipoLocal
     public string? TlNombre { get; set; }
 
     public string? TlNombreIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

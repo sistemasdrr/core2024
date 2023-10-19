@@ -16,4 +16,6 @@ public partial class TOrdenReg
     public double? OrdValor3 { get; set; }
 
     public double? OrdValor4 { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

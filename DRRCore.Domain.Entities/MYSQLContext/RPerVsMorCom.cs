@@ -23,4 +23,6 @@ public partial class RPerVsMorCom
     public double? McMonme { get; set; }
 
     public string? McFecinc { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

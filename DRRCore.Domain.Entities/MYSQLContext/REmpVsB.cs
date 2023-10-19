@@ -238,4 +238,6 @@ public partial class REmpVsB
     public double? BsTotpat3 { get; set; }
 
     public double? BsTotpat4 { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

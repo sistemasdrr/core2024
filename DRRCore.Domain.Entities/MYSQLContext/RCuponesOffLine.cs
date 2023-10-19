@@ -12,4 +12,6 @@ public partial class RCuponesOffLine
     public DateTime? Fecha { get; set; }
 
     public int? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

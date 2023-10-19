@@ -132,4 +132,6 @@ public partial class REmpVsRamNeg
     public string? SecCodigo { get; set; }
 
     public string? RamCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

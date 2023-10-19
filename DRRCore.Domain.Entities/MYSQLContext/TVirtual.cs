@@ -20,4 +20,6 @@ public partial class TVirtual
     public string? EmNombre { get; set; }
 
     public string? EmCiudad { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -32,4 +32,6 @@ public partial class TParamSistema
     public string? Flag2 { get; set; }
 
     public string? Flag3 { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

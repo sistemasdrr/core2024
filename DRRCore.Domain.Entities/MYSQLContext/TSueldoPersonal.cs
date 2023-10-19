@@ -14,4 +14,6 @@ public partial class TSueldoPersonal
     public double? Monto { get; set; }
 
     public string? MonCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

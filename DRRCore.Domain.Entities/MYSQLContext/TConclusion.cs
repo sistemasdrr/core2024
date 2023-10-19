@@ -12,4 +12,6 @@ public partial class TConclusion
     public string? CoNombreIng { get; set; }
 
     public sbyte? CoOrden { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

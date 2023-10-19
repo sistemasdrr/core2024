@@ -14,4 +14,6 @@ public partial class TGraCol
     public int? GcActivo { get; set; }
 
     public int? GcOrden { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

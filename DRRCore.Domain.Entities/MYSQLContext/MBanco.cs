@@ -8,4 +8,6 @@ public partial class MBanco
     public string? BanCodigo { get; set; }
 
     public string? BanNombre { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

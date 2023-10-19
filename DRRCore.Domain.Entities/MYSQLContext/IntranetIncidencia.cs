@@ -32,4 +32,6 @@ public partial class IntranetIncidencia
     public string? IncCorreoPara { get; set; }
 
     public short? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

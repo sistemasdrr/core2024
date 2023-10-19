@@ -18,4 +18,6 @@ public partial class TClasif
     public string? CrOrdenIng { get; set; }
 
     public int? CrActivo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

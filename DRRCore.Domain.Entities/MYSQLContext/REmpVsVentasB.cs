@@ -16,4 +16,6 @@ public partial class REmpVsVentasB
     public string? VeVentas { get; set; }
 
     public string? PaiMone { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

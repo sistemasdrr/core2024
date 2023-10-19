@@ -34,4 +34,6 @@ public partial class TAsigTrad
     public string? AtLogobs { get; set; }
 
     public string? Tipo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

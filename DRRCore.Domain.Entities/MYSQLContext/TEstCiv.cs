@@ -10,4 +10,6 @@ public partial class TEstCiv
     public string? EcNombre { get; set; }
 
     public string? EcNombreIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

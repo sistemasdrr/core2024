@@ -34,4 +34,6 @@ public partial class REmpVsProvB
     public string? ProvPlazosIng { get; set; }
 
     public string? ProvTiempoIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

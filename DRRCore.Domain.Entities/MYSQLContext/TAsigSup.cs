@@ -16,4 +16,6 @@ public partial class TAsigSup
     public string? PerCodigoSup { get; set; }
 
     public string? PerCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -97,4 +97,6 @@ public partial class MCliente
     /// Si - Precio Online 
     /// </summary>
     public string? CliPnonli { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

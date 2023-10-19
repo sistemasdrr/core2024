@@ -12,4 +12,6 @@ public partial class TAboVsKardex
     public int? Mes { get; set; }
 
     public decimal? Valor { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

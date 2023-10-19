@@ -40,4 +40,6 @@ public partial class TCabFactAbonado
     public double? FacTcSd { get; set; }
 
     public double? FacTcEd { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

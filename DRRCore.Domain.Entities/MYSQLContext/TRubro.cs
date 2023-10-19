@@ -14,4 +14,6 @@ public partial class TRubro
     public string? RubObserv { get; set; }
 
     public bool? RubActivo { get; set; }
+
+    public bool Migra { get; set; }
 }

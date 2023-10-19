@@ -12,4 +12,6 @@ public partial class TSituacion
     public string? SitNombreIng { get; set; }
 
     public string? SitAbrevia { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

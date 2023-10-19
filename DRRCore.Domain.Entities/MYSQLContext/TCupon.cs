@@ -129,4 +129,6 @@ public partial class TCupon
     public string? Flag { get; set; }
 
     public string? Aaa { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

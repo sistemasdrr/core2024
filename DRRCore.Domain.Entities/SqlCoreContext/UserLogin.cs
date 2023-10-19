@@ -23,5 +23,5 @@ public partial class UserLogin
 
     public virtual Employee? IdEmployeeNavigation { get; set; }
 
-    public virtual ICollection<UserPermission> UserPermissions { get; set; } = new List<UserPermission>();
+    public virtual ICollection<UserProcess> UserProcesses { get; set; } = new List<UserProcess>();
 }

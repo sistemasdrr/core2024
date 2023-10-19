@@ -14,4 +14,6 @@ public partial class TSitFin
     public string? SfNombreIng { get; set; }
 
     public string? SfComenIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

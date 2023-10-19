@@ -16,4 +16,6 @@ public partial class REmpVsVenta
     public double? VeVentas { get; set; }
 
     public string PaiMone { get; set; } = null!;
+
+    public sbyte Migra { get; set; }
 }

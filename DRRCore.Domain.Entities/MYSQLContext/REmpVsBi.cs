@@ -18,4 +18,6 @@ public partial class REmpVsBi
     public string? BiNombreIng { get; set; }
 
     public double? BiValor { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

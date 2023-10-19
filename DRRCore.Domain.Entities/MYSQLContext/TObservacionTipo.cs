@@ -10,4 +10,6 @@ public partial class TObservacionTipo
     public string? ObNombre { get; set; }
 
     public sbyte? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

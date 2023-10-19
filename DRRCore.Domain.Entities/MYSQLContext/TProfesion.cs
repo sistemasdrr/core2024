@@ -16,4 +16,6 @@ public partial class TProfesion
     public string? PfNombreIng { get; set; }
 
     public string? PfObservIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

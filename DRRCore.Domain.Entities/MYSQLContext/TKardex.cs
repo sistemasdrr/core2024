@@ -28,4 +28,6 @@ public partial class TKardex
     public double? SaldoActual { get; set; }
 
     public double? TotalSaldoActual { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

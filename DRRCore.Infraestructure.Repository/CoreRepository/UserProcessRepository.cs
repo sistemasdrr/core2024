@@ -1,24 +1,23 @@
 ﻿using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common.Interface;
-using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
-    public class PermissionRepository:IPermissionRepository
+    public class UserProcessRepository: IUserProcessRepository
     {
         private readonly ILogger _logger;
-        public PermissionRepository(ILogger logger)
+        public UserProcessRepository(ILogger logger)
         {
             _logger = logger;
         }
-        public async Task<bool> AddAsync(Permission obj)
+        public async Task<bool> AddAsync(UserProcess obj)
         {
             try
             {
                 using (var context = new SqlCoreContext())
                 {
-                    await context.Permissions.AddAsync(obj);
+                    await context.UserProcesses.AddAsync(obj);
                     await context.SaveChangesAsync();
                     return true;
                 }
@@ -36,9 +35,9 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using (var context = new SqlCoreContext())
                 {
-                    var obj = await context.Permissions.FindAsync(id) ?? throw new Exception("No existe el país solicitado");
+                    var obj = await context.UserProcesses.FindAsync(id) ?? throw new Exception("No existe el país solicitado");
                     obj.Enable = false;
-                    context.Permissions.Update(obj);
+                    context.UserProcesses.Update(obj);
                     await context.SaveChangesAsync();
                     return true;
                 }
@@ -50,26 +49,17 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public async Task<List<Permission>> GetAllAsync()
+        public Task<List<UserProcess>> GetAllAsync()
         {
-            try
-            {
-                using var context = new SqlCoreContext();
-                return await context.Permissions.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return new List<Permission>();
-            }
+           throw new NotImplementedException();
         }
 
-        public async Task<Permission> GetByIdAsync(int id)
+        public async Task<UserProcess> GetByIdAsync(int id)
         {
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Permissions.FindAsync(id) ?? throw new Exception("No existe el país solicitado");
+                return await context.UserProcesses.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {
@@ -78,32 +68,18 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public Task<List<Permission>> GetByNameAsync(string name)
+        public async Task<List<UserProcess>> GetByNameAsync(string name)
         {
-           throw new NotImplementedException(); 
+            throw new NotImplementedException();
         }
 
-        public async Task<List<Permission>> GetByRol(int idRol)
-        {
-            try
-            {
-                using var context = new SqlCoreContext();
-                return await context.Permissions.Where(x=>x.IdRol==idRol).ToListAsync() ?? throw new Exception("No existe el país solicitado");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return new List<Permission>();
-            }
-        }
-
-        public async Task<bool> UpdateAsync(Permission obj)
+        public async Task<bool> UpdateAsync(UserProcess obj)
         {
             try
             {
                 using (var context = new SqlCoreContext())
                 {
-                    context.Permissions.Update(obj);
+                    context.UserProcesses.Update(obj);
                     await context.SaveChangesAsync();
                     return true;
                 }

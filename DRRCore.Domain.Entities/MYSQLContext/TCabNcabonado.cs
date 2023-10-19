@@ -26,4 +26,6 @@ public partial class TCabNcabonado
     public string? NcObservacion { get; set; }
 
     public string? NcEstado { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -16,4 +16,6 @@ public partial class TOpcionSitFin
     public string? OfDescri1Ing { get; set; }
 
     public string? OfDescri2Ing { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

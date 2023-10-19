@@ -48,4 +48,6 @@ public partial class MEmpresaRegistro
     /// 1- Ya se migro  0- Falta Migrar 2 -Denegado
     /// </summary>
     public int ErActivo { get; set; }
+
+    public sbyte Migra { get; set; }
 }

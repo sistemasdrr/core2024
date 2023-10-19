@@ -25,4 +25,6 @@ public partial class TPrecioAbonado
     public DateTime? PaFecha { get; set; }
 
     public string? MonCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

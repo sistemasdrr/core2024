@@ -12,4 +12,6 @@ public partial class TRamo
     public string? RamNombreIng { get; set; }
 
     public string? RamFlag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

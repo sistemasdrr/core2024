@@ -32,4 +32,6 @@ public partial class TPai
     public string? PaiMoneda { get; set; }
 
     public string? Sector { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -14,4 +14,6 @@ public partial class TRamoB
     public string? RamBNombreIng { get; set; }
 
     public string? RamBFlag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

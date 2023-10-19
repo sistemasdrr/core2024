@@ -70,4 +70,6 @@ public partial class RCupVsAbo
     public string? RcNombre { get; set; }
 
     public string? EmEntrev { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

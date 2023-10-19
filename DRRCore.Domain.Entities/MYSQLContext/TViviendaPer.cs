@@ -10,4 +10,6 @@ public partial class TViviendaPer
     public string? VivNombre { get; set; }
 
     public string? VivNombreIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

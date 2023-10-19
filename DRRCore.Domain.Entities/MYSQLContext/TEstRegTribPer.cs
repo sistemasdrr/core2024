@@ -10,4 +10,6 @@ public partial class TEstRegTribPer
     public string? ErNombre { get; set; }
 
     public string? ErNombreIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

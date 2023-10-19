@@ -14,4 +14,6 @@ public partial class TComplemento
     public DateTime? Fecha { get; set; }
 
     public string? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -15,6 +15,8 @@ public partial class SqlCoreContext : DbContext
     {
     }
 
+    public virtual DbSet<Continent> Continents { get; set; }
+
     public virtual DbSet<Country> Countries { get; set; }
 
     public virtual DbSet<DocumentType> DocumentTypes { get; set; }
@@ -25,15 +27,11 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<JobDepartment> JobDepartments { get; set; }
 
-    public virtual DbSet<Permission> Permissions { get; set; }
-
     public virtual DbSet<Process> Processes { get; set; }
-
-    public virtual DbSet<Rol> Rols { get; set; }
 
     public virtual DbSet<UserLogin> UserLogins { get; set; }
 
-    public virtual DbSet<UserPermission> UserPermissions { get; set; }
+    public virtual DbSet<UserProcess> UserProcesses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -41,19 +39,11 @@ public partial class SqlCoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Country>(entity =>
+        modelBuilder.Entity<Continent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Country__3213E83F0354AE0C");
+            entity.HasKey(e => e.Id).HasName("PK__Continen__3213E83F507587CC");
 
-            entity.ToTable("Country");
-
-            entity.HasIndex(e => e.Name, "UQ__Country__72E12F1B14C5EF2B").IsUnique();
-
-            entity.HasIndex(e => e.EnglishName, "UQ__Country__A124FA46587436C1").IsUnique();
-
-            entity.HasIndex(e => e.Iso, "UQ__Country__DC509075CA3B2293").IsUnique();
-
-            entity.HasIndex(e => e.FlagIso, "UQ__Country__ED15D6F32E0E806C").IsUnique();
+            entity.ToTable("Continent");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreationDate)
@@ -67,29 +57,65 @@ public partial class SqlCoreContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
             entity.Property(e => e.EnglishName)
-                .HasMaxLength(50)
+                .HasMaxLength(70)
+                .IsUnicode(false)
+                .HasColumnName("englishName");
+            entity.Property(e => e.Flag)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("flag");
+            entity.Property(e => e.Name)
+                .HasMaxLength(70)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
+        modelBuilder.Entity<Country>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Country__3213E83F8638D955");
+
+            entity.ToTable("Country");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EnglishName)
+                .HasMaxLength(70)
                 .IsUnicode(false)
                 .HasColumnName("englishName");
             entity.Property(e => e.Flag)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("flag");
             entity.Property(e => e.FlagIso)
-                .HasMaxLength(2)
+                .HasMaxLength(10)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("flagIso");
+            entity.Property(e => e.IdContinent).HasColumnName("idContinent");
             entity.Property(e => e.Iso)
-                .HasMaxLength(3)
+                .HasMaxLength(10)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("iso");
             entity.Property(e => e.Name)
-                .HasMaxLength(50)
+                .HasMaxLength(70)
                 .IsUnicode(false)
                 .HasColumnName("name");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdContinentNavigation).WithMany(p => p.Countries)
+                .HasForeignKey(d => d.IdContinent)
+                .HasConstraintName("FK__Country__idConti__7A3223E8");
         });
 
         modelBuilder.Entity<DocumentType>(entity =>
@@ -144,11 +170,11 @@ public partial class SqlCoreContext : DbContext
 
         modelBuilder.Entity<Employee>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Employee__3213E83F317A8138");
+            entity.HasKey(e => e.Id).HasName("PK__Employee__3213E83FD3E4A6E2");
 
             entity.ToTable("Employee");
 
-            entity.HasIndex(e => e.Code, "UQ__Employee__357D4CF9FF0B743F").IsUnique();
+            entity.HasIndex(e => e.Code, "UQ__Employee__357D4CF98225C32C").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Address)
@@ -211,24 +237,22 @@ public partial class SqlCoreContext : DbContext
 
             entity.HasOne(d => d.IdCountryNavigation).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.IdCountry)
-                .HasConstraintName("FK__Employee__idCoun__70DDC3D8");
+                .HasConstraintName("FK__Employee__idCoun__14E61A24");
 
             entity.HasOne(d => d.IdDocumentTypeNavigation).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.IdDocumentType)
-                .HasConstraintName("FK__Employee__idDocu__6EF57B66");
+                .HasConstraintName("FK__Employee__idDocu__12FDD1B2");
 
             entity.HasOne(d => d.IdJobNavigation).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.IdJob)
-                .HasConstraintName("FK__Employee__idJob__6FE99F9F");
+                .HasConstraintName("FK__Employee__idJob__13F1F5EB");
         });
 
         modelBuilder.Entity<Job>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Job__3213E83FD43C5CBC");
+            entity.HasKey(e => e.Id).HasName("PK__Job__3213E83F533F8829");
 
             entity.ToTable("Job");
-
-            entity.HasIndex(e => e.Name, "UQ__Job__72E12F1B13485DA5").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreationDate)
@@ -252,16 +276,16 @@ public partial class SqlCoreContext : DbContext
 
             entity.HasOne(d => d.IdJobDepartmentNavigation).WithMany(p => p.Jobs)
                 .HasForeignKey(d => d.IdJobDepartment)
-                .HasConstraintName("FK__Job__idJobDepart__46E78A0C");
+                .HasConstraintName("FK__Job__idJobDepart__078C1F06");
         });
 
         modelBuilder.Entity<JobDepartment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__JobDepar__3213E83F8284DB3C");
+            entity.HasKey(e => e.Id).HasName("PK__JobDepar__3213E83F01F30501");
 
             entity.ToTable("JobDepartment");
 
-            entity.HasIndex(e => e.Name, "UQ__JobDepar__72E12F1BA2CA8812").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__JobDepar__72E12F1BD5E8AB73").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreationDate)
@@ -281,48 +305,14 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
-        });
-
-        modelBuilder.Entity<Permission>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Permissi__3213E83F2649FEE1");
-
-            entity.ToTable("Permission");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.CreationDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("creationDate");
-            entity.Property(e => e.DeleteDate)
-                .HasColumnType("datetime")
-                .HasColumnName("deleteDate");
-            entity.Property(e => e.Enable)
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("enable");
-            entity.Property(e => e.IdProcess).HasColumnName("idProcess");
-            entity.Property(e => e.IdRol).HasColumnName("idRol");
-            entity.Property(e => e.UpdateDate)
-                .HasColumnType("datetime")
-                .HasColumnName("updateDate");
-
-            entity.HasOne(d => d.IdProcessNavigation).WithMany(p => p.Permissions)
-                .HasForeignKey(d => d.IdProcess)
-                .HasConstraintName("FK__Permissio__idPro__4CA06362");
-
-            entity.HasOne(d => d.IdRolNavigation).WithMany(p => p.Permissions)
-                .HasForeignKey(d => d.IdRol)
-                .HasConstraintName("FK__Permissio__idRol__4BAC3F29");
         });
 
         modelBuilder.Entity<Process>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Process__3213E83F04891FD1");
+            entity.HasKey(e => e.Id).HasName("PK__Process__3213E83F2DC21E99");
 
             entity.ToTable("Process");
 
-            entity.HasIndex(e => e.Name, "UQ__Process__72E12F1BD270B4D3").IsUnique();
-
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")
@@ -334,38 +324,15 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
+            entity.Property(e => e.Menu)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("menu");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("name");
-            entity.Property(e => e.UpdateDate)
-                .HasColumnType("datetime")
-                .HasColumnName("updateDate");
-        });
-
-        modelBuilder.Entity<Rol>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Rol__3213E83F94448855");
-
-            entity.ToTable("Rol");
-
-            entity.HasIndex(e => e.Name, "UQ__Rol__72E12F1B5131A1CD").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.CreationDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("creationDate");
-            entity.Property(e => e.DeleteDate)
-                .HasColumnType("datetime")
-                .HasColumnName("deleteDate");
-            entity.Property(e => e.Enable)
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("enable");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("name");
+            entity.Property(e => e.OrderItem).HasColumnName("orderItem");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
@@ -373,7 +340,7 @@ public partial class SqlCoreContext : DbContext
 
         modelBuilder.Entity<UserLogin>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserLogi__3213E83FA7238118");
+            entity.HasKey(e => e.Id).HasName("PK__UserLogi__3213E83F7AE70E9C");
 
             entity.ToTable("UserLogin");
 
@@ -403,14 +370,14 @@ public partial class SqlCoreContext : DbContext
 
             entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.UserLogins)
                 .HasForeignKey(d => d.IdEmployee)
-                .HasConstraintName("FK__UserLogin__idEmp__75A278F5");
+                .HasConstraintName("FK__UserLogin__idEmp__19AACF41");
         });
 
-        modelBuilder.Entity<UserPermission>(entity =>
+        modelBuilder.Entity<UserProcess>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserPerm__3213E83FB81072F3");
+            entity.HasKey(e => e.Id).HasName("PK__UserProc__3213E83F8C1D3BF0");
 
-            entity.ToTable("UserPermission");
+            entity.ToTable("UserProcess");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreationDate)
@@ -423,19 +390,19 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
-            entity.Property(e => e.IdPermission).HasColumnName("idPermission");
+            entity.Property(e => e.IdProcess).HasColumnName("idProcess");
             entity.Property(e => e.IdUser).HasColumnName("idUser");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
 
-            entity.HasOne(d => d.IdPermissionNavigation).WithMany(p => p.UserPermissions)
-                .HasForeignKey(d => d.IdPermission)
-                .HasConstraintName("FK__UserPermi__idPer__7A672E12");
+            entity.HasOne(d => d.IdProcessNavigation).WithMany(p => p.UserProcesses)
+                .HasForeignKey(d => d.IdProcess)
+                .HasConstraintName("FK__UserProce__idPro__24285DB4");
 
-            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.UserPermissions)
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.UserProcesses)
                 .HasForeignKey(d => d.IdUser)
-                .HasConstraintName("FK__UserPermi__idUse__7B5B524B");
+                .HasConstraintName("FK__UserProce__idUse__251C81ED");
         });
 
         OnModelCreatingPartial(modelBuilder);

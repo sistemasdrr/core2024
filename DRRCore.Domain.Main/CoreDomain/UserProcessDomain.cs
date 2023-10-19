@@ -4,15 +4,15 @@ using DRRCore.Infraestructure.Interfaces.CoreRepository;
 
 namespace DRRCore.Domain.Main.CoreDomain
 {
-    public class UserPermissionDomain:IUserPermisionDomain
+    public class UserProcessDomain:IUserProcessDomain
     {
-        private readonly IUserPermissionRepository _repository;
-        public UserPermissionDomain(IUserPermissionRepository repository)
+        private readonly IUserProcessRepository _repository;
+        public UserProcessDomain(IUserProcessRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<bool> AddAsync(UserPermission obj)
+        public async Task<bool> AddAsync(UserProcess obj)
         {
             return await _repository.AddAsync(obj);
         }
@@ -22,22 +22,22 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _repository.DeleteAsync(id);
         }
 
-        public async Task<List<UserPermission>> GetAllAsync()
+        public async Task<List<UserProcess>> GetAllAsync()
         {
             return await _repository.GetAllAsync();
         }
 
-        public async Task<UserPermission> GetByIdAsync(int id)
+        public async Task<UserProcess> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
         }
 
-        public async Task<List<UserPermission>> GetByNameAsync(string name)
+        public async Task<List<UserProcess>> GetByNameAsync(string name)
         {
             return await _repository.GetByNameAsync(name);
         }
 
-        public async Task<bool> UpdateAsync(UserPermission obj)
+        public async Task<bool> UpdateAsync(UserProcess obj)
         {
             return await _repository.UpdateAsync(obj);
         }

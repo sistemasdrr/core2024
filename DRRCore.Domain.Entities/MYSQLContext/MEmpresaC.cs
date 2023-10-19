@@ -114,4 +114,6 @@ public partial class MEmpresaC
     public string? MemoSunatIng { get; set; }
 
     public string? EmPagweb { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

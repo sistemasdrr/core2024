@@ -14,4 +14,6 @@ public partial class TSectorEconomico
     public string? SeNombreIng { get; set; }
 
     public string? SeActividadesIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

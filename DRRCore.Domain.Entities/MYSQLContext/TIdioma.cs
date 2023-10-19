@@ -14,4 +14,6 @@ public partial class TIdioma
     public string? IdiObserv { get; set; }
 
     public bool? IdiActivo { get; set; }
+
+    public bool? Migra { get; set; }
 }

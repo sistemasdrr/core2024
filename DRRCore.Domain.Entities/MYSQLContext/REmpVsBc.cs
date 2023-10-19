@@ -20,4 +20,6 @@ public partial class REmpVsBc
     public string? BcMonNac { get; set; }
 
     public string? BcMonExt { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

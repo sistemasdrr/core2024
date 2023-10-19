@@ -11,4 +11,6 @@ public partial class REmpVsRep
     /// Codigo de la Reputacion Comercial
     /// </summary>
     public string RcCodigo { get; set; } = null!;
+
+    public sbyte Migra { get; set; }
 }

@@ -12,4 +12,6 @@ public partial class TDireccion
     public string? DiNombreIng { get; set; }
 
     public sbyte? DiOrden { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

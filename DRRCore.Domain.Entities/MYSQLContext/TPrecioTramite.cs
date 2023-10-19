@@ -20,4 +20,6 @@ public partial class TPrecioTramite
     public double? PreAux5 { get; set; }
 
     public double? PreAux6 { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

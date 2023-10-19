@@ -68,4 +68,6 @@ public partial class TUsuario
     public int? UsWord { get; set; }
 
     public byte[]? UsFoto { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

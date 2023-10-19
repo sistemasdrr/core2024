@@ -2,8 +2,7 @@
 
 namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
-    public interface IPermissionRepository : IBaseRepository<Permission>
+    public interface IUserProcessRepository : IBaseRepository<UserProcess>
     {
-        Task<List<Permission>> GetByRol(int idRol);
     }
 }

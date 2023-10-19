@@ -12,4 +12,6 @@ public partial class TTamano
     public string? TaNombreIng { get; set; }
 
     public string? Valor { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

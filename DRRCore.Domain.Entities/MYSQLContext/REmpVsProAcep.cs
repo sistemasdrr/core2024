@@ -31,4 +31,6 @@ public partial class REmpVsProAcep
     public string? PaFecreg { get; set; }
 
     public int? PaDiaatr { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

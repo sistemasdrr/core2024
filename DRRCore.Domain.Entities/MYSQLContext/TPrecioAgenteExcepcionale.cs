@@ -19,4 +19,6 @@ public partial class TPrecioAgenteExcepcionale
     public bool? PeActivo { get; set; }
 
     public string? PaiCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

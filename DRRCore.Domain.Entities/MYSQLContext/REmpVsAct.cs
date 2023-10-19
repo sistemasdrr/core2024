@@ -12,4 +12,6 @@ public partial class REmpVsAct
     public string? RamCodigo { get; set; }
 
     public uint? RamBCodigo { get; set; }
+
+    public byte? Migra { get; set; }
 }

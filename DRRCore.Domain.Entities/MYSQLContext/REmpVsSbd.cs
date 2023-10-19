@@ -34,4 +34,6 @@ public partial class REmpVsSbd
     public string? SbdMemo { get; set; }
 
     public string? SbdMemoIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

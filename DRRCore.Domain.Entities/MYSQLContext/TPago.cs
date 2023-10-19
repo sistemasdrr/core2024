@@ -18,4 +18,6 @@ public partial class TPago
     public string? PaOrdenIng { get; set; }
 
     public int? PaActivo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

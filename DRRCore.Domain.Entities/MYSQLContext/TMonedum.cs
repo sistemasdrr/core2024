@@ -14,4 +14,6 @@ public partial class TMonedum
     public string? MonObserv { get; set; }
 
     public bool? MonActivo { get; set; }
+
+    public bool? Migra { get; set; }
 }

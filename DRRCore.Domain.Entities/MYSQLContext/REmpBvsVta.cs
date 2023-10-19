@@ -12,4 +12,6 @@ public partial class REmpBvsVta
     public double? EvTipcam { get; set; }
 
     public string? EvAnio { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

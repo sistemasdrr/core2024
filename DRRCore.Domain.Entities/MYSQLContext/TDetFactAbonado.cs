@@ -10,4 +10,6 @@ public partial class TDetFactAbonado
     public string? CupCodigo { get; set; }
 
     public double? CupMonto { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

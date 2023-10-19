@@ -22,4 +22,6 @@ public partial class REmpVsLit
     public string? LiDemandIng { get; set; }
 
     public string? LiEstado { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

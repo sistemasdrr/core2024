@@ -74,4 +74,6 @@ public partial class REmpVsProv
     public DateTime? AudFecha { get; set; }
 
     public string? AudAccion { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

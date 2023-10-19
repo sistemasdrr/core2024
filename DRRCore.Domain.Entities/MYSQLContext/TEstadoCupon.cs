@@ -14,4 +14,6 @@ public partial class TEstadoCupon
     public string? EcObserv { get; set; }
 
     public bool? EcActivo { get; set; }
+
+    public bool? Migra { get; set; }
 }

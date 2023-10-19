@@ -41,4 +41,6 @@ public partial class RPerVsTrab
     public string? PtDetall { get; set; }
 
     public string? PtDetallIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

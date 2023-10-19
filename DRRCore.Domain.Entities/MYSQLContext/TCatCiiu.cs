@@ -12,4 +12,6 @@ public partial class TCatCiiu
     public string? CcNombreIng { get; set; }
 
     public string? CcDescri { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

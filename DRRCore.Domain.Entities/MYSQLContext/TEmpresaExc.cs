@@ -12,4 +12,6 @@ public partial class TEmpresaExc
     public string? PaisCod { get; set; }
 
     public string? PaisNom { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

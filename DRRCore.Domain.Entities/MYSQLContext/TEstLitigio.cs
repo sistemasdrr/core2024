@@ -10,4 +10,6 @@ public partial class TEstLitigio
     public string? ElDescri { get; set; }
 
     public string? ElDescriIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

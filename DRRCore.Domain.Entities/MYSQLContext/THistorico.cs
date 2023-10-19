@@ -16,4 +16,6 @@ public partial class THistorico
     public string LblHostName { get; set; } = null!;
 
     public string LblIpbehindProxy { get; set; } = null!;
+
+    public sbyte Migra { get; set; }
 }

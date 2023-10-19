@@ -14,4 +14,6 @@ public partial class TControlAsignacione
     public int? Acceso { get; set; }
 
     public int? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

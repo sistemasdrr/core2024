@@ -23,4 +23,6 @@ public partial class RAboVsCup
     public double? AcCupdis { get; set; }
 
     public string CupCodigo { get; set; } = null!;
+
+    public sbyte Migra { get; set; }
 }

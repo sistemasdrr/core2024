@@ -10,4 +10,6 @@ public partial class TDetObservacion
     public string PerCodigo { get; set; } = null!;
 
     public string? ObComent { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

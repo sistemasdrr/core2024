@@ -24,4 +24,6 @@ public partial class TAbonadoTalonario
     public double? AtCancom { get; set; }
 
     public string? AtFactur { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

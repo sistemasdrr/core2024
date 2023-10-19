@@ -1,12 +1,13 @@
 ﻿using DRRCore.Transversal.Common.Interface;
 using log4net;
 using log4net.Config;
+using log4net.Repository.Hierarchy;
 using System.Reflection;
 using System.Xml;
 
 namespace DRRCore.Transversal.Common
 {
-    public class LoggerManager : ILogger
+    public class LoggerManager: ILogger
     {
         private readonly ILog _logger = LogManager.GetLogger(typeof(LoggerManager));
 
@@ -44,6 +45,9 @@ namespace DRRCore.Transversal.Common
             _logger.Warn(message,ex);
         }
 
+       
+      
+
         public void LogError(string message)
         {
             _logger.Error(message);
@@ -54,6 +58,8 @@ namespace DRRCore.Transversal.Common
             _logger.Error(message,ex);
         }
 
+     
+
         public void LogInformation(string message)
         {
             _logger.Info(message);
@@ -63,5 +69,7 @@ namespace DRRCore.Transversal.Common
         {
             _logger.Info(message, ex);
         }
+
+       
     }
 }

@@ -43,4 +43,6 @@ public partial class TAsigRep
     public string? ArLogobs { get; set; }
 
     public string? Tipo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

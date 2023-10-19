@@ -36,4 +36,6 @@ public partial class TCabObservacion
     public string? ObConclusion { get; set; }
 
     public string? AboCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

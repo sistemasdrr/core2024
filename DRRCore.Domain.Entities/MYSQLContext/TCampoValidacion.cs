@@ -10,4 +10,6 @@ public partial class TCampoValidacion
     public string? CamDescripcion { get; set; }
 
     public int? CamEstado { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

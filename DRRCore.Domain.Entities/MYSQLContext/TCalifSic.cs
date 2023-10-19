@@ -18,4 +18,6 @@ public partial class TCalifSic
     public string? CcCodigo { get; set; }
 
     public string? CsSector { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

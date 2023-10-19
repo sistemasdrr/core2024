@@ -10,4 +10,6 @@ public partial class TConsultasTipo
     public string? ConNombre { get; set; }
 
     public sbyte? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -10,4 +10,6 @@ public partial class TMatSub
     public string? MatNombre { get; set; }
 
     public string? MatNombreIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

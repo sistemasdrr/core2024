@@ -10,4 +10,6 @@ public partial class TCiiu
     public string? CiNombre { get; set; }
 
     public string? CcCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

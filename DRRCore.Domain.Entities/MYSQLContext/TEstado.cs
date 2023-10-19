@@ -14,4 +14,6 @@ public partial class TEstado
     public int? EstOrden { get; set; }
 
     public bool? EstEstado { get; set; }
+
+    public bool? Migra { get; set; }
 }

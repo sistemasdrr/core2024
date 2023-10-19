@@ -23,4 +23,6 @@ public partial class TRepCom
     public string? RcOrdenIng { get; set; }
 
     public string? RcStatus { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

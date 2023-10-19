@@ -2,8 +2,7 @@
 
 namespace DRRCore.Domain.Interfaces.CoreDomain
 {
-    public interface IRolDomain:IBaseDomain<Rol>
+    public interface IUserProcessDomain : IBaseDomain<UserProcess>
     {
-       
     }
 }

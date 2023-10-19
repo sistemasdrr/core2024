@@ -12,4 +12,6 @@ public partial class TPartPoli
     public string? PpDescri { get; set; }
 
     public string? PpActivo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

@@ -30,4 +30,6 @@ public partial class TPrecioAgente
     public int PaContador { get; set; }
 
     public string? MonCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

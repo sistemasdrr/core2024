@@ -12,4 +12,6 @@ public partial class TNovedade
     public string? NovDescrip { get; set; }
 
     public string? NovVersion { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

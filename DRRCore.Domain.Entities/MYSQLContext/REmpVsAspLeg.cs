@@ -96,4 +96,6 @@ public partial class REmpVsAspLeg
     public string? EmOrigenIng { get; set; }
 
     public string? EmCapactComent { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

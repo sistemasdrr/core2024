@@ -10,4 +10,6 @@ public partial class TSiNo
     public string? SnNombre { get; set; }
 
     public string? SnNombreIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

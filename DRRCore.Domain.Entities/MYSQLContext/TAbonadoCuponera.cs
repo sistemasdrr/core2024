@@ -26,4 +26,6 @@ public partial class TAbonadoCuponera
     public string? AcFactur { get; set; }
 
     public double? AcPrecio { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

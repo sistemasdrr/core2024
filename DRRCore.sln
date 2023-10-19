@@ -5,41 +5,43 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Infraestructure", "1.Infraestructure", "{F11C06A8-1183-44A2-9FF6-8B4A827BA698}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Infraestructure.Configuration", "DRRCore.Infraestructure.Configuration\DRRCore.Infraestructure.Configuration.csproj", "{D53821FC-2047-4684-A3F2-0964CC8D3E2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Infraestructure.Configuration", "DRRCore.Infraestructure.Configuration\DRRCore.Infraestructure.Configuration.csproj", "{D53821FC-2047-4684-A3F2-0964CC8D3E2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Infraestructure.Interfaces", "DRRCore.Infraestructure.Interfaces\DRRCore.Infraestructure.Interfaces.csproj", "{A184AD18-9C26-48F2-A869-ACDF05160B98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Infraestructure.Interfaces", "DRRCore.Infraestructure.Interfaces\DRRCore.Infraestructure.Interfaces.csproj", "{A184AD18-9C26-48F2-A869-ACDF05160B98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Infraestructure.Repository", "DRRCore.Infraestructure.Repository\DRRCore.Infraestructure.Repository.csproj", "{DDBA74E3-265B-4E55-AE79-839A011B0EAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Infraestructure.Repository", "DRRCore.Infraestructure.Repository\DRRCore.Infraestructure.Repository.csproj", "{DDBA74E3-265B-4E55-AE79-839A011B0EAC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Domain", "2.Domain", "{14E769EF-B923-446E-A450-8361045816D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Domain.Entities", "DRRCore.Domain.Entities\DRRCore.Domain.Entities.csproj", "{DD1E85F3-B9DC-4199-A450-5382E62B6BDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Domain.Entities", "DRRCore.Domain.Entities\DRRCore.Domain.Entities.csproj", "{DD1E85F3-B9DC-4199-A450-5382E62B6BDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Domain.Interfaces", "DRRCore.Domain.Interfaces\DRRCore.Domain.Interfaces.csproj", "{FC1A35C0-2EFB-4237-BEB8-FD6DE0AC7201}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Domain.Interfaces", "DRRCore.Domain.Interfaces\DRRCore.Domain.Interfaces.csproj", "{FC1A35C0-2EFB-4237-BEB8-FD6DE0AC7201}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Domain.Main", "DRRCore.Domain.Main\DRRCore.Domain.Main.csproj", "{96E7AF6A-3DEC-4405-B3FB-58F6212A63FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Domain.Main", "DRRCore.Domain.Main\DRRCore.Domain.Main.csproj", "{96E7AF6A-3DEC-4405-B3FB-58F6212A63FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Application", "3.Application", "{1EA36422-D53A-4D53-A6CF-FAA71C07582A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Application.DTO", "DRRCore.Application.DTO\DRRCore.Application.DTO.csproj", "{BE151736-6FA1-438C-9A67-FC3A900777F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Application.DTO", "DRRCore.Application.DTO\DRRCore.Application.DTO.csproj", "{BE151736-6FA1-438C-9A67-FC3A900777F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Application.Interfaces", "DRRCore.Application.Interfaces\DRRCore.Application.Interfaces.csproj", "{81C3D6F6-A336-4BC8-9B6B-F67B52BF4528}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Application.Interfaces", "DRRCore.Application.Interfaces\DRRCore.Application.Interfaces.csproj", "{81C3D6F6-A336-4BC8-9B6B-F67B52BF4528}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Application.Main", "DRRCore.Application.Main\DRRCore.Application.Main.csproj", "{279425BB-AE46-467A-88CA-97B959339E60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Application.Main", "DRRCore.Application.Main\DRRCore.Application.Main.csproj", "{279425BB-AE46-467A-88CA-97B959339E60}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.Services", "4.Services", "{AE5F0844-2074-453A-8027-EECC2D7C3CBA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.Transversal", "5.Transversal", "{FF25FFFD-00BF-463B-BE1C-7074743C0041}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Transversal.Common", "DRRCore.Transversal.Common\DRRCore.Transversal.Common.csproj", "{F7EB9451-E49A-4C43-99E5-5C058E169626}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Transversal.Common", "DRRCore.Transversal.Common\DRRCore.Transversal.Common.csproj", "{F7EB9451-E49A-4C43-99E5-5C058E169626}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Transversal.Mapper", "DRRCore.Transversal.Mapper\DRRCore.Transversal.Mapper.csproj", "{A8C7F3D6-F547-4AB9-97C3-EACAACCFCD26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Transversal.Mapper", "DRRCore.Transversal.Mapper\DRRCore.Transversal.Mapper.csproj", "{A8C7F3D6-F547-4AB9-97C3-EACAACCFCD26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Services.ApiCore", "DRRCore.Services.ApiCore\DRRCore.Services.ApiCore.csproj", "{3A6B5760-D69F-4F94-BCC6-C662C3A5D285}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Services.ApiCore", "DRRCore.Services.ApiCore\DRRCore.Services.ApiCore.csproj", "{3A6B5760-D69F-4F94-BCC6-C662C3A5D285}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Services.ApiEmail", "DRRCore.Services.ApiEmail\DRRCore.Services.ApiEmail.csproj", "{4CC0D501-3C86-4CB1-82C3-580E664B42E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Services.ApiEmail", "DRRCore.Services.ApiEmail\DRRCore.Services.ApiEmail.csproj", "{4CC0D501-3C86-4CB1-82C3-580E664B42E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Services.ApiWeb", "DRRCore.Services.ApiWeb\DRRCore.Services.ApiWeb.csproj", "{DF0B88F4-541B-483E-8A1E-48E5CDCE58A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Services.ApiWeb", "DRRCore.Services.ApiWeb\DRRCore.Services.ApiWeb.csproj", "{DF0B88F4-541B-483E-8A1E-48E5CDCE58A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Services.Migration", "DRRCore.Services.Migration\DRRCore.Services.Migration.csproj", "{C1496B15-BCFF-4811-88E5-82F673FE4E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +105,10 @@ Global
 		{DF0B88F4-541B-483E-8A1E-48E5CDCE58A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF0B88F4-541B-483E-8A1E-48E5CDCE58A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF0B88F4-541B-483E-8A1E-48E5CDCE58A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1496B15-BCFF-4811-88E5-82F673FE4E13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1496B15-BCFF-4811-88E5-82F673FE4E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1496B15-BCFF-4811-88E5-82F673FE4E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1496B15-BCFF-4811-88E5-82F673FE4E13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +128,7 @@ Global
 		{3A6B5760-D69F-4F94-BCC6-C662C3A5D285} = {AE5F0844-2074-453A-8027-EECC2D7C3CBA}
 		{4CC0D501-3C86-4CB1-82C3-580E664B42E7} = {AE5F0844-2074-453A-8027-EECC2D7C3CBA}
 		{DF0B88F4-541B-483E-8A1E-48E5CDCE58A8} = {AE5F0844-2074-453A-8027-EECC2D7C3CBA}
+		{C1496B15-BCFF-4811-88E5-82F673FE4E13} = {AE5F0844-2074-453A-8027-EECC2D7C3CBA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9395AABF-47D5-4FDF-8D13-09BFD1B39889}

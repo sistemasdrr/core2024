@@ -10,4 +10,6 @@ public partial class REmpVsExp
     public int ExAno { get; set; }
 
     public string? ExMonto { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

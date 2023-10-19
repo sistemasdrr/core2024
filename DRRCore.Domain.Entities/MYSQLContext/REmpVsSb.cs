@@ -102,4 +102,6 @@ public partial class REmpVsSb
     public double? EmTotdeu { get; set; }
 
     public double? EmGarofr { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

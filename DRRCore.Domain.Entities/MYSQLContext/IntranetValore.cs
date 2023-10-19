@@ -16,4 +16,6 @@ public partial class IntranetValore
     public string? ValImagen { get; set; }
 
     public int? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

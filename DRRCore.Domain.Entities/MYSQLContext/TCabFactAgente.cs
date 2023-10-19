@@ -24,4 +24,6 @@ public partial class TCabFactAgente
     public string? FacEstado { get; set; }
 
     public int? FacCantid { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

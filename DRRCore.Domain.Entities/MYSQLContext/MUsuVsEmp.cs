@@ -12,4 +12,6 @@ public partial class MUsuVsEmp
     public string? EmCodigo { get; set; }
 
     public DateTime? UeFecdes { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

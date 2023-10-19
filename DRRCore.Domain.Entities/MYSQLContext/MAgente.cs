@@ -32,4 +32,6 @@ public partial class MAgente
     public string? AgeAbo { get; set; }
 
     public int? AgeActivo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

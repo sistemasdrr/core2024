@@ -42,4 +42,6 @@ public partial class TAsigAgen
     public string? AgFactura { get; set; }
 
     public long AgNumped { get; set; }
+
+    public sbyte Migra { get; set; }
 }

@@ -22,4 +22,6 @@ public partial class REmpVsSe
     public string? EsVence { get; set; }
 
     public string? EsVenceIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

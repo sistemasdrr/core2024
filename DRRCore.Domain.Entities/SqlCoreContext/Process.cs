@@ -9,6 +9,10 @@ public partial class Process
 
     public string Name { get; set; } = null!;
 
+    public string? Menu { get; set; }
+
+    public int? OrderItem { get; set; }
+
     public DateTime CreationDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
@@ -17,5 +21,5 @@ public partial class Process
 
     public bool? Enable { get; set; }
 
-    public virtual ICollection<Permission> Permissions { get; set; } = new List<Permission>();
+    public virtual ICollection<UserProcess> UserProcesses { get; set; } = new List<UserProcess>();
 }

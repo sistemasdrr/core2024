@@ -16,4 +16,6 @@ public partial class ResumenMensual
     public int? Cantidad { get; set; }
 
     public string? Anio { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

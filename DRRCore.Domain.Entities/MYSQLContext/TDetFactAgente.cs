@@ -10,4 +10,6 @@ public partial class TDetFactAgente
     public long? CupCodigo { get; set; }
 
     public double? AgMonto { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

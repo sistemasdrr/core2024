@@ -10,4 +10,6 @@ public partial class TComentProvVario
     public string? CpNombre { get; set; }
 
     public string? CpNombreIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

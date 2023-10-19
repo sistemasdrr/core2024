@@ -12,4 +12,6 @@ public partial class RAboVsIng
     public DateTime AiFecing { get; set; }
 
     public DateTime AiFecsal { get; set; }
+
+    public sbyte Migra { get; set; }
 }

@@ -30,4 +30,6 @@ public partial class RPerVsEr
     public string? EmCodigo { get; set; }
 
     public string? Hasta { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

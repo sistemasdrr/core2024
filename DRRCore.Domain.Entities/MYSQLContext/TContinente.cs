@@ -14,4 +14,6 @@ public partial class TContinente
     public string? ConObserv { get; set; }
 
     public int ConActivo { get; set; }
+
+    public sbyte Migra { get; set; }
 }

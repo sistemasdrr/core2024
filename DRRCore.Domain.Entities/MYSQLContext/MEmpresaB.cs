@@ -192,4 +192,6 @@ public partial class MEmpresaB
     public string? EmImport1Ing { get; set; }
 
     public string? EmExport1Ing { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

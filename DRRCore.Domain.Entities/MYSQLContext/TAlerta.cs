@@ -20,4 +20,6 @@ public partial class TAlerta
     public string? CupNomsol { get; set; }
 
     public bool Flag { get; set; }
+
+    public bool Migra { get; set; }
 }

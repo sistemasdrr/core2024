@@ -12,4 +12,6 @@ public partial class TCargo
     public string? CaCodigoIng { get; set; }
 
     public string? CaNombreIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

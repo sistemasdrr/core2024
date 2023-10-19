@@ -28,4 +28,6 @@ public partial class TConsulta
     public string? ConMensaje3 { get; set; }
 
     public sbyte? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

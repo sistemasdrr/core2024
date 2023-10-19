@@ -16,4 +16,6 @@ public partial class MAuditorium
     public string? Valor2 { get; set; }
 
     public string? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

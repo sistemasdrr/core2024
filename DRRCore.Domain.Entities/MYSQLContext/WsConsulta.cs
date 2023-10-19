@@ -14,4 +14,6 @@ public partial class WsConsulta
     public string? EmCodigo { get; set; }
 
     public sbyte? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

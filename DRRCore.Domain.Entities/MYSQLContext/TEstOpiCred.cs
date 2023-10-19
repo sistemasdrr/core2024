@@ -15,4 +15,6 @@ public partial class TEstOpiCred
     public string? OcDescriIng { get; set; }
 
     public int? OcOrden { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

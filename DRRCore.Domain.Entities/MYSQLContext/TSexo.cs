@@ -10,4 +10,6 @@ public partial class TSexo
     public string? SexDescri { get; set; }
 
     public string? SexDescriIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

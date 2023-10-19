@@ -62,4 +62,6 @@ public partial class REmpVsPeAnt
     public string? EpTitulo7 { get; set; }
 
     public string? EpTitulo8 { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

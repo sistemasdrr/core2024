@@ -12,4 +12,6 @@ public partial class RUsuVsIng
     public DateTime? UiFecsal { get; set; }
 
     public string? UsCodigo { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

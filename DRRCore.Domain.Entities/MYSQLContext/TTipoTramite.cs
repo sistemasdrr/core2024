@@ -14,4 +14,6 @@ public partial class TTipoTramite
     public string? TramObserv { get; set; }
 
     public int? TramEstado { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

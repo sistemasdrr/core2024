@@ -17,6 +17,8 @@ public partial class Country
 
     public bool? Flag { get; set; }
 
+    public int? IdContinent { get; set; }
+
     public DateTime CreationDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
@@ -26,4 +28,6 @@ public partial class Country
     public bool? Enable { get; set; }
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+
+    public virtual Continent? IdContinentNavigation { get; set; }
 }

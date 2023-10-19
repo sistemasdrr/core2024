@@ -12,4 +12,6 @@ public partial class TActCom
     public string? AcNombreIng { get; set; }
 
     public string? EmCiiu { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

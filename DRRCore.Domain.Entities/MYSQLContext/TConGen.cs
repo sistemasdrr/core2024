@@ -24,4 +24,6 @@ public partial class TConGen
     public string? TgObsGen { get; set; }
 
     public string? TgObsGenIng { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

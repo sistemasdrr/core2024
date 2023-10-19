@@ -18,4 +18,6 @@ public partial class MEmpresaNoWeb
     public string? Descripcion { get; set; }
 
     public sbyte? Flag { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

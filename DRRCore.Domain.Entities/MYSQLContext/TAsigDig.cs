@@ -34,4 +34,6 @@ public partial class TAsigDig
     public long AdNumped { get; set; }
 
     public string Tipo { get; set; } = null!;
+
+    public sbyte Migra { get; set; }
 }

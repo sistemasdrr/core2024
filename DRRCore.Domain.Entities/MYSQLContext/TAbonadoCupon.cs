@@ -33,4 +33,6 @@ public partial class TAbonadoCupon
     public double? AcCancom { get; set; }
 
     public string? AcFactur { get; set; }
+
+    public sbyte? Migra { get; set; }
 }
