@@ -1,4 +1,7 @@
-﻿namespace DRRCore.Domain.Entities.SqlCoreContext;
+﻿using System;
+using System.Collections.Generic;
+
+namespace DRRCore.Domain.Entities.SqlCoreContext;
 
 public partial class UserProcess
 {

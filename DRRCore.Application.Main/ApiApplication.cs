@@ -5,7 +5,6 @@ using DRRCore.Application.Interfaces;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
-using Microsoft.Identity.Client;
 
 namespace DRRCore.Application.Main
 {

@@ -14,9 +14,4 @@
     <ProjectReference Include="..\DRRCore.Transversal.Common\DRRCore.Transversal.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Core\Response\" />
-    <Folder Include="Core\Request\" />
-  </ItemGroup>
-
 </Project>

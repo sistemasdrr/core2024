@@ -50,6 +50,16 @@ namespace DRRCore.Application.DTO
                     TypeDocument = "RUC",
                     NumberDocument = "2010005****"
                 },
+                TaxpayerSituation=new ValueDetailDto
+                {
+                    Code="TS1",
+                    Description="Active"
+                },
+                JuridicForm=new ValueDetailDto
+                {
+                    Code= "JF26",
+                    Description= "Publicly Held Corporation"
+                },
                 Main_Address = "Argentina, 4793, ****",
                 CityProvincie = "Callao",
                 PostalCode = "Callao, 3",

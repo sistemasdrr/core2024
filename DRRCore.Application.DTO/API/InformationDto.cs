@@ -12,6 +12,11 @@ namespace DRRCore.Application.DTO.API
         public string QualityInformation { get; set; } = string.Empty;
         [JsonPropertyName("DRR_INFORM_NUMREG")]
         public DocumentTypeDto TaxpayerRegistration { get; set;}= new DocumentTypeDto();
+        [JsonPropertyName("DRR_INFORM_SITTAX")]
+        public ValueDetailDto TaxpayerSituation { get; set; } = new ValueDetailDto();
+        [JsonPropertyName("DRR_INFORM_FORJUR")]
+        public ValueDetailDto JuridicForm { get; set; } = new ValueDetailDto();
+        
         [JsonPropertyName("DRR_INFORM_MAINAD")]
         public string Main_Address { get; set; }=string.Empty;
         [JsonPropertyName("DRR_INFORM_CITPRV")]

@@ -36,7 +36,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using (var context = new SqlCoreContext())
                 {
-                    var obj = await context.Employees.FindAsync(id) ?? throw new Exception("No existe el país solicitado");
+                    var obj = await context.Employees.FindAsync(id) ?? throw new Exception("No existe el empleado solicitado");
                     obj.Enable = false;
                     context.Employees.Update(obj);
                     await context.SaveChangesAsync();
@@ -69,7 +69,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Employees.FindAsync(id) ?? throw new Exception("No existe el país solicitado");
+                return await context.Employees.FindAsync(id) ?? throw new Exception("No existe el empleado solicitado");
             }
             catch (Exception ex)
             {

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using DRRCore.Application.DTO.Email;
-using DRRCore.Application.DTO.Web;
 using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Transversal.Common;
 

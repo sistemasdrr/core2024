@@ -9,13 +9,19 @@ public partial class Employee
 
     public string Code { get; set; } = null!;
 
-    public string FirstName { get; set; } = null!;
+    public string? FirstName { get; set; }
 
-    public string LastName { get; set; } = null!;
+    public string? LastName { get; set; }
+
+    public string? ShortName { get; set; }
 
     public string Address { get; set; } = null!;
 
-    public string? Cellphone { get; set; }
+    public string? Telephone { get; set; }
+
+    public string? CivilStatus { get; set; }
+
+    public string? Gender { get; set; }
 
     public string? Email { get; set; }
 
@@ -23,7 +29,9 @@ public partial class Employee
 
     public int? IdDocumentType { get; set; }
 
-    public string DocumentNumber { get; set; } = null!;
+    public string? Grains { get; set; }
+
+    public string? DocumentNumber { get; set; }
 
     public DateTime? StartDate { get; set; }
 
@@ -34,6 +42,22 @@ public partial class Employee
     public int? IdJob { get; set; }
 
     public int? IdCountry { get; set; }
+
+    public string? City { get; set; }
+
+    public string? Spouse { get; set; }
+
+    public string? Father { get; set; }
+
+    public string? Mother { get; set; }
+
+    public string? Children { get; set; }
+
+    public string? LastWork { get; set; }
+
+    public string? WorkModality { get; set; }
+
+    public string? Observation { get; set; }
 
     public DateTime CreationDate { get; set; }
 
