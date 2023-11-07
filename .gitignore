@@ -271,3 +271,5 @@
 /DRRCore.Domain.Entities/obj/Release/net6.0
 /DRRCore.Domain.Interfaces/obj/Release/net6.0
 /DRRCore.Services.ApiCore/Properties/PublishProfiles
+*.editorconfig
+/DRRCore.Services.Migration/obj/Release/net6.0
