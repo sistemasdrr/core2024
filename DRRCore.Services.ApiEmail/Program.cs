@@ -11,6 +11,9 @@ using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.JsonReader;
 using DRRCore.Transversal.Mapper.Profiles.Web;
 using System.Configuration;
+using DRRCore.Domain.Interfaces.EmailDomain;
+using DRRCore.Domain.Main.EmailDomain;
+using DRRCore.Application.Interfaces.EmailApplication;
 
 var builder = WebApplication.CreateBuilder(args);
 

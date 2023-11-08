@@ -1,7 +1,9 @@
 using DRRCore.Application.Interfaces;
 using DRRCore.Application.Main;
 using DRRCore.Domain.Interfaces;
+using DRRCore.Domain.Interfaces.EmailDomain;
 using DRRCore.Domain.Main;
+using DRRCore.Domain.Main.EmailDomain;
 using DRRCore.Infraestructure.Interfaces.MySqlRepository;
 using DRRCore.Infraestructure.Interfaces.Repository;
 using DRRCore.Infraestructure.Repository.MYSQLRepository;

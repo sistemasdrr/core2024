@@ -1,5 +1,5 @@
 ﻿using DRRCore.Application.Interfaces.MigrationApplication;
-using DRRCore.Domain.Interfaces;
+using DRRCore.Domain.Interfaces.MysqlDomain;
 
 namespace DRRCore.Application.Main.MigrationApplication
 {

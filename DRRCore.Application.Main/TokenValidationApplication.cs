@@ -1,5 +1,5 @@
 ﻿using DRRCore.Application.Interfaces;
-using DRRCore.Domain.Interfaces;
+using DRRCore.Domain.Interfaces.EmailDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.IdentityModel.Tokens;

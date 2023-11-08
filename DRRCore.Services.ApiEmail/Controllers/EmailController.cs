@@ -1,5 +1,5 @@
 ﻿using DRRCore.Application.DTO.Email;
-using DRRCore.Application.Interfaces;
+using DRRCore.Application.Interfaces.EmailApplication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DRRCore.Services.ApiEmail.Controllers
