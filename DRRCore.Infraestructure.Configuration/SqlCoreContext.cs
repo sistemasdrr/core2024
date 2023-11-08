@@ -15,13 +15,21 @@ public partial class SqlCoreContext : DbContext
     {
     }
 
+    public virtual DbSet<BankAccountType> BankAccountTypes { get; set; }
+
+    public virtual DbSet<CivilStatus> CivilStatuses { get; set; }
+
     public virtual DbSet<Continent> Continents { get; set; }
 
     public virtual DbSet<Country> Countries { get; set; }
 
+    public virtual DbSet<Currency> Currencies { get; set; }
+
     public virtual DbSet<DocumentType> DocumentTypes { get; set; }
 
     public virtual DbSet<Employee> Employees { get; set; }
+
+    public virtual DbSet<FamilyBondType> FamilyBondTypes { get; set; }
 
     public virtual DbSet<Job> Jobs { get; set; }
 
@@ -39,6 +47,59 @@ public partial class SqlCoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<BankAccountType>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__BankAcco__3213E83F33005565");
+
+            entity.ToTable("BankAccountType");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
+        modelBuilder.Entity<CivilStatus>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CivilSta__3213E83F1C27FB6C");
+
+            entity.ToTable("CivilStatus");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.Level).HasColumnName("level");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
         modelBuilder.Entity<Continent>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Continen__3213E83FF93989B2");
@@ -116,6 +177,41 @@ public partial class SqlCoreContext : DbContext
             entity.HasOne(d => d.IdContinentNavigation).WithMany(p => p.Countries)
                 .HasForeignKey(d => d.IdContinent)
                 .HasConstraintName("FK__Country__idConti__3552E9B6");
+        });
+
+        modelBuilder.Entity<Currency>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Currency__3213E83F35505995");
+
+            entity.ToTable("Currency");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Abreviation)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("abreviation");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.Level).HasColumnName("level");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.Symbol)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("symbol");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
         });
 
         modelBuilder.Entity<DocumentType>(entity =>
@@ -295,6 +391,32 @@ public partial class SqlCoreContext : DbContext
             entity.HasOne(d => d.IdJobNavigation).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.IdJob)
                 .HasConstraintName("FK__Employee__idJob__44952D46");
+        });
+
+        modelBuilder.Entity<FamilyBondType>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__FamilyBo__3213E83FD5B5409C");
+
+            entity.ToTable("FamilyBondType");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
         });
 
         modelBuilder.Entity<Job>(entity =>

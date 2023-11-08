@@ -17,7 +17,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using (var context = new SqlCoreContext())
-                {
+                {                   
                     await context.Employees.AddAsync(obj);
                     await context.SaveChangesAsync();
                     return true;

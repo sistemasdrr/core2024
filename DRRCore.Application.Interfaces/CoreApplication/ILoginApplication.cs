@@ -1,6 +1,6 @@
 ﻿namespace DRRCore.Application.Interfaces.CoreApplication
 {
-    internal interface ILoginApplication
+    public interface ILoginApplication
     {
     }
 }

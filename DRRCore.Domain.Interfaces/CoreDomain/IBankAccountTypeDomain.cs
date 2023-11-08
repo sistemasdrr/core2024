@@ -2,8 +2,7 @@
 
 namespace DRRCore.Domain.Interfaces.CoreDomain
 {
-    public interface IJobDomain : IBaseDomain<Job>
+    public interface IBankAccountTypeDomain:IBaseDomain<BankAccountType>
     {
-        Task<List<Job>> GetJobByDepartment(int idDepartment);
     }
 }

@@ -2,8 +2,7 @@
 
 namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
-    public interface IJobRepository : IBaseRepository<Job>
+    public interface ICurrencyRepository:IBaseRepository<Currency>
     {
-        Task<List<Job>> GetJobByDepartment(int idDepartment);
     }
 }

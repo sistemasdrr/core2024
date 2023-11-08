@@ -97,6 +97,20 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<List<Job>> GetJobByDepartment(int idDepartment)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.Jobs.Where(x=>x.IdJobDepartment==idDepartment).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new List<Job>();
+            }
+        }
+
         public async Task<bool> UpdateAsync(Job obj)
         {
             try

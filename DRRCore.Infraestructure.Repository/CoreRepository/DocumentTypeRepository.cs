@@ -112,7 +112,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.DocumentTypes.Where(x => x.IsNatural == true).ToListAsync();
+                return await context.DocumentTypes.Where(x => x.IsNatural == true).OrderBy(x=>x.Id).ToListAsync();
             }
             catch (Exception ex)
             {

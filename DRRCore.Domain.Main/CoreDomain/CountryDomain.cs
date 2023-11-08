@@ -37,6 +37,16 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _repository.GetByNameAsync(name);
         }
 
+        public async Task<List<Continent>> GetContinents()
+        {
+           return await _repository.GetContinents();
+        }
+
+        public async Task<List<Country>> GetCountriesByContinent(int idContinent)
+        {
+            return await _repository.GetCountriesByContinent(idContinent);
+        }
+
         public async Task<bool> UpdateAsync(Country obj)
         {
             return await _repository.UpdateAsync(obj);

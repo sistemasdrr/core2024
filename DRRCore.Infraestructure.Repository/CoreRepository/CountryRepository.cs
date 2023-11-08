@@ -73,7 +73,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return null;
+                return new Country();
             }
         }
 
@@ -83,6 +83,34 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using var context = new SqlCoreContext();
                 return await context.Countries.Where(x=>x.Name.Contains(name) || x.EnglishName.Contains(name)).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new List<Country>();
+            }
+        }
+
+        public async Task<List<Continent>> GetContinents()
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.Continents.OrderBy(x=>x.Name).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new List<Continent>();
+            }
+        }
+
+        public async Task<List<Country>> GetCountriesByContinent(int idContinent)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.Countries.Where(x => x.IdContinent==idContinent).ToListAsync();
             }
             catch (Exception ex)
             {

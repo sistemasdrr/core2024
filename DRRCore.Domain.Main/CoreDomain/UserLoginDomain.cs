@@ -4,7 +4,7 @@ using DRRCore.Infraestructure.Interfaces.CoreRepository;
 
 namespace DRRCore.Domain.Main.CoreDomain
 {
-    internal class UserLoginDomain:IUserLoginDomain
+    public class UserLoginDomain:IUserLoginDomain
     {
         private readonly IUserLoginRepository _repository;
         public UserLoginDomain(IUserLoginRepository repository)

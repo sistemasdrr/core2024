@@ -1,9 +1,10 @@
 ﻿using DRRCore.Domain.Entities.SqlCoreContext;
+using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common.Interface;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
-    public class UserLoginRepository
+    public class UserLoginRepository:IUserLoginRepository
     {
         private readonly ILogger _logger;
         public UserLoginRepository(ILogger logger)
@@ -88,6 +89,11 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 _logger.LogError(ex.Message);
                 return false;
             }
+        }
+
+        Task<List<UserLogin>> IBaseRepository<UserLogin>.GetByNameAsync(string name)
+        {
+            throw new NotImplementedException();
         }
     }
 }

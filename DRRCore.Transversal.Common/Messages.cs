@@ -19,5 +19,7 @@
         public static readonly string TokenNotSend = "Token no enviado";
 
         public static readonly string InsertedUser = "Usuario insertado con codigo de abonado: {0}";
+
+        public static readonly string MessageNoDataFoundEmployee = "No se encontró datos del empleado";
     }
 }

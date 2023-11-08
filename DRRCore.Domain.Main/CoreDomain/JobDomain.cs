@@ -37,6 +37,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _repository.GetByNameAsync(name);
         }
 
+        public async Task<List<Job>> GetJobByDepartment(int idDepartment)
+        {
+            return await _repository.GetJobByDepartment(idDepartment);
+        }
+
         public async Task<bool> UpdateAsync(Job obj)
         {
             return await _repository.UpdateAsync(obj);

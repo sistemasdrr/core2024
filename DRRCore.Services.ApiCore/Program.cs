@@ -16,6 +16,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using DRRCore.Infraestructure.Interfaces.CoreRepository;
+using DRRCore.Infraestructure.Repository.CoreRepository;
+using Azure.Identity;
+using DRRCore.Domain.Interfaces.CoreDomain;
+using DRRCore.Domain.Main.CoreDomain;
+using DRRCore.Application.Interfaces.CoreApplication;
+using DRRCore.Application.Main.CoreApplication;
+using DRRCore.Transversal.Mapper.Profiles.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,30 +63,40 @@ builder.Services.AddSwaggerGen(opt =>
 
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddAutoMapper(typeof(DataProfile).Assembly);
-
+builder.Services.AddAutoMapper(typeof(EmployeeProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(ComboProfile).Assembly);
 
 builder.Services.AddHttpContextAccessor();
 
 
-builder.Services.AddScoped<IMySqlUserRepository, MySqlUserRepository>();
-builder.Services.AddScoped<IMySqlWebRepository, MySqlWebRepository>();
-builder.Services.AddScoped<IWebQueryRepository, WebQueryRepository>();
-builder.Services.AddScoped<IAttachmentsNotSendRepository, AttachmentsNotSendRepository>();
-builder.Services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
-builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
-builder.Services.AddScoped<IApiUserRepository, ApiUserRepository>();
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+builder.Services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IJobDepartmentRepository, JobDepartmentRepository>();
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IProcessRepository, ProcessRepository>();
+builder.Services.AddScoped<IUserLoginRepository, UserLoginRepository>();
+builder.Services.AddScoped<IUserProcessRepository, UserProcessRepository>();
+builder.Services.AddScoped<ICivilStatusRepository, CivilStatusRepository>();
+builder.Services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+builder.Services.AddScoped<IFamilyBondTypeRepository, FamilyBondyTypeRepository>();
+builder.Services.AddScoped<IBankAccountTypeRepository, BankAccountTypeRepository>();
 
-builder.Services.AddScoped<IWebDataDomain, WebDataDomain>();
-builder.Services.AddScoped<IAttachmentsNotSendDomain, AttachmentsNotSendDomain>();
-builder.Services.AddScoped<IEmailConfigurationDomain, EmailConfigurationDomain>();
-builder.Services.AddScoped<IEmailHistoryDomain, EmailHistoryDomain>();
-builder.Services.AddScoped<IApiUserDomain, ApiUserDomain>();
+builder.Services.AddScoped<ICountryDomain, CountryDomain>();
+builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
+builder.Services.AddScoped<IEmployeeDomain, EmployeeDomain>();
+builder.Services.AddScoped<IJobDepartmentDomain, JobDepartmentDomain>();
+builder.Services.AddScoped<IJobDomain, JobDomain>();
+builder.Services.AddScoped<IProcessDomain, ProcessDomain>();
+builder.Services.AddScoped<IUserLoginDomain, UserLoginDomain>();
+builder.Services.AddScoped<IUserProcessDomain, UserProcessDomain>();
+builder.Services.AddScoped<ICivilStatusDomain, CivilStatusDomain>();
+builder.Services.AddScoped<IBankAccountTypeDomain, BankAccountTypeDomain>();
+builder.Services.AddScoped<IFamilyBondyTypeDomain, FamilyBondyTypeDomain>();
+builder.Services.AddScoped<ICurrencyDomain, CurrencyDomain>();
 
-
-builder.Services.AddScoped<IWebDataApplication, WebDataApplication>();
-builder.Services.AddScoped<IApiApplication, ApiApplication>();
-builder.Services.AddScoped<ITokenValidationApplication, TokenValidationApplication>();
+builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
+builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
@@ -109,6 +127,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
  */
 
 var app = builder.Build();
+
+app.UseCors(builder => builder
+       .AllowAnyHeader()
+       .AllowAnyMethod()
+       .AllowAnyOrigin()
+    );
 
 app.UseSwagger();
 app.UseSwaggerUI();

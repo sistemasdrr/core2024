@@ -9,8 +9,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetEmployeeResponseDto>> GetByIdAsync(int id);
         Task<Response<List<GetEmployeeResponseDto>>> GetAllAsync();
         Task<Response<List<GetEmployeeResponseDto>>> GetByNameAsync(string name);
-        Task<Response<bool>> AddAsync(AddOrUpdateEmployeeRequestDto obj);
-        Task<Response<bool>> UpdateAsync(AddOrUpdateEmployeeRequestDto obj);
+        Task<Response<bool>> AddOrUpdateAsync(AddOrUpdateEmployeeRequestDto obj);       
         Task<Response<bool>> DeleteAsync(int id);
     }
 }
