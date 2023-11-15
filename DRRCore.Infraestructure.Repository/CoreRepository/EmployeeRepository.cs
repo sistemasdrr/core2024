@@ -12,6 +12,28 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
         {
             _logger = logger;
         }
+
+        public async Task<bool> ActiveEmployeeAsync(int id)
+        {
+            try
+            {
+                using (var context = new SqlCoreContext())
+                {
+                    var obj = await context.Employees.FindAsync(id) ?? throw new Exception("No existe el empleado solicitado");
+                    obj.Enable = true;
+                    obj.DeleteDate = null;
+                    context.Employees.Update(obj);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
+
         public async Task<bool> AddAsync(Employee obj)
         {
             try
@@ -38,6 +60,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 {
                     var obj = await context.Employees.FindAsync(id) ?? throw new Exception("No existe el empleado solicitado");
                     obj.Enable = false;
+                    obj.DeleteDate = DateTime.Now;
                     context.Employees.Update(obj);
                     await context.SaveChangesAsync();
                     return true;
@@ -55,7 +78,8 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Employees.ToListAsync();
+                return await context.Employees.Include(x=>x.IdJobDepartmentNavigation)
+                    .Include(x => x.IdJobNavigation).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -69,7 +93,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Employees.FindAsync(id) ?? throw new Exception("No existe el empleado solicitado");
+                return await context.Employees.Where(x=>x.Id==id).Include(x=>x.HealthInsurances).FirstOrDefaultAsync() ?? throw new Exception("No existe el empleado solicitado");
             }
             catch (Exception ex)
             {
@@ -98,6 +122,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using (var context = new SqlCoreContext())
                 {
+                    var healthInsurances = await context.HealthInsurances.Where(x => x.IdEmployee == obj.Id).ToListAsync();
+                    if (healthInsurances.Any())
+                    {
+                        context.HealthInsurances.RemoveRange(healthInsurances);
+                    }
+                    obj.UpdateDate = DateTime.Now;
                     context.Employees.Update(obj);
                     await context.SaveChangesAsync();
                     return true;
@@ -106,7 +136,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return false;
+                throw new Exception(ex.Message);
             }
         }
     }

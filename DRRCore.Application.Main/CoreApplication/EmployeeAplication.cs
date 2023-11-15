@@ -4,6 +4,7 @@ using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
+using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 
@@ -53,7 +54,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 var employee = await _employeeDomain.GetAllAsync();
                 if (employee == null)
                 {
-                 
+                    
                     response.IsSuccess = false;
                     response.Message = Messages.MessageNoDataFound;
                     _logger.LogError(response.Message);
@@ -106,7 +107,8 @@ namespace DRRCore.Application.Main.CoreApplication
                 }
                 if (obj.Id == 0)
                 {
-                    response.Data = await _employeeDomain.AddAsync(_mapper.Map<Employee>(obj));
+                    var newEmployee = _mapper.Map<Employee>(obj);
+                    response.Data = await _employeeDomain.AddAsync(newEmployee);
                 }
                 else
                 {
@@ -153,6 +155,27 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
-       
+
+        public async Task<Response<bool>> ActiveAsync(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (id == 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                }
+                response.Data = await _employeeDomain.ActiveEmployeeAsync(id);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
     }
 }

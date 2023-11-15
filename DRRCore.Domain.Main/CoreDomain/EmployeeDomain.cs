@@ -12,6 +12,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             _repository = repository;
         }
 
+        public async Task<bool> ActiveEmployeeAsync(int id)
+        {
+            return await _repository.ActiveEmployeeAsync(id);
+        }
+
         public async Task<bool> AddAsync(Employee obj)
         {
             return await _repository.AddAsync(obj);

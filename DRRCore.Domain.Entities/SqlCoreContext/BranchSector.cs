@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace DRRCore.Domain.Entities.SqlCoreContext;
 
-public partial class FamilyBondType
+public partial class BranchSector
 {
     public int Id { get; set; }
+
+    public string? EnglishName { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -17,5 +19,5 @@ public partial class FamilyBondType
 
     public bool? Enable { get; set; }
 
-    public virtual ICollection<HealthInsurance> HealthInsurances { get; set; } = new List<HealthInsurance>();
+    public virtual ICollection<CompanyBranch> CompanyBranches { get; set; } = new List<CompanyBranch>();
 }

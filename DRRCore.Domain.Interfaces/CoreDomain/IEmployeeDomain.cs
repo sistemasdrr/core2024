@@ -4,5 +4,6 @@ namespace DRRCore.Domain.Interfaces.CoreDomain
 {
     public interface IEmployeeDomain:IBaseDomain<Employee>
     {
+        Task<bool> ActiveEmployeeAsync(int id);
     }
 }

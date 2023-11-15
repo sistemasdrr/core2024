@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DRRCore.Domain.Entities.SqlCoreContext;
 
-public partial class Country
+public partial class CreditRisk
 {
     public int Id { get; set; }
 
@@ -11,13 +11,7 @@ public partial class Country
 
     public string EnglishName { get; set; } = null!;
 
-    public string? Iso { get; set; }
-
-    public string? FlagIso { get; set; }
-
     public bool? Flag { get; set; }
-
-    public int? IdContinent { get; set; }
 
     public DateTime CreationDate { get; set; }
 
@@ -28,6 +22,4 @@ public partial class Country
     public bool? Enable { get; set; }
 
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
-
-    public virtual Continent? IdContinentNavigation { get; set; }
 }

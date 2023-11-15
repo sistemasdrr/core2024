@@ -17,5 +17,7 @@ public partial class JobDepartment
 
     public bool? Enable { get; set; }
 
+    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+
     public virtual ICollection<Job> Jobs { get; set; } = new List<Job>();
 }
