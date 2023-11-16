@@ -19,5 +19,7 @@ public partial class LegalPersonType
 
     public bool? Enable { get; set; }
 
+    public string? Sigla { get; set; }
+
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 }

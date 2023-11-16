@@ -21,5 +21,15 @@ public partial class CreditRisk
 
     public bool? Enable { get; set; }
 
+    public int? Level { get; set; }
+
+    public int? Rate { get; set; }
+
+    public string? Color { get; set; }
+
+    public string? Identifier { get; set; }
+
+    public string? Abreviation { get; set; }
+
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 }

@@ -17,6 +17,8 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICurrencyDomain _currencyDomain;
         private readonly IFamilyBondyTypeDomain _familyBondyTypeDomain;
         private readonly IBankAccountTypeDomain _bankAccountTypeDomain;
+        private readonly ILegalPersonTypeDomain _legalPersonTypeDomain;
+        private readonly ICreditRiskDomain _creditRiskDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         public ComboboxApplication(IDocumentTypeDomain documentTypeDomain,
@@ -26,6 +28,8 @@ namespace DRRCore.Application.Main.CoreApplication
                                    IFamilyBondyTypeDomain familyBondyTypeDomain,
                                    IBankAccountTypeDomain bankAccountTypeDomain,
                                    ICurrencyDomain currencyDomain,
+                                   ILegalPersonTypeDomain legalPersonTypeDomain,
+                                   ICreditRiskDomain creditRiskDomain,
                                    IJobDomain jobDomain,
                                     IMapper mapper,ILogger logger) { 
         
@@ -38,6 +42,8 @@ namespace DRRCore.Application.Main.CoreApplication
             _currencyDomain = currencyDomain;
             _bankAccountTypeDomain = bankAccountTypeDomain;
             _familyBondyTypeDomain = familyBondyTypeDomain;
+            _legalPersonTypeDomain = legalPersonTypeDomain;
+            _creditRiskDomain = creditRiskDomain;
             _jobDomain = jobDomain;
         }
 
@@ -126,6 +132,23 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<List<GetComboCreditRiskResponseDto>>> GetCreditRisk()
+        {
+            var response = new Response<List<GetComboCreditRiskResponseDto>>();
+            try
+            {
+                var list = await _creditRiskDomain.GetAllAsync();
+                response.Data = _mapper.Map<List<GetComboCreditRiskResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         public async Task<Response<List<GetComboValueResponseDto>>> GetCurrency()
         {
             var response = new Response<List<GetComboValueResponseDto>>();
@@ -200,6 +223,23 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var list = await _jobDomain.GetJobByDepartment(idDepartment);
+                response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboValueResponseDto>>> GetLegalPersonType()
+        {
+            var response = new Response<List<GetComboValueResponseDto>>();
+            try
+            {
+                var list = await _legalPersonTypeDomain.GetAllAsync();
                 response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
             }
             catch (Exception ex)

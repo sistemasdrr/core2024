@@ -21,5 +21,13 @@ public partial class Reputation
 
     public bool? Enable { get; set; }
 
+    public int? Level { get; set; }
+
+    public string Type { get; set; } = null!;
+
+    public string OldCode { get; set; } = null!;
+
+    public string? Color { get; set; }
+
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 }

@@ -56,7 +56,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.DocumentTypes.ToListAsync();
+                return await context.DocumentTypes.Where(x => x.Enable == true).ToListAsync();
             }
             catch (Exception ex)
             {

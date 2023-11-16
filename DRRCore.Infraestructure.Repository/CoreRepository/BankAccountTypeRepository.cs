@@ -27,7 +27,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.BankAccountTypes.ToListAsync();
+                return await context.BankAccountTypes.Where(x => x.Enable == true).ToListAsync();
             }
             catch (Exception ex)
             {

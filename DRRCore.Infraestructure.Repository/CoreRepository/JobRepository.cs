@@ -60,7 +60,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Jobs.ToListAsync();
+                return await context.Jobs.Where(x => x.Enable == true).ToListAsync();
             }
             catch (Exception ex)
             {

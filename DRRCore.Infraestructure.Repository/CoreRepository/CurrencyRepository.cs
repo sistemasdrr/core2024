@@ -27,7 +27,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Currencies.OrderBy(x=>x.Level).ToListAsync();
+                return await context.Currencies.Where(x => x.Enable == true).OrderBy(x=>x.Level).ToListAsync();
             }
             catch (Exception ex)
             {

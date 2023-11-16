@@ -54,7 +54,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Countries.ToListAsync();
+                return await context.Countries.Where(x => x.Enable == true).ToListAsync();
             }
             catch (Exception ex)
             {

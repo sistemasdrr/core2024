@@ -21,5 +21,9 @@ public partial class PaymentPolicy
 
     public bool? Enable { get; set; }
 
+    public int? Level { get; set; }
+
+    public string? Color { get; set; }
+
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 }

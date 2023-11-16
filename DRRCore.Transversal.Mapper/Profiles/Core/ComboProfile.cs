@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
-using DRRCore.Application.DTO.Email;
 using DRRCore.Domain.Entities.SqlCoreContext;
-using DRRCore.Transversal.Common;
 
 namespace DRRCore.Transversal.Mapper.Profiles.Core
 {
@@ -41,6 +38,11 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
           .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
           .ReverseMap();
 
+            CreateMap<LegalPersonType, GetComboValueResponseDto>()
+         .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+         .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+         .ReverseMap();
+
             CreateMap<FamilyBondType, GetComboValueResponseDto>()
          .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
          .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
@@ -50,6 +52,15 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
         .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
         .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Symbol+"-"+src.Name+"("+src.Abreviation+")"))
         .ReverseMap();
+
+            CreateMap<CreditRisk, GetComboCreditRiskResponseDto>()
+       .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+       .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src =>  src.Name))
+       .ForMember(dest => dest.Rate, opt => opt?.MapFrom(src => src.Rate))
+       .ForMember(dest => dest.Color, opt => opt?.MapFrom(src => src.Color))
+       .ForMember(dest => dest.Identifier, opt => opt?.MapFrom(src => src.Identifier))
+       .ForMember(dest => dest.Abreviation, opt => opt?.MapFrom(src => src.Abreviation))
+       .ReverseMap();
 
             CreateMap<Country, GetComboValueFlagResponseDto>()
              .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))

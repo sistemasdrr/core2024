@@ -81,6 +81,9 @@ builder.Services.AddScoped<ICivilStatusRepository, CivilStatusRepository>();
 builder.Services.AddScoped<ICurrencyRepository, CurrencyRepository>();
 builder.Services.AddScoped<IFamilyBondTypeRepository, FamilyBondyTypeRepository>();
 builder.Services.AddScoped<IBankAccountTypeRepository, BankAccountTypeRepository>();
+builder.Services.AddScoped<ILegalPersonTypeRepository, LegalPersonTypeRepository>();
+builder.Services.AddScoped<ICreditRiskRepository, CreditRiskRepository>();
+
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -94,6 +97,9 @@ builder.Services.AddScoped<ICivilStatusDomain, CivilStatusDomain>();
 builder.Services.AddScoped<IBankAccountTypeDomain, BankAccountTypeDomain>();
 builder.Services.AddScoped<IFamilyBondyTypeDomain, FamilyBondyTypeDomain>();
 builder.Services.AddScoped<ICurrencyDomain, CurrencyDomain>();
+builder.Services.AddScoped<ILegalPersonTypeDomain, LegalPersonTypeDomain>();
+builder.Services.AddScoped<ICreditRiskDomain, CreditRiskDomain>();
+
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();

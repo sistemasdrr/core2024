@@ -15,5 +15,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetComboValueResponseDto>>> GetCurrency();
         Task<Response<List<GetComboValueResponseDto>>> GetFamilyBondyType();
         Task<Response<List<GetComboValueResponseDto>>> GetBankAccountType();
+        Task<Response<List<GetComboValueResponseDto>>> GetLegalPersonType();
+        Task<Response<List<GetComboCreditRiskResponseDto>>> GetCreditRisk();
     }
 }

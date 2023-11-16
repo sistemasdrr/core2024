@@ -73,5 +73,17 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _comboboxApplication.GetFamilyBondyType());
         }
+        [HttpGet()]
+        [Route("legalpersontype")]
+        public async Task<ActionResult> GetLegalPersonTypeCombo()
+        {
+            return Ok(await _comboboxApplication.GetLegalPersonType());
+        }
+        [HttpGet()]
+        [Route("creditrisk")]
+        public async Task<ActionResult> GetCreditRiskCombo()
+        {
+            return Ok(await _comboboxApplication.GetCreditRisk());
+        }
     }
 }
