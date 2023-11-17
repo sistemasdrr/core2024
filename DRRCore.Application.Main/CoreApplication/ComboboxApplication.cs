@@ -19,6 +19,9 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IBankAccountTypeDomain _bankAccountTypeDomain;
         private readonly ILegalPersonTypeDomain _legalPersonTypeDomain;
         private readonly ICreditRiskDomain _creditRiskDomain;
+        private readonly IPaymentPolicyDomain _paymentPolicyDomain;
+        private readonly IReputationDomain _reputationDomain;
+        private readonly ILegalRegisterSituationDomain _legalRegisterSituationDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         public ComboboxApplication(IDocumentTypeDomain documentTypeDomain,
@@ -30,6 +33,9 @@ namespace DRRCore.Application.Main.CoreApplication
                                    ICurrencyDomain currencyDomain,
                                    ILegalPersonTypeDomain legalPersonTypeDomain,
                                    ICreditRiskDomain creditRiskDomain,
+                                   IPaymentPolicyDomain paymentPolicyDomain,
+                                   IReputationDomain reputationDomain,
+                                   ILegalRegisterSituationDomain legalRegisterSituationDomain,
                                    IJobDomain jobDomain,
                                     IMapper mapper,ILogger logger) { 
         
@@ -44,6 +50,9 @@ namespace DRRCore.Application.Main.CoreApplication
             _familyBondyTypeDomain = familyBondyTypeDomain;
             _legalPersonTypeDomain = legalPersonTypeDomain;
             _creditRiskDomain = creditRiskDomain;
+            _paymentPolicyDomain = paymentPolicyDomain;
+            _legalRegisterSituationDomain = legalRegisterSituationDomain;
+            _reputationDomain= reputationDomain;
             _jobDomain = jobDomain;
         }
 
@@ -71,6 +80,23 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 var list = await _civilStatusDomain.GetAllAsync();
                 response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboColorResponseDto>>> GetCompanyReputation()
+        {
+            var response = new Response<List<GetComboColorResponseDto>>();
+            try
+            {
+                var list = await _reputationDomain.GetAllCompanyReputationAsync();
+                response.Data = _mapper.Map<List<GetComboColorResponseDto>>(list);
             }
             catch (Exception ex)
             {
@@ -241,6 +267,40 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 var list = await _legalPersonTypeDomain.GetAllAsync();
                 response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboValueResponseDto>>> GetLegalRegisterSituation()
+        {
+            var response = new Response<List<GetComboValueResponseDto>>();
+            try
+            {
+                var list = await _legalRegisterSituationDomain.GetAllAsync();
+                response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboColorResponseDto>>> GetPaymentPolicy()
+        {
+            var response = new Response<List<GetComboColorResponseDto>>();
+            try
+            {
+                var list = await _paymentPolicyDomain.GetAllAsync();
+                response.Data = _mapper.Map<List<GetComboColorResponseDto>>(list);
             }
             catch (Exception ex)
             {

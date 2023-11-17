@@ -1,11 +1,6 @@
 ﻿using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DRRCore.Domain.Main.CoreDomain
 {

@@ -77,6 +77,8 @@ public partial class Company
 
     public string? NewsComentary { get; set; }
 
+    public string? IdentificacionCommentary { get; set; }
+
     public virtual ICollection<CompanyBackground> CompanyBackgrounds { get; set; } = new List<CompanyBackground>();
 
     public virtual ICollection<CompanyBranch> CompanyBranches { get; set; } = new List<CompanyBranch>();
@@ -92,4 +94,6 @@ public partial class Company
     public virtual PaymentPolicy? IdPaymentPolicyNavigation { get; set; }
 
     public virtual Reputation? IdReputationNavigation { get; set; }
+
+    public virtual ICollection<Traduction> Traductions { get; set; } = new List<Traduction>();
 }

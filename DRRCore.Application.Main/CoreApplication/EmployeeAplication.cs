@@ -4,7 +4,6 @@ using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
-using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 
@@ -122,7 +121,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
                     existingEmployee = _mapper.Map(obj, existingEmployee);
                     existingEmployee.UpdateDate = DateTime.Now;
-                    response.Data = await _employeeDomain.UpdateAsync(_mapper.Map(obj, existingEmployee));
+                    response.Data = await _employeeDomain.UpdateAsync(existingEmployee);
                 }
             }
             catch (Exception ex)

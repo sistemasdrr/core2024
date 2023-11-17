@@ -277,6 +277,9 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.IdLegalRegisterSituation).HasColumnName("idLegalRegisterSituation");
             entity.Property(e => e.IdPaymentPolicy).HasColumnName("idPaymentPolicy");
             entity.Property(e => e.IdReputation).HasColumnName("idReputation");
+            entity.Property(e => e.IdentificacionCommentary)
+                .IsUnicode(false)
+                .HasColumnName("identificacionCommentary");
             entity.Property(e => e.Language)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -1207,6 +1210,11 @@ public partial class SqlCoreContext : DbContext
             entity.HasIndex(e => e.Name, "UQ__LegalReg__72E12F1B64D96D4B").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Abreviation)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("abreviation");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -1395,6 +1403,10 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.Traductions)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK_CompanyTraductionNull");
 
             entity.HasOne(d => d.IdLanguageNavigation).WithMany(p => p.Traductions)
                 .HasForeignKey(d => d.IdLanguage)

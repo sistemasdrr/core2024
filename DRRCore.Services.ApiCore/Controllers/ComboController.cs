@@ -85,5 +85,23 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _comboboxApplication.GetCreditRisk());
         }
+        [HttpGet()]
+        [Route("companyreputation")]
+        public async Task<ActionResult> GetCompanyReputationCombo()
+        {
+            return Ok(await _comboboxApplication.GetCompanyReputation());
+        }
+        [HttpGet()]
+        [Route("paymentpolicy")]
+        public async Task<ActionResult> GetPaymentPolicyCombo()
+        {
+            return Ok(await _comboboxApplication.GetPaymentPolicy());
+        }
+        [HttpGet()]
+        [Route("legalregister")]
+        public async Task<ActionResult> GetLegalRegisterSituationCombo()
+        {
+            return Ok(await _comboboxApplication.GetLegalRegisterSituation());
+        }
     }
 }

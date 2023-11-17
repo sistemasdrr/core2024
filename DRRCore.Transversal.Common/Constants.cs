@@ -14,7 +14,7 @@
         public const string DateFormatEnglish = "MM/dd/yyyy";
         public const string DateFormatSpanish = "dd/MM/yyyy";
 
-        public const string CodeSituation= "03|07|04|09|05";
+        public const string CodeSituation = "03|07|04|09|05";
         public const string Asterisco = "*";
         public const string EspacioBlanco = " ";
         public const string OLetter = " ó ";
@@ -84,5 +84,16 @@
         public const string DRR_WORKFLOW_ESP_0039_ERROR = "DRR_WORKFLOW_ESP_0039_ERROR";
         public const string DRR_WORKFLOW_ESP_0039 = "DRR_WORKFLOW_ESP_0039";
         public const string DRR_WORKFLOW_ESP_0040 = "DRR_WORKFLOW_ESP_0040";
+
+        public static readonly string[] TRADUCTIONS_FORMS =  {"L_E_COMIDE","S_E_DURATION","L_E_REPUTATION","L_E_NEW",
+                                                               "S_B_DURATION","S_B_REGISTERIN","S_B_PUBLICREGIS","L_B_PAIDCAPITAL","S_B_INCREASEDATE",
+                                                                "S_B_TAXRATE","L_B_LEGALBACK","L_B_HISTORY",
+                                                                "S_R_SALEPER","S_R_CREDITPER","S_R_TERRITORY","S_R_EXTSALES","S_R_NATIBUY","S_R_INTERBUY","S_R_TOTALAREA","L_R_OTRHERLOCALS",
+                                                                "L_R_PRINCACT","L_R_ADIBUS",
+                                                                "S_F_JOB","L_F_COMENT","L_F_PRINCACTIV","L_F_SELECTFIN","L_F_ANALISTCOM",
+                                                                "S_S_MAXAMOUNT","S_S_PLAZOS","S_S_CLIENTFROM","S_S_ARTICLES","L_S_COMENTARY","S_S_DEUDAMEMO",
+                                                                 "L_S_BANCARIOS","L_S_AVALES",
+                                                                "S_O_QUERYCREDIT","S_O_SUGCREDIT","L_O_COMENTARY",
+                                                                 "L_I_GENERAL","S_IMG_1","S_IMG_2","S_IMG_3","S_IMG_4"} ;
     }
 }

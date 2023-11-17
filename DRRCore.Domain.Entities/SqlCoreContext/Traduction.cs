@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DRRCore.Domain.Entities.SqlCoreContext;
+﻿namespace DRRCore.Domain.Entities.SqlCoreContext;
 
 public partial class Traduction
 {
@@ -38,6 +35,8 @@ public partial class Traduction
     public DateTime? DeleteDate { get; set; }
 
     public bool? Enable { get; set; }
+
+    public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Language? IdLanguageNavigation { get; set; }
 }

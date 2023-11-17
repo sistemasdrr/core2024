@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
-    public class ReputationRepository : IReputationRepository
+    public class LegalRegisterSituationRepository : ILegalRegisterSituationRepository
     {
         private readonly ILogger _logger;
-        public ReputationRepository(ILogger logger)
+        public LegalRegisterSituationRepository(ILogger logger)
         {
             _logger = logger;
         }
-        public Task<bool> AddAsync(Reputation obj)
+        public Task<bool> AddAsync(LegalRegisterSituation obj)
         {
             throw new NotImplementedException();
         }
@@ -22,36 +22,31 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
-        public  Task<List<Reputation>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<Reputation>> GetAllCompanyReputationAsync()
+        public async Task<List<LegalRegisterSituation>> GetAllAsync()
         {
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Reputations.Where(x => x.Enable == true && x.Type == "E").OrderBy(x => x.Level).ToListAsync();
+                return await context.LegalRegisterSituations.Where(x => x.Enable == true).ToListAsync();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Reputation>();
+                return new List<LegalRegisterSituation>();
             }
         }
 
-        public Task<Reputation> GetByIdAsync(int id)
+        public Task<LegalRegisterSituation> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Reputation>> GetByNameAsync(string name)
+        public Task<List<LegalRegisterSituation>> GetByNameAsync(string name)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(Reputation obj)
+        public Task<bool> UpdateAsync(LegalRegisterSituation obj)
         {
             throw new NotImplementedException();
         }

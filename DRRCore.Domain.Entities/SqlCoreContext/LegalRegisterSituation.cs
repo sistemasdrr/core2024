@@ -19,5 +19,7 @@ public partial class LegalRegisterSituation
 
     public bool? Enable { get; set; }
 
+    public string? Abreviation { get; set; }
+
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 }

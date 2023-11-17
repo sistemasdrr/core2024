@@ -48,6 +48,11 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
          .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
          .ReverseMap();
 
+            CreateMap<LegalRegisterSituation, GetComboValueResponseDto>()
+        .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+        .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+        .ReverseMap();
+
             CreateMap<Currency, GetComboValueResponseDto>()
         .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
         .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Symbol+"-"+src.Name+"("+src.Abreviation+")"))
@@ -61,6 +66,20 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
        .ForMember(dest => dest.Identifier, opt => opt?.MapFrom(src => src.Identifier))
        .ForMember(dest => dest.Abreviation, opt => opt?.MapFrom(src => src.Abreviation))
        .ReverseMap();
+
+            CreateMap<Reputation, GetComboColorResponseDto>()
+     .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+     .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))     
+     .ForMember(dest => dest.Color, opt => opt?.MapFrom(src => src.Color))    
+     .ReverseMap();
+
+            CreateMap<PaymentPolicy, GetComboColorResponseDto>()
+    .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+    .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+    .ForMember(dest => dest.Color, opt => opt?.MapFrom(src => src.Color))
+    .ReverseMap();
+
+       
 
             CreateMap<Country, GetComboValueFlagResponseDto>()
              .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))

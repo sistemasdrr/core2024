@@ -1,17 +1,17 @@
 ﻿using DRRCore.Domain.Entities.SqlCoreContext;
+using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
-using DRRCore.Transversal.Common.Interface;
-using Microsoft.EntityFrameworkCore;
 
-namespace DRRCore.Infraestructure.Repository.CoreRepository
+namespace DRRCore.Domain.Main.CoreDomain
 {
-    public class ReputationRepository : IReputationRepository
+    public class ReputationDomain : IReputationDomain
     {
-        private readonly ILogger _logger;
-        public ReputationRepository(ILogger logger)
+        private readonly IReputationRepository _reputationRepository;
+        public ReputationDomain(IReputationRepository reputationRepository)
         {
-            _logger = logger;
+            _reputationRepository = reputationRepository;
         }
+
         public Task<bool> AddAsync(Reputation obj)
         {
             throw new NotImplementedException();
@@ -22,23 +22,14 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
-        public  Task<List<Reputation>> GetAllAsync()
+        public Task<List<Reputation>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
         public async Task<List<Reputation>> GetAllCompanyReputationAsync()
         {
-            try
-            {
-                using var context = new SqlCoreContext();
-                return await context.Reputations.Where(x => x.Enable == true && x.Type == "E").OrderBy(x => x.Level).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return new List<Reputation>();
-            }
+            return await _reputationRepository.GetAllCompanyReputationAsync();
         }
 
         public Task<Reputation> GetByIdAsync(int id)
