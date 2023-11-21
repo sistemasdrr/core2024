@@ -30,9 +30,9 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _companyRepository.GetByIdAsync(id);
         }
 
-        public Task<List<Company>> GetByNameAsync(string name)
+        public async Task<List<Company>> GetByNameAsync(string name, string form, int idCountry)
         {
-            throw new NotImplementedException();
+            return await _companyRepository.GetByNameAsync(name,form,idCountry);
         }
 
         public async Task<bool> UpdateAsync(Company obj)

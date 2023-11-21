@@ -25,5 +25,18 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _companyApplication.DeleteAsync(id));
         }
+        [HttpPost()]
+        [Route("get")]
+        public async Task<ActionResult> GetCompany(int id)
+        {
+            return Ok(await _companyApplication.GetCompanyById(id));
+        }
+        [HttpPost()]
+        [Route("getbyname")]
+        public async Task<ActionResult> GetCompanyByName(string? name,string form,int idCountry)
+        {
+            name ??= string.Empty;
+            return Ok(await _companyApplication.GetAllCompanys(name,form,idCountry));
+        }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DRRCore.Domain.Entities.SqlCoreContext;
+﻿namespace DRRCore.Domain.Entities.SqlCoreContext;
 
 public partial class CompanyBackground
 {

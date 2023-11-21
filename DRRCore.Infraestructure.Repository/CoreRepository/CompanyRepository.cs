@@ -74,10 +74,14 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
 
         public async Task<Company> GetByIdAsync(int id)
         {
+            List<Traduction> traductions = new List<Traduction>();
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Companies.Where(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
+                var company= await context.Companies.Where(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
+                traductions.AddRange(await context.Traductions.Where(x => x.IdCompany == id && x.Identifier.Contains("_E_")).ToListAsync());
+                company.Traductions = traductions;
+                return company;
             }
             catch (Exception ex)
             {
@@ -86,9 +90,20 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public Task<List<Company>> GetByNameAsync(string name)
+        public async Task<List<Company>> GetByNameAsync(string name, string form, int idCountry)
         {
-            throw new NotImplementedException();
+
+            try
+            {
+                using var context = new SqlCoreContext();
+
+                return await context.Companies.Where(x => x.Name.Contains(name) || x.SocialName.Contains(name)).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
         }
 
         public async Task<bool> UpdateAsync(Company obj)

@@ -4,7 +4,7 @@
     {
         Task<T> GetByIdAsync(int id);
         Task<List<T>> GetAllAsync();
-        Task<List<T>> GetByNameAsync(string name);
+        Task<List<T>> GetByNameAsync(string name, string form, int idCountry);
         Task<bool> AddAsync(T obj);
         Task<bool> UpdateAsync(T obj);
         Task<bool> DeleteAsync(int id);
