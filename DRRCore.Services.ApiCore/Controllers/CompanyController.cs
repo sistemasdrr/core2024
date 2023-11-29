@@ -33,10 +33,35 @@ namespace DRRCore.Services.ApiCore.Controllers
         }
         [HttpPost()]
         [Route("getbyname")]
-        public async Task<ActionResult> GetCompanyByName(string? name,string form,int idCountry)
+        public async Task<ActionResult> GetCompanyByName(string? name,string? form,int idCountry,bool haveReport)
         {
             name ??= string.Empty;
-            return Ok(await _companyApplication.GetAllCompanys(name,form,idCountry));
+            form ??= string.Empty;
+            return Ok(await _companyApplication.GetAllCompanys(name,form,idCountry,haveReport));
+        }
+        [HttpGet()]
+        [Route("getBack")]
+        public async Task<ActionResult> GetCompanyBackground(int idCompany)
+        {
+             return Ok(await _companyApplication.GetCompanyBackgroundById(idCompany));
+        }
+        [HttpPost()]
+        [Route("addBack")]
+        public async Task<ActionResult> AddBackground(AddOrUpdateCompanyBackgroundRequestDto obj)
+        {
+           return Ok(await _companyApplication.AddOrUpdateCompanyBackGroundAsync(obj));
+        }
+        [HttpPost()]
+        [Route("activeweb")]
+        public async Task<ActionResult> ActiveWebVision(int id)
+        {
+            return Ok(await _companyApplication.ActiveWebVisionAsync(id));
+        }
+        [HttpPost()]
+        [Route("desactiveweb")]
+        public async Task<ActionResult> DesactiveWebVision(int id)
+        {
+            return Ok(await _companyApplication.DesactiveWebVisionAsync(id));
         }
     }
 }

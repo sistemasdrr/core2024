@@ -44,6 +44,11 @@ namespace DRRCore.Domain.Main
             return await _webQueryRepository.GetByParamAsync(param,page);           
         }
 
+        public async Task<string> GetOldCodeAsync(string code)
+        {
+            return await _webQueryRepository.GetOldCodeAsync(code);
+        }
+
         public async Task<List<WebQuery>> GetSimilarBrunchAsync(string code)
         {
             return await _webQueryRepository.GetSimilarBrunchAsync(code);

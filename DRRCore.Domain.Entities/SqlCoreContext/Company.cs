@@ -79,6 +79,8 @@ public partial class Company
 
     public string? IdentificacionCommentary { get; set; }
 
+    public bool? OnWeb { get; set; }
+
     public virtual ICollection<CompanyBackground> CompanyBackgrounds { get; set; } = new List<CompanyBackground>();
 
     public virtual ICollection<CompanyBranch> CompanyBranches { get; set; } = new List<CompanyBranch>();

@@ -13,6 +13,28 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
         {
             _logger = logger;
         }
+
+        public async Task<bool> ActiveWebVision(int id)
+        {
+            try
+            {
+                using (var context = new SqlCoreContext())
+                {
+                    var obj = await context.Companies.FindAsync(id) ?? throw new Exception("No existe la empresa solicitada");
+                    obj.OnWeb = true;
+                    obj.UpdateDate = DateTime.Now;
+                    context.Companies.Update(obj);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
+
         public async Task<bool> AddAsync(Company obj)
         {
             List<Traduction> traductions = new List<Traduction>();
@@ -46,6 +68,39 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<int> AddCompanyAsync(Company obj)
+        {
+            List<Traduction> traductions = new List<Traduction>();
+            try
+            {
+                using (var context = new SqlCoreContext())
+                {
+                    foreach (var item in Constants.TRADUCTIONS_FORMS)
+                    {
+                        var exist = obj.Traductions.Where(x => x.Identifier == item).FirstOrDefault();
+                        if (exist == null)
+                        {
+                            obj.Traductions.Add(new Traduction
+                            {
+                                IdPerson = null,
+                                Identifier = item,
+                                IdLanguage = 1,
+                                LastUpdaterUser = 1
+                            });
+                        }
+                    }
+                    await context.Companies.AddAsync(obj);
+                    await context.SaveChangesAsync();
+                    return obj.Id;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return 0;
+            }
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             try
@@ -55,6 +110,27 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     var obj = await context.Companies.FindAsync(id) ?? throw new Exception("No existe la empresa solicitada");
                     obj.Enable = false;
                     obj.DeleteDate = DateTime.Now;
+                    context.Companies.Update(obj);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> DesactiveWebVision(int id)
+        {
+            try
+            {
+                using (var context = new SqlCoreContext())
+                {
+                    var obj = await context.Companies.FindAsync(id) ?? throw new Exception("No existe la empresa solicitada");
+                    obj.OnWeb = false;
+                    obj.UpdateDate = DateTime.Now;
                     context.Companies.Update(obj);
                     await context.SaveChangesAsync();
                     return true;
@@ -90,20 +166,54 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public async Task<List<Company>> GetByNameAsync(string name, string form, int idCountry)
+        public async Task<List<Company>> GetByNameAsync(string name, string form, int idCountry,bool haveReport)
         {
-
+            //Fata el Have Report
+            List<Company> companys = new List<Company>();
             try
             {
                 using var context = new SqlCoreContext();
+                if (form == "C")
+                {
+                    if (idCountry == 0)
+                    {
+                        companys = await context.Companies.Include(x=>x.IdCreditRiskNavigation).
+                            Include(x => x.IdCountryNavigation).Where(x => x.Name.Contains(name) || x.SocialName.Contains(name)).Take(100).ToListAsync();
+                    }
+                    else
+                    {
+                        companys = await context.Companies.Include(x => x.IdCreditRiskNavigation).
+                            Include(x => x.IdCountryNavigation).Where(x =>x.IdCountry==idCountry && (x.Name.Contains(name) || x.SocialName.Contains(name))).Take(100).ToListAsync();
+                    }
+                    
+                }
+                else
+                {
+                    if (idCountry == 0)
+                    {
+                        companys = await context.Companies.Include(x => x.IdCreditRiskNavigation).
+                            Include(x => x.IdCountryNavigation).Where(x => x.Name.StartsWith(name) || x.SocialName.StartsWith(name)).Take(100).ToListAsync();
+                    }
+                    else
+                    {
+                        companys = await context.Companies.Include(x => x.IdCreditRiskNavigation).
+                            Include(x => x.IdCountryNavigation).Where(x => x.IdCountry == idCountry && ( x.Name.StartsWith(name) || x.SocialName.StartsWith(name))).Take(100).ToListAsync();
+                    }
+                  
+                }
 
-                return await context.Companies.Where(x => x.Name.Contains(name) || x.SocialName.Contains(name)).ToListAsync();
+                return companys; 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
                 return null;
             }
+        }
+
+        public Task<List<Company>> GetByNameAsync(string name)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<bool> UpdateAsync(Company obj)

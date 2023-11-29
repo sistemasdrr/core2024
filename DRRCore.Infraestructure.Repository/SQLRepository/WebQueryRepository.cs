@@ -93,5 +93,13 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
             using var context = new SqlContext();
             return await context.WebQueries.Where(x => x.CodigoEmpresaWeb == code).FirstOrDefaultAsync();
         }
+
+        public async Task<string> GetOldCodeAsync(string code)
+        {
+            using var context = new SqlContext();
+            var query= await context.WebQueries.Where(x => x.CodigoEmpresa == code).FirstOrDefaultAsync();
+            if (query == null) throw new Exception("No existe el código");
+            return query.CodigoEmpresaWeb??string.Empty;
+        }
     }
 }

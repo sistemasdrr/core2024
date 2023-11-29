@@ -21,6 +21,10 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                    .ForMember(dest => dest.LastSearched, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.LastSearched)))
                    .ForMember(dest => dest.ConstitutionDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.ConstitutionDate)))
                    .ReverseMap();
+            CreateMap<AddOrUpdateCompanyBackgroundRequestDto, CompanyBackground>()                 
+                  .ForMember(dest => dest.LastQueryRrpp, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.LastQueryRrpp)))
+                  .ForMember(dest => dest.ConstitutionDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.ConstitutionDate)))
+                  .ReverseMap();
             CreateMap<TraductionDto, Traduction>()
                  .ReverseMap();
             CreateMap<Company, GetCompanyResponseDto>()               
@@ -29,12 +33,43 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.ConstitutionDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.ConstitutionDate)))
                 .ForMember(dest => dest.OldCode, opt => opt?.MapFrom(src => string.IsNullOrEmpty(src.OldCode)?"N"+src.Id.ToString("D10"):src.OldCode))
                 .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
+                .ReverseMap();
 
+            CreateMap<Company, GetListCompanyResponseDto>()
+                .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Name, opt => opt?.MapFrom(src => src.Name))
+                 .ForMember(dest => dest.Code, opt => opt?.MapFrom(src => string.IsNullOrEmpty(src.OldCode) ? "N" + src.Id.ToString("D10") : src.OldCode))
+                .ForMember(dest => dest.CreditRisk, opt => opt?.MapFrom(src => src.IdCreditRiskNavigation!=null?src.IdCreditRiskNavigation.Identifier:string.Empty))
+                .ForMember(dest => dest.Language, opt => opt?.MapFrom(src => src.Language))
+                .ForMember(dest => dest.TaxNumber, opt => opt?.MapFrom(src => src.TaxTypeCode))
+                .ForMember(dest => dest.LastReportDate, opt => opt?.MapFrom(src =>StaticFunctions.DateTimeToString(src.LastSearched)))
+                .ForMember(dest => dest.Country, opt => opt?.MapFrom(src => src.IdCountryNavigation!=null?src.IdCountryNavigation.Name:string.Empty))
+                .ForMember(dest => dest.IsoCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation != null ? src.IdCountryNavigation.Iso : string.Empty))
+                .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation != null ? src.IdCountryNavigation.FlagIso : string.Empty))
+                .ForMember(dest => dest.Quality, opt => opt?.MapFrom(src => src.Quality))
+                //Falta implementar
+                .ForMember(dest => dest.TraductionPercentage, opt => opt?.MapFrom(src =>GetTraductionPercentage()))
+                .ForMember(dest => dest.Manager, opt => opt?.MapFrom(src => string.Empty))
                 .ReverseMap();
             CreateMap<Traduction, TraductionDto>()
                 .ForMember(dest => dest.Key, opt => opt?.MapFrom(src => src.Identifier))
                 .ForMember(dest => dest.Value, opt => opt?.MapFrom(src =>src.Identifier.StartsWith("S")?src.ShortValue:src.LargeValue))
                  .ReverseMap();
+
+            CreateMap<CompanyBackground, GetCompanyBackgroundResponseDto>()
+                .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Traductions))
+              .ForMember(dest => dest.LastQueryRrpp, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.LastQueryRrpp)))
+              .ForMember(dest => dest.ConstitutionDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.ConstitutionDate)))
+              .ReverseMap();
+        }
+
+        private int GetTraductionPercentage()
+        {
+            int min = 1;
+            int max = 100;
+
+            Random rnd = new Random();
+            return rnd.Next(min, max + 1);
         }
     }
 }

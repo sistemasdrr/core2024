@@ -66,6 +66,8 @@
 
         public string? NewsComentary { get; set; }       
         public string? IdentificacionCommentary { get; set; }
+        public bool IsRelationed { get; set; }  
+        public int CodeRelationed { get; set; }
       
         public List<TraductionDto> Traductions { get; set; }=new List<TraductionDto>();
     }

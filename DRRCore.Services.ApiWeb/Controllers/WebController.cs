@@ -50,6 +50,12 @@ namespace DRRCore.Services.ApiWeb.Controllers
         {
             return Ok(await _webDataApplication.GetSimilarBrunchAsync(code));
         }
+        [HttpGet()]
+        [Route("get/oldcode/{code}")]
+        public async Task<ActionResult> GetOldCode(string code)
+        {
+            return Ok(await _webDataApplication.GetOldCodeAsync(code));
+        }
 
 
     }

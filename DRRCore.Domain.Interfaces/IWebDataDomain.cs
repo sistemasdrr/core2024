@@ -1,6 +1,4 @@
-﻿using DRRCore.Application.DTO.Web;
-using DRRCore.Domain.Entities.SQLContext;
-using DRRCore.Transversal.Common;
+﻿using DRRCore.Domain.Entities.SQLContext;
 
 namespace DRRCore.Domain.Interfaces
 {
@@ -12,5 +10,6 @@ namespace DRRCore.Domain.Interfaces
         Task<List<WebQuery>> GetByCountryAndBranchAsync(int country, string branch, int page);
         Task<List<WebQuery>> GetSimilarBrunchAsync(string code);
         Task<List<WebQuery>> GetByParamAndCountryAsync(string param, string country);
+        Task<string> GetOldCodeAsync(string code);
     }
 }

@@ -23,10 +23,10 @@ namespace DRRCore.Application.Main.CoreApplication
             _mapper = mapper;
             _logger = logger;
         }
-        public async Task<Response<bool>> AddOrUpdateAsync(AddOrUpdateCompanyRequestDto obj)
+        public async Task<Response<int>> AddOrUpdateAsync(AddOrUpdateCompanyRequestDto obj)
         {
             List<Traduction> traductions = new List<Traduction>();
-            var response = new Response<bool>();
+            var response = new Response<int>();
             try
             {
                 if (obj == null)
@@ -51,7 +51,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
                     var newCompany = _mapper.Map<Company>(obj);
                     newCompany.Traductions = traductions;
-                     response.Data = await _companyDomain.AddAsync(newCompany);
+                     response.Data = await _companyDomain.AddCompanyAsync(newCompany);
                 }
                 else
                 {
@@ -78,7 +78,8 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
                     existingCompany.Traductions= traductions;
                     existingCompany.UpdateDate = DateTime.Now;
-                    response.Data = await _companyDomain.UpdateAsync(existingCompany);
+                    await _companyDomain.UpdateAsync(existingCompany);
+                    response.Data = existingCompany.Id;
                 }
             }
             catch (Exception ex)
@@ -177,19 +178,19 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<List<GetCompanyResponseDto>>> GetAllCompanys(string name, string form, int idCountry)
+        public async Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name, string form, int idCountry, bool haveReport)
         {
-            var response = new Response<List<GetCompanyResponseDto>>();
+            var response = new Response<List<GetListCompanyResponseDto>>();
             try
             {
-                var company = await _companyDomain.GetByNameAsync(name,form,idCountry);
+                var company = await _companyDomain.GetByNameAsync(name,form,idCountry,haveReport);
                 if (company == null)
                 {
                     response.IsSuccess = false;
                     response.Message = Messages.MessageNoDataFound;
                     _logger.LogError(response.Message);
                 }
-                response.Data = _mapper.Map<List<GetCompanyResponseDto>>(company);
+                response.Data = _mapper.Map<List<GetListCompanyResponseDto>>(company);
             }
             catch (Exception ex)
             {
@@ -214,6 +215,73 @@ namespace DRRCore.Application.Main.CoreApplication
                     return response;
                 }
                 response.Data = _mapper.Map<GetCompanyResponseDto>(company);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+        public async Task<Response<GetCompanyBackgroundResponseDto>> GetCompanyBackgroundById(int id)
+        {
+            var response = new Response<GetCompanyBackgroundResponseDto>();
+            try
+            {
+                var company = await _companyBackgroundDomain.GetByIdAsync(id);
+                if (company == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetCompanyBackgroundResponseDto>(company);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> ActiveWebVisionAsync(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (id == 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                }
+                response.Data = await _companyDomain.ActiveWebVision(id);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DesactiveWebVisionAsync(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (id == 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                }
+                response.Data = await _companyDomain.DesactiveWebVision(id);
             }
             catch (Exception ex)
             {

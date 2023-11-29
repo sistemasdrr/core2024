@@ -156,5 +156,34 @@ namespace DRRCore.Application.Main
                 return response;
             }
         }
+
+        public async Task<Response<string>> GetOldCodeAsync(string code)
+        {
+
+            var response = new Response<string>();
+            try
+            {
+                if (!string.IsNullOrEmpty(code) && code.Length==11)
+                {
+                    response.Data = await _webDataDomain.GetOldCodeAsync(code);                
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.IsWarning = true;
+                    response.Message = "Error al listar: parametro inválido";
+                    _logger.LogError(response.Message);
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.IsWarning = true;
+                response.Message = "Error al listar: " + ex.Message;
+                _logger.LogError(response.Message, ex);
+                return response;
+            }
+        }
     }
 }

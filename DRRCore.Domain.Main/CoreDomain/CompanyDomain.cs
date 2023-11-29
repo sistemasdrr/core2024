@@ -10,14 +10,30 @@ namespace DRRCore.Domain.Main.CoreDomain
         public CompanyDomain(ICompanyRepository companyRepository) { 
           _companyRepository = companyRepository;
         }
+
+        public async Task<bool> ActiveWebVision(int id)
+        {
+           return await _companyRepository.ActiveWebVision(id);
+        }
+
         public async Task<bool> AddAsync(Company obj)
         {
             return await _companyRepository.AddAsync(obj);
         }
 
+        public async Task<int> AddCompanyAsync(Company obj)
+        {
+            return await _companyRepository.AddCompanyAsync(obj);
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             return await _companyRepository.DeleteAsync(id);
+        }
+
+        public async Task<bool> DesactiveWebVision(int id)
+        {
+            return await _companyRepository.DesactiveWebVision(id);
         }
 
         public Task<List<Company>> GetAllAsync()
@@ -30,9 +46,14 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _companyRepository.GetByIdAsync(id);
         }
 
-        public async Task<List<Company>> GetByNameAsync(string name, string form, int idCountry)
+        public async Task<List<Company>> GetByNameAsync(string name, string form, int idCountry,bool haveReport)
         {
-            return await _companyRepository.GetByNameAsync(name,form,idCountry);
+            return await _companyRepository.GetByNameAsync(name,form,idCountry, haveReport);
+        }
+
+        public Task<List<Company>> GetByNameAsync(string name)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<bool> UpdateAsync(Company obj)
