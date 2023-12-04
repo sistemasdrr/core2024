@@ -1,29 +1,17 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using DRRCore.Application.Interfaces;
-using DRRCore.Application.Main;
-using DRRCore.Domain.Interfaces;
-using DRRCore.Domain.Main;
-using DRRCore.Infraestructure.Interfaces.MySqlRepository;
-using DRRCore.Infraestructure.Interfaces.Repository;
-using DRRCore.Infraestructure.Repository.MYSQLRepository;
-using DRRCore.Infraestructure.Repository.SQLRepository;
+using DRRCore.Application.Interfaces.CoreApplication;
+using DRRCore.Application.Main.CoreApplication;
+using DRRCore.Domain.Interfaces.CoreDomain;
+using DRRCore.Domain.Main.CoreDomain;
+using DRRCore.Infraestructure.Interfaces.CoreRepository;
+using DRRCore.Infraestructure.Repository.CoreRepository;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using DRRCore.Transversal.Common.JsonReader;
-using DRRCore.Transversal.Mapper.Profiles.Web;
+using DRRCore.Transversal.Mapper.Profiles.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.OpenApi.Models;
-using DRRCore.Infraestructure.Interfaces.CoreRepository;
-using DRRCore.Infraestructure.Repository.CoreRepository;
-using Azure.Identity;
-using DRRCore.Domain.Interfaces.CoreDomain;
-using DRRCore.Domain.Main.CoreDomain;
-using DRRCore.Application.Interfaces.CoreApplication;
-using DRRCore.Application.Main.CoreApplication;
-using DRRCore.Transversal.Mapper.Profiles.Core;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
