@@ -30,4 +30,6 @@ public partial class Reputation
     public string? Color { get; set; }
 
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
+
+    public virtual ICollection<Person> People { get; set; } = new List<Person>();
 }

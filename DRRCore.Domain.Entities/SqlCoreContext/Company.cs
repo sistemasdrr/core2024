@@ -97,5 +97,7 @@ public partial class Company
 
     public virtual Reputation? IdReputationNavigation { get; set; }
 
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
     public virtual ICollection<Traduction> Traductions { get; set; } = new List<Traduction>();
 }

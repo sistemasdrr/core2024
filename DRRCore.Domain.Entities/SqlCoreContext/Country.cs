@@ -30,4 +30,8 @@ public partial class Country
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 
     public virtual Continent? IdContinentNavigation { get; set; }
+
+    public virtual ICollection<Person> People { get; set; } = new List<Person>();
+
+    public virtual ICollection<Subscriber> Subscribers { get; set; } = new List<Subscriber>();
 }

@@ -22,4 +22,6 @@ public partial class Currency
     public DateTime? DeleteDate { get; set; }
 
     public bool? Enable { get; set; }
+
+    public virtual ICollection<Subscriber> Subscribers { get; set; } = new List<Subscriber>();
 }

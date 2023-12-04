@@ -10,7 +10,7 @@ public partial class SqlCoreContext : DbContext
     {
     }
 
-    public SqlCoreContext(DbContextOptions<SqlCoreContext> options)
+    public SqlCoreContext(DbContextOptions<DbA9ccf0EecoreContext> options)
         : base(options)
     {
     }
@@ -63,11 +63,17 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<LegalRegisterSituation> LegalRegisterSituations { get; set; }
 
+    public virtual DbSet<Order> Orders { get; set; }
+
     public virtual DbSet<PaymentPolicy> PaymentPolicies { get; set; }
+
+    public virtual DbSet<Person> People { get; set; }
 
     public virtual DbSet<Process> Processes { get; set; }
 
     public virtual DbSet<Reputation> Reputations { get; set; }
+
+    public virtual DbSet<Subscriber> Subscribers { get; set; }
 
     public virtual DbSet<Traduction> Traductions { get; set; }
 
@@ -299,6 +305,9 @@ public partial class SqlCoreContext : DbContext
                 .HasMaxLength(25)
                 .IsUnicode(false)
                 .HasColumnName("oldCode");
+            entity.Property(e => e.OnWeb)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("onWeb");
             entity.Property(e => e.Place)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -1238,6 +1247,84 @@ public partial class SqlCoreContext : DbContext
                 .HasColumnName("updateDate");
         });
 
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Order__3213E83FCBF19D24");
+
+            entity.ToTable("Order");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.CreditAmount)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("creditAmount");
+            entity.Property(e => e.DateReport)
+                .HasColumnType("datetime")
+                .HasColumnName("dateReport");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.ExpirationDate)
+                .HasColumnType("datetime")
+                .HasColumnName("expirationDate");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.IdSubscriber).HasColumnName("idSubscriber");
+            entity.Property(e => e.Language)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("language");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.RealExpirationDate)
+                .HasColumnType("datetime")
+                .HasColumnName("realExpirationDate");
+            entity.Property(e => e.ReferenceNumber)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("referenceNumber");
+            entity.Property(e => e.StartDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("startDate");
+            entity.Property(e => e.Terms)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("terms");
+            entity.Property(e => e.TypeOrder)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("typeOrder");
+            entity.Property(e => e.TypeReport)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("typeReport");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__Order__idCompany__3F3159AB");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__Order__idPerson__40257DE4");
+
+            entity.HasOne(d => d.IdSubscriberNavigation).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.IdSubscriber)
+                .HasConstraintName("FK__Order__idSubscri__3E3D3572");
+        });
+
         modelBuilder.Entity<PaymentPolicy>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__PaymentP__3213E83F0926C101");
@@ -1274,6 +1361,180 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
+        });
+
+        modelBuilder.Entity<Person>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Person_Id");
+
+            entity.ToTable("Person");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Address)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("address");
+            entity.Property(e => e.BirthDate)
+                .HasColumnType("datetime")
+                .HasColumnName("birthDate");
+            entity.Property(e => e.BirthPlace)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("birthPlace");
+            entity.Property(e => e.Cellphone)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("cellphone");
+            entity.Property(e => e.City)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("city");
+            entity.Property(e => e.ClubMember)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("clubMember");
+            entity.Property(e => e.CodeDocumentType)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("codeDocumentType");
+            entity.Property(e => e.CodePhone)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("codePhone");
+            entity.Property(e => e.Cp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("cp");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Email)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("email");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.FatherName)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("fatherName");
+            entity.Property(e => e.Fullname)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("fullname");
+            entity.Property(e => e.IdCivilStatus).HasColumnName("idCivilStatus");
+            entity.Property(e => e.IdCountry).HasColumnName("idCountry");
+            entity.Property(e => e.IdCreditRisk).HasColumnName("idCreditRisk");
+            entity.Property(e => e.IdDocumentType).HasColumnName("idDocumentType");
+            entity.Property(e => e.IdLegalRegisterSituation).HasColumnName("idLegalRegisterSituation");
+            entity.Property(e => e.IdPaymentPolicy).HasColumnName("idPaymentPolicy");
+            entity.Property(e => e.IdProfession).HasColumnName("idProfession");
+            entity.Property(e => e.IdReputation).HasColumnName("idReputation");
+            entity.Property(e => e.Insurance)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("insurance");
+            entity.Property(e => e.Language)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("language");
+            entity.Property(e => e.LastSearched)
+                .HasColumnType("datetime")
+                .HasColumnName("lastSearched");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.MotherName)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("motherName");
+            entity.Property(e => e.Nationality)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("nationality");
+            entity.Property(e => e.NewsCommentary)
+                .IsUnicode(false)
+                .HasColumnName("newsCommentary");
+            entity.Property(e => e.NumberPhone)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("numberPhone");
+            entity.Property(e => e.OldCode)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .HasColumnName("oldCode");
+            entity.Property(e => e.OnWeb)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("onWeb");
+            entity.Property(e => e.OtherDirecctions)
+                .IsUnicode(false)
+                .HasColumnName("otherDirecctions");
+            entity.Property(e => e.PrintNewsCommentary).HasColumnName("printNewsCommentary");
+            entity.Property(e => e.PrivateCommentary)
+                .IsUnicode(false)
+                .HasColumnName("privateCommentary");
+            entity.Property(e => e.RelationshipCodeDocument)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("relationshipCodeDocument");
+            entity.Property(e => e.RelationshipDocumentType).HasColumnName("relationshipDocumentType");
+            entity.Property(e => e.RelationshipWith)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("relationshipWith");
+            entity.Property(e => e.ReputationCommentary)
+                .IsUnicode(false)
+                .HasColumnName("reputationCommentary");
+            entity.Property(e => e.TaxTypeCode)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("taxTypeCode");
+            entity.Property(e => e.TaxTypeName)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("taxTypeName");
+            entity.Property(e => e.TradeName)
+                .IsUnicode(false)
+                .HasColumnName("tradeName");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCivilStatusNavigation).WithMany(p => p.People)
+                .HasForeignKey(d => d.IdCivilStatus)
+                .HasConstraintName("FK__Person__idCivilS__2D12A970");
+
+            entity.HasOne(d => d.IdCountryNavigation).WithMany(p => p.People)
+                .HasForeignKey(d => d.IdCountry)
+                .HasConstraintName("FK__Person__idCountr__2C1E8537");
+
+            entity.HasOne(d => d.IdCreditRiskNavigation).WithMany(p => p.People)
+                .HasForeignKey(d => d.IdCreditRisk)
+                .HasConstraintName("FK__Person__idCredit__2EFAF1E2");
+
+            entity.HasOne(d => d.IdDocumentTypeNavigation).WithMany(p => p.PersonIdDocumentTypeNavigations)
+                .HasForeignKey(d => d.IdDocumentType)
+                .HasConstraintName("FK__Person__idDocume__2A363CC5");
+
+            entity.HasOne(d => d.IdLegalRegisterSituationNavigation).WithMany(p => p.People)
+                .HasForeignKey(d => d.IdLegalRegisterSituation)
+                .HasConstraintName("FK__Person__idLegalR__2B2A60FE");
+
+            entity.HasOne(d => d.IdPaymentPolicyNavigation).WithMany(p => p.People)
+                .HasForeignKey(d => d.IdPaymentPolicy)
+                .HasConstraintName("FK__Person__idPaymen__2FEF161B");
+
+            entity.HasOne(d => d.IdReputationNavigation).WithMany(p => p.People)
+                .HasForeignKey(d => d.IdReputation)
+                .HasConstraintName("FK__Person__idReputa__30E33A54");
+
+            entity.HasOne(d => d.RelationshipDocumentTypeNavigation).WithMany(p => p.PersonRelationshipDocumentTypeNavigations)
+                .HasForeignKey(d => d.RelationshipDocumentType)
+                .HasConstraintName("FK__Person__relation__2E06CDA9");
         });
 
         modelBuilder.Entity<Process>(entity =>
@@ -1353,6 +1614,152 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
+        });
+
+        modelBuilder.Entity<Subscriber>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Subscrib__3213E83FAAFFFEEC");
+
+            entity.ToTable("Subscriber");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Acronym)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("acronym");
+            entity.Property(e => e.AdditionalContactEmail)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("additionalContactEmail");
+            entity.Property(e => e.AdditionalContactName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("additionalContactName");
+            entity.Property(e => e.AdditionalContactTelephone)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("additionalContactTelephone");
+            entity.Property(e => e.Address)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("address");
+            entity.Property(e => e.City)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("city");
+            entity.Property(e => e.Code)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("code");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("email");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.FacturationType)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("facturationType");
+            entity.Property(e => e.Fax)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("fax");
+            entity.Property(e => e.IdContinent).HasColumnName("idContinent");
+            entity.Property(e => e.IdCountry).HasColumnName("idCountry");
+            entity.Property(e => e.IdCurrency).HasColumnName("idCurrency");
+            entity.Property(e => e.IdRubro).HasColumnName("idRubro");
+            entity.Property(e => e.Indications)
+                .IsUnicode(false)
+                .HasColumnName("indications");
+            entity.Property(e => e.Language)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("language");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.MaximumCredit).HasColumnName("maximumCredit");
+            entity.Property(e => e.Name)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.NormalPrice).HasColumnName("normalPrice");
+            entity.Property(e => e.Observations)
+                .IsUnicode(false)
+                .HasColumnName("observations");
+            entity.Property(e => e.PrincipalContact)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("principalContact");
+            entity.Property(e => e.RevealName).HasColumnName("revealName");
+            entity.Property(e => e.SendInvoiceToEmail)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("sendInvoiceToEmail");
+            entity.Property(e => e.SendInvoiceToName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("sendInvoiceToName");
+            entity.Property(e => e.SendInvoiceToTelephone)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("sendInvoiceToTelephone");
+            entity.Property(e => e.SendReportToEmail)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("sendReportToEmail");
+            entity.Property(e => e.SendReportToName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("sendReportToName");
+            entity.Property(e => e.SendReportToTelephone)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("sendReportToTelephone");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("startDate");
+            entity.Property(e => e.SubscriberType)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("subscriberType");
+            entity.Property(e => e.TaxRegistration)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("taxRegistration");
+            entity.Property(e => e.Telephone)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("telephone");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+            entity.Property(e => e.WebPage)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("webPage");
+
+            entity.HasOne(d => d.IdContinentNavigation).WithMany(p => p.Subscribers)
+                .HasForeignKey(d => d.IdContinent)
+                .HasConstraintName("FK__Subscribe__idCon__369C13AA");
+
+            entity.HasOne(d => d.IdCountryNavigation).WithMany(p => p.Subscribers)
+                .HasForeignKey(d => d.IdCountry)
+                .HasConstraintName("FK__Subscribe__idCou__379037E3");
+
+            entity.HasOne(d => d.IdCurrencyNavigation).WithMany(p => p.Subscribers)
+                .HasForeignKey(d => d.IdCurrency)
+                .HasConstraintName("FK__Subscribe__idCur__38845C1C");
         });
 
         modelBuilder.Entity<Traduction>(entity =>

@@ -32,4 +32,6 @@ public partial class CreditRisk
     public string? Abreviation { get; set; }
 
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
+
+    public virtual ICollection<Person> People { get; set; } = new List<Person>();
 }

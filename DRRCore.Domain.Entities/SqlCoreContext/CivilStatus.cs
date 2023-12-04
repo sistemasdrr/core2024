@@ -18,4 +18,6 @@ public partial class CivilStatus
     public DateTime? DeleteDate { get; set; }
 
     public bool? Enable { get; set; }
+
+    public virtual ICollection<Person> People { get; set; } = new List<Person>();
 }

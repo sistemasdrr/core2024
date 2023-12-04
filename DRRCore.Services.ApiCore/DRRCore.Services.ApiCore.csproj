@@ -15,6 +15,7 @@
     <ProjectReference Include="..\DRRCore.Application.DTO\DRRCore.Application.DTO.csproj" />
     <ProjectReference Include="..\DRRCore.Application.Interfaces\DRRCore.Application.Interfaces.csproj" />
     <ProjectReference Include="..\DRRCore.Application.Main\DRRCore.Application.Main.csproj" />
+    <ProjectReference Include="..\DRRCore.Domain.Entities\DRRCore.Domain.Entities.csproj" />
     <ProjectReference Include="..\DRRCore.Domain.Interfaces\DRRCore.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\DRRCore.Domain.Main\DRRCore.Domain.Main.csproj" />
     <ProjectReference Include="..\DRRCore.Infraestructure.Interfaces\DRRCore.Infraestructure.Interfaces.csproj" />

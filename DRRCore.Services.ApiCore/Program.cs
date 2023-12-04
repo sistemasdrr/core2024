@@ -52,6 +52,7 @@ builder.Services.AddSwaggerGen(opt =>
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddAutoMapper(typeof(EmployeeProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(SubscriberProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(ComboProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(CompanyProfile).Assembly);
 builder.Services.AddHttpContextAccessor();
@@ -77,6 +78,7 @@ builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ILegalRegisterSituationRepository, LegalRegisterSituationRepository>();
 builder.Services.AddScoped<ICompanyBackgroundRepository, CompanyBackgroundRepository>();
 builder.Services.AddScoped<ICompanyBranchRepository, CompanyBranchRepository>();
+builder.Services.AddScoped<ISubscriberRepository, SubscriberRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -98,12 +100,13 @@ builder.Services.AddScoped<ICompanyDomain, CompanyDomain>();
 builder.Services.AddScoped<ILegalRegisterSituationDomain, LegalRegisterSituationDomain>();
 builder.Services.AddScoped<ICompanyBackgroundDomain, CompanyBackgroundDomain>();
 builder.Services.AddScoped<ICompanyBranchDomain, CompanyBranchDomain>();
+builder.Services.AddScoped<ISubscriberDomain, SubscriberDomain>();
 
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
 builder.Services.AddScoped<ICompanyApplication, CompanyApplication>();
-
+builder.Services.AddScoped<ISubscriberApplication, SubscriberApplication>();
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
