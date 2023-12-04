@@ -13,12 +13,22 @@ namespace DRRCore.Domain.Main.CoreDomain
             _subscriberRepository = subscriberRepository;
         }
 
+        public async Task<bool> ActiveSubscriberAsync(int id)
+        {
+            return await _subscriberRepository.ActiveSubscriberAsync(id);
+        }
+
         public async Task<int> AddSubscriberAsync(Subscriber subscriber)
         {
             return await _subscriberRepository.AddSubscriberAsync(subscriber);
         }
 
-        public async Task<List<Subscriber>> GetSubscriber(string code, string name, bool enable)
+        public async Task<bool> DeleteSubscriberAsync(int id)
+        {
+            return await _subscriberRepository.DeleteSubscriberAsync(id);
+        }
+
+        public async Task<List<Subscriber>> GetSubscriber(string code, string name, string enable)
         {
             return await _subscriberRepository.GetSubscriber(code, name, enable);
         }

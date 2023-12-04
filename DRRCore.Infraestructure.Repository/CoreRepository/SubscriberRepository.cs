@@ -13,6 +13,34 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             _logger = logger;
         }
 
+        public async Task<bool> ActiveSubscriberAsync(int id)
+        {
+            try
+            {
+                using (var context = new SqlCoreContext())
+                {
+                    var subscriber = await context.Subscribers.FindAsync(id);
+                    if(subscriber != null)
+                    {
+                        subscriber.Enable = true;
+                        context.Subscribers.Update(subscriber);
+                        await context.SaveChangesAsync();
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+
+            }
+        }
+
         public async Task<int> AddSubscriberAsync(Subscriber subscriber)
         {
             try
@@ -32,19 +60,47 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public async Task<List<Subscriber>> GetSubscriber(string code, string name, bool enable)
+        public async Task<bool> DeleteSubscriberAsync(int id)
+        {
+            try
+            {
+                using (var context = new SqlCoreContext())
+                {
+                    var subscriber = await context.Subscribers.FindAsync(id);
+                    if (subscriber != null)
+                    {
+                        subscriber.Enable = false;
+                        context.Subscribers.Update(subscriber);
+                        await context.SaveChangesAsync();
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+
+            }
+        }
+
+        public async Task<List<Subscriber>> GetSubscriber(string code, string name, string enable)
         {
             try
             {
                 using var context = new SqlCoreContext();
-                if (enable)
+                if (enable.Equals("A"))
                 {
-                    return await context.Subscribers.Where(x => x.Code.Contains(code) && x.Name.Contains(name) && x.Enable == true).ToListAsync();
+                    return await context.Subscribers.Include(x => x.IdCountryNavigation).Where(x => x.Code.Contains(code) && x.Name.Contains(name) && x.Enable == true).ToListAsync();
 
                 }
                 else
                 {
-                    return await context.Subscribers.Where(x => x.Code.Contains(code) && x.Name.Contains(name)).ToListAsync();
+                    return await context.Subscribers.Include(x => x.IdCountryNavigation).Where(x => x.Code.Contains(code) && x.Name.Contains(name)).ToListAsync();
                 }
             }
             catch (Exception ex)

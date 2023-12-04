@@ -21,6 +21,32 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _subscriberApplication.AddOrUpdateAsync(request));
         }
-
+        [HttpGet()]
+        [Route("get")]
+        public async Task<ActionResult> GetSubscribers(string? code, string? name, string? enable)
+        {
+            code ??= string.Empty;
+            name ??= string.Empty;
+            enable ??= string.Empty;
+            return Ok(await _subscriberApplication.GetSubscriber(code, name, enable));
+        }
+        [HttpGet()]
+        [Route("getById")]
+        public async Task<ActionResult> GetSubscriberById(int id)
+        {
+            return Ok(await _subscriberApplication.GetSubscriberById(id));
+        }
+        [HttpPost()]
+        [Route("delete")]
+        public async Task<ActionResult> DeleteSubscriber(int id)
+        {
+            return Ok(await _subscriberApplication.DeleteSubscriber(id));
+        }
+        [HttpPost()]
+        [Route("active")]
+        public async Task<ActionResult> ActiveSubscriber(int id)
+        {
+            return Ok(await _subscriberApplication.ActiveSubscriber(id));
+        }
     }
 }

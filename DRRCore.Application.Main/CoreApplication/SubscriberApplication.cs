@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DRRCore.Application.DTO.Core.Request;
+using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
@@ -18,6 +19,31 @@ namespace DRRCore.Application.Main.CoreApplication
             _subscriberDomain = subscriberDomain;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        public async Task<Response<bool>> ActiveSubscriber(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var existingSubscriber = await _subscriberDomain.GetSubscriberById(id);
+                if (existingSubscriber == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFoundEmployee;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                
+                response.Data = await _subscriberDomain.ActiveSubscriberAsync(id);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
         }
 
         public async Task<Response<int>> AddOrUpdateAsync(AddOrUpdateSubscriberRequestDto subscriberDto)
@@ -61,14 +87,76 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
-        public Task<Response<List<Subscriber>>> GetSubscriber(string code, string name, bool enable)
+
+        public async Task<Response<bool>> DeleteSubscriber(int id)
         {
-            throw new NotImplementedException();
+            var response = new Response<bool>();
+            try
+            {
+                var existingSubscriber = await _subscriberDomain.GetSubscriberById(id);
+                if (existingSubscriber == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFoundEmployee;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+
+                response.Data = await _subscriberDomain.DeleteSubscriberAsync(id);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
         }
 
-        public Task<Response<Subscriber>> GetSubscriberById(int id)
+        public async Task<Response<List<GetListSubscriberResponseDto>>> GetSubscriber(string code, string name, string enable)
         {
-            throw new NotImplementedException();
+            var response = new Response<List<GetListSubscriberResponseDto>>();
+            try
+            {
+                var subscriber = await _subscriberDomain.GetSubscriber(code, name, enable);
+                if (subscriber == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                }
+                response.Data = _mapper.Map<List<GetListSubscriberResponseDto>>(subscriber);
+            }
+            catch(Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetSubscriberRequestDto>> GetSubscriberById(int id)
+        {
+            var response = new Response<GetSubscriberRequestDto>();
+            try
+            {
+                var subscriber = await _subscriberDomain.GetSubscriberById(id);
+                if (subscriber == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                }
+                response.Data = _mapper.Map<GetSubscriberRequestDto>(subscriber);
+            }
+            catch(Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
         }
     }
 }
