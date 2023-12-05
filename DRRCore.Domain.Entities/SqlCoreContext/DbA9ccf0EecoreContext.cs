@@ -15,6 +15,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
     {
     }
 
+    public virtual DbSet<Anniversary> Anniversaries { get; set; }
+
     public virtual DbSet<BankAccountType> BankAccountTypes { get; set; }
 
     public virtual DbSet<BranchSector> BranchSectors { get; set; }
@@ -75,6 +77,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
 
     public virtual DbSet<Subscriber> Subscribers { get; set; }
 
+    public virtual DbSet<SubscriberPrice> SubscriberPrices { get; set; }
+
     public virtual DbSet<Traduction> Traductions { get; set; }
 
     public virtual DbSet<UserLogin> UserLogins { get; set; }
@@ -87,6 +91,38 @@ public partial class DbA9ccf0EecoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Anniversary>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Annivers__3213E83FEB9CDB75");
+
+            entity.ToTable("Anniversary");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EndDate)
+                .HasColumnType("datetime")
+                .HasColumnName("endDate");
+            entity.Property(e => e.Name)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("startDate");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
         modelBuilder.Entity<BankAccountType>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__BankAcco__3213E83F30664FC1");
@@ -271,7 +307,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("duration");
             entity.Property(e => e.Email)
-                .HasMaxLength(60)
+                .HasMaxLength(250)
                 .IsUnicode(false)
                 .HasColumnName("email");
             entity.Property(e => e.Enable)
@@ -1760,6 +1796,59 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.HasOne(d => d.IdCurrencyNavigation).WithMany(p => p.Subscribers)
                 .HasForeignKey(d => d.IdCurrency)
                 .HasConstraintName("FK__Subscribe__idCur__38845C1C");
+        });
+
+        modelBuilder.Entity<SubscriberPrice>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Subscrib__3213E83F16E2D8E8");
+
+            entity.ToTable("SubscriberPrice");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.Date)
+                .HasColumnType("datetime")
+                .HasColumnName("date");
+            entity.Property(e => e.DayT1).HasColumnName("dayT1");
+            entity.Property(e => e.DayT2).HasColumnName("dayT2");
+            entity.Property(e => e.DayT3).HasColumnName("dayT3");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdContinent).HasColumnName("idContinent");
+            entity.Property(e => e.IdCountry).HasColumnName("idCountry");
+            entity.Property(e => e.IdCurrency).HasColumnName("idCurrency");
+            entity.Property(e => e.IdSubscriber).HasColumnName("idSubscriber");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.PriceB).HasColumnName("priceB");
+            entity.Property(e => e.PriceT1).HasColumnName("priceT1");
+            entity.Property(e => e.PriceT2).HasColumnName("priceT2");
+            entity.Property(e => e.PriceT3).HasColumnName("priceT3");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdContinentNavigation).WithMany(p => p.SubscriberPrices)
+                .HasForeignKey(d => d.IdContinent)
+                .HasConstraintName("FK__Subscribe__idCon__52442E1F");
+
+            entity.HasOne(d => d.IdCountryNavigation).WithMany(p => p.SubscriberPrices)
+                .HasForeignKey(d => d.IdCountry)
+                .HasConstraintName("FK__Subscribe__idCou__53385258");
+
+            entity.HasOne(d => d.IdCurrencyNavigation).WithMany(p => p.SubscriberPrices)
+                .HasForeignKey(d => d.IdCurrency)
+                .HasConstraintName("FK__Subscribe__idCur__542C7691");
+
+            entity.HasOne(d => d.IdSubscriberNavigation).WithMany(p => p.SubscriberPrices)
+                .HasForeignKey(d => d.IdSubscriber)
+                .HasConstraintName("FK__Subscribe__idSub__515009E6");
         });
 
         modelBuilder.Entity<Traduction>(entity =>

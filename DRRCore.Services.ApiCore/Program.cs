@@ -79,6 +79,7 @@ builder.Services.AddScoped<ILegalRegisterSituationRepository, LegalRegisterSitua
 builder.Services.AddScoped<ICompanyBackgroundRepository, CompanyBackgroundRepository>();
 builder.Services.AddScoped<ICompanyBranchRepository, CompanyBranchRepository>();
 builder.Services.AddScoped<ISubscriberRepository, SubscriberRepository>();
+builder.Services.AddScoped<ISubscriberPriceRepository, SubscriberPriceRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -101,12 +102,14 @@ builder.Services.AddScoped<ILegalRegisterSituationDomain, LegalRegisterSituation
 builder.Services.AddScoped<ICompanyBackgroundDomain, CompanyBackgroundDomain>();
 builder.Services.AddScoped<ICompanyBranchDomain, CompanyBranchDomain>();
 builder.Services.AddScoped<ISubscriberDomain, SubscriberDomain>();
+builder.Services.AddScoped<ISubscriberPriceDomain, SubscriberPriceDomain>();
 
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
 builder.Services.AddScoped<ICompanyApplication, CompanyApplication>();
 builder.Services.AddScoped<ISubscriberApplication, SubscriberApplication>();
+builder.Services.AddScoped<ISubscriberPriceApplication, SubscriberPriceApplication>();
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();

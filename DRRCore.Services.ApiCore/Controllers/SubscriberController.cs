@@ -10,9 +10,11 @@ namespace DRRCore.Services.ApiCore.Controllers
     public class SubscriberController : Controller
     {
         public readonly ISubscriberApplication _subscriberApplication;
-        public SubscriberController(ISubscriberApplication subscriberApplication)
+        public readonly ISubscriberPriceApplication _subscriberPriceApplication;
+        public SubscriberController(ISubscriberApplication subscriberApplication, ISubscriberPriceApplication subscriberPriceApplication)
         {
             _subscriberApplication = subscriberApplication;
+            _subscriberPriceApplication = subscriberPriceApplication;
         }
 
         [HttpPost()]
@@ -47,6 +49,31 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> ActiveSubscriber(int id)
         {
             return Ok(await _subscriberApplication.ActiveSubscriber(id));
+        }
+
+        [HttpPost()]
+        [Route("addPrice")]
+        public async Task<ActionResult> AddSubscriberPrice(AddOrUpdateSubscriberPriceDto request)
+        {
+            return Ok(await _subscriberPriceApplication.AddOrUpdateAsync(request));
+        }
+        [HttpGet()]
+        [Route("getPrices")]
+        public async Task<ActionResult> GetSubscriberPrice(int idSubscriber)
+        {
+            return Ok(await _subscriberPriceApplication.GetSubscriberPricesById(idSubscriber));
+        }
+        [HttpGet()]
+        [Route("getPrice")]
+        public async Task<ActionResult> GetSubscriberPriceById(int id)
+        {
+            return Ok(await _subscriberPriceApplication.GetSubscriberPriceById(id));
+        }
+        [HttpPost()]
+        [Route("deletePrice")]
+        public async Task<ActionResult> DeleteSubscriberPrice(int id)
+        {
+            return Ok(await _subscriberPriceApplication.DeleteAsync(id));
         }
     }
 }

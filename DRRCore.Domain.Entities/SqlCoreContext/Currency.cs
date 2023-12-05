@@ -23,5 +23,7 @@ public partial class Currency
 
     public bool? Enable { get; set; }
 
+    public virtual ICollection<SubscriberPrice> SubscriberPrices { get; set; } = new List<SubscriberPrice>();
+
     public virtual ICollection<Subscriber> Subscribers { get; set; } = new List<Subscriber>();
 }

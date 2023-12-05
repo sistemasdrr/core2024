@@ -36,7 +36,29 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency))
             .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
         .ReverseMap();
+
+            CreateMap<AddOrUpdateSubscriberPriceDto, SubscriberPrice>()
+            .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
+            .ForMember(dest => dest.IdSubscriber, opt => opt?.MapFrom(src => src.IdSubscriber == 0 ? null : src.IdSubscriber))
+            .ForMember(dest => dest.IdContinent, opt => opt?.MapFrom(src => src.IdContinent == 0 ? null : src.IdContinent))
+            .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountry))
+            .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
+        .ReverseMap();
+            CreateMap<SubscriberPrice, GetSuscriberPriceResponseDto>()
+           .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+           .ForMember(dest => dest.Country, opt => opt?.MapFrom(src => src.IdCountryNavigation != null ? src.IdCountryNavigation.Iso : string.Empty))
+           .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation != null ? src.IdCountryNavigation.FlagIso : string.Empty))
+           .ForMember(dest => dest.Currency, opt => opt?.MapFrom(src => src.IdCurrencyNavigation!= null ? src.IdCurrencyNavigation.Abreviation: string.Empty))
+           .ForMember(dest => dest.PriceT1, opt => opt?.MapFrom(src => src.PriceT1 + " / " + src.DayT1))
+           .ForMember(dest => dest.PriceT2, opt => opt?.MapFrom(src => src.PriceT2 + " / " + src.DayT2))
+           .ForMember(dest => dest.PriceT3, opt => opt?.MapFrom(src => src.PriceT3 + " / " + src.DayT3))
+           .ForMember(dest => dest.PriceB, opt => opt?.MapFrom(src => src.PriceB))
+       .ReverseMap();
+            CreateMap<SubscriberPrice, GetSuscriberPriceByIdResponseDto>()
+            .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+        .ReverseMap();
+
+
         }
-        
     }
 }
