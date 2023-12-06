@@ -125,6 +125,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+
         public async Task<bool> UpdateSubscriberAsync(Subscriber subscriber)
         {
             try

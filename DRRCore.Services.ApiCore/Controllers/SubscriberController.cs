@@ -75,5 +75,24 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _subscriberPriceApplication.DeleteAsync(id));
         }
+
+        [HttpGet()]
+        [Route("getContinents")]
+        public async Task<ActionResult> getContinentesById(int id)
+        {
+            return Ok(await _subscriberPriceApplication.GetContinentsById(id));
+        }
+        [HttpGet()]
+        [Route("getCountries")]
+        public async Task<ActionResult> getCountriesById(int idSubscriber, int idContinent)
+        {
+            return Ok(await _subscriberPriceApplication.GetCountriesById(idSubscriber,idContinent));
+        }
+        [HttpGet()]
+        [Route("getPriceByIds")]
+        public async Task<ActionResult> getPriceByIds(int idSubscriber, int idContinent, int idCountry)
+        {
+            return Ok(await _subscriberPriceApplication.GetSelectSubscriberPrice(idSubscriber, idContinent, idCountry));
+        }
     }
 }

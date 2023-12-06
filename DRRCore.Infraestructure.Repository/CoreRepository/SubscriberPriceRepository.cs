@@ -100,6 +100,28 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
+        public async Task<SubscriberPrice> GetPriceBySubscriberIds(int idSubscriber, int idContinent, int idCountry)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var existingSubcriberPrice = await context.SubscriberPrices.FirstOrDefaultAsync(x => x.IdSubscriber == idSubscriber && x.IdContinent == idContinent && x.IdCountry == idCountry);
+                if (existingSubcriberPrice != null)
+                {
+                    return existingSubcriberPrice;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
         public async Task<List<SubscriberPrice>> GetPricesBySubscriberId(int idSubscriber)
         {
             try
@@ -108,7 +130,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 var existingSubscriber = await context.Subscribers.FindAsync(idSubscriber);
                 if(existingSubscriber != null)
                 {
-                    var subcriberPrices = await context.SubscriberPrices.Include(x => x.IdCountryNavigation).Include(x => x.IdCurrencyNavigation).Where(x => x.IdSubscriber == idSubscriber).ToListAsync();
+                    var subcriberPrices = await context.SubscriberPrices.Include(x => x.IdContinentNavigation).Include(x => x.IdCountryNavigation).Include(x => x.IdCurrencyNavigation).Where(x => x.IdSubscriber == idSubscriber).ToListAsync();
                     return subcriberPrices;
                 }
                 else

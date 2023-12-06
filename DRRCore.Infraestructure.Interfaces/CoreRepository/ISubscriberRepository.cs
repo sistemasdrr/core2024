@@ -10,6 +10,5 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
         Task<List<Subscriber>> GetSubscriber(string code, string name, string enable);
         Task<bool> DeleteSubscriberAsync(int id);
         Task<bool> ActiveSubscriberAsync(int id);
-
     }
 }

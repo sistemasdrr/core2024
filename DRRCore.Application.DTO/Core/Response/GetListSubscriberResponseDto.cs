@@ -10,6 +10,7 @@
         public string Country { get; set; } = string.Empty;
         public string FlagCountry { get; set; } = string.Empty;
         public string IsoCountry { get; set; } = string.Empty;
+        public string FacturationType { get; set; } = string.Empty;
         public Boolean Enable { get; set; } = new bool();
 
     }

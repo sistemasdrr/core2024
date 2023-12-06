@@ -37,6 +37,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             throw new NotImplementedException();
         }
 
+        public async Task<SubscriberPrice> GetPriceBySubscriberIds(int idSubscriber, int idContinent, int idCountry)
+        {
+            return await _subscriberPriceRepository.GetPriceBySubscriberIds(idSubscriber, idContinent, idCountry);
+        }
+
         public async Task<List<SubscriberPrice>> GetPricesBySubscriberId(int idSubscriber)
         {
             return await _subscriberPriceRepository.GetPricesBySubscriberId(idSubscriber);

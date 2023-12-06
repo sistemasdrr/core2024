@@ -136,9 +136,9 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<GetSubscriberRequestDto>> GetSubscriberById(int id)
+        public async Task<Response<GetSubscriberResponseDto>> GetSubscriberById(int id)
         {
-            var response = new Response<GetSubscriberRequestDto>();
+            var response = new Response<GetSubscriberResponseDto>();
             try
             {
                 var subscriber = await _subscriberDomain.GetSubscriberById(id);
@@ -148,7 +148,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     response.Message = Messages.MessageNoDataFound;
                     _logger.LogError(response.Message);
                 }
-                response.Data = _mapper.Map<GetSubscriberRequestDto>(subscriber);
+                response.Data = _mapper.Map<GetSubscriberResponseDto>(subscriber);
             }
             catch(Exception ex)
             {

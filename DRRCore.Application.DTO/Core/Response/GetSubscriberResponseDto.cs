@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DRRCore.Application.DTO.Core.Response
 {
-    public class GetSubscriberRequestDto
+    public class GetSubscriberResponseDto
     {
         public int Id { get; set; } = new int();
         public string Code { get; set; } = string.Empty;
