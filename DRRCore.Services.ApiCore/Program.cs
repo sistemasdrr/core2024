@@ -55,7 +55,6 @@ builder.Services.AddAutoMapper(typeof(EmployeeProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(SubscriberProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(ComboProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(CompanyProfile).Assembly);
-builder.Services.AddAutoMapper(typeof(AgentProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(AnniversaryProfile).Assembly);
 builder.Services.AddHttpContextAccessor();
 
@@ -81,12 +80,8 @@ builder.Services.AddScoped<ILegalRegisterSituationRepository, LegalRegisterSitua
 builder.Services.AddScoped<ICompanyBackgroundRepository, CompanyBackgroundRepository>();
 builder.Services.AddScoped<ICompanyBranchRepository, CompanyBranchRepository>();
 builder.Services.AddScoped<ISubscriberRepository, SubscriberRepository>();
-
 builder.Services.AddScoped<IAnniversaryRepository, AnniversaryRepository>();
-
 builder.Services.AddScoped<ISubscriberPriceRepository, SubscriberPriceRepository>();
-builder.Services.AddScoped<IAgentRepository, AgentRepository>();
-builder.Services.AddScoped<IAgentPriceRepository, AgentPriceRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -109,24 +104,16 @@ builder.Services.AddScoped<ILegalRegisterSituationDomain, LegalRegisterSituation
 builder.Services.AddScoped<ICompanyBackgroundDomain, CompanyBackgroundDomain>();
 builder.Services.AddScoped<ICompanyBranchDomain, CompanyBranchDomain>();
 builder.Services.AddScoped<ISubscriberDomain, SubscriberDomain>();
-
 builder.Services.AddScoped<IAnniversaryDomain, AnniversaryDomain>();
-
 builder.Services.AddScoped<ISubscriberPriceDomain, SubscriberPriceDomain>();
-builder.Services.AddScoped<IAgentDomain, AgentDomain>();
-builder.Services.AddScoped<IAgentPriceDomain, AgentPriceDomain>();
-
 
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
 builder.Services.AddScoped<ICompanyApplication, CompanyApplication>();
 builder.Services.AddScoped<ISubscriberApplication, SubscriberApplication>();
-
-builder.Services.AddScoped<IAnniversaryApplication, AnniversayApplication>();
 builder.Services.AddScoped<ISubscriberPriceApplication, SubscriberPriceApplication>();
-builder.Services.AddScoped<IAgentApplication, AgentApplication>();
-builder.Services.AddScoped<IAgentPriceApplication, AgentPriceApplication>();
+builder.Services.AddScoped<IAnniversaryApplication, AnniversayApplication>();
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
