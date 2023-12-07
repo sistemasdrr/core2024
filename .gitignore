@@ -273,3 +273,13 @@
 /DRRCore.Services.ApiCore/Properties/PublishProfiles
 *.editorconfig
 /DRRCore.Services.Migration/obj/Release/net6.0
+/DRRCore.Services.Migration/bin/Debug/net6.0
+/DRRCore.Services.Migration/obj/Debug/net6.0/staticwebassets
+/DRRCore.Services.Migration/obj/Debug/net6.0/DRRCore.Services.Migration.AssemblyInfo.cs
+/DRRCore.Services.Migration/obj/Debug/net6.0/DRRCore.Services.Migration.csproj.BuildWithSkipAnalyzers
+/DRRCore.Services.Migration/obj/Debug/net6.0/DRRCore.Services.Migration.csproj.FileListAbsolute.txt
+/DRRCore.Services.Migration/obj/Debug/net6.0/DRRCore.Services.Migration.MvcApplicationPartsAssemblyInfo.cs
+/DRRCore.Services.Migration/obj/Debug/net6.0/DRRCore.Services.Migration.pdb
+/DRRCore.Services.Migration/obj/Debug/net6.0/apphost.exe
+/DRRCore.Services.Migration/obj/DRRCore.Services.Migration.csproj.nuget.g.props
+/DRRCore.Services.Migration/obj/DRRCore.Services.Migration.csproj.nuget.g.targets
