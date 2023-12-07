@@ -69,7 +69,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     if (existingSubscriber == null)
                     {
                         response.IsSuccess = false;
-                        response.Message = Messages.MessageNoDataFoundEmployee;
+                        response.Message = Messages.MessageNoDataFound;
                         _logger.LogError(response.Message);
                         return response;
                     }

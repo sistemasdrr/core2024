@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace DRRCore.Domain.Entities.SqlCoreContext;
 
-public partial class SubscriberPrice
+public partial class AgentPrice
 {
     public int Id { get; set; }
 
-    public int? IdSubscriber { get; set; }
+    public int? IdAgent { get; set; }
 
     public DateTime? Date { get; set; }
 
@@ -29,7 +29,21 @@ public partial class SubscriberPrice
 
     public int? DayT3 { get; set; }
 
-    public int? PriceB { get; set; }
+    public int? PricePn { get; set; }
+
+    public int? DayPn { get; set; }
+
+    public int? PriceBd { get; set; }
+
+    public int? DayBd { get; set; }
+
+    public int? PriceRp { get; set; }
+
+    public int? DayRp { get; set; }
+
+    public int? PriceCr { get; set; }
+
+    public int? DayCr { get; set; }
 
     public DateTime? CreationDate { get; set; }
 
@@ -41,11 +55,11 @@ public partial class SubscriberPrice
 
     public bool? Enable { get; set; }
 
+    public virtual Agent? IdAgentNavigation { get; set; }
+
     public virtual Continent? IdContinentNavigation { get; set; }
 
     public virtual Country? IdCountryNavigation { get; set; }
 
     public virtual Currency? IdCurrencyNavigation { get; set; }
-
-    public virtual Subscriber? IdSubscriberNavigation { get; set; }
 }

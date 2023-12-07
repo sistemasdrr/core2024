@@ -24,7 +24,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _logger = logger;
         }
 
-        public async Task<Response<bool>> AddOrUpdateAsync(AddOrUpdateSubscriberPriceDto obj)
+        public async Task<Response<bool>> AddOrUpdateAsync(AddOrUpdateSubscriberPriceRequestDto obj)
         {
             var response = new Response<bool>();
             try

@@ -8,7 +8,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
     {
         Task<Response<List<GetSuscriberPriceResponseDto>>> GetSubscriberPricesById(int idSubscriber);
         Task<Response<GetSuscriberPriceByIdResponseDto>> GetSubscriberPriceById(int id);
-        Task<Response<bool>> AddOrUpdateAsync (AddOrUpdateSubscriberPriceDto obj);
+        Task<Response<bool>> AddOrUpdateAsync (AddOrUpdateSubscriberPriceRequestDto obj);
         Task<Response<bool>> DeleteAsync (int id);
         Task<Response<List<GetComboValueResponseDto>>> GetContinentsById(int idSubscriber);
         Task<Response<List<GetComboValueFlagResponseDto>>> GetCountriesById(int idSubscriber, int idContitent);

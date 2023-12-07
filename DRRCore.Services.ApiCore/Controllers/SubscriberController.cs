@@ -59,7 +59,7 @@ namespace DRRCore.Services.ApiCore.Controllers
 
         [HttpPost()]
         [Route("addPrice")]
-        public async Task<ActionResult> AddSubscriberPrice(AddOrUpdateSubscriberPriceDto request)
+        public async Task<ActionResult> AddSubscriberPrice(AddOrUpdateSubscriberPriceRequestDto request)
         {
             return Ok(await _subscriberPriceApplication.AddOrUpdateAsync(request));
         }

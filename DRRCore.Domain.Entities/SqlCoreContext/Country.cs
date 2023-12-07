@@ -27,6 +27,10 @@ public partial class Country
 
     public bool? Enable { get; set; }
 
+    public virtual ICollection<AgentPrice> AgentPrices { get; set; } = new List<AgentPrice>();
+
+    public virtual ICollection<Agent> Agents { get; set; } = new List<Agent>();
+
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 
     public virtual Continent? IdContinentNavigation { get; set; }

@@ -38,7 +38,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
         .ReverseMap();
 
-            CreateMap<AddOrUpdateSubscriberPriceDto, SubscriberPrice>()
+            CreateMap<AddOrUpdateSubscriberPriceRequestDto, SubscriberPrice>()
             .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
             .ForMember(dest => dest.IdSubscriber, opt => opt?.MapFrom(src => src.IdSubscriber == 0 ? null : src.IdSubscriber))
             .ForMember(dest => dest.IdContinent, opt => opt?.MapFrom(src => src.IdContinent == 0 ? null : src.IdContinent))

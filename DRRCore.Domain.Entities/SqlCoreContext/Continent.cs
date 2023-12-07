@@ -21,6 +21,8 @@ public partial class Continent
 
     public bool? Enable { get; set; }
 
+    public virtual ICollection<AgentPrice> AgentPrices { get; set; } = new List<AgentPrice>();
+
     public virtual ICollection<Country> Countries { get; set; } = new List<Country>();
 
     public virtual ICollection<SubscriberPrice> SubscriberPrices { get; set; } = new List<SubscriberPrice>();

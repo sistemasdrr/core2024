@@ -73,7 +73,7 @@ public partial class Subscriber
 
     public bool? NormalPrice { get; set; }
 
-    public DateTime CreationDate { get; set; }
+    public DateTime? CreationDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
 

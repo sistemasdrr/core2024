@@ -1,6 +1,6 @@
 ﻿namespace DRRCore.Application.DTO.Core.Request
 {
-    public class AddOrUpdateSubscriberPriceDto
+    public class AddOrUpdateSubscriberPriceRequestDto
     {
         public int Id { get; set; }
 
