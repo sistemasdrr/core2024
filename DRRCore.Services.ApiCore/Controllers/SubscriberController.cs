@@ -10,9 +10,11 @@ namespace DRRCore.Services.ApiCore.Controllers
     public class SubscriberController : Controller
     {
         public readonly ISubscriberApplication _subscriberApplication;
-        public SubscriberController(ISubscriberApplication subscriberApplication)
+        public readonly ISubscriberPriceApplication _subscriberPriceApplication;
+        public SubscriberController(ISubscriberApplication subscriberApplication, ISubscriberPriceApplication subscriberPriceApplication)
         {
             _subscriberApplication = subscriberApplication;
+            _subscriberPriceApplication = subscriberPriceApplication;
         }
 
         [HttpPost()]
@@ -21,6 +23,82 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _subscriberApplication.AddOrUpdateAsync(request));
         }
+        [HttpGet()]
+        [Route("get")]
+        public async Task<ActionResult> GetSubscribers(string? code, string? name, string? enable)
+        {
+            code ??= string.Empty;
+            name ??= string.Empty;
+            enable ??= string.Empty;
+            return Ok(await _subscriberApplication.GetSubscriber(code, name, enable));
+        }
+        [HttpGet()]
+        [Route("getById")]
+        public async Task<ActionResult> GetSubscriberById(int id)
+        {
+            return Ok(await _subscriberApplication.GetSubscriberById(id));
+        }
+        [HttpGet()]
+        [Route("getByCode")]
+        public async Task<ActionResult> GetSubscriberPriceByCode(string code)
+        {
+            return Ok(await _subscriberApplication.GetSubscriberByCode(code));
+        }
+        [HttpPost()]
+        [Route("delete")]
+        public async Task<ActionResult> DeleteSubscriber(int id)
+        {
+            return Ok(await _subscriberApplication.DeleteSubscriber(id));
+        }
+        [HttpPost()]
+        [Route("active")]
+        public async Task<ActionResult> ActiveSubscriber(int id)
+        {
+            return Ok(await _subscriberApplication.ActiveSubscriber(id));
+        }
 
+        [HttpPost()]
+        [Route("addPrice")]
+        public async Task<ActionResult> AddSubscriberPrice(AddOrUpdateSubscriberPriceDto request)
+        {
+            return Ok(await _subscriberPriceApplication.AddOrUpdateAsync(request));
+        }
+        [HttpGet()]
+        [Route("getPrices")]
+        public async Task<ActionResult> GetSubscriberPrice(int idSubscriber)
+        {
+            return Ok(await _subscriberPriceApplication.GetSubscriberPricesById(idSubscriber));
+        }
+        [HttpGet()]
+        [Route("getPrice")]
+        public async Task<ActionResult> GetSubscriberPriceById(int id)
+        {
+            return Ok(await _subscriberPriceApplication.GetSubscriberPriceById(id));
+        }
+        [HttpPost()]
+        [Route("deletePrice")]
+        public async Task<ActionResult> DeleteSubscriberPrice(int id)
+        {
+            return Ok(await _subscriberPriceApplication.DeleteAsync(id));
+        }
+
+        [HttpGet()]
+        [Route("getContinents")]
+        public async Task<ActionResult> getContinentesById(int id)
+        {
+            return Ok(await _subscriberPriceApplication.GetContinentsById(id));
+        }
+        [HttpGet()]
+        [Route("getCountries")]
+        public async Task<ActionResult> getCountriesById(int idSubscriber, int idContinent)
+        {
+            return Ok(await _subscriberPriceApplication.GetCountriesById(idSubscriber,idContinent));
+        }
+        [HttpGet()]
+        [Route("getPriceByIds")]
+        public async Task<ActionResult> getPriceByIds(int idSubscriber, int idContinent, int idCountry)
+        {
+            return Ok(await _subscriberPriceApplication.GetSelectSubscriberPrice(idSubscriber, idContinent, idCountry));
+        }
     }
 }

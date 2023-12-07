@@ -23,5 +23,7 @@ public partial class Continent
 
     public virtual ICollection<Country> Countries { get; set; } = new List<Country>();
 
+    public virtual ICollection<SubscriberPrice> SubscriberPrices { get; set; } = new List<SubscriberPrice>();
+
     public virtual ICollection<Subscriber> Subscribers { get; set; } = new List<Subscriber>();
 }

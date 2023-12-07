@@ -73,7 +73,7 @@ public partial class Subscriber
 
     public bool? NormalPrice { get; set; }
 
-    public DateTime? CreationDate { get; set; }
+    public DateTime CreationDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
 
@@ -90,4 +90,6 @@ public partial class Subscriber
     public virtual Currency? IdCurrencyNavigation { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual ICollection<SubscriberPrice> SubscriberPrices { get; set; } = new List<SubscriberPrice>();
 }
