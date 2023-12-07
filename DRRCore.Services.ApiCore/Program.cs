@@ -55,6 +55,7 @@ builder.Services.AddAutoMapper(typeof(EmployeeProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(SubscriberProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(ComboProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(CompanyProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(AgentProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(AnniversaryProfile).Assembly);
 builder.Services.AddHttpContextAccessor();
 
@@ -84,7 +85,8 @@ builder.Services.AddScoped<ISubscriberRepository, SubscriberRepository>();
 builder.Services.AddScoped<IAnniversaryRepository, AnniversaryRepository>();
 =======
 builder.Services.AddScoped<ISubscriberPriceRepository, SubscriberPriceRepository>();
->>>>>>> 9c9dfd0b5d951f6292e54cf2849e9fcceaf040a0
+builder.Services.AddScoped<IAgentRepository, AgentRepository>();
+builder.Services.AddScoped<IAgentPriceRepository, AgentPriceRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -111,6 +113,8 @@ builder.Services.AddScoped<ISubscriberDomain, SubscriberDomain>();
 builder.Services.AddScoped<IAnniversaryDomain, AnniversaryDomain>();
 =======
 builder.Services.AddScoped<ISubscriberPriceDomain, SubscriberPriceDomain>();
+builder.Services.AddScoped<IAgentDomain, AgentDomain>();
+builder.Services.AddScoped<IAgentPriceDomain, AgentPriceDomain>();
 
 >>>>>>> 9c9dfd0b5d951f6292e54cf2849e9fcceaf040a0
 
@@ -122,7 +126,8 @@ builder.Services.AddScoped<ISubscriberApplication, SubscriberApplication>();
 builder.Services.AddScoped<IAnniversaryApplication, AnniversayApplication>();
 =======
 builder.Services.AddScoped<ISubscriberPriceApplication, SubscriberPriceApplication>();
->>>>>>> 9c9dfd0b5d951f6292e54cf2849e9fcceaf040a0
+builder.Services.AddScoped<IAgentApplication, AgentApplication>();
+builder.Services.AddScoped<IAgentPriceApplication, AgentPriceApplication>();
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
