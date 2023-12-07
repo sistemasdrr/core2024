@@ -613,4 +613,6 @@ public partial class MEmpresa
     public string? EmEstadoempresa { get; set; }
 
     public string? EmComenSup { get; set; }
+
+    public sbyte? Migra { get; set; }
 }

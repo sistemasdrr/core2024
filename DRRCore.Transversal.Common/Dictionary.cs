@@ -12,6 +12,12 @@
                 {"M", "MEDIA"},
                 {"H", "HIGH"}
          };
+        public static Dictionary<int, string?> LanguageMigra = new(){
+                {0, null},
+                {1, "I"},
+                {2, "E"},
+                {3, "A"}
+         };
 
     }
 }

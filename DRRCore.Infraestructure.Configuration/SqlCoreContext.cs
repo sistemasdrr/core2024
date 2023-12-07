@@ -10,10 +10,12 @@ public partial class SqlCoreContext : DbContext
     {
     }
 
-    public SqlCoreContext(DbContextOptions<DbA9ccf0EecoreContext> options)
+    public SqlCoreContext(DbContextOptions<SqlCoreContext> options)
         : base(options)
     {
     }
+
+    public virtual DbSet<Anniversary> Anniversaries { get; set; }
 
     public virtual DbSet<BankAccountType> BankAccountTypes { get; set; }
 
@@ -87,6 +89,38 @@ public partial class SqlCoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Anniversary>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Annivers__3213E83FEB9CDB75");
+
+            entity.ToTable("Anniversary");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EndDate)
+                .HasColumnType("datetime")
+                .HasColumnName("endDate");
+            entity.Property(e => e.Name)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("startDate");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
         modelBuilder.Entity<BankAccountType>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__BankAcco__3213E83F30664FC1");
@@ -271,7 +305,7 @@ public partial class SqlCoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("duration");
             entity.Property(e => e.Email)
-                .HasMaxLength(60)
+                .HasMaxLength(250)
                 .IsUnicode(false)
                 .HasColumnName("email");
             entity.Property(e => e.Enable)

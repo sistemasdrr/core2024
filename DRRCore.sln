@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Services.ApiEmail",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Services.ApiWeb", "DRRCore.Services.ApiWeb\DRRCore.Services.ApiWeb.csproj", "{DF0B88F4-541B-483E-8A1E-48E5CDCE58A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DRRCore.Services.Migration", "DRRCore.Services.Migration\DRRCore.Services.Migration.csproj", "{C1496B15-BCFF-4811-88E5-82F673FE4E13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DRRCore.Services.Migration", "DRRCore.Services.Migration\DRRCore.Services.Migration.csproj", "{C1496B15-BCFF-4811-88E5-82F673FE4E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

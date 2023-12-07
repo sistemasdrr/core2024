@@ -16,5 +16,15 @@ namespace DRRCore.Domain.Main.MysqlDomain
         {
             return await _repository.GetmEmpresaByCodigoAsync(codigo);
         }
+
+        public async Task<List<MEmpresa>> GetNotMigratedEmpresa()
+        {
+            return await _repository.GetNotMigratedEmpresa();
+        }
+
+        public async Task<bool> MigrateEmpresa(string code)
+        {
+            return await _repository.MigrateEmpresa(code);
+        }
     }
 }

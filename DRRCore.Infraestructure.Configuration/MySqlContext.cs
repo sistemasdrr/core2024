@@ -1667,6 +1667,10 @@ public partial class MySqlContext : DbContext
                 .IsFixedLength()
                 .HasComment("Personería Jurídica (Código)<= tJuridi.Ju_Codigo")
                 .HasColumnName("JU_CODIGO");
+            entity.Property(e => e.Migra)
+                .HasDefaultValueSql("'0'")
+                .HasColumnType("tinyint(4)")
+                .HasColumnName("MIGRA");
             entity.Property(e => e.OcCodigo)
                 .HasMaxLength(3)
                 .HasDefaultValueSql("'0'")

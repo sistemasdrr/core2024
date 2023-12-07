@@ -9,8 +9,10 @@ namespace DRRCore.Services.ApiCore.Controllers
     public class MasterController : Controller
     {
         private readonly IEmployeeApplication _employeeApplication;
-        public MasterController(IEmployeeApplication employeeApplication) {
+        private readonly IAnniversaryApplication _anniversaryApplication;
+        public MasterController(IEmployeeApplication employeeApplication, IAnniversaryApplication anniversaryApplication) {
            _employeeApplication = employeeApplication;
+            _anniversaryApplication= anniversaryApplication;
         }
 
         [HttpPost()]
@@ -48,6 +50,42 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> GetEmployeesByName(string name)
         {
             return Ok(await _employeeApplication.GetByNameAsync(name));
+        }
+        [HttpPost()]
+        [Route("addAnniversary")]
+        public async Task<ActionResult> AddAnniversary(AddOrUpdateAnniversaryRequestDto request)
+        {
+            return Ok(await _anniversaryApplication.AddOrUpdateAsync(request));
+        }
+        [HttpPost()]
+        [Route("deleteAnnyversary")]
+        public async Task<ActionResult> DeleteAnniversary(int id)
+        {
+            return Ok(await _anniversaryApplication.DeleteAsync(id));
+        }
+        [HttpPost()]
+        [Route("activeAnnyversary")]
+        public async Task<ActionResult> ActiveAnnyversary(int id)
+        {
+            return Ok(await _anniversaryApplication.ActiveAsync(id));
+        }
+        [HttpGet()]
+        [Route("getAnniversaryById")]
+        public async Task<ActionResult> GetAnniversaryById(int id)
+        {
+            return Ok(await _anniversaryApplication.GetByIdAsync(id));
+        }
+        [HttpGet()]
+        [Route("getAnniversary")]
+        public async Task<ActionResult> GetAnniversary()
+        {
+            return Ok(await _anniversaryApplication.GetAllAsync());
+        }
+        [HttpGet()]
+        [Route("getCurrentAnniversary")]
+        public async Task<ActionResult> GetCurrentAnniversary()
+        {
+            return Ok(await _anniversaryApplication.GetCurrentAnniversary());
         }
     }
 }

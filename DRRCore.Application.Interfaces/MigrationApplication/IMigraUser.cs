@@ -3,5 +3,6 @@
     public interface IMigraUser
     {
         Task MigrateUser();
+        Task<bool> MigrateCompany();
     }
 }

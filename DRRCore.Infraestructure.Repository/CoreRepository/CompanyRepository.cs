@@ -88,6 +88,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                                 LastUpdaterUser = 1
                             });
                         }
+                    
                     }
                     await context.Companies.AddAsync(obj);
                     await context.SaveChangesAsync();
