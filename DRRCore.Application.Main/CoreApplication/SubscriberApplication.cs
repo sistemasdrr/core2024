@@ -136,6 +136,29 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<GetSubscriberResponseDto>> GetSubscriberByCode(string code)
+        {
+            var response = new Response<GetSubscriberResponseDto>();
+            try
+            {
+                var subscriber = await _subscriberDomain.GetSubscriberByCode(code);
+                if (subscriber == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                }
+                response.Data = _mapper.Map<GetSubscriberResponseDto>(subscriber);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         public async Task<Response<GetSubscriberResponseDto>> GetSubscriberById(int id)
         {
             var response = new Response<GetSubscriberResponseDto>();

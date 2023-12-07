@@ -110,6 +110,21 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<Subscriber> GetSubscriberByCode(string code)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+
+                return await context.Subscribers.FirstOrDefaultAsync(x => x.Code == code);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<Subscriber> GetSubscriberById(int id)
         {
             try

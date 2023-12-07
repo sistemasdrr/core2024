@@ -9,6 +9,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
     public interface ISubscriberApplication
     {
         Task<Response<GetSubscriberResponseDto>> GetSubscriberById(int id);
+        Task<Response<GetSubscriberResponseDto>> GetSubscriberByCode(string code);
         Task<Response<bool>> DeleteSubscriber(int id);
         Task<Response<bool>> ActiveSubscriber(int id);
         Task<Response<int>> AddOrUpdateAsync(AddOrUpdateSubscriberRequestDto subscriberDto);

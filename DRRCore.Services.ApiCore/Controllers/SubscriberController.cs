@@ -38,6 +38,12 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _subscriberApplication.GetSubscriberById(id));
         }
+        [HttpGet()]
+        [Route("getByCode")]
+        public async Task<ActionResult> GetSubscriberPriceByCode(string code)
+        {
+            return Ok(await _subscriberApplication.GetSubscriberByCode(code));
+        }
         [HttpPost()]
         [Route("delete")]
         public async Task<ActionResult> DeleteSubscriber(int id)

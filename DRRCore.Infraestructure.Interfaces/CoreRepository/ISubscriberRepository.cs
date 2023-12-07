@@ -5,6 +5,7 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
     public interface ISubscriberRepository
     {
         Task <Subscriber> GetSubscriberById(int id);
+        Task<Subscriber> GetSubscriberByCode(string code);
         Task<int> AddSubscriberAsync(Subscriber subscriber);
         Task<Boolean> UpdateSubscriberAsync(Subscriber subscriber);
         Task<List<Subscriber>> GetSubscriber(string code, string name, string enable);

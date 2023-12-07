@@ -33,6 +33,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _subscriberRepository.GetSubscriber(code, name, enable);
         }
 
+        public async Task<Subscriber> GetSubscriberByCode(string code)
+        {
+            return await _subscriberRepository.GetSubscriberByCode(code);
+        }
+
         public async Task<Subscriber> GetSubscriberById(int id)
         {
             return await _subscriberRepository.GetSubscriberById(id);
