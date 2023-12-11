@@ -7,6 +7,7 @@ using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -183,9 +184,10 @@ namespace DRRCore.Application.Main.CoreApplication
 
         private bool GetCurrentAnniversaries(DateTime startDate)
         {
-            var startDateStr=startDate.Day.ToString()+"/"+startDate.Month.ToString()+"/"+DateTime.Now.Year.ToString();
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            var startDateStr=startDate.Day.ToString("D2")+"/"+startDate.Month.ToString("D2")+"/"+DateTime.Now.Year.ToString();
 
-            var days= (DateTime.Now-DateTime.Parse(startDateStr)).Days;
+            var days= (DateTime.Now-DateTime.ParseExact(startDateStr,"dd/MM/yyyy",provider)).Days;
             var abs=Math.Abs(days);
             var around = abs <= 7;
             return around;
