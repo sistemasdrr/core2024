@@ -27,6 +27,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
            .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
        .ReverseMap();
             CreateMap<AgentPrice, GetListAgentPriceResponseDto>()
+         .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
          .ForMember(dest => dest.IdAgente, opt => opt?.MapFrom(src => src.IdAgent == 0 ? null : src.IdAgent))
          .ForMember(dest => dest.Country, opt => opt?.MapFrom(src => src.IdCountryNavigation.Iso == null ? "" : src.IdCountryNavigation.Iso))
          .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation.FlagIso == null ? "" : src.IdCountryNavigation.FlagIso))

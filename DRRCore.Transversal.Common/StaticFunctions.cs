@@ -11,7 +11,7 @@
 
         public static string DateTimeToString(DateTime? date)
         {
-            return date?.ToShortDateString();
+            return date?.ToString("dd/MM/yyyy");
         }
     }
 }
