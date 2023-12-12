@@ -68,6 +68,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     {
                         var newCouponBilling = new CouponBillingSubscriber();
                         newCouponBilling.IdSubscriber = response.Data;
+                        newCouponBilling.NumCoupon = 0;
                         await _couponBillingSubscriberDomain.AddAsync(newCouponBilling);
                     }
                 }
