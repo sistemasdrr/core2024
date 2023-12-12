@@ -1,5 +1,6 @@
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Application.Main.CoreApplication;
+using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Domain.Main.CoreDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
@@ -84,6 +85,8 @@ builder.Services.AddScoped<IAnniversaryRepository, AnniversaryRepository>();
 builder.Services.AddScoped<ISubscriberPriceRepository, SubscriberPriceRepository>();
 builder.Services.AddScoped<IAgentRepository, AgentRepository>();
 builder.Services.AddScoped<IAgentPriceRepository, AgentPriceRepository>();
+builder.Services.AddScoped<ICouponBillingSubscriberRepository, CouponBillingSubscriberRepository>();
+builder.Services.AddScoped<ICouponBillingSubscriberHistoryRepository, CouponBillingSubscriberHistoryRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -110,6 +113,8 @@ builder.Services.AddScoped<IAnniversaryDomain, AnniversaryDomain>();
 builder.Services.AddScoped<ISubscriberPriceDomain, SubscriberPriceDomain>();
 builder.Services.AddScoped<IAgentDomain, AgentDomain>();
 builder.Services.AddScoped<IAgentPriceDomain, AgentPriceDomain>();
+builder.Services.AddScoped<ICouponBillingSubscriberDomain, CouponBillingSubscriberDomain>();
+builder.Services.AddScoped<ICouponBillingSubscriberHistoryDomain, CouponBillingSubscriberHistoryDomain>();
 
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
@@ -120,6 +125,7 @@ builder.Services.AddScoped<ISubscriberPriceApplication, SubscriberPriceApplicati
 builder.Services.AddScoped<IAnniversaryApplication, AnniversayApplication>();
 builder.Services.AddScoped<IAgentApplication, AgentApplication>();
 builder.Services.AddScoped<IAgentPriceApplication, AgentPriceApplication>();
+builder.Services.AddScoped<ICouponBillingSubscriberApplication, CouponBillingSubscriberApplication>();
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();

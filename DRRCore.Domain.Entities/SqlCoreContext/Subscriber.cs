@@ -83,6 +83,8 @@ public partial class Subscriber
 
     public bool? Enable { get; set; }
 
+    public virtual ICollection<CouponBillingSubscriber> CouponBillingSubscribers { get; set; } = new List<CouponBillingSubscriber>();
+
     public virtual Continent? IdContinentNavigation { get; set; }
 
     public virtual Country? IdCountryNavigation { get; set; }

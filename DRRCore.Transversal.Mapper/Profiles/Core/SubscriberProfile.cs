@@ -67,6 +67,24 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
            .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.IdCountryNavigation != null ? src.IdCountryNavigation.Name : string.Empty))
            .ForMember(dest => dest.Bandera, opt => opt?.MapFrom(src => src.IdCountryNavigation != null ? src.IdCountryNavigation.FlagIso : string.Empty))
        .ReverseMap();
+            CreateMap<CouponBillingSubscriberHistory, GetCouponBillingSubscriberHistoryResponseDto>()
+           .ForMember(dest => dest.PurchaseDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.PurchaseDate)))
+           .ForMember(dest => dest.IdCouponBilling, opt => opt?.MapFrom(src => src.IdCouponBilling == 0 ? null : src.IdCouponBilling))
+           .ForMember(dest => dest.IdEmployee, opt => opt?.MapFrom(src => src.IdEmployee == 0 ? null : src.IdEmployee))
+           .ForMember(dest => dest.CouponAmount, opt => opt?.MapFrom(src => src.CouponAmount))
+           .ForMember(dest => dest.CouponUnitPrice, opt => opt?.MapFrom(src => src.CouponUnitPrice))
+           .ForMember(dest => dest.TotalPrice, opt => opt?.MapFrom(src => src.TotalPrice))
+        .ReverseMap();
+            CreateMap<AddOrUpdateCouponBillingSubscriberHistoryRequestDto, CouponBillingSubscriberHistory>()
+            .ForMember(dest => dest.IdCouponBilling, opt => opt?.MapFrom(src => src.IdCouponBilling == 0 ? null : src.IdCouponBilling))
+            .ForMember(dest => dest.PurchaseDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.PurchaseDate)))
+        .ReverseMap();
+            CreateMap<AddOrUpdateCouponBillingSubscriberRequestDto, CouponBillingSubscriber>()
+            .ForMember(dest => dest.IdSubscriber, opt => opt?.MapFrom(src => src.IdSubscriber == 0 ? null : src.IdSubscriber))
+        .ReverseMap();
+            CreateMap<CouponBillingSubscriber, GetCouponBillingSubscriberResponseDto>()
+                .ForMember(dest => dest.IdSubscriber, opt => opt?.MapFrom(src => src.IdSubscriber == 0 ? null : src.IdSubscriber))
+            .ReverseMap();
         }
     }
 }

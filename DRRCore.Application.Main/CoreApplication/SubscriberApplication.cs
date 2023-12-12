@@ -12,13 +12,15 @@ namespace DRRCore.Application.Main.CoreApplication
     public class SubscriberApplication : ISubscriberApplication
     {
         private readonly ISubscriberDomain _subscriberDomain;
+        private readonly ICouponBillingSubscriberDomain _couponBillingSubscriberDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
-        public SubscriberApplication(ISubscriberDomain subscriberDomain, IMapper mapper, ILogger logger)
+        public SubscriberApplication(ISubscriberDomain subscriberDomain, IMapper mapper, ILogger logger, ICouponBillingSubscriberDomain couponBillingSubscriberDomain)
         {
             _subscriberDomain = subscriberDomain;
             _mapper = mapper;
             _logger = logger;
+            _couponBillingSubscriberDomain = couponBillingSubscriberDomain;
         }
 
         public async Task<Response<bool>> ActiveSubscriber(int id)
@@ -62,6 +64,12 @@ namespace DRRCore.Application.Main.CoreApplication
                 {
                     var newSubscriber = _mapper.Map<Subscriber>(subscriberDto);
                     response.Data = await _subscriberDomain.AddSubscriberAsync(newSubscriber);
+                    if(response.Data > 0)
+                    {
+                        var newCouponBilling = new CouponBillingSubscriber();
+                        newCouponBilling.IdSubscriber = response.Data;
+                        await _couponBillingSubscriberDomain.AddAsync(newCouponBilling);
+                    }
                 }
                 else
                 {

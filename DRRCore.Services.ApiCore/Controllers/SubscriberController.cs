@@ -11,10 +11,13 @@ namespace DRRCore.Services.ApiCore.Controllers
     {
         public readonly ISubscriberApplication _subscriberApplication;
         public readonly ISubscriberPriceApplication _subscriberPriceApplication;
-        public SubscriberController(ISubscriberApplication subscriberApplication, ISubscriberPriceApplication subscriberPriceApplication)
+        public readonly ICouponBillingSubscriberApplication _couponBillingSubscriberApplication;
+        public SubscriberController(ISubscriberApplication subscriberApplication, ISubscriberPriceApplication subscriberPriceApplication,
+            ICouponBillingSubscriberApplication couponBillingSubscriberApplication)
         {
             _subscriberApplication = subscriberApplication;
             _subscriberPriceApplication = subscriberPriceApplication;
+            _couponBillingSubscriberApplication = couponBillingSubscriberApplication;
         }
 
         [HttpPost()]
@@ -99,6 +102,30 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> getPriceByIds(int idSubscriber, int idContinent, int idCountry)
         {
             return Ok(await _subscriberPriceApplication.GetSelectSubscriberPrice(idSubscriber, idContinent, idCountry));
+        }
+        [HttpPost()]
+        [Route("addCouponBilling")]
+        public async Task<ActionResult> AddOrUpdateCouponBilling(AddOrUpdateCouponBillingSubscriberRequestDto obj)
+        {
+            return Ok(await _couponBillingSubscriberApplication.AddOrUpdateCouponBillingSubscriber(obj));
+        }
+        [HttpGet()]
+        [Route("getCouponBilling")]
+        public async Task<ActionResult> getCouponBilling(int idSubscriber)
+        {
+            return Ok(await _couponBillingSubscriberApplication.GetCouponBillingByIdSubscriber(idSubscriber));
+        }
+        [HttpGet()]
+        [Route("getCouponBillingHistory")]
+        public async Task<ActionResult> getCouponBillingHistory(int idSubscriber)
+        {
+            return Ok(await _couponBillingSubscriberApplication.GetHistoryByIdSubscriber(idSubscriber));
+        }
+        [HttpPost()]
+        [Route("addCouponBillingHistory")]
+        public async Task<ActionResult> AddCouponBillingHistory(AddOrUpdateCouponBillingSubscriberHistoryRequestDto obj)
+        {
+            return Ok(await _couponBillingSubscriberApplication.AddCouponBillingHistory(obj));
         }
     }
 }

@@ -43,6 +43,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
 
     public virtual DbSet<Country> Countries { get; set; }
 
+    public virtual DbSet<CouponBillingSubscriber> CouponBillingSubscribers { get; set; }
+
+    public virtual DbSet<CouponBillingSubscriberHistory> CouponBillingSubscriberHistories { get; set; }
+
     public virtual DbSet<CreditRisk> CreditRisks { get; set; }
 
     public virtual DbSet<Currency> Currencies { get; set; }
@@ -874,6 +878,88 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.HasOne(d => d.IdContinentNavigation).WithMany(p => p.Countries)
                 .HasForeignKey(d => d.IdContinent)
                 .HasConstraintName("FK__Country__idConti__79C80F94");
+        });
+
+        modelBuilder.Entity<CouponBillingSubscriber>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CouponBi__3213E83FF31869E3");
+
+            entity.ToTable("CouponBillingSubscriber");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdSubscriber).HasColumnName("idSubscriber");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.NumCoupon)
+                .HasColumnType("decimal(18, 0)")
+                .HasColumnName("numCoupon");
+            entity.Property(e => e.PriceT0)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("priceT0");
+            entity.Property(e => e.PriceT1)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("priceT1");
+            entity.Property(e => e.PriceT2)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("priceT2");
+            entity.Property(e => e.PriceT3)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("priceT3");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdSubscriberNavigation).WithMany(p => p.CouponBillingSubscribers)
+                .HasForeignKey(d => d.IdSubscriber)
+                .HasConstraintName("FK__CouponBil__idSub__664B26CC");
+        });
+
+        modelBuilder.Entity<CouponBillingSubscriberHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CouponBi__3213E83FA46C58FE");
+
+            entity.ToTable("CouponBillingSubscriberHistory");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CouponAmount).HasColumnName("couponAmount");
+            entity.Property(e => e.CouponUnitPrice)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("couponUnitPrice");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdCouponBilling).HasColumnName("idCouponBilling");
+            entity.Property(e => e.IdEmployee).HasColumnName("idEmployee");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.PurchaseDate)
+                .HasColumnType("datetime")
+                .HasColumnName("purchaseDate");
+            entity.Property(e => e.TotalPrice)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("totalPrice");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCouponBillingNavigation).WithMany(p => p.CouponBillingSubscriberHistories)
+                .HasForeignKey(d => d.IdCouponBilling)
+                .HasConstraintName("FK__CouponBil__idCou__6B0FDBE9");
         });
 
         modelBuilder.Entity<CreditRisk>(entity =>
