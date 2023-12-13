@@ -15,7 +15,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             .ForMember(dest => dest.IdContinent, opt => opt?.MapFrom(src => src.IdContinent == 0 ? null : src.IdContinent))
             .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountry))
             .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
-           // .ForMember(dest => dest.IdRubro, opt => opt?.MapFrom(src => src.IdRubro == 0 ? null : src.IdRubro))
+            .ForMember(dest => dest.IdSubscriberCategory, opt => opt?.MapFrom(src => src.IdSubscriberCategory == 0 ? null : src.IdSubscriberCategory))
         .ReverseMap();
             CreateMap<Subscriber, GetListSubscriberResponseDto>()
             .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))

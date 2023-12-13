@@ -11,7 +11,9 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name,string form,int idCountry,bool haveReport);
         Task<Response<bool>> DeleteAsync(int id);
         Task<Response<bool>> AddOrUpdateCompanyBackGroundAsync(AddOrUpdateCompanyBackgroundRequestDto obj);
+        Task<Response<bool>> AddOrUpdateCompanyFinancialInformationAsync(AddOrUpdateCompanyFinancialInformationRequestDto obj);
         Task<Response<GetCompanyBackgroundResponseDto>> GetCompanyBackgroundById(int id);
+        Task<Response<GetCompanyFinancialInformationResponseDto>> GetCompanyFinancialInformationById(int idCompany);
         Task<Response<bool>> ActiveWebVisionAsync(int id);
         Task<Response<bool>> DesactiveWebVisionAsync(int id);
     }
