@@ -291,3 +291,7 @@
 /DRRCore.Services.Migration/obj/Debug/net6.0/DRRCore.Services.Migration.csproj.FileListAbsolute.txt
 /DRRCore.Services.Migration/obj/Debug/net6.0/DRRCore.Services.Migration.pdb
 /DRRCore.Services.ApiCore/DRRCore.Services.ApiCore.csproj.user
+/DRRCore.Services.Migration/obj/Debug/net6.0/staticwebassets/msbuild.build.DRRCore.Services.Migration.props
+/DRRCore.Services.Migration/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.DRRCore.Services.Migration.props
+/DRRCore.Services.Migration/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.DRRCore.Services.Migration.props
+/DRRCore.Services.Migration/obj/Debug/net6.0/DRRCore.Services.Migration.MvcApplicationPartsAssemblyInfo.cs
