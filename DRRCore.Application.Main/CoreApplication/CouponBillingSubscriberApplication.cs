@@ -78,6 +78,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
                     else
                     {
+                        obj.NumCoupon = existingCoupongBilling.NumCoupon;
                         existingCoupongBilling = _mapper.Map(obj, existingCoupongBilling);
                         existingCoupongBilling.UpdateDate = DateTime.Now;
                         response.Data = await _couponBillingSubscriberDomain.UpdateAsync(existingCoupongBilling);

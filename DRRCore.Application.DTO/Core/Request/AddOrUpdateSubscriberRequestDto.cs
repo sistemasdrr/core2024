@@ -32,7 +32,7 @@
 
         public string? PrincipalContact { get; set; }
 
-        public int? IdRubro { get; set; }
+        public int? IdSubscriberCategory { get; set; }
 
         public string? TaxRegistration { get; set; }
 

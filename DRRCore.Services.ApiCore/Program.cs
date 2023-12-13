@@ -2,6 +2,7 @@ using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Application.Main.CoreApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
+using DRRCore.Domain.Main;
 using DRRCore.Domain.Main.CoreDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Infraestructure.Repository.CoreRepository;
@@ -87,6 +88,10 @@ builder.Services.AddScoped<IAgentRepository, AgentRepository>();
 builder.Services.AddScoped<IAgentPriceRepository, AgentPriceRepository>();
 builder.Services.AddScoped<ICouponBillingSubscriberRepository, CouponBillingSubscriberRepository>();
 builder.Services.AddScoped<ICouponBillingSubscriberHistoryRepository, CouponBillingSubscriberHistoryRepository>();
+builder.Services.AddScoped<ISubscriberCategoryRepository, SubscriberCategoryRepository>();
+builder.Services.AddScoped<IFinancialSituacionRepository, FinancialSituacionRepository>();
+builder.Services.AddScoped<ICollaborationDegreeRepository, CollaborationDegreeRepository>();
+builder.Services.AddScoped<ICompanyFinancialInformationRepository, CompanyFinancialInformationRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -115,6 +120,10 @@ builder.Services.AddScoped<IAgentDomain, AgentDomain>();
 builder.Services.AddScoped<IAgentPriceDomain, AgentPriceDomain>();
 builder.Services.AddScoped<ICouponBillingSubscriberDomain, CouponBillingSubscriberDomain>();
 builder.Services.AddScoped<ICouponBillingSubscriberHistoryDomain, CouponBillingSubscriberHistoryDomain>();
+builder.Services.AddScoped<ISubscriberCategoryDomain, SubscriberCategoryDomain>();
+builder.Services.AddScoped<IFinancialSituacionDomain, FinancialSituacionDomain>();
+builder.Services.AddScoped<ICollaborationDegreeDomain, CollaborationDegreeDomain>();
+builder.Services.AddScoped<ICompanyFinancialInformationDomain, CompanyFinancialInformationDomain>();
 
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();

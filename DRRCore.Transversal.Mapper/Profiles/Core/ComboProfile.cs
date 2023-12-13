@@ -86,6 +86,20 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
              .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
              .ForMember(dest => dest.Bandera, opt => opt?.MapFrom(src => src.FlagIso))
              .ReverseMap();
+            CreateMap<SubscriberCategory, GetComboValueResponseDto>()
+            .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+            .ReverseMap();
+            CreateMap<FinancialSituacion, GetFinancialSituationResponseDto>()
+           .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+           .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+           .ForMember(dest => dest.reportCommentWithBalance, opt => opt?.MapFrom(src => src.ReportCommentWithBalance))
+           .ForMember(dest => dest.reportCommentWithoutBalance, opt => opt?.MapFrom(src => src.ReportCommentWithoutBalance))
+           .ReverseMap();
+            CreateMap<CollaborationDegree, GetComboValueResponseDto>()
+           .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+           .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+           .ReverseMap();
         }
     }
 }

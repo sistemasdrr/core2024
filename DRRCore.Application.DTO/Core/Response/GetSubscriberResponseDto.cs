@@ -23,7 +23,7 @@ namespace DRRCore.Application.DTO.Core.Response
         public string Email { get; set; } = string.Empty;
         public string WebPage { get; set; } = string.Empty;
         public string PrincipalContact { get; set; } = string.Empty;
-        public int IdRubro { get; set; } = new int();
+        public int IdSubscriberCategory { get; set; } = new int();
         public string TaxRegistration { get; set; } = string.Empty;
         public string SendReportToName { get; set; } = string.Empty;
         public string SendReportToTelephone { get; set; } = string.Empty;

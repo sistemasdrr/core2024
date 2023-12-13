@@ -63,5 +63,17 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _companyApplication.DesactiveWebVisionAsync(id));
         }
+        [HttpPost()]
+        [Route("addFinancial")]
+        public async Task<ActionResult> AddFinancialInformation(AddOrUpdateCompanyFinancialInformationRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCompanyFinancialInformationAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getFinancial")]
+        public async Task<ActionResult> GetFinancialById(int idCompany)
+        {
+            return Ok(await _companyApplication.GetCompanyFinancialInformationById(idCompany));
+        }
     }
 }
