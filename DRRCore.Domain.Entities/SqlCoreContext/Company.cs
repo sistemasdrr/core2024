@@ -85,6 +85,8 @@ public partial class Company
 
     public virtual ICollection<CompanyBranch> CompanyBranches { get; set; } = new List<CompanyBranch>();
 
+    public virtual ICollection<CompanyFinancialInformation> CompanyFinancialInformations { get; set; } = new List<CompanyFinancialInformation>();
+
     public virtual Country? IdCountryNavigation { get; set; }
 
     public virtual CreditRisk? IdCreditRiskNavigation { get; set; }

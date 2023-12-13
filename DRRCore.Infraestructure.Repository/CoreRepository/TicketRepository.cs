@@ -5,42 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
-    public class AnniversaryRepository : IAnniversaryRepository
+    public class TicketRepository : ITicketRepository
     {
         private readonly ILogger _logger;
-        public AnniversaryRepository(ILogger logger)
+        public TicketRepository(ILogger logger)
         {
             _logger = logger;
         }
-
-        public async Task<bool> ActiveAnniversaryAsync(int id)
+        public async Task<bool> AddAsync(Ticket obj)
         {
             try
             {
                 using (var context = new SqlCoreContext())
                 {
-                    var obj = await context.Anniversaries.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
-                    obj.Enable = true;
-                    obj.DeleteDate = null;
-                    context.Anniversaries.Update(obj);
-                    await context.SaveChangesAsync();
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return false;
-            }
-        }
-
-        public async Task<bool> AddAsync(Anniversary obj)
-        {
-            try
-            {
-                using (var context = new SqlCoreContext())
-                {
-                    await context.Anniversaries.AddAsync(obj);
+                    await context.Tickets.AddAsync(obj);
                     await context.SaveChangesAsync();
                     return true;
                 }
@@ -58,10 +36,10 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using (var context = new SqlCoreContext())
                 {
-                    var obj = await context.Anniversaries.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
+                    var obj = await context.Tickets.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
                     obj.Enable = false;
                     obj.DeleteDate = DateTime.Now;
-                    context.Anniversaries.Update(obj);
+                    context.Tickets.Update(obj);
                     await context.SaveChangesAsync();
                     return true;
                 }
@@ -73,26 +51,27 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public async Task<List<Anniversary>> GetAllAsync()
+        public async Task<List<Ticket>> GetAllAsync()
         {
+
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Anniversaries.Where(x=>x.Enable==true).ToListAsync();
+                return await context.Tickets.Where(x => x.Enable == true).ToListAsync();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Anniversary>();
+                return new List<Ticket>();
             }
         }
 
-        public async Task<Anniversary> GetByIdAsync(int id)
+        public async Task<Ticket> GetByIdAsync(int id)
         {
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Anniversaries.FindAsync(id)?? throw new Exception("No existe el objeto solicitado");
+                return await context.Tickets.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {
@@ -101,20 +80,20 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public Task<List<Anniversary>> GetByNameAsync(string name)
+        public Task<List<Ticket>> GetByNameAsync(string name)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UpdateAsync(Anniversary obj)
+        public async Task<bool> UpdateAsync(Ticket obj)
         {
             try
             {
                 using (var context = new SqlCoreContext())
                 {
-                  
+
                     obj.UpdateDate = DateTime.Now;
-                    context.Anniversaries.Update(obj);
+                    context.Tickets.Update(obj);
                     await context.SaveChangesAsync();
                     return true;
                 }

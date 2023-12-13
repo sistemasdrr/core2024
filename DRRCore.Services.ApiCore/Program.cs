@@ -1,6 +1,7 @@
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Application.Main.CoreApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
+using DRRCore.Domain.Interfaces;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Domain.Main.CoreDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
@@ -57,6 +58,7 @@ builder.Services.AddAutoMapper(typeof(SubscriberProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(ComboProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(CompanyProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(AnniversaryProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(TicketProfile).Assembly);
 builder.Services.AddHttpContextAccessor();
 
 
@@ -87,6 +89,9 @@ builder.Services.AddScoped<IAgentRepository, AgentRepository>();
 builder.Services.AddScoped<IAgentPriceRepository, AgentPriceRepository>();
 builder.Services.AddScoped<ICouponBillingSubscriberRepository, CouponBillingSubscriberRepository>();
 builder.Services.AddScoped<ICouponBillingSubscriberHistoryRepository, CouponBillingSubscriberHistoryRepository>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+builder.Services.AddScoped<ITicketHistoryRepository, TicketHistoryRepository>();
+builder.Services.AddScoped<INumerationRepository, NumerationRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -115,7 +120,9 @@ builder.Services.AddScoped<IAgentDomain, AgentDomain>();
 builder.Services.AddScoped<IAgentPriceDomain, AgentPriceDomain>();
 builder.Services.AddScoped<ICouponBillingSubscriberDomain, CouponBillingSubscriberDomain>();
 builder.Services.AddScoped<ICouponBillingSubscriberHistoryDomain, CouponBillingSubscriberHistoryDomain>();
-
+builder.Services.AddScoped<ITicketDomain, TicketDomain>();
+builder.Services.AddScoped<ITicketHistoryDomain, TicketHistoryDomain>();
+builder.Services.AddScoped<INumerationDomain, NumerationDomain>();
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
@@ -126,6 +133,7 @@ builder.Services.AddScoped<IAnniversaryApplication, AnniversayApplication>();
 builder.Services.AddScoped<IAgentApplication, AgentApplication>();
 builder.Services.AddScoped<IAgentPriceApplication, AgentPriceApplication>();
 builder.Services.AddScoped<ICouponBillingSubscriberApplication, CouponBillingSubscriberApplication>();
+builder.Services.AddScoped<ITicketApplication, TicketApplication>();
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();

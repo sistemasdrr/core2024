@@ -31,6 +31,8 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<CivilStatus> CivilStatuses { get; set; }
 
+    public virtual DbSet<CollaborationDegree> CollaborationDegrees { get; set; }
+
     public virtual DbSet<Company> Companies { get; set; }
 
     public virtual DbSet<CompanyBackground> CompanyBackgrounds { get; set; }
@@ -38,6 +40,8 @@ public partial class SqlCoreContext : DbContext
     public virtual DbSet<CompanyBranch> CompanyBranches { get; set; }
 
     public virtual DbSet<CompanyBusineesActivity> CompanyBusineesActivities { get; set; }
+
+    public virtual DbSet<CompanyFinancialInformation> CompanyFinancialInformations { get; set; }
 
     public virtual DbSet<Continent> Continents { get; set; }
 
@@ -57,6 +61,8 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<FamilyBondType> FamilyBondTypes { get; set; }
 
+    public virtual DbSet<FinancialSituacion> FinancialSituacions { get; set; }
+
     public virtual DbSet<HealthInsurance> HealthInsurances { get; set; }
 
     public virtual DbSet<HistoryInfoChange> HistoryInfoChanges { get; set; }
@@ -73,6 +79,8 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<LegalRegisterSituation> LegalRegisterSituations { get; set; }
 
+    public virtual DbSet<Numeration> Numerations { get; set; }
+
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<PaymentPolicy> PaymentPolicies { get; set; }
@@ -85,7 +93,13 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<Subscriber> Subscribers { get; set; }
 
+    public virtual DbSet<SubscriberCategory> SubscriberCategories { get; set; }
+
     public virtual DbSet<SubscriberPrice> SubscriberPrices { get; set; }
+
+    public virtual DbSet<Ticket> Tickets { get; set; }
+
+    public virtual DbSet<TicketHistory> TicketHistories { get; set; }
 
     public virtual DbSet<Traduction> Traductions { get; set; }
 
@@ -412,6 +426,40 @@ public partial class SqlCoreContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("name");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
+        modelBuilder.Entity<CollaborationDegree>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Collabor__3213E83F97CBFADC");
+
+            entity.ToTable("CollaborationDegree");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EnglishName)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("englishName");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.Name)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.Observations)
+                .IsUnicode(false)
+                .HasColumnName("observations");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
@@ -801,6 +849,74 @@ public partial class SqlCoreContext : DbContext
                 .HasConstraintName("FK__CompanyBu__idCom__21A0F6C4");
         });
 
+        modelBuilder.Entity<CompanyFinancialInformation>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CompanyF__3213E83F794B1341");
+
+            entity.ToTable("CompanyFinancialInformation");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AnalystCommentary)
+                .IsUnicode(false)
+                .HasColumnName("analystCommentary");
+            entity.Property(e => e.Auditors)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("auditors");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.FinancialCommentarySelected)
+                .IsUnicode(false)
+                .HasColumnName("financialCommentarySelected");
+            entity.Property(e => e.IdCollaborationDegree).HasColumnName("idCollaborationDegree");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdFinancialSituacion).HasColumnName("idFinancialSituacion");
+            entity.Property(e => e.InterviewCommentary)
+                .IsUnicode(false)
+                .HasColumnName("interviewCommentary");
+            entity.Property(e => e.Interviewed)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("interviewed");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.MainFixedAssets)
+                .IsUnicode(false)
+                .HasColumnName("mainFixedAssets");
+            entity.Property(e => e.ReportCommentWithBalance)
+                .IsUnicode(false)
+                .HasColumnName("reportCommentWithBalance");
+            entity.Property(e => e.ReportCommentWithoutBalance)
+                .IsUnicode(false)
+                .HasColumnName("reportCommentWithoutBalance");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+            entity.Property(e => e.WorkPosition)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("workPosition");
+
+            entity.HasOne(d => d.IdCollaborationDegreeNavigation).WithMany(p => p.CompanyFinancialInformations)
+                .HasForeignKey(d => d.IdCollaborationDegree)
+                .HasConstraintName("FK__CompanyFi__idCol__10416098");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.CompanyFinancialInformations)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__CompanyFi__idCom__0F4D3C5F");
+
+            entity.HasOne(d => d.IdFinancialSituacionNavigation).WithMany(p => p.CompanyFinancialInformations)
+                .HasForeignKey(d => d.IdFinancialSituacion)
+                .HasConstraintName("FK__CompanyFi__idFin__113584D1");
+        });
+
         modelBuilder.Entity<Continent>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Continen__3213E83F1D74F7BC");
@@ -900,7 +1016,7 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.IdSubscriber).HasColumnName("idSubscriber");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
             entity.Property(e => e.NumCoupon)
-                .HasColumnType("decimal(18, 0)")
+                .HasColumnType("decimal(10, 2)")
                 .HasColumnName("numCoupon");
             entity.Property(e => e.PriceT0)
                 .HasColumnType("decimal(10, 2)")
@@ -1241,6 +1357,54 @@ public partial class SqlCoreContext : DbContext
                 .HasColumnName("updateDate");
         });
 
+        modelBuilder.Entity<FinancialSituacion>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Financia__3213E83F46832F2C");
+
+            entity.ToTable("FinancialSituacion");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Abreviation)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("abreviation");
+            entity.Property(e => e.Color)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("color");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EnglishName)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("englishName");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.Name)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.Observations)
+                .IsUnicode(false)
+                .HasColumnName("observations");
+            entity.Property(e => e.ReportCommentWithBalance)
+                .IsUnicode(false)
+                .HasColumnName("reportCommentWithBalance");
+            entity.Property(e => e.ReportCommentWithoutBalance)
+                .IsUnicode(false)
+                .HasColumnName("reportCommentWithoutBalance");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
         modelBuilder.Entity<HealthInsurance>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__HealthIn__3213E83F6FEAA16F");
@@ -1500,6 +1664,40 @@ public partial class SqlCoreContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("name");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
+        modelBuilder.Entity<Numeration>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Numerati__3213E83F326B4CFF");
+
+            entity.ToTable("Numeration");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Description)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("description");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.InvoiceNumber).HasColumnName("invoiceNumber");
+            entity.Property(e => e.Name)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.Number).HasColumnName("number");
+            entity.Property(e => e.Number2).HasColumnName("number2");
+            entity.Property(e => e.Number3).HasColumnName("number3");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
@@ -1935,7 +2133,7 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.IdContinent).HasColumnName("idContinent");
             entity.Property(e => e.IdCountry).HasColumnName("idCountry");
             entity.Property(e => e.IdCurrency).HasColumnName("idCurrency");
-            entity.Property(e => e.IdRubro).HasColumnName("idRubro");
+            entity.Property(e => e.IdSubscriberCategory).HasColumnName("idSubscriberCategory");
             entity.Property(e => e.Indications)
                 .IsUnicode(false)
                 .HasColumnName("indications");
@@ -2018,6 +2216,48 @@ public partial class SqlCoreContext : DbContext
             entity.HasOne(d => d.IdCurrencyNavigation).WithMany(p => p.Subscribers)
                 .HasForeignKey(d => d.IdCurrency)
                 .HasConstraintName("FK__Subscribe__idCur__38845C1C");
+
+            entity.HasOne(d => d.IdSubscriberCategoryNavigation).WithMany(p => p.Subscribers)
+                .HasForeignKey(d => d.IdSubscriberCategory)
+                .HasConstraintName("FK__Subscribe__idSub__02E7657A");
+        });
+
+        modelBuilder.Entity<SubscriberCategory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Subscrib__3213E83F43854E36");
+
+            entity.ToTable("SubscriberCategory");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Abreviation)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("abreviation");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EnglishName)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("englishName");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.Name)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.Observations)
+                .IsUnicode(false)
+                .HasColumnName("observations");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
         });
 
         modelBuilder.Entity<SubscriberPrice>(entity =>
@@ -2071,6 +2311,161 @@ public partial class SqlCoreContext : DbContext
             entity.HasOne(d => d.IdSubscriberNavigation).WithMany(p => p.SubscriberPrices)
                 .HasForeignKey(d => d.IdSubscriber)
                 .HasConstraintName("FK__Subscribe__idSub__515009E6");
+        });
+
+        modelBuilder.Entity<Ticket>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Ticket__3213E83F4B33CE20");
+
+            entity.ToTable("Ticket");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.About)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("about");
+            entity.Property(e => e.Address)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("address");
+            entity.Property(e => e.AditionalData)
+                .IsUnicode(false)
+                .HasColumnName("aditionalData");
+            entity.Property(e => e.BusineesName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("busineesName");
+            entity.Property(e => e.City)
+                .HasMaxLength(60)
+                .IsUnicode(false)
+                .HasColumnName("city");
+            entity.Property(e => e.ComercialName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("comercialName");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.Creditrisk).HasColumnName("creditrisk");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Email)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("email");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.ExpireDate)
+                .HasColumnType("datetime")
+                .HasColumnName("expireDate");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdContinent).HasColumnName("idContinent");
+            entity.Property(e => e.IdCountry).HasColumnName("idCountry");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.IdSubscriber).HasColumnName("idSubscriber");
+            entity.Property(e => e.Language)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("language");
+            entity.Property(e => e.NameRevealed)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("nameRevealed");
+            entity.Property(e => e.Number).HasColumnName("number");
+            entity.Property(e => e.OrderDate)
+                .HasColumnType("datetime")
+                .HasColumnName("orderDate");
+            entity.Property(e => e.ProcedureType)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("procedureType");
+            entity.Property(e => e.QueryCredit)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("queryCredit");
+            entity.Property(e => e.RealExpireDate)
+                .HasColumnType("datetime")
+                .HasColumnName("realExpireDate");
+            entity.Property(e => e.ReferenceNumber)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("referenceNumber");
+            entity.Property(e => e.ReportType)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("reportType");
+            entity.Property(e => e.RevealName)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("revealName");
+            entity.Property(e => e.Status)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("status");
+            entity.Property(e => e.TaxCode)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("taxCode");
+            entity.Property(e => e.TaxType)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("taxType");
+            entity.Property(e => e.Telephone)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("telephone");
+            entity.Property(e => e.TimeLimit)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("timeLimit");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdSubscriberNavigation).WithMany(p => p.Tickets)
+                .HasForeignKey(d => d.IdSubscriber)
+                .HasConstraintName("FK__Ticket__idSubscr__71BCD978");
+        });
+
+        modelBuilder.Entity<TicketHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__TicketHi__3213E83F73A94BC9");
+
+            entity.ToTable("TicketHistory");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdTicket).HasColumnName("idTicket");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+            entity.Property(e => e.UserFrom)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("userFrom");
+            entity.Property(e => e.UserTo)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("userTo");
+
+            entity.HasOne(d => d.IdTicketNavigation).WithMany(p => p.TicketHistories)
+                .HasForeignKey(d => d.IdTicket)
+                .HasConstraintName("FK__TicketHis__idTic__1411F17C");
         });
 
         modelBuilder.Entity<Traduction>(entity =>

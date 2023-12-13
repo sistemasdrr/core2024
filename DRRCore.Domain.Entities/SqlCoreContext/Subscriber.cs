@@ -35,7 +35,7 @@ public partial class Subscriber
 
     public string? PrincipalContact { get; set; }
 
-    public int? IdRubro { get; set; }
+    public int? IdSubscriberCategory { get; set; }
 
     public string? TaxRegistration { get; set; }
 
@@ -91,7 +91,11 @@ public partial class Subscriber
 
     public virtual Currency? IdCurrencyNavigation { get; set; }
 
+    public virtual SubscriberCategory? IdSubscriberCategoryNavigation { get; set; }
+
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual ICollection<SubscriberPrice> SubscriberPrices { get; set; } = new List<SubscriberPrice>();
+
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }
