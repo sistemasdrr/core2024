@@ -23,4 +23,5 @@ public partial class TicketHistory
 
     public bool? Enable { get; set; }
 
+    public virtual Ticket? IdTicketNavigation { get; set; }
 }
