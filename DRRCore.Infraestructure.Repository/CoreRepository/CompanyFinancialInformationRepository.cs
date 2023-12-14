@@ -19,7 +19,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
-        public async Task<bool> AddCompanyFinancialInformation(CompanyFinancialInformation obj, List<Traduction> traductions)
+        public async Task<int> AddCompanyFinancialInformation(CompanyFinancialInformation obj, List<Traduction> traductions)
         {
             try
             {
@@ -37,12 +37,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     }
                 }
                 await context.SaveChangesAsync();
-                return true;
+                return obj.Id;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return false;
+                return 0;
             }
         }
 
@@ -124,12 +124,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UpdateCompanyFinancialInformation(CompanyFinancialInformation obj, List<Traduction> traductions)
+        public async Task<int> UpdateCompanyFinancialInformation(CompanyFinancialInformation obj, List<Traduction> traductions)
         {
             try
             {
                 using var context = new SqlCoreContext();
-                await context.CompanyFinancialInformations.AddAsync(obj);
+                context.CompanyFinancialInformations.Update(obj);
                 foreach (var item in traductions)
                 {
                     var modifierTraduction = await context.Traductions.Where(x => x.IdCompany == obj.IdCompany && x.Identifier == item.Identifier).FirstOrDefaultAsync();
@@ -142,12 +142,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     }
                 }
                 await context.SaveChangesAsync();
-                return true;
+                return obj.Id;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                return false;
+                return 0;
             }
         }
     }

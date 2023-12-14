@@ -91,6 +91,8 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<Reputation> Reputations { get; set; }
 
+    public virtual DbSet<SalesHistory> SalesHistories { get; set; }
+
     public virtual DbSet<Subscriber> Subscribers { get; set; }
 
     public virtual DbSet<SubscriberCategory> SubscriberCategories { get; set; }
@@ -2070,6 +2072,51 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
+        });
+
+        modelBuilder.Entity<SalesHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__SalesHis__3213E83FD100895D");
+
+            entity.ToTable("SalesHistory");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Amount)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("amount");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.Date)
+                .HasColumnType("datetime")
+                .HasColumnName("date");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EquivalentToDollars)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("equivalentToDollars");
+            entity.Property(e => e.ExchangeRate)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("exchangeRate");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdCurrency).HasColumnName("idCurrency");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.SalesHistories)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__SalesHist__idCom__1F83A428");
+
+            entity.HasOne(d => d.IdCurrencyNavigation).WithMany(p => p.SalesHistories)
+                .HasForeignKey(d => d.IdCurrency)
+                .HasConstraintName("FK__SalesHist__idCur__2077C861");
         });
 
         modelBuilder.Entity<Subscriber>(entity =>

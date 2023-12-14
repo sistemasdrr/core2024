@@ -14,16 +14,20 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICompanyDomain _companyDomain;
         private readonly ICompanyBackgroundDomain _companyBackgroundDomain;
         private readonly ICompanyFinancialInformationDomain _companyFinancialInformationDomain;
+        private readonly IFinancialSalesHistoryDomain _financialSalesHistoryDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public CompanyApplication(ICompanyDomain companyDomain,ICompanyBackgroundDomain companyBackgroundDomain, ICompanyFinancialInformationDomain companyFinancialInformationDomain, IMapper mapper,ILogger logger)
+        public CompanyApplication(ICompanyDomain companyDomain,ICompanyBackgroundDomain companyBackgroundDomain,
+            ICompanyFinancialInformationDomain companyFinancialInformationDomain, IMapper mapper, ILogger logger, 
+            IFinancialSalesHistoryDomain financialSalesHistoryDomain)
         {
             _companyDomain = companyDomain;
             _companyBackgroundDomain = companyBackgroundDomain;
             _companyFinancialInformationDomain = companyFinancialInformationDomain;
             _mapper = mapper;
             _logger = logger;
+            _financialSalesHistoryDomain = financialSalesHistoryDomain;
         }
         public async Task<Response<int>> AddOrUpdateAsync(AddOrUpdateCompanyRequestDto obj)
         {
@@ -294,10 +298,10 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<bool>> AddOrUpdateCompanyFinancialInformationAsync(AddOrUpdateCompanyFinancialInformationRequestDto obj)
+        public async Task<Response<int>> AddOrUpdateCompanyFinancialInformationAsync(AddOrUpdateCompanyFinancialInformationRequestDto obj)
         {
             List<Traduction> traductions = new List<Traduction>();
-            var response = new Response<bool>();
+            var response = new Response<int>();
             try
             {
                 if (obj == null)
@@ -325,7 +329,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 }
                 else
                 {
-                    var existingCompany = await _companyFinancialInformationDomain.GetByIdAsync((int)obj.IdCompany);
+                    var existingCompany = await _companyFinancialInformationDomain.GetByIdCompany((int)obj.IdCompany);
                     if (existingCompany == null)
                     {
                         response.IsSuccess = false;
@@ -397,6 +401,85 @@ namespace DRRCore.Application.Main.CoreApplication
                     return response;
                 }
                 response.Data = _mapper.Map<GetCompanyFinancialInformationResponseDto>(company);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateSaleHistoryAsync(AddOrUpdateSaleHistoryRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if(obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }else if(obj.Id == 0)
+                {
+                    var newSaleHistory = _mapper.Map<SalesHistory>(obj);
+                    response.Data = await _financialSalesHistoryDomain.AddAsync(newSaleHistory);
+                }
+                else if(obj.Id > 0)
+                {
+                    var existingSaleHistory = await _financialSalesHistoryDomain.GetByIdAsync(obj.Id);
+                    existingSaleHistory = _mapper.Map(obj, existingSaleHistory);
+                    response.Data = await _financialSalesHistoryDomain.UpdateAsync(existingSaleHistory);
+                }
+            }catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetListSalesHistoryResponseDto>>> GetListSalesHistoriesByIdCompany(int idCompany)
+        {
+            var response = new Response<List<GetListSalesHistoryResponseDto>>();
+            try
+            {
+                var list = await _financialSalesHistoryDomain.GetByIdCompany(idCompany);
+                if(list == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }               
+                response.Data = _mapper.Map<List<GetListSalesHistoryResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetSaleHistoryResponseDto>> GetSaleHistoryById(int id)
+        {
+            var response = new Response<GetSaleHistoryResponseDto>();
+            try
+            {
+                var saleHistory = await _financialSalesHistoryDomain.GetByIdAsync(id);
+                if(saleHistory == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetSaleHistoryResponseDto>(saleHistory);
             }
             catch (Exception ex)
             {

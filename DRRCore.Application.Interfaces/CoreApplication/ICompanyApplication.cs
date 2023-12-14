@@ -11,11 +11,14 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name,string form,int idCountry,bool haveReport);
         Task<Response<bool>> DeleteAsync(int id);
         Task<Response<bool>> AddOrUpdateCompanyBackGroundAsync(AddOrUpdateCompanyBackgroundRequestDto obj);
-        Task<Response<bool>> AddOrUpdateCompanyFinancialInformationAsync(AddOrUpdateCompanyFinancialInformationRequestDto obj);
+        Task<Response<int>> AddOrUpdateCompanyFinancialInformationAsync(AddOrUpdateCompanyFinancialInformationRequestDto obj);
         Task<Response<GetCompanyBackgroundResponseDto>> GetCompanyBackgroundById(int id);
         Task<Response<GetCompanyFinancialInformationResponseDto>> GetCompanyFinancialInformationById(int id);
         Task<Response<GetCompanyFinancialInformationResponseDto>> GetCompanyFinancialInformationByIdCompany(int idCompany);
         Task<Response<bool>> ActiveWebVisionAsync(int id);
         Task<Response<bool>> DesactiveWebVisionAsync(int id);
+        Task<Response<bool>> AddOrUpdateSaleHistoryAsync(AddOrUpdateSaleHistoryRequestDto obj);
+        Task<Response<List<GetListSalesHistoryResponseDto>>> GetListSalesHistoriesByIdCompany(int idCompany);
+        Task<Response<GetSaleHistoryResponseDto>> GetSaleHistoryById(int id);
     }
 }

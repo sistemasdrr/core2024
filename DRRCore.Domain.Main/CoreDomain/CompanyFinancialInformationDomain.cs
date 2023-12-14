@@ -17,7 +17,7 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _repository.AddAsync(obj);
         }
 
-        public async Task<bool> AddCompanyFinancialInformation(CompanyFinancialInformation obj, List<Traduction> traduction)
+        public async Task<int> AddCompanyFinancialInformation(CompanyFinancialInformation obj, List<Traduction> traduction)
         {
             return await _repository.AddCompanyFinancialInformation(obj, traduction);
         }
@@ -52,7 +52,7 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _repository.UpdateAsync(obj);
         }
 
-        public async Task<bool> UpdateCompanyFinancialInformation(CompanyFinancialInformation obj, List<Traduction> traduction)
+        public async Task<int> UpdateCompanyFinancialInformation(CompanyFinancialInformation obj, List<Traduction> traduction)
         {
             return await _repository.UpdateCompanyFinancialInformation(obj, traduction);
         }

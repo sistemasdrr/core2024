@@ -81,5 +81,23 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _companyApplication.GetCompanyFinancialInformationByIdCompany(idCompany));
         }
+        [HttpPost()]
+        [Route("addOrUpdateSaleHistory")]
+        public async Task<ActionResult> addOrUpdateSaleHistory(AddOrUpdateSaleHistoryRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateSaleHistoryAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getSaleHistoryById")]
+        public async Task<ActionResult> getSaleHistoryById(int id)
+        {
+            return Ok(await _companyApplication.GetSaleHistoryById(id));
+        }
+        [HttpGet()]
+        [Route("getListSaleHistoryByIdCompany")]
+        public async Task<ActionResult> getListSaleHistoryByIdCompany(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListSalesHistoriesByIdCompany(idCompany));
+        }
     }
 }

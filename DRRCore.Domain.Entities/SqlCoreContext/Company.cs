@@ -101,5 +101,7 @@ public partial class Company
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
+    public virtual ICollection<SalesHistory> SalesHistories { get; set; } = new List<SalesHistory>();
+
     public virtual ICollection<Traduction> Traductions { get; set; } = new List<Traduction>();
 }

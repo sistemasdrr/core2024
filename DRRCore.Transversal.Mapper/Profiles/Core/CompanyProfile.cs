@@ -69,6 +69,23 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             CreateMap<CompanyFinancialInformation, GetCompanyFinancialInformationResponseDto>()
                 .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Traductions))
               .ReverseMap();
+            CreateMap<SalesHistory, GetListSalesHistoryResponseDto>()
+                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+                .ForMember(dest => dest.Currency, opt => opt?.MapFrom(src => src.IdCurrencyNavigation!= null ? src.IdCurrencyNavigation.Abreviation : string.Empty))
+                .ForMember(dest => dest.Amount, opt => opt?.MapFrom(src => src.Amount))
+                .ForMember(dest => dest.ExchangeRate, opt => opt?.MapFrom(src => src.ExchangeRate))
+                .ForMember(dest => dest.EquivalentToDollars, opt => opt?.MapFrom(src => src.EquivalentToDollars))
+             .ReverseMap();
+            CreateMap<SalesHistory, GetSaleHistoryResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
+                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+             .ReverseMap();
+            CreateMap<AddOrUpdateSaleHistoryRequestDto, SalesHistory>()
+                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
+             .ReverseMap();
         }
 
         private int GetTraductionPercentage()
