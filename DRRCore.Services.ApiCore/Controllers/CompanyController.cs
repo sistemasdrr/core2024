@@ -70,10 +70,16 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _companyApplication.AddOrUpdateCompanyFinancialInformationAsync(obj));
         }
         [HttpGet()]
-        [Route("getFinancial")]
-        public async Task<ActionResult> GetFinancialById(int idCompany)
+        [Route("getFinancialById")]
+        public async Task<ActionResult> GetFinancialById(int id)
         {
-            return Ok(await _companyApplication.GetCompanyFinancialInformationById(idCompany));
+            return Ok(await _companyApplication.GetCompanyFinancialInformationById(id));
+        }
+        [HttpGet()]
+        [Route("getFinancialByIdCompany")]
+        public async Task<ActionResult> GetFinancialByIdCompany(int idCompany)
+        {
+            return Ok(await _companyApplication.GetCompanyFinancialInformationByIdCompany(idCompany));
         }
     }
 }

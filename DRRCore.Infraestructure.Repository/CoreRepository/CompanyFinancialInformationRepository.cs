@@ -1,6 +1,7 @@
 ﻿using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common.Interface;
+using DRRCore.Transversal.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
@@ -93,16 +94,23 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
 
         public async Task<CompanyFinancialInformation> GetByIdCompany(int idCompany)
         {
+            List<Traduction> traductions = new List<Traduction>();
             try
             {
                 using var context = new SqlCoreContext();
-                var existingCompany = await context.CompanyFinancialInformations.Include(x => x.IdCompanyNavigation).Where(x => x.IdCompany == idCompany).FirstOrDefaultAsync();
-                return existingCompany;
+                var company = await context.CompanyFinancialInformations.Include(x => x.IdCompanyNavigation).Where(x => x.IdCompany == idCompany).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
+                traductions.AddRange(await context.Traductions.Where(x => x.IdCompany == idCompany && x.Identifier.Contains("_F_")).ToListAsync());
+
+                if (company == null)
+                    throw new Exception("No existe la empresa");
+
+                company.IdCompanyNavigation.Traductions = traductions;
+                return company;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                return new CompanyFinancialInformation();
+                _logger.LogError(ex.Message);
+                return null;
             }
         }
 

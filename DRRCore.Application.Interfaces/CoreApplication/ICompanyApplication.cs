@@ -13,7 +13,8 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> AddOrUpdateCompanyBackGroundAsync(AddOrUpdateCompanyBackgroundRequestDto obj);
         Task<Response<bool>> AddOrUpdateCompanyFinancialInformationAsync(AddOrUpdateCompanyFinancialInformationRequestDto obj);
         Task<Response<GetCompanyBackgroundResponseDto>> GetCompanyBackgroundById(int id);
-        Task<Response<GetCompanyFinancialInformationResponseDto>> GetCompanyFinancialInformationById(int idCompany);
+        Task<Response<GetCompanyFinancialInformationResponseDto>> GetCompanyFinancialInformationById(int id);
+        Task<Response<GetCompanyFinancialInformationResponseDto>> GetCompanyFinancialInformationByIdCompany(int idCompany);
         Task<Response<bool>> ActiveWebVisionAsync(int id);
         Task<Response<bool>> DesactiveWebVisionAsync(int id);
     }

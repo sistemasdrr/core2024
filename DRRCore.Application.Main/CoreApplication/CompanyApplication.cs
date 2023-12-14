@@ -359,12 +359,36 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<GetCompanyFinancialInformationResponseDto>> GetCompanyFinancialInformationById(int idCompany)
+        public async Task<Response<GetCompanyFinancialInformationResponseDto>> GetCompanyFinancialInformationById(int id)
         {
             var response = new Response<GetCompanyFinancialInformationResponseDto>();
             try
             {
-                var company = await _companyFinancialInformationDomain.GetByIdAsync(idCompany);
+                var company = await _companyFinancialInformationDomain.GetByIdAsync(id);
+                if (company == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetCompanyFinancialInformationResponseDto>(company);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetCompanyFinancialInformationResponseDto>> GetCompanyFinancialInformationByIdCompany(int idCompany)
+        {
+            var response = new Response<GetCompanyFinancialInformationResponseDto>();
+            try
+            {
+                var company = await _companyFinancialInformationDomain.GetByIdCompany(idCompany);
                 if (company == null)
                 {
                     response.IsSuccess = false;
