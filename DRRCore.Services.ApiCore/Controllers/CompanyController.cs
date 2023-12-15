@@ -99,5 +99,35 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _companyApplication.GetListSalesHistoriesByIdCompany(idCompany));
         }
+        [HttpPost()]
+        [Route("deleteSaleHistory")]
+        public async Task<ActionResult> deleteSaleHistory(int id)
+        {
+            return Ok(await _companyApplication.DeleteSaleHistory(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateBalance")]
+        public async Task<ActionResult> addOrUpdateBalance(AddOrUpdateFinancialBalanceRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateFinancialBalanceAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getListBalance")]
+        public async Task<ActionResult> getListBalance(int idCompany, string balanceType)
+        {
+            return Ok(await _companyApplication.GetListFinancialBalanceAsync(idCompany, balanceType));
+        }
+        [HttpGet()]
+        [Route("getBalanceById")]
+        public async Task<ActionResult> getBalanceById(int id)
+        {
+            return Ok(await _companyApplication.GetFinancialBalanceById(id));
+        }
+        [HttpPost()]
+        [Route("deleteBalance")]
+        public async Task<ActionResult> deleteBalance(int id)
+        {
+            return Ok(await _companyApplication.DeleteFinancialBalance(id));
+        }
     }
 }

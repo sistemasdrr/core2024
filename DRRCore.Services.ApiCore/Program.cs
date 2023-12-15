@@ -98,6 +98,7 @@ builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketHistoryRepository, TicketHistoryRepository>();
 builder.Services.AddScoped<INumerationRepository, NumerationRepository>();
 builder.Services.AddScoped<IFinancialSalesHistoryRepository, FinancialSalesHistoryRepository>();
+builder.Services.AddScoped<IFinancialBalanceRepository, FinancialBalanceRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -131,6 +132,7 @@ builder.Services.AddScoped<IFinancialSituacionDomain, FinancialSituacionDomain>(
 builder.Services.AddScoped<ICollaborationDegreeDomain, CollaborationDegreeDomain>();
 builder.Services.AddScoped<ICompanyFinancialInformationDomain, CompanyFinancialInformationDomain>();
 builder.Services.AddScoped<IFinancialSalesHistoryDomain, FinancialSalesHistoryDomain>();
+builder.Services.AddScoped<IFinancialBalanceDomain, FinancialBalanceDomain>();
 
 builder.Services.AddScoped<ITicketDomain, TicketDomain>();
 builder.Services.AddScoped<ITicketHistoryDomain, TicketHistoryDomain>();

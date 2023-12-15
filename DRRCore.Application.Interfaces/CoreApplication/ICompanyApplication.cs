@@ -20,5 +20,11 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> AddOrUpdateSaleHistoryAsync(AddOrUpdateSaleHistoryRequestDto obj);
         Task<Response<List<GetListSalesHistoryResponseDto>>> GetListSalesHistoriesByIdCompany(int idCompany);
         Task<Response<GetSaleHistoryResponseDto>> GetSaleHistoryById(int id);
+        Task<Response<bool>> DeleteSaleHistory(int id);
+        Task<Response<bool>> AddOrUpdateFinancialBalanceAsync(AddOrUpdateFinancialBalanceRequestDto obj);
+        Task<Response<List<GetComboValueResponseDto>>> GetListFinancialBalanceAsync(int idCompany, string balanceType);
+        Task<Response<GetFinancialBalanceResponseDto>> GetFinancialBalanceById(int id);
+        Task<Response<bool>> DeleteFinancialBalance(int id);
+
     }
 }

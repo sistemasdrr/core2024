@@ -61,6 +61,8 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<FamilyBondType> FamilyBondTypes { get; set; }
 
+    public virtual DbSet<FinancialBalance> FinancialBalances { get; set; }
+
     public virtual DbSet<FinancialSituacion> FinancialSituacions { get; set; }
 
     public virtual DbSet<HealthInsurance> HealthInsurances { get; set; }
@@ -1357,6 +1359,138 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
+        });
+
+        modelBuilder.Entity<FinancialBalance>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Financia__3213E83FBD3B434A");
+
+            entity.ToTable("FinancialBalance");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ACashBoxBank)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("aCashBoxBank");
+            entity.Property(e => e.AFixed)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("aFixed");
+            entity.Property(e => e.AInventory)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("aInventory");
+            entity.Property(e => e.AOtherCurrentAssets)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("aOtherCurrentAssets");
+            entity.Property(e => e.AOtherNonCurrentAssets)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("aOtherNonCurrentAssets");
+            entity.Property(e => e.AToCollect)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("aToCollect");
+            entity.Property(e => e.BalanceType)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("balanceType");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.Date)
+                .HasColumnType("datetime")
+                .HasColumnName("date");
+            entity.Property(e => e.DebtRatio)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("debtRatio");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Duration)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("duration");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.ExchangeRate)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("exchangeRate");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdCurrency).HasColumnName("idCurrency");
+            entity.Property(e => e.LCashBoxBank)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("lCashBoxBank");
+            entity.Property(e => e.LLongTerm)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("lLongTerm");
+            entity.Property(e => e.LOtherCurrentLiabilities)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("lOtherCurrentLiabilities");
+            entity.Property(e => e.LOtherNonCurrentLiabilities)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("lOtherNonCurrentLiabilities");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.LiquidityRatio)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("liquidityRatio");
+            entity.Property(e => e.PCapital)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("pCapital");
+            entity.Property(e => e.POther)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("pOther");
+            entity.Property(e => e.PStockPile)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("pStockPile");
+            entity.Property(e => e.PUtilities)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("pUtilities");
+            entity.Property(e => e.ProfitabilityRatio)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("profitabilityRatio");
+            entity.Property(e => e.Sales)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("sales");
+            entity.Property(e => e.TotalAssets)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("totalAssets");
+            entity.Property(e => e.TotalCurrentAssets)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("totalCurrentAssets");
+            entity.Property(e => e.TotalCurrentLiabilities)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("totalCurrentLiabilities");
+            entity.Property(e => e.TotalLiabilitiesPatrimony)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("totalLiabilitiesPatrimony");
+            entity.Property(e => e.TotalLliabilities)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("totalLliabilities");
+            entity.Property(e => e.TotalNonCurrentAssets)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("totalNonCurrentAssets");
+            entity.Property(e => e.TotalNonCurrentLiabilities)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("totalNonCurrentLiabilities");
+            entity.Property(e => e.TotalPatrimony)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("totalPatrimony");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+            entity.Property(e => e.Utilities)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("utilities");
+            entity.Property(e => e.WorkingCapital)
+                .HasColumnType("decimal(20, 2)")
+                .HasColumnName("workingCapital");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.FinancialBalances)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__Financial__idCom__253C7D7E");
+
+            entity.HasOne(d => d.IdCurrencyNavigation).WithMany(p => p.FinancialBalances)
+                .HasForeignKey(d => d.IdCurrency)
+                .HasConstraintName("FK__Financial__idCur__2630A1B7");
         });
 
         modelBuilder.Entity<FinancialSituacion>(entity =>

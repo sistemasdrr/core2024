@@ -87,6 +87,8 @@ public partial class Company
 
     public virtual ICollection<CompanyFinancialInformation> CompanyFinancialInformations { get; set; } = new List<CompanyFinancialInformation>();
 
+    public virtual ICollection<FinancialBalance> FinancialBalances { get; set; } = new List<FinancialBalance>();
+
     public virtual Country? IdCountryNavigation { get; set; }
 
     public virtual CreditRisk? IdCreditRiskNavigation { get; set; }

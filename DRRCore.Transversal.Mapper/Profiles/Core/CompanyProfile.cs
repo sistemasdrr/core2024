@@ -86,6 +86,20 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
                  .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
              .ReverseMap();
+            CreateMap<AddOrUpdateFinancialBalanceRequestDto, FinancialBalance>()
+                .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
+                .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
+            .ReverseMap();
+            CreateMap<FinancialBalance, GetFinancialBalanceResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
+                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+             .ReverseMap();
+            CreateMap<FinancialBalance, GetComboValueResponseDto>()
+                 .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+                 .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+             .ReverseMap();
         }
 
         private int GetTraductionPercentage()

@@ -15,12 +15,13 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICompanyBackgroundDomain _companyBackgroundDomain;
         private readonly ICompanyFinancialInformationDomain _companyFinancialInformationDomain;
         private readonly IFinancialSalesHistoryDomain _financialSalesHistoryDomain;
+        private readonly IFinancialBalanceDomain _financialBalanceDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public CompanyApplication(ICompanyDomain companyDomain,ICompanyBackgroundDomain companyBackgroundDomain,
             ICompanyFinancialInformationDomain companyFinancialInformationDomain, IMapper mapper, ILogger logger, 
-            IFinancialSalesHistoryDomain financialSalesHistoryDomain)
+            IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain )
         {
             _companyDomain = companyDomain;
             _companyBackgroundDomain = companyBackgroundDomain;
@@ -28,6 +29,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _mapper = mapper;
             _logger = logger;
             _financialSalesHistoryDomain = financialSalesHistoryDomain;
+            _financialBalanceDomain = financialBalanceDomain;
         }
         public async Task<Response<int>> AddOrUpdateAsync(AddOrUpdateCompanyRequestDto obj)
         {
@@ -480,6 +482,136 @@ namespace DRRCore.Application.Main.CoreApplication
                     return response;
                 }
                 response.Data = _mapper.Map<GetSaleHistoryResponseDto>(saleHistory);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteSaleHistory(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if(id == 0 || id == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = await _financialSalesHistoryDomain.DeleteAsync(id);
+            }catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateFinancialBalanceAsync(AddOrUpdateFinancialBalanceRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if(obj.Id == 0)
+                {
+                    var newBalance = _mapper.Map<FinancialBalance>(obj);
+                    response.Data = await _financialBalanceDomain.AddAsync(newBalance);
+                }
+                else
+                {
+                    var existingBalance = await _financialBalanceDomain.GetByIdAsync(obj.Id);
+                    existingBalance = _mapper.Map(obj, existingBalance);
+                    response.Data = await _financialBalanceDomain.UpdateAsync(existingBalance);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboValueResponseDto>>> GetListFinancialBalanceAsync(int idCompany, string balanceType)
+        {
+            var response = new Response<List<GetComboValueResponseDto>>();
+            try
+            {
+                var list = await _financialBalanceDomain.GetFinancialBalanceByIdCompany(idCompany, balanceType);
+                if(list == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetFinancialBalanceResponseDto>> GetFinancialBalanceById(int id)
+        {
+            var response = new Response<GetFinancialBalanceResponseDto>();
+            try
+            {
+                var balance = await _financialBalanceDomain.GetByIdAsync(id);
+                if (balance == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetFinancialBalanceResponseDto>(balance);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteFinancialBalance(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var balance = await _financialBalanceDomain.GetByIdAsync(id);
+                if (balance == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _financialBalanceDomain.DeleteAsync(id);
+                }
             }
             catch (Exception ex)
             {
