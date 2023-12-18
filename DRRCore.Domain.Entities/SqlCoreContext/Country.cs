@@ -37,6 +37,8 @@ public partial class Country
 
     public virtual ICollection<Person> People { get; set; } = new List<Person>();
 
+    public virtual ICollection<Provider> Providers { get; set; } = new List<Provider>();
+
     public virtual ICollection<SubscriberPrice> SubscriberPrices { get; set; } = new List<SubscriberPrice>();
 
     public virtual ICollection<Subscriber> Subscribers { get; set; } = new List<Subscriber>();

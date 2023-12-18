@@ -25,6 +25,17 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetComboValueResponseDto>>> GetListFinancialBalanceAsync(int idCompany, string balanceType);
         Task<Response<GetFinancialBalanceResponseDto>> GetFinancialBalanceById(int id);
         Task<Response<bool>> DeleteFinancialBalance(int id);
-
+        Task<Response<bool>> AddOrUpdateProviderAsync(AddOrUpdateProviderRequestDto obj);
+        Task<Response<List<GetListProviderResponseDto>>> GetListProvidersAsync(int idCompany);
+        Task<Response<GetProviderResponseDto>> GetProviderById(int id);
+        Task<Response<bool>> DeleteProvider(int id);
+        Task<Response<bool>> AddOrUpdateComercialLatePaymentAsync(AddOrUpdateComercialLatePaymentRequestDto obj);
+        Task<Response<List<GetListComercialLatePaymentResponseDto>>> GetListComercialLatePaymentAsync(int idCompany);
+        Task<Response<GetComercialLatePaymentResponseDto>> GetComercialLatePaymentById(int id);
+        Task<Response<bool>> DeleteComercialLatePayment(int id);
+        Task<Response<bool>> AddOrUpdateBankDebtAsync(AddOrUpdateBankDebtRequestDto obj);
+        Task<Response<List<GetListBankDebtResponseDto>>> GetListBankDebtAsync(int idCompany);
+        Task<Response<GetBankDebtResponseDto>> GetBankDebtById(int id);
+        Task<Response<bool>> DeleteBankDebt(int id);
     }
 }

@@ -100,6 +100,53 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
                  .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
              .ReverseMap();
+            CreateMap<AddOrUpdateProviderRequestDto, Provider>()
+                .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
+                .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
+            .ReverseMap();
+            CreateMap<Provider, GetProviderResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountry))
+                 .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
+                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+             .ReverseMap();
+            CreateMap<Provider, GetListProviderResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.Country, opt => opt?.MapFrom(src => src.IdCountryNavigation.Name))
+                 .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation.FlagIso))
+                 .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
+                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+             .ReverseMap();
+            CreateMap<AddOrUpdateComercialLatePaymentRequestDto, ComercialLatePayment>()
+               .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+               .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
+               .ForMember(dest => dest.PendingPaymentDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.PendingPaymentDate)))
+           .ReverseMap();
+            CreateMap<ComercialLatePayment, GetComercialLatePaymentResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+                 .ForMember(dest => dest.PendingPaymentDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.PendingPaymentDate)))
+             .ReverseMap();
+            CreateMap<ComercialLatePayment, GetListComercialLatePaymentResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
+                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+                 .ForMember(dest => dest.PendingPaymentDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.PendingPaymentDate)))
+             .ReverseMap();
+            CreateMap<AddOrUpdateBankDebtRequestDto, BankDebt>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+               .ForMember(dest => dest.DebtDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.DebtDate)))
+           .ReverseMap();
+            CreateMap<BankDebt, GetBankDebtResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.DebtDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DebtDate)))
+             .ReverseMap();
+            CreateMap<BankDebt, GetListBankDebtResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.DebtDate, opt => opt?.MapFrom(src => src.DebtDate))
+                 .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
+             .ReverseMap();
         }
 
         private int GetTraductionPercentage()
