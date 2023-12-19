@@ -91,6 +91,8 @@ public partial class Company
 
     public virtual ICollection<CompanyFinancialInformation> CompanyFinancialInformations { get; set; } = new List<CompanyFinancialInformation>();
 
+    public virtual ICollection<CompanySb> CompanySbs { get; set; } = new List<CompanySb>();
+
     public virtual ICollection<FinancialBalance> FinancialBalances { get; set; } = new List<FinancialBalance>();
 
     public virtual Country? IdCountryNavigation { get; set; }

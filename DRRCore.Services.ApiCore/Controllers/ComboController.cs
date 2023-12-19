@@ -121,5 +121,11 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _comboboxApplication.GetCollaborationDegree());
         }
+        [HttpGet()]
+        [Route("opcionalCommentarySbs")]
+        public async Task<ActionResult> GetOpcionalCommentarySbs()
+        {
+            return Ok(await _comboboxApplication.GetOpcionalCommentarySbs());
+        }
     }
 }

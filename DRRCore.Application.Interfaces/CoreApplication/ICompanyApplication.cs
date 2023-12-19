@@ -37,5 +37,8 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetListBankDebtResponseDto>>> GetListBankDebtAsync(int idCompany);
         Task<Response<GetBankDebtResponseDto>> GetBankDebtById(int id);
         Task<Response<bool>> DeleteBankDebt(int id);
+        Task<Response<bool>> AddOrUpdateCompanySBSAsync(AddOrUpdateCompanySbsRequestDto obj);
+        Task<Response<GetCompanySbsResponseDto>> GetCompanySBSById(int id);
+        Task<Response<bool>> DeleteCompanySBS(int id);
     }
 }

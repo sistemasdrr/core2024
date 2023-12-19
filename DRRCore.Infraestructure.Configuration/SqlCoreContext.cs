@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Domain.Entities.SqlCoreContext;
 
@@ -47,6 +45,8 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<CompanyFinancialInformation> CompanyFinancialInformations { get; set; }
 
+    public virtual DbSet<CompanySb> CompanySbs { get; set; }
+
     public virtual DbSet<Continent> Continents { get; set; }
 
     public virtual DbSet<Country> Countries { get; set; }
@@ -86,6 +86,8 @@ public partial class SqlCoreContext : DbContext
     public virtual DbSet<LegalRegisterSituation> LegalRegisterSituations { get; set; }
 
     public virtual DbSet<Numeration> Numerations { get; set; }
+
+    public virtual DbSet<OpcionalCommentarySb> OpcionalCommentarySbs { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 
@@ -1032,6 +1034,67 @@ public partial class SqlCoreContext : DbContext
                 .HasConstraintName("FK__CompanyFi__idFin__113584D1");
         });
 
+        modelBuilder.Entity<CompanySb>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CompanyS__3213E83F150D6A9A");
+
+            entity.ToTable("CompanySBS");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AditionalCommentaryRiskCenter)
+                .IsUnicode(false)
+                .HasColumnName("aditionalCommentaryRiskCenter");
+            entity.Property(e => e.BankingCommentary)
+                .IsUnicode(false)
+                .HasColumnName("bankingCommentary");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.CreditHistoryCommentary)
+                .IsUnicode(false)
+                .HasColumnName("creditHistoryCommentary");
+            entity.Property(e => e.Date)
+                .HasColumnType("datetime")
+                .HasColumnName("date");
+            entity.Property(e => e.DebtRecordedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("debtRecordedDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EndorsementsObservations)
+                .IsUnicode(false)
+                .HasColumnName("endorsementsObservations");
+            entity.Property(e => e.ExchangeRate)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnName("exchangeRate");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdOpcionalCommentarySbs).HasColumnName("idOpcionalCommentarySBS");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.LitigationsCommentary)
+                .IsUnicode(false)
+                .HasColumnName("litigationsCommentary");
+            entity.Property(e => e.ReferentOrAnalyst)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("referentOrAnalyst");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.CompanySbs)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__CompanySB__idCom__47919582");
+
+            entity.HasOne(d => d.IdOpcionalCommentarySbsNavigation).WithMany(p => p.CompanySbs)
+                .HasForeignKey(d => d.IdOpcionalCommentarySbs)
+                .HasConstraintName("FK__CompanySB__idOpc__4885B9BB");
+        });
+
         modelBuilder.Entity<Continent>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Continen__3213E83F1D74F7BC");
@@ -1945,6 +2008,37 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.Number).HasColumnName("number");
             entity.Property(e => e.Number2).HasColumnName("number2");
             entity.Property(e => e.Number3).HasColumnName("number3");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
+        modelBuilder.Entity<OpcionalCommentarySb>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Opcional__3213E83F583A1BF6");
+
+            entity.ToTable("OpcionalCommentarySBS");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EnglishName)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("englishName");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.Name)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("name");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");

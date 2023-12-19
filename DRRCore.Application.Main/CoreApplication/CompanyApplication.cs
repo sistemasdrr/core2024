@@ -19,13 +19,15 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IProviderDomain _providerDomain;
         private readonly IComercialLatePaymentDomain _comercialLatePaymentDomain;
         private readonly IBankDebtDomain _bankDebtDomain;
+        private readonly ICompanySBSDomain _companySBSDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public CompanyApplication(ICompanyDomain companyDomain,ICompanyBackgroundDomain companyBackgroundDomain,
             ICompanyFinancialInformationDomain companyFinancialInformationDomain, IMapper mapper, ILogger logger, 
             IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain,
-            IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain)
+            IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain,
+            ICompanySBSDomain companySBSDomain)
         {
             _companyDomain = companyDomain;
             _companyBackgroundDomain = companyBackgroundDomain;
@@ -35,6 +37,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _providerDomain = providerDomain;
             _comercialLatePaymentDomain = comercialLatePaymentDomain;
             _bankDebtDomain = bankDebtDomain;
+            _companySBSDomain = companySBSDomain;
             _mapper = mapper;
             _logger = logger;
         }
@@ -942,6 +945,90 @@ namespace DRRCore.Application.Main.CoreApplication
                 else
                 {
                     response.Data = await _bankDebtDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateCompanySBSAsync(AddOrUpdateCompanySbsRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newCompanySbs= _mapper.Map<CompanySb>(obj);
+                    response.Data = await _companySBSDomain.AddAsync(newCompanySbs);
+                }
+                else
+                {
+                    var existingCompanySbs = await _companySBSDomain.GetByIdAsync(obj.Id);
+                    existingCompanySbs = _mapper.Map(obj, existingCompanySbs);
+                    response.Data = await _companySBSDomain.UpdateAsync(existingCompanySbs);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetCompanySbsResponseDto>> GetCompanySBSById(int id)
+        {
+            var response = new Response<GetCompanySbsResponseDto>();
+            try
+            {
+                var companySbs = await _companySBSDomain.GetByIdAsync(id);
+                if (companySbs == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetCompanySbsResponseDto>(companySbs);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteCompanySBS(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var bankDebt = await _companySBSDomain.GetByIdAsync(id);
+                if (bankDebt == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _companySBSDomain.DeleteAsync(id);
                 }
             }
             catch (Exception ex)

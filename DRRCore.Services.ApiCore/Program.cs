@@ -102,6 +102,8 @@ builder.Services.AddScoped<IFinancialBalanceRepository, FinancialBalanceReposito
 builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
 builder.Services.AddScoped<IComercialLatePaymentRepository, ComercialLatePaymentRepository>();
 builder.Services.AddScoped<IBankDebtRepository, BankDebtRepository>();
+builder.Services.AddScoped<ICompanySBSRepository, CompanySBSRepository>();
+builder.Services.AddScoped<IOpcionalCommentarySbsRepository, OpcionalCommentarySbsRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -139,10 +141,11 @@ builder.Services.AddScoped<IFinancialBalanceDomain, FinancialBalanceDomain>();
 builder.Services.AddScoped<IProviderDomain, ProviderDomain>();
 builder.Services.AddScoped<IComercialLatePaymentDomain, ComercialLatePaymentDomain>();
 builder.Services.AddScoped<IBankDebtDomain, BankDebtDomain>();
-
 builder.Services.AddScoped<ITicketDomain, TicketDomain>();
 builder.Services.AddScoped<ITicketHistoryDomain, TicketHistoryDomain>();
 builder.Services.AddScoped<INumerationDomain, NumerationDomain>();
+builder.Services.AddScoped<ICompanySBSDomain, CompanySBSDomain>();
+builder.Services.AddScoped<IOpcionalCommentarySbsDomain, OpcionalCommentarySbsDomain>();
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();

@@ -130,6 +130,24 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _companyApplication.DeleteFinancialBalance(id));
         }
         [HttpPost()]
+        [Route("addOrUpdateCompanySbs")]
+        public async Task<ActionResult> addOrUpdateCompanySbs(AddOrUpdateCompanySbsRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCompanySBSAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getCompanySbsById")]
+        public async Task<ActionResult> getCompanySbsById(int id)
+        {
+            return Ok(await _companyApplication.GetCompanySBSById(id));
+        }
+        [HttpPost()]
+        [Route("deleteCompanySbs")]
+        public async Task<ActionResult> deleteCompanySbs(int id)
+        {
+            return Ok(await _companyApplication.DeleteCompanySBS(id));
+        }
+        [HttpPost()]
         [Route("addOrUpdateProvider")]
         public async Task<ActionResult> addOrUpdateProvider(AddOrUpdateProviderRequestDto obj)
         {

@@ -25,6 +25,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ISubscriberCategoryDomain _subscriberCategoryDomain;
         private readonly IFinancialSituacionDomain _financialSituacionDomain;
         private readonly ICollaborationDegreeDomain _collaborationDegreeDomain;
+        private readonly IOpcionalCommentarySbsDomain _opcionalCommentarySbsDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         public ComboboxApplication(IDocumentTypeDomain documentTypeDomain,
@@ -42,6 +43,7 @@ namespace DRRCore.Application.Main.CoreApplication
                                    ISubscriberCategoryDomain subscriberCategoryDomain,
                                    IFinancialSituacionDomain financialSituacionDomain,
                                    ICollaborationDegreeDomain collaborationDegreeDomain,
+                                   IOpcionalCommentarySbsDomain opcionalCommentarySbsDomain,
                                    IJobDomain jobDomain,
                                     IMapper mapper,ILogger logger) { 
         
@@ -63,6 +65,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _subscriberCategoryDomain = subscriberCategoryDomain;
             _collaborationDegreeDomain = collaborationDegreeDomain;
             _financialSituacionDomain = financialSituacionDomain;
+            _opcionalCommentarySbsDomain = opcionalCommentarySbsDomain;
         }
 
         public async Task<Response<List<GetComboValueResponseDto>>> GetBankAccountType()
@@ -326,6 +329,23 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var list = await _legalRegisterSituationDomain.GetAllAsync();
+                response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboValueResponseDto>>> GetOpcionalCommentarySbs()
+        {
+            var response = new Response<List<GetComboValueResponseDto>>();
+            try
+            {
+                var list = await _opcionalCommentarySbsDomain.GetAllAsync();
                 response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
             }
             catch (Exception ex)
