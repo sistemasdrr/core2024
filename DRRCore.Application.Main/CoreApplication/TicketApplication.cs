@@ -17,7 +17,7 @@ namespace DRRCore.Application.Main.CoreApplication
     {
         private readonly INumerationDomain _numerationDomain;
         private readonly ITicketDomain _ticketDomain;
-        private readonly ITicketHistoryDomain _ticketHistoryDomain;
+        private readonly ITicketHistoryDomain _ticketHistoryDomain;       
         private IMapper _mapper;
         private ILogger _logger;
         public TicketApplication(INumerationDomain numerationDomain,ITicketDomain ticketDomain,ITicketHistoryDomain ticketHistoryDomain,IMapper mapper, ILogger logger)
@@ -53,7 +53,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     if( await _ticketDomain.AddAsync(newTicket))
                     {
                         await CopyReportForm(request.Number);
-                        await CopyReportPerson(request.Number);
+                        await CopyReportPerson(request.Number);                      
                         await _numerationDomain.UpdateTicketNumberAsync();
                         response.Data = true;
                     }
@@ -173,9 +173,6 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 throw new Exception(string.Format(Messages.ExceptionMessage, ex.Message));
             }
-
-
-
         }
         private FtpClientConfiguration GetFtpClientConfiguration()
         {

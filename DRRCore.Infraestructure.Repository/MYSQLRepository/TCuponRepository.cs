@@ -34,5 +34,34 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<List<TCupon>> GetTCuponByPersonaOrEmpresaAsync(string codigo)
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    return await context.TCupons.Where(x => x.EpCodigo == codigo).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<bool> GetTCuponExistAsync(string codigo)
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    return await context.TCupons.AnyAsync(x => x.EpCodigo == codigo);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
