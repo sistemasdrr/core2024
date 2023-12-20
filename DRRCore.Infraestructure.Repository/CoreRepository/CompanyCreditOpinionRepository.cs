@@ -5,35 +5,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
-    public class CompanySBSRepository : ICompanySBSRepository
+    public class CompanyCreditOpinionRepository : ICompanyCreditOpinionRepository
     {
         private readonly ILogger _logger;
-        public CompanySBSRepository(ILogger logger)
+        public CompanyCreditOpinionRepository(ILogger logger)
         {
             _logger = logger;
         }
 
-        public Task<bool> AddAsync(CompanySb obj)
+        public Task<bool> AddAsync(CompanyCreditOpinion obj)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> AddCompanySBS(CompanySb companySb)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<int> AddCompanySBS(CompanySb companySb, List<Traduction> traductions)
+        public async Task<int> AddCreditOpinion(CompanyCreditOpinion obj, List<Traduction> traductions)
         {
             try
             {
                 using (var context = new SqlCoreContext())
                 {
-                    context.CompanySbs.Add(companySb);
+                    context.CompanyCreditOpinions.Add(obj);
 
                     foreach (var item in traductions)
                     {
-                        var modifierTraduction = await context.Traductions.Where(x => x.IdCompany == companySb.IdCompany && x.Identifier == item.Identifier).FirstOrDefaultAsync();
+                        var modifierTraduction = await context.Traductions.Where(x => x.IdCompany == obj.IdCompany && x.Identifier == item.Identifier).FirstOrDefaultAsync();
                         if (modifierTraduction != null)
                         {
                             modifierTraduction.ShortValue = item.ShortValue;
@@ -43,7 +38,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                         }
                     }
                     await context.SaveChangesAsync();
-                    return companySb.Id;
+                    return obj.Id;
                 }
             }
             catch (Exception ex)
@@ -58,47 +53,49 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                var companySbs = await context.CompanySbs.FindAsync(id);
-                if(companySbs != null)
+                var creditOpinion = await context.CompanyCreditOpinions.FindAsync(id);
+                if(creditOpinion != null)
                 {
-                    companySbs.Enable = false;
-                    companySbs.DeleteDate = DateTime.Now;
-                    companySbs.LastUpdateUser = 1;
-                    context.CompanySbs.Update(companySbs);
-                    await context.SaveChangesAsync();
+                    creditOpinion.Enable = false;
+                    creditOpinion.DeleteDate = DateTime.Now;
+                    context.CompanyCreditOpinions.Update(creditOpinion);
                     return true;
                 }
                 else
                 {
                     return false;
                 }
-            }
-            catch (Exception ex)
+            }catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
                 return false;
             }
         }
 
-        public Task<List<CompanySb>> GetAllAsync()
+        public Task<List<CompanyCreditOpinion>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<CompanySb> GetByIdAsync(int id)
+        public Task<CompanyCreditOpinion> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<CompanyCreditOpinion> GetByIdCompany(int idCompany)
         {
             List<Traduction> traductions = new List<Traduction>();
             try
             {
                 using var context = new SqlCoreContext();
-                var companySbs = await context.CompanySbs.Include(x => x.IdCompanyNavigation).Where(x => x.IdCompany == id).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
-                traductions.AddRange(await context.Traductions.Where(x => x.IdCompany == companySbs.IdCompany && x.Identifier.Contains("_S_")).ToListAsync());
+                var creditOpinion = await context.CompanyCreditOpinions.Include(x => x.IdCompanyNavigation).Where(x => x.IdCompany == idCompany).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
+                traductions.AddRange(await context.Traductions.Where(x => x.IdCompany == idCompany && x.Identifier.Contains("_O_")).ToListAsync());
 
-                if (companySbs.IdCompanyNavigation == null)
+                if (creditOpinion.IdCompanyNavigation == null)
                     throw new Exception("No existe la empresa");
 
-                companySbs.IdCompanyNavigation.Traductions = traductions;
-                return companySbs;
+                creditOpinion.IdCompanyNavigation.Traductions = traductions;
+                return creditOpinion;
             }
             catch (Exception ex)
             {
@@ -107,52 +104,28 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public async Task<CompanySb> GetByIdCompany(int idCompany)
-        {
-            List<Traduction> traductions = new List<Traduction>();
-            try
-            {
-                using var context = new SqlCoreContext();
-                var companySbs = await context.CompanySbs.Include(x => x.IdCompanyNavigation).Where(x => x.IdCompany == idCompany).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
-                traductions.AddRange(await context.Traductions.Where(x => x.IdCompany == idCompany  && x.Identifier.Contains("_S_")).ToListAsync());
-
-                if (companySbs.IdCompanyNavigation == null)
-                    throw new Exception("No existe la empresa");
-
-                companySbs.IdCompanyNavigation.Traductions = traductions;
-                return companySbs;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return null;
-            }
-        }
-
-        public Task<List<CompanySb>> GetByNameAsync(string name)
+        public Task<List<CompanyCreditOpinion>> GetByNameAsync(string name)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(CompanySb obj)
+        public Task<bool> UpdateAsync(CompanyCreditOpinion obj)
         {
             throw new NotImplementedException();
         }
 
-       
-
-        public async Task<int> UpdateCompanySBS(CompanySb companySb, List<Traduction> traductions)
+        public async Task<int> UpdateCreditOpinion(CompanyCreditOpinion obj, List<Traduction> traductions)
         {
             try
             {
                 using (var context = new SqlCoreContext())
                 {
-                    companySb.UpdateDate = DateTime.Now;
-                    context.CompanySbs.Update(companySb);
+                    obj.UpdateDate = DateTime.Now;
+                    context.CompanyCreditOpinions.Update(obj);
 
                     foreach (var item in traductions)
                     {
-                        var modifierTraduction = await context.Traductions.Where(x => x.IdCompany == companySb.IdCompany && x.Identifier == item.Identifier).FirstOrDefaultAsync();
+                        var modifierTraduction = await context.Traductions.Where(x => x.IdCompany == obj.IdCompany && x.Identifier == item.Identifier).FirstOrDefaultAsync();
                         if (modifierTraduction != null)
                         {
                             modifierTraduction.ShortValue = item.ShortValue;
@@ -162,7 +135,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                         }
                     }
                     await context.SaveChangesAsync();
-                    return companySb.Id;
+                    return obj.Id;
                 }
             }
             catch (Exception ex)

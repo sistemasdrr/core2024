@@ -20,6 +20,8 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IComercialLatePaymentDomain _comercialLatePaymentDomain;
         private readonly IBankDebtDomain _bankDebtDomain;
         private readonly ICompanySBSDomain _companySBSDomain;
+        private readonly IEndorsementsDomain _endorsementsDomain;
+        private readonly ICompanyCreditOpinionDomain _companyCreditOpinionDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
@@ -27,7 +29,7 @@ namespace DRRCore.Application.Main.CoreApplication
             ICompanyFinancialInformationDomain companyFinancialInformationDomain, IMapper mapper, ILogger logger, 
             IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain,
             IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain,
-            ICompanySBSDomain companySBSDomain)
+            ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain)
         {
             _companyDomain = companyDomain;
             _companyBackgroundDomain = companyBackgroundDomain;
@@ -38,6 +40,8 @@ namespace DRRCore.Application.Main.CoreApplication
             _comercialLatePaymentDomain = comercialLatePaymentDomain;
             _bankDebtDomain = bankDebtDomain;
             _companySBSDomain = companySBSDomain;
+            _endorsementsDomain = endorsementsDomain;
+            _companyCreditOpinionDomain = companyCreditOpinionDomain;
             _mapper = mapper;
             _logger = logger;
         }
@@ -956,28 +960,60 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<bool>> AddOrUpdateCompanySBSAsync(AddOrUpdateCompanySbsRequestDto obj)
+        public async Task<Response<int>> AddOrUpdateCompanySBSAsync(AddOrUpdateCompanySbsRequestDto obj)
         {
-            var response = new Response<bool>();
+            List<Traduction> traductions = new List<Traduction>();
+            var response = new Response<int>();
             try
             {
                 if (obj == null)
                 {
                     response.IsSuccess = false;
-                    response.Message = Messages.MessageNoDataFound;
+                    response.Message = Messages.WrongParameter;
                     _logger.LogError(response.Message);
                     return response;
                 }
                 if (obj.Id == 0)
                 {
-                    var newCompanySbs= _mapper.Map<CompanySb>(obj);
-                    response.Data = await _companySBSDomain.AddAsync(newCompanySbs);
+                    foreach (var item in obj.Traductions)
+                    {
+                        traductions.Add(new Traduction
+                        {
+                            Identifier = item.Key,
+                            ShortValue = item.Key.Split('_')[0] == "S" ? item.Value : string.Empty,
+                            LargeValue = item.Key.Split('_')[0] == "L" ? item.Value : string.Empty,
+                            IdLanguage = 1,
+                            LastUpdaterUser = 1
+                        });
+                    }
+                    var newCompanySbs = _mapper.Map<CompanySb>(obj);
+                    response.Data = await _companySBSDomain.AddCompanySBS(newCompanySbs, traductions);
                 }
                 else
                 {
-                    var existingCompanySbs = await _companySBSDomain.GetByIdAsync(obj.Id);
+                    var existingCompanySbs = await _companySBSDomain.GetByIdCompany((int)obj.IdCompany);
+                    if (existingCompanySbs == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = Messages.MessageNoDataCompany;
+                        _logger.LogError(response.Message);
+                        return response;
+                    }
                     existingCompanySbs = _mapper.Map(obj, existingCompanySbs);
-                    response.Data = await _companySBSDomain.UpdateAsync(existingCompanySbs);
+
+                    foreach (var item in obj.Traductions)
+                    {
+                        traductions.Add(new Traduction
+                        {
+                            Identifier = item.Key,
+                            ShortValue = item.Key.Split('_')[0] == "S" ? item.Value : string.Empty,
+                            LargeValue = item.Key.Split('_')[0] == "L" ? item.Value : string.Empty,
+                            IdLanguage = 1,
+                            LastUpdaterUser = 1
+                        });
+                    }
+                    existingCompanySbs.UpdateDate = DateTime.Now;
+                    response.Data = await _companySBSDomain.UpdateCompanySBS(existingCompanySbs, traductions);
                 }
             }
             catch (Exception ex)
@@ -1029,6 +1065,230 @@ namespace DRRCore.Application.Main.CoreApplication
                 else
                 {
                     response.Data = await _companySBSDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateEndorsementsAsync(AddOrUpdateEndorsementsRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newEndorsement = _mapper.Map<Endorsement>(obj);
+                    response.Data = await _endorsementsDomain.AddAsync(newEndorsement);
+                }
+                else
+                {
+                    var existingEndorsement = await _endorsementsDomain.GetByIdAsync(obj.Id);
+                    existingEndorsement = _mapper.Map(obj, existingEndorsement);
+                    response.Data = await _endorsementsDomain.UpdateAsync(existingEndorsement);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetEndorsementsResponseDto>>> GetListEndorsementsAsync(int idCompany)
+        {
+            var response = new Response<List<GetEndorsementsResponseDto>>();
+            try
+            {
+                var list = await _endorsementsDomain.GetByIdCompany(idCompany);
+                if (list == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<List<GetEndorsementsResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetEndorsementsResponseDto>> GetEndorsementsById(int id)
+        {
+            var response = new Response<GetEndorsementsResponseDto>();
+            try
+            {
+                var endorsement = await _endorsementsDomain.GetByIdAsync(id);
+                if (endorsement == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetEndorsementsResponseDto>(endorsement);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteEndorsements(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var endorsement = await _endorsementsDomain.GetByIdAsync(id);
+                if (endorsement == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _endorsementsDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<int>> AddOrUpdateCreditOpinionAsync(AddOrUpdateCompanyCreditOpinionRequestDto obj)
+        {
+            List<Traduction> traductions = new List<Traduction>();
+            var response = new Response<int>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    foreach (var item in obj.Traductions)
+                    {
+                        traductions.Add(new Traduction
+                        {
+                            Identifier = item.Key,
+                            ShortValue = item.Key.Split('_')[0] == "S" ? item.Value : string.Empty,
+                            LargeValue = item.Key.Split('_')[0] == "L" ? item.Value : string.Empty,
+                            IdLanguage = 1,
+                            LastUpdaterUser = 1
+                        });
+                    }
+                    var newCreditOpinion = _mapper.Map<CompanyCreditOpinion>(obj);
+                    response.Data = await _companyCreditOpinionDomain.AddCreditOpinion(newCreditOpinion, traductions);
+                }
+                else
+                {
+                    var existingCreditOpinion = await _companyCreditOpinionDomain.GetByIdCompany((int)obj.IdCompany);
+                    if (existingCreditOpinion == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = Messages.MessageNoDataCompany;
+                        _logger.LogError(response.Message);
+                        return response;
+                    }
+                    existingCreditOpinion = _mapper.Map(obj, existingCreditOpinion);
+
+                    foreach (var item in obj.Traductions)
+                    {
+                        traductions.Add(new Traduction
+                        {
+                            Identifier = item.Key,
+                            ShortValue = item.Key.Split('_')[0] == "S" ? item.Value : string.Empty,
+                            LargeValue = item.Key.Split('_')[0] == "L" ? item.Value : string.Empty,
+                            IdLanguage = 1,
+                            LastUpdaterUser = 1
+                        });
+                    }
+                    existingCreditOpinion.UpdateDate = DateTime.Now;
+                    response.Data = await _companyCreditOpinionDomain.UpdateCreditOpinion(existingCreditOpinion, traductions);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetCompanyCreditOpinionResponseDto>> GetCreditOpinionByIdCompany(int idCompany)
+        {
+            var response = new Response<GetCompanyCreditOpinionResponseDto>();
+            try
+            {
+                var creditOpinion = await _companyCreditOpinionDomain.GetByIdCompany(idCompany);
+                if (creditOpinion == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetCompanyCreditOpinionResponseDto>(creditOpinion);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteCreditOpinion(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var companyCreditOpinion = await _companyCreditOpinionDomain.GetByIdAsync(id);
+                if (companyCreditOpinion == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _companyCreditOpinionDomain.DeleteAsync(id);
                 }
             }
             catch (Exception ex)

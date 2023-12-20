@@ -159,7 +159,23 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.IdOpcionalCommentarySbs, opt => opt?.MapFrom(src => src.IdOpcionalCommentarySbs == 0 ? null : src.IdOpcionalCommentarySbs))
                  .ForMember(dest => dest.DebtRecordedDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DebtRecordedDate)))
                  .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+                 .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Traductions))
              .ReverseMap();
+            CreateMap<AddOrUpdateEndorsementsRequestDto, Endorsement>()
+                .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
+          .ReverseMap();
+            CreateMap<Endorsement, GetEndorsementsResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+           .ReverseMap();
+            CreateMap<AddOrUpdateCompanyCreditOpinionRequestDto, CompanyCreditOpinion>()
+                .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+          .ReverseMap();
+            CreateMap<CompanyCreditOpinion, GetCompanyCreditOpinionResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Traductions))
+           .ReverseMap();
         }
 
         private int GetTraductionPercentage()

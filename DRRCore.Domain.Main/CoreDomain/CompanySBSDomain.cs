@@ -17,9 +17,9 @@ namespace DRRCore.Domain.Main.CoreDomain
             throw new NotImplementedException();
         }
 
-        public async Task<int> AddCompanySBS(CompanySb companySb)
+        public async Task<int> AddCompanySBS(CompanySb companySb, List<Traduction> traductions)
         {
-            return await _companySBSRepository.AddCompanySBS(companySb);
+            return await _companySBSRepository.AddCompanySBS(companySb, traductions);
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -52,9 +52,9 @@ namespace DRRCore.Domain.Main.CoreDomain
             throw new NotImplementedException();
         }
 
-        public async Task<int> UpdateCompanySBS(CompanySb companySb)
+        public async Task<int> UpdateCompanySBS(CompanySb companySb, List<Traduction> traductions)
         {
-            return await _companySBSRepository.UpdateCompanySBS(companySb);
+            return await _companySBSRepository.UpdateCompanySBS(companySb, traductions);
         }
     }
 }

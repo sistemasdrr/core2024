@@ -3,7 +3,6 @@ using DRRCore.Application.Main.CoreApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Domain.Interfaces.CoreDomain;
-using DRRCore.Domain.Main;
 using DRRCore.Domain.Main.CoreDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Infraestructure.Repository.CoreRepository;
@@ -104,6 +103,8 @@ builder.Services.AddScoped<IComercialLatePaymentRepository, ComercialLatePayment
 builder.Services.AddScoped<IBankDebtRepository, BankDebtRepository>();
 builder.Services.AddScoped<ICompanySBSRepository, CompanySBSRepository>();
 builder.Services.AddScoped<IOpcionalCommentarySbsRepository, OpcionalCommentarySbsRepository>();
+builder.Services.AddScoped<IEndorsementsRepository, EndorsementsRepository>();
+builder.Services.AddScoped<ICompanyCreditOpinionRepository, CompanyCreditOpinionRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -146,6 +147,8 @@ builder.Services.AddScoped<ITicketHistoryDomain, TicketHistoryDomain>();
 builder.Services.AddScoped<INumerationDomain, NumerationDomain>();
 builder.Services.AddScoped<ICompanySBSDomain, CompanySBSDomain>();
 builder.Services.AddScoped<IOpcionalCommentarySbsDomain, OpcionalCommentarySbsDomain>();
+builder.Services.AddScoped<IEndorsementsDomain, EndorsementsDomain>();
+builder.Services.AddScoped<ICompanyCreditOpinionDomain, CompanyCreditOpinionDomain>();
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();

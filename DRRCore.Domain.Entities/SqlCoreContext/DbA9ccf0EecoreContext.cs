@@ -45,6 +45,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
 
     public virtual DbSet<CompanyBusineesActivity> CompanyBusineesActivities { get; set; }
 
+    public virtual DbSet<CompanyCreditOpinion> CompanyCreditOpinions { get; set; }
+
     public virtual DbSet<CompanyFinancialInformation> CompanyFinancialInformations { get; set; }
 
     public virtual DbSet<CompanySb> CompanySbs { get; set; }
@@ -64,6 +66,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
     public virtual DbSet<DocumentType> DocumentTypes { get; set; }
 
     public virtual DbSet<Employee> Employees { get; set; }
+
+    public virtual DbSet<Endorsement> Endorsements { get; set; }
 
     public virtual DbSet<FamilyBondType> FamilyBondTypes { get; set; }
 
@@ -968,6 +972,49 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasConstraintName("FK__CompanyBu__idCom__21A0F6C4");
         });
 
+        modelBuilder.Entity<CompanyCreditOpinion>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CompanyC__3213E83F88C5A979");
+
+            entity.ToTable("CompanyCreditOpinion");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ConsultedCredit)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("consultedCredit");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.CreditRequest).HasColumnName("creditRequest");
+            entity.Property(e => e.CurrentCommentary)
+                .IsUnicode(false)
+                .HasColumnName("currentCommentary");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.PreviousCommentary)
+                .IsUnicode(false)
+                .HasColumnName("previousCommentary");
+            entity.Property(e => e.SuggestedCredit)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("suggestedCredit");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.CompanyCreditOpinions)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__CompanyCr__idCom__520F23F5");
+        });
+
         modelBuilder.Entity<CompanyFinancialInformation>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__CompanyF__3213E83F794B1341");
@@ -1074,6 +1121,12 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.ExchangeRate)
                 .HasColumnType("decimal(5, 2)")
                 .HasColumnName("exchangeRate");
+            entity.Property(e => e.GuaranteesOfferedFc)
+                .HasColumnType("decimal(15, 2)")
+                .HasColumnName("guaranteesOfferedFC");
+            entity.Property(e => e.GuaranteesOfferedNc)
+                .HasColumnType("decimal(15, 2)")
+                .HasColumnName("guaranteesOfferedNC");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdOpcionalCommentarySbs).HasColumnName("idOpcionalCommentarySBS");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
@@ -1509,6 +1562,53 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.HasOne(d => d.IdJobDepartmentNavigation).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.IdJobDepartment)
                 .HasConstraintName("FK__Employee__idJobD__08162EEB");
+        });
+
+        modelBuilder.Entity<Endorsement>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Endorsem__3213E83F4444C241");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AmountNc)
+                .HasColumnType("decimal(14, 2)")
+                .HasColumnName("amountNC");
+            entity.Property(e => e.AmountUs)
+                .HasColumnType("decimal(14, 2)")
+                .HasColumnName("amountUS");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.Date)
+                .HasColumnType("datetime")
+                .HasColumnName("date");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EndorsementName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("endorsementName");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.ReceivingEntity)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("receivingEntity");
+            entity.Property(e => e.Ruc)
+                .HasMaxLength(40)
+                .IsUnicode(false)
+                .HasColumnName("ruc");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.Endorsements)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__Endorseme__idCom__4D4A6ED8");
         });
 
         modelBuilder.Entity<FamilyBondType>(entity =>

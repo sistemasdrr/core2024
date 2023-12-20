@@ -39,6 +39,10 @@ public partial class CompanySb
 
     public bool? Enable { get; set; }
 
+    public decimal? GuaranteesOfferedNc { get; set; }
+
+    public decimal? GuaranteesOfferedFc { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual OpcionalCommentarySb? IdOpcionalCommentarySbsNavigation { get; set; }

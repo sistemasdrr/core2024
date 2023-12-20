@@ -2,7 +2,7 @@
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 
-namespace DRRCore.Domain.Main
+namespace DRRCore.Domain.Main.CoreDomain
 {
     public class CollaborationDegreeDomain : ICollaborationDegreeDomain
     {

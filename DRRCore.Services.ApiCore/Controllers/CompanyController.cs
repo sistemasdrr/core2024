@@ -136,10 +136,10 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _companyApplication.AddOrUpdateCompanySBSAsync(obj));
         }
         [HttpGet()]
-        [Route("getCompanySbsById")]
-        public async Task<ActionResult> getCompanySbsById(int id)
+        [Route("getCompanySbsByIdCompany")]
+        public async Task<ActionResult> getCompanySbsByIdCompany(int idCompany)
         {
-            return Ok(await _companyApplication.GetCompanySBSById(id));
+            return Ok(await _companyApplication.GetCompanySBSById(idCompany));
         }
         [HttpPost()]
         [Route("deleteCompanySbs")]
@@ -218,6 +218,48 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> deleteBankDebt(int id)
         {
             return Ok(await _companyApplication.DeleteBankDebt(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateEndorsement")]
+        public async Task<ActionResult> addOrUpdateEndorsement(AddOrUpdateEndorsementsRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateEndorsementsAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getListEndorsement")]
+        public async Task<ActionResult> getListEndorsement(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListEndorsementsAsync(idCompany));
+        }
+        [HttpGet()]
+        [Route("getEndorsementById")]
+        public async Task<ActionResult> getEndorsementById(int id)
+        {
+            return Ok(await _companyApplication.GetEndorsementsById(id));
+        }
+        [HttpPost()]
+        [Route("deleteEndorsement")]
+        public async Task<ActionResult> deleteEndorsement(int id)
+        {
+            return Ok(await _companyApplication.DeleteEndorsements(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateCreditOpinion")]
+        public async Task<ActionResult> addOrUpdateCreditOpinion(AddOrUpdateCompanyCreditOpinionRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCreditOpinionAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getCreditOpinionByIdCompany")]
+        public async Task<ActionResult> getCreditOpinionByIdCompany(int idCompany)
+        {
+            return Ok(await _companyApplication.GetCreditOpinionByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("deleteCreditOpinion")]
+        public async Task<ActionResult> deleteCreditOpinion(int id)
+        {
+            return Ok(await _companyApplication.DeleteCreditOpinion(id));
         }
     }
 }
