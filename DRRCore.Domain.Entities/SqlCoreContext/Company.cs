@@ -81,11 +81,19 @@ public partial class Company
 
     public bool? OnWeb { get; set; }
 
+    public virtual ICollection<BankDebt> BankDebts { get; set; } = new List<BankDebt>();
+
+    public virtual ICollection<ComercialLatePayment> ComercialLatePayments { get; set; } = new List<ComercialLatePayment>();
+
     public virtual ICollection<CompanyBackground> CompanyBackgrounds { get; set; } = new List<CompanyBackground>();
 
     public virtual ICollection<CompanyBranch> CompanyBranches { get; set; } = new List<CompanyBranch>();
 
     public virtual ICollection<CompanyFinancialInformation> CompanyFinancialInformations { get; set; } = new List<CompanyFinancialInformation>();
+
+    public virtual ICollection<CompanySb> CompanySbs { get; set; } = new List<CompanySb>();
+
+    public virtual ICollection<FinancialBalance> FinancialBalances { get; set; } = new List<FinancialBalance>();
 
     public virtual Country? IdCountryNavigation { get; set; }
 
@@ -100,6 +108,10 @@ public partial class Company
     public virtual Reputation? IdReputationNavigation { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual ICollection<Provider> Providers { get; set; } = new List<Provider>();
+
+    public virtual ICollection<SalesHistory> SalesHistories { get; set; } = new List<SalesHistory>();
 
     public virtual ICollection<Traduction> Traductions { get; set; } = new List<Traduction>();
 }

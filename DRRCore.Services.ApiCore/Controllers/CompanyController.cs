@@ -81,5 +81,143 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _companyApplication.GetCompanyFinancialInformationByIdCompany(idCompany));
         }
+        [HttpPost()]
+        [Route("addOrUpdateSaleHistory")]
+        public async Task<ActionResult> addOrUpdateSaleHistory(AddOrUpdateSaleHistoryRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateSaleHistoryAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getSaleHistoryById")]
+        public async Task<ActionResult> getSaleHistoryById(int id)
+        {
+            return Ok(await _companyApplication.GetSaleHistoryById(id));
+        }
+        [HttpGet()]
+        [Route("getListSaleHistoryByIdCompany")]
+        public async Task<ActionResult> getListSaleHistoryByIdCompany(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListSalesHistoriesByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("deleteSaleHistory")]
+        public async Task<ActionResult> deleteSaleHistory(int id)
+        {
+            return Ok(await _companyApplication.DeleteSaleHistory(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateBalance")]
+        public async Task<ActionResult> addOrUpdateBalance(AddOrUpdateFinancialBalanceRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateFinancialBalanceAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getListBalance")]
+        public async Task<ActionResult> getListBalance(int idCompany, string balanceType)
+        {
+            return Ok(await _companyApplication.GetListFinancialBalanceAsync(idCompany, balanceType));
+        }
+        [HttpGet()]
+        [Route("getBalanceById")]
+        public async Task<ActionResult> getBalanceById(int id)
+        {
+            return Ok(await _companyApplication.GetFinancialBalanceById(id));
+        }
+        [HttpPost()]
+        [Route("deleteBalance")]
+        public async Task<ActionResult> deleteBalance(int id)
+        {
+            return Ok(await _companyApplication.DeleteFinancialBalance(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateCompanySbs")]
+        public async Task<ActionResult> addOrUpdateCompanySbs(AddOrUpdateCompanySbsRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCompanySBSAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getCompanySbsById")]
+        public async Task<ActionResult> getCompanySbsById(int id)
+        {
+            return Ok(await _companyApplication.GetCompanySBSById(id));
+        }
+        [HttpPost()]
+        [Route("deleteCompanySbs")]
+        public async Task<ActionResult> deleteCompanySbs(int id)
+        {
+            return Ok(await _companyApplication.DeleteCompanySBS(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateProvider")]
+        public async Task<ActionResult> addOrUpdateProvider(AddOrUpdateProviderRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateProviderAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getListProvider")]
+        public async Task<ActionResult> getListProvider(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListProvidersAsync(idCompany));
+        }
+        [HttpGet()]
+        [Route("getProviderById")]
+        public async Task<ActionResult> getProviderById(int id)
+        {
+            return Ok(await _companyApplication.GetProviderById(id));
+        }
+        [HttpPost()]
+        [Route("deleteProvider")]
+        public async Task<ActionResult> deleteProvider(int id)
+        {
+            return Ok(await _companyApplication.DeleteProvider(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateLatePayment")]
+        public async Task<ActionResult> addOrUpdateLatePayment(AddOrUpdateComercialLatePaymentRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateComercialLatePaymentAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getListLatePayment")]
+        public async Task<ActionResult> getListLatePayment(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListComercialLatePaymentAsync(idCompany));
+        }
+        [HttpGet()]
+        [Route("getLatePaymentById")]
+        public async Task<ActionResult> getLatePaymentById(int id)
+        {
+            return Ok(await _companyApplication.GetComercialLatePaymentById(id));
+        }
+        [HttpPost()]
+        [Route("deleteLatePayment")]
+        public async Task<ActionResult> deleteLatePayment(int id)
+        {
+            return Ok(await _companyApplication.DeleteComercialLatePayment(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateBankDebt")]
+        public async Task<ActionResult> addOrUpdateBankDebt(AddOrUpdateBankDebtRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateBankDebtAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getListBankDebt")]
+        public async Task<ActionResult> getListBankDebt(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListBankDebtAsync(idCompany));
+        }
+        [HttpGet()]
+        [Route("getBankDebtById")]
+        public async Task<ActionResult> getBankDebtById(int id)
+        {
+            return Ok(await _companyApplication.GetBankDebtById(id));
+        }
+        [HttpPost()]
+        [Route("deleteBankDebt")]
+        public async Task<ActionResult> deleteBankDebt(int id)
+        {
+            return Ok(await _companyApplication.DeleteBankDebt(id));
+        }
     }
 }
