@@ -49,6 +49,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
 
     public virtual DbSet<CompanyFinancialInformation> CompanyFinancialInformations { get; set; }
 
+    public virtual DbSet<CompanyGeneralInformation> CompanyGeneralInformations { get; set; }
+
+    public virtual DbSet<CompanyImage> CompanyImages { get; set; }
+
     public virtual DbSet<CompanySb> CompanySbs { get; set; }
 
     public virtual DbSet<Continent> Continents { get; set; }
@@ -1081,6 +1085,91 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.HasOne(d => d.IdFinancialSituacionNavigation).WithMany(p => p.CompanyFinancialInformations)
                 .HasForeignKey(d => d.IdFinancialSituacion)
                 .HasConstraintName("FK__CompanyFi__idFin__113584D1");
+        });
+
+        modelBuilder.Entity<CompanyGeneralInformation>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CompanyG__3213E83FBCC6DE2F");
+
+            entity.ToTable("CompanyGeneralInformation");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.GeneralInfo)
+                .IsUnicode(false)
+                .HasColumnName("generalInfo");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.CompanyGeneralInformations)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__CompanyGe__idCom__56D3D912");
+        });
+
+        modelBuilder.Entity<CompanyImage>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CompanyI__3213E83F11FCC099");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.ImgDesc1)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("imgDesc1");
+            entity.Property(e => e.ImgDesc2)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("imgDesc2");
+            entity.Property(e => e.ImgDesc3)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("imgDesc3");
+            entity.Property(e => e.ImgDesc4)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("imgDesc4");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.Path1)
+                .IsUnicode(false)
+                .HasColumnName("path1");
+            entity.Property(e => e.Path2)
+                .IsUnicode(false)
+                .HasColumnName("path2");
+            entity.Property(e => e.Path3)
+                .IsUnicode(false)
+                .HasColumnName("path3");
+            entity.Property(e => e.Path4)
+                .IsUnicode(false)
+                .HasColumnName("path4");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.CompanyImages)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__CompanyIm__idCom__5B988E2F");
         });
 
         modelBuilder.Entity<CompanySb>(entity =>

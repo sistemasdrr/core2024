@@ -176,6 +176,20 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
                  .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Traductions))
            .ReverseMap();
+            CreateMap<AddOrUpdateCompanyGeneralInformationRequestDto, CompanyGeneralInformation>()
+               .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+         .ReverseMap();
+            CreateMap<CompanyGeneralInformation, GetCompanyGeneralInformationResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Traductions))
+           .ReverseMap();
+            CreateMap<AddOrUpdateCompanyImagesRequestDto, CompanyImage>()
+               .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+         .ReverseMap();
+            CreateMap<CompanyImage, GetCompanyImageResponseDto>()
+                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Traductions))
+           .ReverseMap();
         }
 
         private int GetTraductionPercentage()

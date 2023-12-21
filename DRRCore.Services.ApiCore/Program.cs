@@ -105,6 +105,8 @@ builder.Services.AddScoped<ICompanySBSRepository, CompanySBSRepository>();
 builder.Services.AddScoped<IOpcionalCommentarySbsRepository, OpcionalCommentarySbsRepository>();
 builder.Services.AddScoped<IEndorsementsRepository, EndorsementsRepository>();
 builder.Services.AddScoped<ICompanyCreditOpinionRepository, CompanyCreditOpinionRepository>();
+builder.Services.AddScoped<ICompanyGeneralInformationRepository, CompanyGeneralInformationRepository>();
+builder.Services.AddScoped<ICompanyImagesRepository, CompanyImagesRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -149,10 +151,13 @@ builder.Services.AddScoped<ICompanySBSDomain, CompanySBSDomain>();
 builder.Services.AddScoped<IOpcionalCommentarySbsDomain, OpcionalCommentarySbsDomain>();
 builder.Services.AddScoped<IEndorsementsDomain, EndorsementsDomain>();
 builder.Services.AddScoped<ICompanyCreditOpinionDomain, CompanyCreditOpinionDomain>();
+builder.Services.AddScoped<ICompanyGeneralInformationDomain, CompanyGeneralInformationDomain>();
+builder.Services.AddScoped<ICompanyImagesDomain, CompanyImagesDomain>();
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
 builder.Services.AddScoped<ICompanyApplication, CompanyApplication>();
+builder.Services.AddScoped<ICompanyImagesApplication, CompanyImagesApplication>();
 builder.Services.AddScoped<ISubscriberApplication, SubscriberApplication>();
 builder.Services.AddScoped<ISubscriberPriceApplication, SubscriberPriceApplication>();
 builder.Services.AddScoped<IAnniversaryApplication, AnniversayApplication>();

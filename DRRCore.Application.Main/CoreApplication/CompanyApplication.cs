@@ -22,6 +22,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICompanySBSDomain _companySBSDomain;
         private readonly IEndorsementsDomain _endorsementsDomain;
         private readonly ICompanyCreditOpinionDomain _companyCreditOpinionDomain;
+        private readonly ICompanyGeneralInformationDomain _companyGeneralInformationDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
@@ -29,7 +30,8 @@ namespace DRRCore.Application.Main.CoreApplication
             ICompanyFinancialInformationDomain companyFinancialInformationDomain, IMapper mapper, ILogger logger, 
             IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain,
             IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain,
-            ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain)
+            ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain,
+            ICompanyGeneralInformationDomain companyGeneralInformationDomain)
         {
             _companyDomain = companyDomain;
             _companyBackgroundDomain = companyBackgroundDomain;
@@ -42,6 +44,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _companySBSDomain = companySBSDomain;
             _endorsementsDomain = endorsementsDomain;
             _companyCreditOpinionDomain = companyCreditOpinionDomain;
+            _companyGeneralInformationDomain = companyGeneralInformationDomain;
             _mapper = mapper;
             _logger = logger;
         }
@@ -1290,6 +1293,95 @@ namespace DRRCore.Application.Main.CoreApplication
                 {
                     response.Data = await _companyCreditOpinionDomain.DeleteAsync(id);
                 }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<int>> AddOrUpdateGeneralInformation(AddOrUpdateCompanyGeneralInformationRequestDto obj)
+        {
+            List<Traduction> traductions = new List<Traduction>();
+            var response = new Response<int>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    foreach (var item in obj.Traductions)
+                    {
+                        traductions.Add(new Traduction
+                        {
+                            Identifier = item.Key,
+                            ShortValue = item.Key.Split('_')[0] == "S" ? item.Value : string.Empty,
+                            LargeValue = item.Key.Split('_')[0] == "L" ? item.Value : string.Empty,
+                            IdLanguage = 1,
+                            LastUpdaterUser = 1
+                        });
+                    }
+                    var newGeneralInformation = _mapper.Map<CompanyGeneralInformation>(obj);
+                    response.Data = await _companyGeneralInformationDomain.AddGeneralInformation(newGeneralInformation, traductions);
+                }
+                else
+                {
+                    var existingGeneralInformation = await _companyGeneralInformationDomain.GetByIdCompany((int)obj.IdCompany);
+                    if (existingGeneralInformation == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = Messages.MessageNoDataCompany;
+                        _logger.LogError(response.Message);
+                        return response;
+                    }
+                    existingGeneralInformation = _mapper.Map(obj, existingGeneralInformation);
+
+                    foreach (var item in obj.Traductions)
+                    {
+                        traductions.Add(new Traduction
+                        {
+                            Identifier = item.Key,
+                            ShortValue = item.Key.Split('_')[0] == "S" ? item.Value : string.Empty,
+                            LargeValue = item.Key.Split('_')[0] == "L" ? item.Value : string.Empty,
+                            IdLanguage = 1,
+                            LastUpdaterUser = 1
+                        });
+                    }
+                    existingGeneralInformation.UpdateDate = DateTime.Now;
+                    response.Data = await _companyGeneralInformationDomain.UpdateGeneralInformation(existingGeneralInformation, traductions);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetCompanyGeneralInformationResponseDto>> GetGeneralInformationByIdCompany(int idCompany)
+        {
+            var response = new Response<GetCompanyGeneralInformationResponseDto>();
+            try
+            {
+                var generalInformation = await _companyGeneralInformationDomain.GetByIdCompany(idCompany);
+                if (generalInformation == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetCompanyGeneralInformationResponseDto>(generalInformation);
             }
             catch (Exception ex)
             {

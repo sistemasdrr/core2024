@@ -93,6 +93,10 @@ public partial class Company
 
     public virtual ICollection<CompanyFinancialInformation> CompanyFinancialInformations { get; set; } = new List<CompanyFinancialInformation>();
 
+    public virtual ICollection<CompanyGeneralInformation> CompanyGeneralInformations { get; set; } = new List<CompanyGeneralInformation>();
+
+    public virtual ICollection<CompanyImage> CompanyImages { get; set; } = new List<CompanyImage>();
+
     public virtual ICollection<CompanySb> CompanySbs { get; set; } = new List<CompanySb>();
 
     public virtual ICollection<Endorsement> Endorsements { get; set; } = new List<Endorsement>();

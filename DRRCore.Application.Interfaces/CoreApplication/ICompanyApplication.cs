@@ -47,5 +47,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<int>> AddOrUpdateCreditOpinionAsync(AddOrUpdateCompanyCreditOpinionRequestDto obj);
         Task<Response<GetCompanyCreditOpinionResponseDto>> GetCreditOpinionByIdCompany(int idCompany);
         Task<Response<bool>> DeleteCreditOpinion(int id);
+        Task<Response<int>> AddOrUpdateGeneralInformation(AddOrUpdateCompanyGeneralInformationRequestDto obj);
+        Task<Response<GetCompanyGeneralInformationResponseDto>> GetGeneralInformationByIdCompany(int idCompany);
     }
 }

@@ -16,6 +16,7 @@
     <ProjectReference Include="..\DRRCore.Application.DTO\DRRCore.Application.DTO.csproj" />
     <ProjectReference Include="..\DRRCore.Application.Interfaces\DRRCore.Application.Interfaces.csproj" />
     <ProjectReference Include="..\DRRCore.Domain.Interfaces\DRRCore.Domain.Interfaces.csproj" />
+    <ProjectReference Include="..\DRRCore.Infraestructure.Configuration\DRRCore.Infraestructure.Configuration.csproj" />
     <ProjectReference Include="..\DRRCore.Transversal.Mapper\DRRCore.Transversal.Mapper.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,7 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.Interfaces.CoreApplication;
 using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 
 namespace DRRCore.Services.ApiCore.Controllers
 {
@@ -9,9 +10,11 @@ namespace DRRCore.Services.ApiCore.Controllers
     public class CompanyController : Controller
     {
         private readonly ICompanyApplication _companyApplication;
-        public CompanyController(ICompanyApplication companyApplication)
+        private readonly ICompanyImagesApplication _companyImagesApplication;
+        public CompanyController(ICompanyApplication companyApplication, ICompanyImagesApplication companyImagesApplication)
         {
             _companyApplication = companyApplication;
+            _companyImagesApplication = companyImagesApplication;
         }
         [HttpPost()]
         [Route("add")]
@@ -260,6 +263,44 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> deleteCreditOpinion(int id)
         {
             return Ok(await _companyApplication.DeleteCreditOpinion(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateGeneralInformation")]
+        public async Task<ActionResult> addOrUpdateGeneralInformation(AddOrUpdateCompanyGeneralInformationRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateGeneralInformation(obj));
+        }
+        [HttpGet()]
+        [Route("getGeneralInformationByIdCompany")]
+        public async Task<ActionResult> getGeneralInformationByIdCompany(int idCompany)
+        {
+            return Ok(await _companyApplication.GetGeneralInformationByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateCompanyImg")]
+        public async Task<ActionResult> addOrUpdateCompanyImg(AddOrUpdateCompanyImagesRequestDto obj)
+        {
+            return Ok(await _companyImagesApplication.AddOrUpdateImages(obj));
+        }
+        [HttpGet()]
+        [Route("getCompanyImgByIdCompany")]
+        public async Task<ActionResult> getCompanyImgByIdCompany(int idCompany)
+        {
+            return Ok(await _companyImagesApplication.GetCompanyImagesByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("uploadImage")]
+        public async Task<ActionResult> uploadImage( IFormFile request)
+        {
+            return Ok(await _companyImagesApplication.UploadImage(request));
+        }
+        [HttpGet()]
+        [Route("getImageByPath")]
+        public async Task<ActionResult> getImageByPath(string path)
+        {
+            var result = await _companyImagesApplication.GetImageByPath(path);
+            return File(result.Data.File.ToArray(), result.Data.ContentType, result.Data.FileName);
+
         }
     }
 }
