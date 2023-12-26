@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.Interfaces.CoreApplication;
+using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
@@ -26,6 +27,9 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IFinancialSituacionDomain _financialSituacionDomain;
         private readonly ICollaborationDegreeDomain _collaborationDegreeDomain;
         private readonly IOpcionalCommentarySbsDomain _opcionalCommentarySbsDomain;
+        private readonly IBranchSectorDomain _branchSectorDomain;
+        private readonly IBusinessBranchDomain _businessBranchDomain;
+        private readonly IBusinessActivityDomain _businessActivityDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         public ComboboxApplication(IDocumentTypeDomain documentTypeDomain,
@@ -44,6 +48,9 @@ namespace DRRCore.Application.Main.CoreApplication
                                    IFinancialSituacionDomain financialSituacionDomain,
                                    ICollaborationDegreeDomain collaborationDegreeDomain,
                                    IOpcionalCommentarySbsDomain opcionalCommentarySbsDomain,
+                                   IBranchSectorDomain branchSectorDomain,
+                                   IBusinessBranchDomain businessBranchDomain,
+                                   IBusinessActivityDomain businessActivityDomain,
                                    IJobDomain jobDomain,
                                     IMapper mapper,ILogger logger) { 
         
@@ -66,6 +73,9 @@ namespace DRRCore.Application.Main.CoreApplication
             _collaborationDegreeDomain = collaborationDegreeDomain;
             _financialSituacionDomain = financialSituacionDomain;
             _opcionalCommentarySbsDomain = opcionalCommentarySbsDomain;
+            _branchSectorDomain = branchSectorDomain;
+            _businessBranchDomain = businessBranchDomain;
+            _businessActivityDomain = businessActivityDomain;
         }
 
         public async Task<Response<List<GetComboValueResponseDto>>> GetBankAccountType()
@@ -74,6 +84,57 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var list = await _bankAccountTypeDomain.GetAllAsync();
+                response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboValueResponseDto>>> GetBranchSector()
+        {
+            var response = new Response<List<GetComboValueResponseDto>>();
+            try
+            {
+                var list = await _branchSectorDomain.GetAllAsync();
+                response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboValueResponseDto>>> GetBusinessActivity(int idBusinessBranch)
+        {
+            var response = new Response<List<GetComboValueResponseDto>>();
+            try
+            {
+                var list = await _businessActivityDomain.GetAllByIdBranch(idBusinessBranch);
+                response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboValueResponseDto>>> GetBusinessBranch()
+        {
+            var response = new Response<List<GetComboValueResponseDto>>();
+            try
+            {
+                var list = await _businessBranchDomain.GetAllAsync();
                 response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
             }
             catch (Exception ex)

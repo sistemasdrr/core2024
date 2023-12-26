@@ -1,6 +1,8 @@
-﻿namespace DRRCore.Application.DTO.Core.Request
+﻿using DRRCore.Application.DTO.Core.Request;
+
+namespace DRRCore.Application.DTO.Core.Response
 {
-    public class AddOrUpdateCompanyBranchRequestDto
+    public class GetCompanyBranchResponseDto
     {
         public int Id { get; set; }
 

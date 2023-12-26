@@ -25,10 +25,19 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                   .ForMember(dest => dest.LastQueryRrpp, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.LastQueryRrpp)))
                   .ForMember(dest => dest.ConstitutionDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.ConstitutionDate)))
                   .ReverseMap();
+            CreateMap<AddOrUpdateCompanyBranchRequestDto, CompanyBranch>()
+                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                  .ForMember(dest => dest.IdBranchSector, opt => opt?.MapFrom(src => src.IdBranchSector == 0 ? null : src.IdBranchSector))
+                  .ForMember(dest => dest.IdBusinessBranch, opt => opt?.MapFrom(src => src.IdBusinessBranch == 0 ? null : src.IdBusinessBranch))
+                  .ForMember(dest => dest.IdLandOwnership, opt => opt?.MapFrom(src => src.IdLandOwnership == 0 ? null : src.IdLandOwnership))
+                .ReverseMap();
             CreateMap<AddOrUpdateCompanyFinancialInformationRequestDto, CompanyFinancialInformation>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
                  .ForMember(dest => dest.IdCollaborationDegree, opt => opt?.MapFrom(src => src.IdCollaborationDegree == 0 ? null : src.IdCollaborationDegree))
                  .ForMember(dest => dest.IdFinancialSituacion, opt => opt?.MapFrom(src => src.IdFinancialSituacion == 0 ? null : src.IdFinancialSituacion))
+                 .ReverseMap();
+            CreateMap<CompanyBranch, GetCompanyBranchResponseDto>()
+                 .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Traductions))
                  .ReverseMap();
             CreateMap<TraductionDto, Traduction>()
                  .ReverseMap();

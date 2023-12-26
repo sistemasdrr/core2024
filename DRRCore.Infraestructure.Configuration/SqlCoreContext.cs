@@ -397,11 +397,11 @@ public partial class SqlCoreContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
             entity.Property(e => e.EnglishName)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("englishName");
             entity.Property(e => e.Name)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("name");
             entity.Property(e => e.UpdateDate)

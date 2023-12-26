@@ -54,6 +54,18 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
            return Ok(await _companyApplication.AddOrUpdateCompanyBackGroundAsync(obj));
         }
+        [HttpGet()]
+        [Route("getCompanyBranch")]
+        public async Task<ActionResult> getCompanyBranch(int idCompany)
+        {
+            return Ok(await _companyApplication.GetCompanyBranchByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("addCompanyBranch")]
+        public async Task<ActionResult> addCompanyBranch(AddOrUpdateCompanyBranchRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCompanyBranchAsync(obj));
+        }
         [HttpPost()]
         [Route("activeweb")]
         public async Task<ActionResult> ActiveWebVision(int id)

@@ -127,5 +127,23 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _comboboxApplication.GetOpcionalCommentarySbs());
         }
+        [HttpGet()]
+        [Route("branchSector")]
+        public async Task<ActionResult> GetBranchSector()
+        {
+            return Ok(await _comboboxApplication.GetBranchSector());
+        }
+        [HttpGet()]
+        [Route("businessBranch")]
+        public async Task<ActionResult> GetBusinessBranch()
+        {
+            return Ok(await _comboboxApplication.GetBusinessBranch());
+        }
+        [HttpGet()]
+        [Route("businessActivity")]
+        public async Task<ActionResult> GetBusinessActivity(int idBusinessBranch)
+        {
+            return Ok(await _comboboxApplication.GetBusinessActivity(idBusinessBranch));
+        }
     }
 }

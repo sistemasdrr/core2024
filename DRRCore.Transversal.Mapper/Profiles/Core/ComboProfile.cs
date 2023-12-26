@@ -104,6 +104,18 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
          .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
          .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
          .ReverseMap();
+            CreateMap<BranchSector, GetComboValueResponseDto>()
+         .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+         .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+         .ReverseMap();
+            CreateMap<BusinessBranch, GetComboValueResponseDto>()
+         .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+         .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+         .ReverseMap();
+            CreateMap<BusineesActivity, GetComboValueResponseDto>()
+         .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+         .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+         .ReverseMap();
         }
     }
 }

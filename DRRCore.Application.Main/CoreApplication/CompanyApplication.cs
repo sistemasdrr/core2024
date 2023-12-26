@@ -13,6 +13,7 @@ namespace DRRCore.Application.Main.CoreApplication
     {
         private readonly ICompanyDomain _companyDomain;
         private readonly ICompanyBackgroundDomain _companyBackgroundDomain;
+        private readonly ICompanyBranchDomain _companyBranchDomain;
         private readonly ICompanyFinancialInformationDomain _companyFinancialInformationDomain;
         private readonly IFinancialSalesHistoryDomain _financialSalesHistoryDomain;
         private readonly IFinancialBalanceDomain _financialBalanceDomain;
@@ -26,7 +27,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public CompanyApplication(ICompanyDomain companyDomain,ICompanyBackgroundDomain companyBackgroundDomain,
+        public CompanyApplication(ICompanyDomain companyDomain,ICompanyBackgroundDomain companyBackgroundDomain, ICompanyBranchDomain companyBranchDomain,
             ICompanyFinancialInformationDomain companyFinancialInformationDomain, IMapper mapper, ILogger logger, 
             IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain,
             IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain,
@@ -35,6 +36,7 @@ namespace DRRCore.Application.Main.CoreApplication
         {
             _companyDomain = companyDomain;
             _companyBackgroundDomain = companyBackgroundDomain;
+            _companyBranchDomain = companyBranchDomain;
             _companyFinancialInformationDomain = companyFinancialInformationDomain;
             _financialSalesHistoryDomain = financialSalesHistoryDomain;
             _financialBalanceDomain = financialBalanceDomain;
@@ -1382,6 +1384,95 @@ namespace DRRCore.Application.Main.CoreApplication
                     return response;
                 }
                 response.Data = _mapper.Map<GetCompanyGeneralInformationResponseDto>(generalInformation);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<int>> AddOrUpdateCompanyBranchAsync(AddOrUpdateCompanyBranchRequestDto obj)
+        {
+            List<Traduction> traductions = new List<Traduction>();
+            var response = new Response<int>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    foreach (var item in obj.Traductions)
+                    {
+                        traductions.Add(new Traduction
+                        {
+                            Identifier = item.Key,
+                            ShortValue = item.Key.Split('_')[0] == "S" ? item.Value : string.Empty,
+                            LargeValue = item.Key.Split('_')[0] == "L" ? item.Value : string.Empty,
+                            IdLanguage = 1,
+                            LastUpdaterUser = 1
+                        });
+                    }
+                    var newCompanyBranch= _mapper.Map<CompanyBranch>(obj);
+                    response.Data = await _companyBranchDomain.AddAsync(newCompanyBranch, traductions);
+                }
+                else
+                {
+                    var existingCompanyBranch= await _companyBranchDomain.GetCompanyBranchByIdCompany((int)obj.IdCompany);
+                    if (existingCompanyBranch == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = Messages.MessageNoDataCompany;
+                        _logger.LogError(response.Message);
+                        return response;
+                    }
+                    existingCompanyBranch = _mapper.Map(obj, existingCompanyBranch);
+
+                    foreach (var item in obj.Traductions)
+                    {
+                        traductions.Add(new Traduction
+                        {
+                            Identifier = item.Key,
+                            ShortValue = item.Key.Split('_')[0] == "S" ? item.Value : string.Empty,
+                            LargeValue = item.Key.Split('_')[0] == "L" ? item.Value : string.Empty,
+                            IdLanguage = 1,
+                            LastUpdaterUser = 1
+                        });
+                    }
+                    existingCompanyBranch.UpdateDate = DateTime.Now;
+                    response.Data = await _companyBranchDomain.UpdateAsync(existingCompanyBranch, traductions);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetCompanyBranchResponseDto>> GetCompanyBranchByIdCompany(int idCompany)
+        {
+            var response = new Response<GetCompanyBranchResponseDto>();
+            try
+            {
+                var companyBranch = await _companyBranchDomain.GetCompanyBranchByIdCompany(idCompany);
+                if (companyBranch == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetCompanyBranchResponseDto>(companyBranch);
             }
             catch (Exception ex)
             {
