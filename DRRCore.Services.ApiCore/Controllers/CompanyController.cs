@@ -314,5 +314,29 @@ namespace DRRCore.Services.ApiCore.Controllers
             return File(result.Data.File.ToArray(), result.Data.ContentType, result.Data.FileName);
 
         }
+        [HttpPost()]
+        [Route("deleteImportAndExport")]
+        public async Task<ActionResult> deleteImportAndExport(int id)
+        {
+            return Ok(await _companyApplication.DeleteImportAndExport(id));
+        }
+        [HttpPost()]
+        [Route("addImportAndExport")]
+        public async Task<ActionResult> addImportAndExport(AddOrUpdateImportsAndExportsRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateImportAndExport(obj));
+        }
+        [HttpGet()]
+        [Route("getImportAndExportById")]
+        public async Task<ActionResult> getImportAndExportById(int id)
+        {
+            return Ok(await _companyApplication.GetImportAndExportById(id));
+        }
+        [HttpGet()]
+        [Route("getImportsAndExportsByIdCompany")]
+        public async Task<ActionResult> getImportAndExportById(int idCompany, string type)
+        {
+            return Ok(await _companyApplication.GetListImportAndExportByIdCompany(idCompany, type));
+        }
     }
 }

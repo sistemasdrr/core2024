@@ -24,6 +24,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IEndorsementsDomain _endorsementsDomain;
         private readonly ICompanyCreditOpinionDomain _companyCreditOpinionDomain;
         private readonly ICompanyGeneralInformationDomain _companyGeneralInformationDomain;
+        private readonly IImportsAndExportsDomain _importsAndExportsDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
@@ -32,7 +33,7 @@ namespace DRRCore.Application.Main.CoreApplication
             IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain,
             IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain,
             ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain,
-            ICompanyGeneralInformationDomain companyGeneralInformationDomain)
+            ICompanyGeneralInformationDomain companyGeneralInformationDomain, IImportsAndExportsDomain importsAndExportsDomain)
         {
             _companyDomain = companyDomain;
             _companyBackgroundDomain = companyBackgroundDomain;
@@ -47,6 +48,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _endorsementsDomain = endorsementsDomain;
             _companyCreditOpinionDomain = companyCreditOpinionDomain;
             _companyGeneralInformationDomain = companyGeneralInformationDomain;
+            _importsAndExportsDomain = importsAndExportsDomain;
             _mapper = mapper;
             _logger = logger;
         }
@@ -1473,6 +1475,124 @@ namespace DRRCore.Application.Main.CoreApplication
                     return response;
                 }
                 response.Data = _mapper.Map<GetCompanyBranchResponseDto>(companyBranch);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteImportAndExport(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var importAndExport = await _importsAndExportsDomain.GetByIdAsync(id);
+                if (importAndExport == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _importsAndExportsDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateImportAndExport(AddOrUpdateImportsAndExportsRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newImportAndExport = _mapper.Map<ImportsAndExport>(obj);
+                    response.Data = await _importsAndExportsDomain.AddAsync(newImportAndExport);
+                }
+                else
+                {
+                    var existingImportAndExport = await _importsAndExportsDomain.GetByIdAsync((int)obj.Id);
+                    if (existingImportAndExport == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = Messages.MessageNoDataCompany;
+                        _logger.LogError(response.Message);
+                        return response;
+                    }
+                    existingImportAndExport = _mapper.Map(obj, existingImportAndExport);
+                    existingImportAndExport.UpdateDate = DateTime.Now;
+                    response.Data = await _importsAndExportsDomain.UpdateAsync(existingImportAndExport);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetImportsAndExportResponseDto>> GetImportAndExportById(int id)
+        {
+            var response = new Response<GetImportsAndExportResponseDto>();
+            try
+            {
+                var importAndExport = await _importsAndExportsDomain.GetByIdAsync(id);
+                if (importAndExport == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetImportsAndExportResponseDto>(importAndExport);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetImportsAndExportResponseDto>>> GetListImportAndExportByIdCompany(int idCompany, string type)
+        {
+            var response = new Response<List<GetImportsAndExportResponseDto>>();
+            try
+            {
+                if(type == "I")
+                {
+                    var list = await _importsAndExportsDomain.GetImports(idCompany);
+                    response.Data = _mapper.Map<List<GetImportsAndExportResponseDto>>(list);
+
+                }
+                else if(type == "E") 
+                {
+                    var list = await _importsAndExportsDomain.GetExports(idCompany);
+                    response.Data = _mapper.Map<List<GetImportsAndExportResponseDto>>(list);
+                }
             }
             catch (Exception ex)
             {
