@@ -60,6 +60,13 @@ namespace DRRCore.Application.Main.CoreApplication
                         await CopyReportForm(request.Number);
                         await CopyReportPerson(request.Number);                      
                         await _numerationDomain.UpdateTicketNumberAsync();
+                        if(request.IdCompany==null)
+                        {
+                            await _companyDomain.AddAsync(new Company
+                            {
+                                Name = request.RequestedName ?? string.Empty
+                            });
+                        }                       
                         response.Data = true;
                     }
                 }
