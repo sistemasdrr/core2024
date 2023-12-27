@@ -145,5 +145,11 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _comboboxApplication.GetBusinessActivity(idBusinessBranch));
         }
+        [HttpGet()]
+        [Route("landOwnership")]
+        public async Task<ActionResult> GetLandOwnership()
+        {
+            return Ok(await _comboboxApplication.GetLandOwnership());
+        }
     }
 }

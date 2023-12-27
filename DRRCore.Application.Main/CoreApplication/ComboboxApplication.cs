@@ -30,6 +30,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IBranchSectorDomain _branchSectorDomain;
         private readonly IBusinessBranchDomain _businessBranchDomain;
         private readonly IBusinessActivityDomain _businessActivityDomain;
+        private readonly ILandOwnershipDomain _landOwnershipDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         public ComboboxApplication(IDocumentTypeDomain documentTypeDomain,
@@ -51,6 +52,7 @@ namespace DRRCore.Application.Main.CoreApplication
                                    IBranchSectorDomain branchSectorDomain,
                                    IBusinessBranchDomain businessBranchDomain,
                                    IBusinessActivityDomain businessActivityDomain,
+                                   ILandOwnershipDomain landOwnershipDomain,
                                    IJobDomain jobDomain,
                                     IMapper mapper,ILogger logger) { 
         
@@ -76,6 +78,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _branchSectorDomain = branchSectorDomain;
             _businessBranchDomain = businessBranchDomain;
             _businessActivityDomain = businessActivityDomain;
+            _landOwnershipDomain = landOwnershipDomain;
         }
 
         public async Task<Response<List<GetComboValueResponseDto>>> GetBankAccountType()
@@ -356,6 +359,23 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var list = await _jobDomain.GetJobByDepartment(idDepartment);
+                response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboValueResponseDto>>> GetLandOwnership()
+        {
+            var response = new Response<List<GetComboValueResponseDto>>();
+            try
+            {
+                var list = await _landOwnershipDomain.GetAllAsync();
                 response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
             }
             catch (Exception ex)

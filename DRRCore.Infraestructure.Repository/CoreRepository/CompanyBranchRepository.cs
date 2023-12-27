@@ -78,10 +78,18 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
 
         public async Task<CompanyBranch> GetCompanyBranchByIdCompany(int idCompany)
         {
+            List<Traduction> traductions = new List<Traduction>();
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.CompanyBranches.Where(x => x.IdCompany == idCompany).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
+                var companyBranch = await context.CompanyBranches.Include(x => x.IdCompanyNavigation).Where(x => x.IdCompany == idCompany).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
+                traductions.AddRange(await context.Traductions.Where(x => x.IdCompany == idCompany && x.Identifier.Contains("_R_")).ToListAsync());
+
+                if (companyBranch.IdCompanyNavigation == null)
+                    throw new Exception("No existe la empresa");
+
+                companyBranch.IdCompanyNavigation.Traductions = traductions;
+                return companyBranch;
             }
             catch (Exception ex)
             {

@@ -53,6 +53,12 @@
         public string? AditionalCommentary { get; set; }
 
         public string? TabCommentary { get; set; }
+
+        public string? CountriesExport { get; set; }
+
+        public string? CountriesImport { get; set; }
+
+        public string? SpecificActivities { get; set; }
         public List<TraductionDto> Traductions { get; set; } = new List<TraductionDto>();
     }
 }

@@ -466,11 +466,11 @@ public partial class SqlCoreContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
             entity.Property(e => e.EnglishName)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("englishName");
             entity.Property(e => e.Name)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("name");
             entity.Property(e => e.UpdateDate)
@@ -862,6 +862,14 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.CashSalePercentage)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("cashSalePercentage");
+            entity.Property(e => e.CountriesExport)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("countriesExport");
+            entity.Property(e => e.CountriesImport)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("countriesImport");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -907,6 +915,9 @@ public partial class SqlCoreContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("previousAddress");
+            entity.Property(e => e.SpecificActivities)
+                .IsUnicode(false)
+                .HasColumnName("specificActivities");
             entity.Property(e => e.TabCommentary)
                 .IsUnicode(false)
                 .HasColumnName("tabCommentary");
