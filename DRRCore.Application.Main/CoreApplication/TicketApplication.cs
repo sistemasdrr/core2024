@@ -7,9 +7,9 @@ using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Domain.Interfaces.CoreDomain;
+using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
-using DRRCore.Transversal.Common.JsonReader;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -17,15 +17,20 @@ namespace DRRCore.Application.Main.CoreApplication
     {
         private readonly INumerationDomain _numerationDomain;
         private readonly ITicketDomain _ticketDomain;
-        private readonly ITicketHistoryDomain _ticketHistoryDomain;       
+        private readonly ITicketHistoryDomain _ticketHistoryDomain;   
+        private readonly ICompanyDomain _companyDomain;
+        private readonly ITCuponDomain _tCuponDomain;
         private IMapper _mapper;
         private ILogger _logger;
-        public TicketApplication(INumerationDomain numerationDomain,ITicketDomain ticketDomain,ITicketHistoryDomain ticketHistoryDomain,IMapper mapper, ILogger logger)
+        public TicketApplication(INumerationDomain numerationDomain,
+            ITCuponDomain tCuponDomain,ITicketDomain ticketDomain,ITicketHistoryDomain ticketHistoryDomain,ICompanyDomain companyDomain,IMapper mapper, ILogger logger)
         {
             _numerationDomain = numerationDomain;
             _ticketDomain = ticketDomain;
             _ticketHistoryDomain = ticketHistoryDomain;
             _mapper = mapper;
+            _companyDomain = companyDomain;
+            _tCuponDomain = tCuponDomain;
             _logger = logger;
         }
 
@@ -83,6 +88,67 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
 
+        }
+
+        public async Task<Response<GetExistingTicketResponseDto>> GetReportType(int id, string type)
+        {
+            var response = new Response<GetExistingTicketResponseDto>();
+            var getExist = new GetExistingTicketResponseDto();
+            var list = new List<GetListSameSearchedReportResponseDto>();
+            try
+            {
+                if (type == "E")
+                {
+                    var company = await _companyDomain.GetByIdAsync(id);
+                    if (company == null)
+                    {
+                        throw new Exception(Messages.MessageNoDataFound);
+                    }
+                    var newBd = await _ticketDomain.GetTicketByCompany(company.Id);
+
+                    if(newBd!=null && newBd.Any())
+                    {
+                        list.AddRange(_mapper.Map<List<GetListSameSearchedReportResponseDto>>(newBd));
+                    }
+
+                    if (company.OldCode!=null && company.OldCode.StartsWith("E"))
+                    {
+                        var oldBd = await _tCuponDomain.GetTCuponExistAsync(company.OldCode);
+                        if (oldBd != null && oldBd.Any())
+                        {
+                            list.AddRange(_mapper.Map<List<GetListSameSearchedReportResponseDto>>(oldBd));
+                        }
+                    }
+
+                    if (list.Any())
+                    {
+                        getExist.TypeReport = "RV";
+                        list = list.OrderByDescending(x => x.DispatchtDate).ToList();
+
+                        var firstTicket = list.FirstOrDefault();
+
+                        if((DateTime.Now - firstTicket.DispatchtDate).TotalDays <= 90)
+                        {
+                            getExist.TypeReport =firstTicket.IsPending?"DF":"EF";
+                        }
+                        getExist.LastSearchedDate = firstTicket.DispatchtDate.ToShortDateString();
+                    }
+                    getExist.ListSameSearched=list.Take(10).ToList();
+                    response.Data = getExist;
+
+                }
+                else if (type == "P")
+                {
+
+                }
+            }
+            catch(Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
         }
 
         public async Task<Response<GetNumerationResponseDto>> GetTicketNumberAsync()

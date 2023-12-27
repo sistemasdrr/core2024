@@ -36,6 +36,16 @@ namespace DRRCore.Domain.Main.CoreDomain
             throw new NotImplementedException();
         }
 
+        public async Task<List<Ticket>> GetTicketByCompany(int id)
+        {
+            return await _ticketRepository.GetTicketByCompany(id);
+        }
+
+        public async Task<List<Ticket>> GetTicketByPerson(int id)
+        {
+           return await _ticketRepository.GetTicketByPerson(id);
+        }
+
         public async Task<bool> UpdateAsync(Ticket obj)
         {
             return await _ticketRepository.UpdateAsync(obj);

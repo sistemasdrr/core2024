@@ -99,7 +99,7 @@ namespace DRRCore.Application.Main
                         var newAttachment= new Attachment { 
                          FileName = attachment.FileName
                         };
-                        newAttachment.StreamBase64= await DownloadFile(attachment.AttachmentsUrl);
+                        newAttachment.StreamBase64= await DownloadFile(attachment.FileName);
                         listAttachments.Add(newAttachment);
                     }
                     var emailRequest = _mapper.Map<EmailValues>(mail);

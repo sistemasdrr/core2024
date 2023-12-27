@@ -8,16 +8,16 @@ namespace DRRCore.Services.ApiCore.Controllers
     [Route("api/[controller]")]
     public class TicketController : Controller
     {
-        public readonly ITicketApplication _ticketApplication;        
+        public readonly ITicketApplication _ticketApplication;
         public TicketController(ITicketApplication ticketApplication)
         {
-           _ticketApplication = ticketApplication;
+            _ticketApplication = ticketApplication;
         }
-      
+
         [HttpGet()]
         [Route("numberticket")]
         public async Task<ActionResult> GetNumberTicket()
-        {         
+        {
             return Ok(await _ticketApplication.GetTicketNumberAsync());
         }
 
@@ -26,6 +26,13 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> AddTicket(AddOrUpdateTicketRequestDto request)
         {
             return Ok(await _ticketApplication.AddTicketAsync(request));
+        }
+        [HttpGet()]
+        [Route("getreporttype")]
+        public async Task<ActionResult> GetReportType(int id, string type)
+        {
+            return Ok(await _ticketApplication.GetReportType(id, type));
+
         }
     }
 }

@@ -73,6 +73,10 @@ public partial class Ticket
 
     public bool? Enable { get; set; }
 
+    public DateTime? DispatchtDate { get; set; }
+
+    public string? RequestedName { get; set; }
+
     public virtual Subscriber? IdSubscriberNavigation { get; set; }
 
     public virtual ICollection<TicketHistory> TicketHistories { get; set; } = new List<TicketHistory>();

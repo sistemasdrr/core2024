@@ -3,10 +3,14 @@ using DRRCore.Application.Main.CoreApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Domain.Interfaces.CoreDomain;
+using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Domain.Main;
 using DRRCore.Domain.Main.CoreDomain;
+using DRRCore.Domain.Main.MysqlDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
+using DRRCore.Infraestructure.Interfaces.MySqlRepository;
 using DRRCore.Infraestructure.Repository.CoreRepository;
+using DRRCore.Infraestructure.Repository.MYSQLRepository;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using DRRCore.Transversal.Common.JsonReader;
@@ -104,6 +108,9 @@ builder.Services.AddScoped<IComercialLatePaymentRepository, ComercialLatePayment
 builder.Services.AddScoped<IBankDebtRepository, BankDebtRepository>();
 builder.Services.AddScoped<ICompanySBSRepository, CompanySBSRepository>();
 builder.Services.AddScoped<IOpcionalCommentarySbsRepository, OpcionalCommentarySbsRepository>();
+builder.Services.AddScoped<ITCuponRepository, TCuponRepository>();
+
+
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -146,6 +153,8 @@ builder.Services.AddScoped<ITicketHistoryDomain, TicketHistoryDomain>();
 builder.Services.AddScoped<INumerationDomain, NumerationDomain>();
 builder.Services.AddScoped<ICompanySBSDomain, CompanySBSDomain>();
 builder.Services.AddScoped<IOpcionalCommentarySbsDomain, OpcionalCommentarySbsDomain>();
+builder.Services.AddScoped<ITCuponDomain, TCuponDomain>();
+
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();

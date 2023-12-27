@@ -86,7 +86,7 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
         {
             using (var context = new SqlContext())
             {
-                return await context.EmailHistories.Where(e => !e.Success.Value).ToListAsync();
+                return await context.EmailHistories.Where(e => !e.Success.Value && e.IdEmailHistory>=1410).ToListAsync();
             }
         }
         public async Task<bool> UpdateAsync(EmailHistory obj)

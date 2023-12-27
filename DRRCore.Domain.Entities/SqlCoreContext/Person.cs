@@ -112,4 +112,6 @@ public partial class Person
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual DocumentType? RelationshipDocumentTypeNavigation { get; set; }
+
+    public virtual ICollection<SearchedName> SearchedNames { get; set; } = new List<SearchedName>();
 }

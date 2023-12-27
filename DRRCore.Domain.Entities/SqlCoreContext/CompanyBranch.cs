@@ -65,6 +65,12 @@ public partial class CompanyBranch
 
     public bool? Enable { get; set; }
 
+    public string? CountriesExport { get; set; }
+
+    public string? CountriesImport { get; set; }
+
+    public string? SpecificActivities { get; set; }
+
     public virtual ICollection<CompanyBusineesActivity> CompanyBusineesActivities { get; set; } = new List<CompanyBusineesActivity>();
 
     public virtual BranchSector? IdBranchSectorNavigation { get; set; }

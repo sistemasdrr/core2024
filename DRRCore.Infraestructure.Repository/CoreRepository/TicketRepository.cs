@@ -85,6 +85,36 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
+        public async Task<List<Ticket>> GetTicketByCompany(int id)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.Tickets.Include(x=>x.IdSubscriberNavigation).Where(x => x.IdCompany == id).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new List<Ticket>();
+            }
+        }
+
+        public async Task<List<Ticket>> GetTicketByPerson(int id)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.Tickets.Where(x => x.IdPerson == id).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new List<Ticket>();
+            }
+        }
+
+      
+
         public async Task<bool> UpdateAsync(Ticket obj)
         {
             try

@@ -60,8 +60,10 @@
 
         public int? Creditrisk { get; set; }
        
-        public bool? Enable { get; set; }
+        public bool? Enable { get; set; }     
 
-    
+        public string? RequestedName { get; set; }
+
+
     }
 }

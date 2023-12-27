@@ -26,7 +26,7 @@ namespace DRRCore.Domain.Main.MysqlDomain
             return await _repository.GetTCuponByPersonaOrEmpresaAsync(codigo);
         }
 
-        public async Task<bool> GetTCuponExistAsync(string codigo)
+        public async Task<List<TCupon>> GetTCuponExistAsync(string codigo)
         {
             return await _repository.GetTCuponExistAsync(codigo);
         }
