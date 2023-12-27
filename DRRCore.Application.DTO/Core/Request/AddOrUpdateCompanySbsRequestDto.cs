@@ -26,5 +26,10 @@
 
         public string? CreditHistoryCommentary { get; set; }
 
+        public decimal? GuaranteesOfferedNc { get; set; }
+
+        public decimal? GuaranteesOfferedFc { get; set; }
+        public List<TraductionDto> Traductions { get; set; } = new List<TraductionDto>();
+
     }
 }

@@ -91,8 +91,7 @@
                                                                 "S_R_SALEPER","S_R_CREDITPER","S_R_TERRITORY","S_R_EXTSALES","S_R_NATIBUY","S_R_INTERBUY","S_R_TOTALAREA","L_R_OTRHERLOCALS",
                                                                 "L_R_PRINCACT","L_R_ADIBUS",
                                                                 "S_F_JOB","L_F_COMENT","L_F_PRINCACTIV","L_F_SELECTFIN","L_F_ANALISTCOM",
-                                                                "S_S_MAXAMOUNT","S_S_PLAZOS","S_S_CLIENTFROM","S_S_ARTICLES","L_S_COMENTARY","S_S_DEUDAMEMO",
-                                                                 "L_S_BANCARIOS","L_S_AVALES",
+                                                                "L_S_COMENTARY", "L_S_BANCARIOS","L_S_AVALES","L_S_LITIG","L_S_CREDHIS",
                                                                 "S_O_QUERYCREDIT","S_O_SUGCREDIT","L_O_COMENTARY",
                                                                  "L_I_GENERAL","S_IMG_1","S_IMG_2","S_IMG_3","S_IMG_4"} ;
     }

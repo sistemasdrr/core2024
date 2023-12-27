@@ -108,6 +108,14 @@ builder.Services.AddScoped<IComercialLatePaymentRepository, ComercialLatePayment
 builder.Services.AddScoped<IBankDebtRepository, BankDebtRepository>();
 builder.Services.AddScoped<ICompanySBSRepository, CompanySBSRepository>();
 builder.Services.AddScoped<IOpcionalCommentarySbsRepository, OpcionalCommentarySbsRepository>();
+builder.Services.AddScoped<IEndorsementsRepository, EndorsementsRepository>();
+builder.Services.AddScoped<ICompanyCreditOpinionRepository, CompanyCreditOpinionRepository>();
+builder.Services.AddScoped<ICompanyGeneralInformationRepository, CompanyGeneralInformationRepository>();
+builder.Services.AddScoped<ICompanyImagesRepository, CompanyImagesRepository>();
+builder.Services.AddScoped<IBranchSectorRepository, BranchSectorRepository>();
+builder.Services.AddScoped<IBusinessBranchRepository, BusinessBranchRepository>();
+builder.Services.AddScoped<IBusinessActivityRepository, BusinessActivityRepository>();
+builder.Services.AddScoped<ILandOwnershipRepository, LandOwnershipRepository>();
 builder.Services.AddScoped<ITCuponRepository, TCuponRepository>();
 
 
@@ -153,12 +161,21 @@ builder.Services.AddScoped<ITicketHistoryDomain, TicketHistoryDomain>();
 builder.Services.AddScoped<INumerationDomain, NumerationDomain>();
 builder.Services.AddScoped<ICompanySBSDomain, CompanySBSDomain>();
 builder.Services.AddScoped<IOpcionalCommentarySbsDomain, OpcionalCommentarySbsDomain>();
+builder.Services.AddScoped<IEndorsementsDomain, EndorsementsDomain>();
+builder.Services.AddScoped<ICompanyCreditOpinionDomain, CompanyCreditOpinionDomain>();
+builder.Services.AddScoped<ICompanyGeneralInformationDomain, CompanyGeneralInformationDomain>();
+builder.Services.AddScoped<ICompanyImagesDomain, CompanyImagesDomain>();
+builder.Services.AddScoped<IBranchSectorDomain, BranchSectorDomain>();
+builder.Services.AddScoped<IBusinessBranchDomain, BusinessBranchDomain>();
+builder.Services.AddScoped<IBusinessActivityDomain, BusinessActivityDomain>();
+builder.Services.AddScoped<ILandOwnershipDomain, LandOwnershipDomain>();
 builder.Services.AddScoped<ITCuponDomain, TCuponDomain>();
 
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
 builder.Services.AddScoped<ICompanyApplication, CompanyApplication>();
+builder.Services.AddScoped<ICompanyImagesApplication, CompanyImagesApplication>();
 builder.Services.AddScoped<ISubscriberApplication, SubscriberApplication>();
 builder.Services.AddScoped<ISubscriberPriceApplication, SubscriberPriceApplication>();
 builder.Services.AddScoped<IAnniversaryApplication, AnniversayApplication>();

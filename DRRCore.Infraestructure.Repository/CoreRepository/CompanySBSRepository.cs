@@ -18,18 +18,38 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
-        public async Task<int> AddCompanySBS(CompanySb companySb)
+        public Task<int> AddCompanySBS(CompanySb companySb)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> AddCompanySBS(CompanySb companySb, List<Traduction> traductions)
         {
             try
             {
-                using var context = new SqlCoreContext();
-                await context.CompanySbs.AddAsync(companySb);
-                await context.SaveChangesAsync();
-                return companySb.Id;
-            }catch (Exception ex)
+                using (var context = new SqlCoreContext())
+                {
+                    context.CompanySbs.Add(companySb);
+
+                    foreach (var item in traductions)
+                    {
+                        var modifierTraduction = await context.Traductions.Where(x => x.IdCompany == companySb.IdCompany && x.Identifier == item.Identifier).FirstOrDefaultAsync();
+                        if (modifierTraduction != null)
+                        {
+                            modifierTraduction.ShortValue = item.ShortValue;
+                            modifierTraduction.LargeValue = item.LargeValue;
+                            modifierTraduction.LastUpdaterUser = item.LastUpdaterUser;
+                            context.Traductions.Update(modifierTraduction);
+                        }
+                    }
+                    await context.SaveChangesAsync();
+                    return companySb.Id;
+                }
+            }
+            catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                return 0; 
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -67,44 +87,44 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
 
         public async Task<CompanySb> GetByIdAsync(int id)
         {
+            List<Traduction> traductions = new List<Traduction>();
             try
             {
                 using var context = new SqlCoreContext();
-                var companySbs = await context.CompanySbs.FindAsync(id);
-                if (companySbs != null)
-                {
-                    return companySbs;
-                }
-                else
-                {
-                    return null;
-                }
+                var companySbs = await context.CompanySbs.Include(x => x.IdCompanyNavigation).Where(x => x.IdCompany == id).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
+                traductions.AddRange(await context.Traductions.Where(x => x.IdCompany == companySbs.IdCompany && x.Identifier.Contains("_S_")).ToListAsync());
+
+                if (companySbs.IdCompanyNavigation == null)
+                    throw new Exception("No existe la empresa");
+
+                companySbs.IdCompanyNavigation.Traductions = traductions;
+                return companySbs;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex.Message);
                 return null;
             }
         }
 
         public async Task<CompanySb> GetByIdCompany(int idCompany)
         {
+            List<Traduction> traductions = new List<Traduction>();
             try
             {
                 using var context = new SqlCoreContext();
-                var companySbs = await context.CompanySbs.FirstOrDefaultAsync(x => x.IdCompany == idCompany);
-                if (companySbs != null)
-                {
-                    return companySbs;
-                }
-                else
-                {
-                    return null;
-                }
+                var companySbs = await context.CompanySbs.Include(x => x.IdCompanyNavigation).Where(x => x.IdCompany == idCompany).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
+                traductions.AddRange(await context.Traductions.Where(x => x.IdCompany == idCompany  && x.Identifier.Contains("_S_")).ToListAsync());
+
+                if (companySbs.IdCompanyNavigation == null)
+                    throw new Exception("No existe la empresa");
+
+                companySbs.IdCompanyNavigation.Traductions = traductions;
+                return companySbs;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
+                _logger.LogError(ex.Message);
                 return null;
             }
         }
@@ -119,19 +139,36 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
-        public async Task<int> UpdateCompanySBS(CompanySb companySb)
+       
+
+        public async Task<int> UpdateCompanySBS(CompanySb companySb, List<Traduction> traductions)
         {
             try
             {
-                using var context = new SqlCoreContext();
-                context.CompanySbs.Update(companySb);
-                await context.SaveChangesAsync();
-                return companySb.Id;
+                using (var context = new SqlCoreContext())
+                {
+                    companySb.UpdateDate = DateTime.Now;
+                    context.CompanySbs.Update(companySb);
+
+                    foreach (var item in traductions)
+                    {
+                        var modifierTraduction = await context.Traductions.Where(x => x.IdCompany == companySb.IdCompany && x.Identifier == item.Identifier).FirstOrDefaultAsync();
+                        if (modifierTraduction != null)
+                        {
+                            modifierTraduction.ShortValue = item.ShortValue;
+                            modifierTraduction.LargeValue = item.LargeValue;
+                            modifierTraduction.LastUpdaterUser = item.LastUpdaterUser;
+                            context.Traductions.Update(modifierTraduction);
+                        }
+                    }
+                    await context.SaveChangesAsync();
+                    return companySb.Id;
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message, ex);
-                return 0;
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
             }
         }
     }

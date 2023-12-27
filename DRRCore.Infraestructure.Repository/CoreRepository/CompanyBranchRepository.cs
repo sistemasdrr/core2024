@@ -12,7 +12,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
         
             _logger = logger;
         }
-        public async Task<bool> AddAsync(CompanyBranch obj, List<Traduction> traductions)
+        public async Task<int> AddAsync(CompanyBranch obj, List<Traduction> traductions)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                         }
                     }
                     await context.SaveChangesAsync();
-                    return true;
+                    return obj.Id;
                 }
             }
             catch (Exception ex)
@@ -76,7 +76,29 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UpdateAsync(CompanyBranch obj, List<Traduction> traductions)
+        public async Task<CompanyBranch> GetCompanyBranchByIdCompany(int idCompany)
+        {
+            List<Traduction> traductions = new List<Traduction>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var companyBranch = await context.CompanyBranches.Include(x => x.IdCompanyNavigation).Where(x => x.IdCompany == idCompany).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
+                traductions.AddRange(await context.Traductions.Where(x => x.IdCompany == idCompany && x.Identifier.Contains("_R_")).ToListAsync());
+
+                if (companyBranch.IdCompanyNavigation == null)
+                    throw new Exception("No existe la empresa");
+
+                companyBranch.IdCompanyNavigation.Traductions = traductions;
+                return companyBranch;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<int> UpdateAsync(CompanyBranch obj, List<Traduction> traductions)
         {
             try
             {
@@ -97,7 +119,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                         }
                     }
                     await context.SaveChangesAsync();
-                    return true;
+                    return obj.Id;
                 }
             }
             catch (Exception ex)

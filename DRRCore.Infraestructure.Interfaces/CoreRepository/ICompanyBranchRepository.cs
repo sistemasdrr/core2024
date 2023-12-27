@@ -4,7 +4,8 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
     public interface ICompanyBranchRepository:IBaseRepository<CompanyBranch>
     {
-        Task<bool> UpdateAsync(CompanyBranch obj, List<Traduction> traductions);
-        Task<bool> AddAsync(CompanyBranch obj, List<Traduction> traductions);
+        Task<int> UpdateAsync(CompanyBranch obj, List<Traduction> traductions);
+        Task<int> AddAsync(CompanyBranch obj, List<Traduction> traductions);
+        Task<CompanyBranch> GetCompanyBranchByIdCompany(int idCompany);
     }
 }

@@ -13,7 +13,7 @@ namespace DRRCore.Domain.Main.CoreDomain
             _companyBranchRepository = companyBranchRepository;
         }
 
-        public async Task<bool> AddAsync(CompanyBranch obj, List<Traduction> traductions)
+        public async Task<int> AddAsync(CompanyBranch obj, List<Traduction> traductions)
         {
             return await _companyBranchRepository.AddAsync(obj, traductions);
         }
@@ -43,7 +43,12 @@ namespace DRRCore.Domain.Main.CoreDomain
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UpdateAsync(CompanyBranch obj, List<Traduction> traductions)
+        public async Task<CompanyBranch> GetCompanyBranchByIdCompany(int idCompany)
+        {
+            return await _companyBranchRepository.GetCompanyBranchByIdCompany(idCompany);
+        }
+
+        public async Task<int> UpdateAsync(CompanyBranch obj, List<Traduction> traductions)
         {
             return await _companyBranchRepository.UpdateAsync(obj, traductions);
         }

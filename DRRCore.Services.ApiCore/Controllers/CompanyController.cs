@@ -1,6 +1,7 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.Interfaces.CoreApplication;
 using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 
 namespace DRRCore.Services.ApiCore.Controllers
 {
@@ -9,9 +10,11 @@ namespace DRRCore.Services.ApiCore.Controllers
     public class CompanyController : Controller
     {
         private readonly ICompanyApplication _companyApplication;
-        public CompanyController(ICompanyApplication companyApplication)
+        private readonly ICompanyImagesApplication _companyImagesApplication;
+        public CompanyController(ICompanyApplication companyApplication, ICompanyImagesApplication companyImagesApplication)
         {
             _companyApplication = companyApplication;
+            _companyImagesApplication = companyImagesApplication;
         }
         [HttpPost()]
         [Route("add")]
@@ -50,6 +53,18 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> AddBackground(AddOrUpdateCompanyBackgroundRequestDto obj)
         {
            return Ok(await _companyApplication.AddOrUpdateCompanyBackGroundAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getCompanyBranch")]
+        public async Task<ActionResult> getCompanyBranch(int idCompany)
+        {
+            return Ok(await _companyApplication.GetCompanyBranchByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("addCompanyBranch")]
+        public async Task<ActionResult> addCompanyBranch(AddOrUpdateCompanyBranchRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCompanyBranchAsync(obj));
         }
         [HttpPost()]
         [Route("activeweb")]
@@ -136,10 +151,10 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _companyApplication.AddOrUpdateCompanySBSAsync(obj));
         }
         [HttpGet()]
-        [Route("getCompanySbsById")]
-        public async Task<ActionResult> getCompanySbsById(int id)
+        [Route("getCompanySbsByIdCompany")]
+        public async Task<ActionResult> getCompanySbsByIdCompany(int idCompany)
         {
-            return Ok(await _companyApplication.GetCompanySBSById(id));
+            return Ok(await _companyApplication.GetCompanySBSById(idCompany));
         }
         [HttpPost()]
         [Route("deleteCompanySbs")]
@@ -218,6 +233,86 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> deleteBankDebt(int id)
         {
             return Ok(await _companyApplication.DeleteBankDebt(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateEndorsement")]
+        public async Task<ActionResult> addOrUpdateEndorsement(AddOrUpdateEndorsementsRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateEndorsementsAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getListEndorsement")]
+        public async Task<ActionResult> getListEndorsement(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListEndorsementsAsync(idCompany));
+        }
+        [HttpGet()]
+        [Route("getEndorsementById")]
+        public async Task<ActionResult> getEndorsementById(int id)
+        {
+            return Ok(await _companyApplication.GetEndorsementsById(id));
+        }
+        [HttpPost()]
+        [Route("deleteEndorsement")]
+        public async Task<ActionResult> deleteEndorsement(int id)
+        {
+            return Ok(await _companyApplication.DeleteEndorsements(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateCreditOpinion")]
+        public async Task<ActionResult> addOrUpdateCreditOpinion(AddOrUpdateCompanyCreditOpinionRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCreditOpinionAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getCreditOpinionByIdCompany")]
+        public async Task<ActionResult> getCreditOpinionByIdCompany(int idCompany)
+        {
+            return Ok(await _companyApplication.GetCreditOpinionByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("deleteCreditOpinion")]
+        public async Task<ActionResult> deleteCreditOpinion(int id)
+        {
+            return Ok(await _companyApplication.DeleteCreditOpinion(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateGeneralInformation")]
+        public async Task<ActionResult> addOrUpdateGeneralInformation(AddOrUpdateCompanyGeneralInformationRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateGeneralInformation(obj));
+        }
+        [HttpGet()]
+        [Route("getGeneralInformationByIdCompany")]
+        public async Task<ActionResult> getGeneralInformationByIdCompany(int idCompany)
+        {
+            return Ok(await _companyApplication.GetGeneralInformationByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateCompanyImg")]
+        public async Task<ActionResult> addOrUpdateCompanyImg(AddOrUpdateCompanyImagesRequestDto obj)
+        {
+            return Ok(await _companyImagesApplication.AddOrUpdateImages(obj));
+        }
+        [HttpGet()]
+        [Route("getCompanyImgByIdCompany")]
+        public async Task<ActionResult> getCompanyImgByIdCompany(int idCompany)
+        {
+            return Ok(await _companyImagesApplication.GetCompanyImagesByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("uploadImage")]
+        public async Task<ActionResult> uploadImage( IFormFile request)
+        {
+            return Ok(await _companyImagesApplication.UploadImage(request));
+        }
+        [HttpGet()]
+        [Route("getImageByPath")]
+        public async Task<ActionResult> getImageByPath(string path)
+        {
+            var result = await _companyImagesApplication.GetImageByPath(path);
+            return File(result.Data.File.ToArray(), result.Data.ContentType, result.Data.FileName);
+
         }
     }
 }

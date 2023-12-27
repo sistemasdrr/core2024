@@ -24,5 +24,9 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetFinancialSituationResponseDto>>> GetFinancialSituacion();
         Task<Response<List<GetComboValueResponseDto>>> GetCollaborationDegree();
         Task<Response<List<GetComboValueResponseDto>>> GetOpcionalCommentarySbs();
+        Task<Response<List<GetComboValueResponseDto>>> GetBranchSector();
+        Task<Response<List<GetComboValueResponseDto>>> GetBusinessBranch();
+        Task<Response<List<GetComboValueResponseDto>>> GetBusinessActivity(int idBusinessBranch);
+        Task<Response<List<GetComboValueResponseDto>>> GetLandOwnership();
     }
 }
