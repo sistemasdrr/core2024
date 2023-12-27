@@ -51,5 +51,9 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> DeleteCreditOpinion(int id);
         Task<Response<int>> AddOrUpdateGeneralInformation(AddOrUpdateCompanyGeneralInformationRequestDto obj);
         Task<Response<GetCompanyGeneralInformationResponseDto>> GetGeneralInformationByIdCompany(int idCompany);
+        Task<Response<bool>> DeleteImportAndExport(int id);
+        Task<Response<bool>> AddOrUpdateImportAndExport(AddOrUpdateImportsAndExportsRequestDto obj);
+        Task<Response<GetImportsAndExportResponseDto>> GetImportAndExportById(int id);
+        Task<Response<List<GetImportsAndExportResponseDto>>> GetListImportAndExportByIdCompany(int idCompany, string type);
     }
 }
