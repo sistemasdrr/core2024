@@ -122,6 +122,27 @@ namespace DRRCore.Application.Main.CoreApplication
             return getReceptor.IdEmployee ?? 0;
         }
 
+        public async Task<Response<bool>> DeleteTicket(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (id == 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = await _ticketDomain.DeleteAsync(id);
+            }
+            catch(Exception ex) 
+            { 
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
         public async Task<Response<GetExistingTicketResponseDto>> GetReportType(int id, string type)
         {
             var response = new Response<GetExistingTicketResponseDto>();
