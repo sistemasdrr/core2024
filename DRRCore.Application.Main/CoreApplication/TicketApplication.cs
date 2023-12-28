@@ -55,11 +55,12 @@ namespace DRRCore.Application.Main.CoreApplication
                         Status= (int?)TicketStatusEnum.Pendiente,
                         UserFrom="1"
                     });
-                   
-                    if( await _ticketDomain.AddAsync(newTicket))
+
+                  
+                    if ( await _ticketDomain.AddAsync(newTicket))
                     {
-                       await CopyReportForm(request.Number);
-                       await CopyReportPerson(request.Number);                      
+                        await CopyReportForm(request.Number);
+                        await CopyReportPerson(request.Number);
                         await _numerationDomain.UpdateTicketNumberAsync();
                         if(request.IdCompany==null)
                         {
@@ -187,10 +188,11 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
-        private async Task CopyReportForm(int ticket)
+        private async Task<string> CopyReportForm(int ticket)
         {
             try
             {
+                var path = "/cupones/" + ticket.ToString("D6") + "/" + ticket.ToString("D6") + "_Planilla_Reportero.doc";
                 using (var ftpClient = new FtpClient(GetFtpClientConfiguration()))
                 {                    
                     await ftpClient.LoginAsync();
@@ -203,26 +205,25 @@ namespace DRRCore.Application.Main.CoreApplication
                            await ftpReadStream.CopyToAsync(stream);
                           stream.Position = 0;
 
-                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync("/cupones/"+ ticket.ToString("D6") +"/"+ ticket.ToString("D6")+"_Planilla_Reportero.doc"))
+                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(path)) 
                             {
-                                await stream.CopyToAsync(writeStream);                                
+                                await stream.CopyToAsync(writeStream);                                   
                             }                           
                         }
                     }
                 }
+                return path;
             }
             catch (Exception ex)
             {
                 throw new Exception(string.Format(Messages.ExceptionMessage, ex.Message));
             }
-
-
-
         }
-        private async Task CopyReportPerson(int ticket)
+        private async Task<string> CopyReportPerson(int ticket)
         {
             try
             {
+                var path = "/cupones/" + ticket.ToString("D6") + "/" + ticket.ToString("D6") + "_Planilla_Negocios_Personales.doc";
                 using (var ftpClient = new FtpClient(GetFtpClientConfiguration()))
                 {
                     await ftpClient.LoginAsync();
@@ -235,13 +236,14 @@ namespace DRRCore.Application.Main.CoreApplication
                            await ftpReadStream.CopyToAsync(stream);
                             stream.Position = 0;
 
-                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync("/cupones/" + ticket.ToString("D6") + "/" + ticket.ToString("D6") + "Planilla_Negocios_Personales.doc"))
+                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(path))
                             {
                                 await stream.CopyToAsync(writeStream);
                             }
                         }
                     }
                 }
+                return path;
             }
             catch (Exception ex)
             {
