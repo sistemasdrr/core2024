@@ -34,5 +34,19 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _ticketApplication.GetReportType(id, type));
 
         }
+        [HttpGet()]
+        [Route("getTicketById")]
+        public async Task<ActionResult> getTicketById(int id)
+        {
+            return Ok(await _ticketApplication.GetTicketRequestAsync(id));
+
+        }
+        [HttpGet()]
+        [Route("getList")]
+        public async Task<ActionResult> getList()
+        {
+            return Ok(await _ticketApplication.GetTicketListAsync());
+
+        }
     }
 }

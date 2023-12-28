@@ -54,12 +54,11 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
 
         public async Task<List<Ticket>> GetAllAsync()
         {
-
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Include(x=>x.IdSubscriberNavigation)
-                    .Include(x => x.IdContinentNavigation)
+                return await context.Tickets.Include(x=>x.IdSubscriberNavigation).Include(x => x.IdSubscriberNavigation.IdCountryNavigation)
+                    .Include(x => x.IdContinentNavigation).Include(x => x.IdCompanyNavigation).Include(x => x.IdCompanyNavigation.IdCountryNavigation).Include(x => x.IdCompanyNavigation.IdCountryNavigation.IdContinentNavigation)
                     .Include(x => x.IdCountryNavigation).Where(x => x.Status!=(int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
             }
             catch (Exception ex)

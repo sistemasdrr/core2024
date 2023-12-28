@@ -160,6 +160,30 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<List<GetListTicketResponseDto>>> GetTicketListAsync()
+        {
+            var response = new Response<List<GetListTicketResponseDto>>();
+            try
+            {
+                var list = await _ticketDomain.GetAllAsync();
+                if(list != null)
+                {
+                    response.Data = _mapper.Map<List<GetListTicketResponseDto>>(list);
+                }
+                else
+                {
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         public async Task<Response<GetNumerationResponseDto>> GetTicketNumberAsync()
         {            
             var response = new Response<GetNumerationResponseDto>();
@@ -188,6 +212,31 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
+
+        public async Task<Response<GetTicketRequestDto>> GetTicketRequestAsync(int id)
+        {
+            var response = new Response<GetTicketRequestDto>();
+            try
+            {
+                var ticket = await _ticketDomain.GetByIdAsync(id);
+                if (ticket != null)
+                {
+                    response.Data = _mapper.Map<GetTicketRequestDto>(ticket);
+                }
+                else
+                {
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         private async Task<string> CopyReportForm(int ticket)
         {
             try
