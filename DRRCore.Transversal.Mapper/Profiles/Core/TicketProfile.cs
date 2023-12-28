@@ -20,7 +20,9 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                    .ForMember(dest => dest.OrderDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.OrderDate)))
                    .ForMember(dest => dest.ExpireDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.ExpireDate)))
                     .ForMember(dest => dest.RealExpireDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.RealExpireDate)))
-                 
+                    .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson==0?null:src.IdPerson))
+                    .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+
                    .ReverseMap();
 
             CreateMap<Ticket, GetListSameSearchedReportResponseDto>()

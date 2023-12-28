@@ -125,5 +125,7 @@ public partial class Company
 
     public virtual ICollection<SearchedName> SearchedNames { get; set; } = new List<SearchedName>();
 
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+
     public virtual ICollection<Traduction> Traductions { get; set; } = new List<Traduction>();
 }

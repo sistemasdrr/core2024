@@ -3199,6 +3199,22 @@ public partial class SqlCoreContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
 
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.Tickets)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__Ticket__idCompan__6521F869");
+
+            entity.HasOne(d => d.IdContinentNavigation).WithMany(p => p.Tickets)
+                .HasForeignKey(d => d.IdContinent)
+                .HasConstraintName("FK__Ticket__idContin__67FE6514");
+
+            entity.HasOne(d => d.IdCountryNavigation).WithMany(p => p.Tickets)
+                .HasForeignKey(d => d.IdCountry)
+                .HasConstraintName("FK__Ticket__idCountr__670A40DB");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.Tickets)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__Ticket__idPerson__66161CA2");
+
             entity.HasOne(d => d.IdSubscriberNavigation).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.IdSubscriber)
                 .HasConstraintName("FK__Ticket__idSubscr__71BCD978");

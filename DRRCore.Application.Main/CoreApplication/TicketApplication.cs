@@ -55,10 +55,11 @@ namespace DRRCore.Application.Main.CoreApplication
                         Status= (int?)TicketStatusEnum.Pendiente,
                         UserFrom="1"
                     });
+                   
                     if( await _ticketDomain.AddAsync(newTicket))
                     {
-                        await CopyReportForm(request.Number);
-                        await CopyReportPerson(request.Number);                      
+                       // await CopyReportForm(request.Number);
+                      //  await CopyReportPerson(request.Number);                      
                         await _numerationDomain.UpdateTicketNumberAsync();
                         if(request.IdCompany==null)
                         {
@@ -201,10 +202,14 @@ namespace DRRCore.Application.Main.CoreApplication
                         {
                             ftpReadStream.CopyTo(stream);
 
-                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(string.Format("/cupones/{0}/{0}_Planilla_Reportero.doc",ticket.ToString("D6"))))
+                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync("/cupones/"+ ticket.ToString("D6") +"/"+ ticket.ToString("D6")+"_Planilla_Reportero.doc"))
                             {
-                                stream.Position = 0;
-                                stream.CopyTo(writeStream);
+                                if(stream.Position!= 0)
+                                {
+                                    stream.Position = 0;
+                                }
+                                
+                                await stream.CopyToAsync(writeStream);
                             }                           
                         }
                     }
@@ -233,10 +238,13 @@ namespace DRRCore.Application.Main.CoreApplication
                         {
                             ftpReadStream.CopyTo(stream);
 
-                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(string.Format("/cupones/{0}/{0}_Planilla_Negocios_Personales.doc", ticket.ToString("D6"))))
+                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync("/cupones/" + ticket.ToString("D6") + "/" + ticket.ToString("D6") + "Planilla_Negocios_Personales.doc"))
                             {
-                                stream.Position = 0;
-                                stream.CopyTo(writeStream);
+                                if (stream.Position != 0)
+                                {
+                                    stream.Position = 0;
+                                }
+                                await stream.CopyToAsync(writeStream);
                             }
                         }
                     }

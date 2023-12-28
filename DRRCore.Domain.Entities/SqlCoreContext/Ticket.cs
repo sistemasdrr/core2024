@@ -77,6 +77,14 @@ public partial class Ticket
 
     public string? RequestedName { get; set; }
 
+    public virtual Company? IdCompanyNavigation { get; set; }
+
+    public virtual Continent? IdContinentNavigation { get; set; }
+
+    public virtual Country? IdCountryNavigation { get; set; }
+
+    public virtual Person? IdPersonNavigation { get; set; }
+
     public virtual Subscriber? IdSubscriberNavigation { get; set; }
 
     public virtual ICollection<TicketHistory> TicketHistories { get; set; } = new List<TicketHistory>();

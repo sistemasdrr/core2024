@@ -28,4 +28,6 @@ public partial class Continent
     public virtual ICollection<SubscriberPrice> SubscriberPrices { get; set; } = new List<SubscriberPrice>();
 
     public virtual ICollection<Subscriber> Subscribers { get; set; } = new List<Subscriber>();
+
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }
