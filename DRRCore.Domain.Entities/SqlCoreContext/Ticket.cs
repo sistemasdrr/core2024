@@ -77,6 +77,8 @@ public partial class Ticket
 
     public string? RequestedName { get; set; }
 
+    public decimal? Price { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Continent? IdContinentNavigation { get; set; }
