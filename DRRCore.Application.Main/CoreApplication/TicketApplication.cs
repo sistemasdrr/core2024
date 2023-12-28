@@ -58,8 +58,8 @@ namespace DRRCore.Application.Main.CoreApplication
                    
                     if( await _ticketDomain.AddAsync(newTicket))
                     {
-                       // await CopyReportForm(request.Number);
-                      //  await CopyReportPerson(request.Number);                      
+                       await CopyReportForm(request.Number);
+                       await CopyReportPerson(request.Number);                      
                         await _numerationDomain.UpdateTicketNumberAsync();
                         if(request.IdCompany==null)
                         {
@@ -194,22 +194,18 @@ namespace DRRCore.Application.Main.CoreApplication
                 using (var ftpClient = new FtpClient(GetFtpClientConfiguration()))
                 {                    
                     await ftpClient.LoginAsync();
-                  
+                 
                     using (var ftpReadStream = await ftpClient.OpenFileReadStreamAsync("/plantillas/Planilla_Reportero.doc"))
                     {
 
                         using (var stream = new MemoryStream())
                         {
-                            ftpReadStream.CopyTo(stream);
+                           await ftpReadStream.CopyToAsync(stream);
+                          stream.Position = 0;
 
                             using (var writeStream = await ftpClient.OpenFileWriteStreamAsync("/cupones/"+ ticket.ToString("D6") +"/"+ ticket.ToString("D6")+"_Planilla_Reportero.doc"))
                             {
-                                if(stream.Position!= 0)
-                                {
-                                    stream.Position = 0;
-                                }
-                                
-                                await stream.CopyToAsync(writeStream);
+                                await stream.CopyToAsync(writeStream);                                
                             }                           
                         }
                     }
@@ -236,14 +232,11 @@ namespace DRRCore.Application.Main.CoreApplication
 
                         using (var stream = new MemoryStream())
                         {
-                            ftpReadStream.CopyTo(stream);
+                           await ftpReadStream.CopyToAsync(stream);
+                            stream.Position = 0;
 
                             using (var writeStream = await ftpClient.OpenFileWriteStreamAsync("/cupones/" + ticket.ToString("D6") + "/" + ticket.ToString("D6") + "Planilla_Negocios_Personales.doc"))
                             {
-                                if (stream.Position != 0)
-                                {
-                                    stream.Position = 0;
-                                }
                                 await stream.CopyToAsync(writeStream);
                             }
                         }
