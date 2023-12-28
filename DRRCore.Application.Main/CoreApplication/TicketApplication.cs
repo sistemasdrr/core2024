@@ -20,10 +20,12 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ITicketHistoryDomain _ticketHistoryDomain;   
         private readonly ICompanyDomain _companyDomain;
         private readonly ITCuponDomain _tCuponDomain;
+        private readonly ITicketReceptorDomain _ticketReceptorDomain;
         private IMapper _mapper;
         private ILogger _logger;
         public TicketApplication(INumerationDomain numerationDomain,
-            ITCuponDomain tCuponDomain,ITicketDomain ticketDomain,ITicketHistoryDomain ticketHistoryDomain,ICompanyDomain companyDomain,IMapper mapper, ILogger logger)
+            ITCuponDomain tCuponDomain,ITicketDomain ticketDomain,
+            ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain,ICompanyDomain companyDomain,IMapper mapper, ILogger logger)
         {
             _numerationDomain = numerationDomain;
             _ticketDomain = ticketDomain;
@@ -31,6 +33,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _mapper = mapper;
             _companyDomain = companyDomain;
             _tCuponDomain = tCuponDomain;
+            _ticketReceptorDomain= ticketReceptorDomain;
             _logger = logger;
         }
 
@@ -55,7 +58,10 @@ namespace DRRCore.Application.Main.CoreApplication
                         Status= (int?)TicketStatusEnum.Pendiente,
                         UserFrom="1"
                     });
-
+                    newTicket.TicketAssignation = new TicketAssignation
+                    {
+                        IdEmployee = await GetReceptorDefault(request.IdCountry??0, request.ReportType)
+                    };
                   
                     if ( await _ticketDomain.AddAsync(newTicket))
                     {
@@ -97,6 +103,23 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
 
+        }
+
+        private async Task<int> GetReceptorDefault(int idCountry, string reportType)
+        {
+            var getReceptor=new TicketReceptor();
+            if (reportType == "DF")
+            {
+                getReceptor = await _ticketReceptorDomain.GetReceptorDoubleDate();
+                return getReceptor.IdEmployee ?? 0;
+            }
+            if(reportType == "EF")
+            {
+                getReceptor = await _ticketReceptorDomain.GetReceptorInDate(idCountry);
+                return getReceptor.IdEmployee ?? 0;
+            }
+            getReceptor = await _ticketReceptorDomain.GetReceptorOtherCase(idCountry);
+            return getReceptor.IdEmployee ?? 0;
         }
 
         public async Task<Response<GetExistingTicketResponseDto>> GetReportType(int id, string type)
@@ -174,6 +197,25 @@ namespace DRRCore.Application.Main.CoreApplication
                 {
                     response.Data = null;
                 }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetListPendingTicketResponseDto>>> GetTicketListPendingAsync()
+        {
+            var response = new Response<List<GetListPendingTicketResponseDto>>();
+            try
+            {
+                var tickets = await _ticketDomain.GetAllPendingTickets();
+                response.Data= _mapper.Map<List<GetListPendingTicketResponseDto>>(tickets);
+
+                return response;
             }
             catch (Exception ex)
             {

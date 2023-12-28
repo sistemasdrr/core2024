@@ -48,5 +48,12 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _ticketApplication.GetTicketListAsync());
 
         }
+        [HttpGet()]
+        [Route("getListPending")]
+        public async Task<ActionResult> getListPending()
+        {
+            return Ok(await _ticketApplication.GetTicketListPendingAsync());
+
+        }
     }
 }

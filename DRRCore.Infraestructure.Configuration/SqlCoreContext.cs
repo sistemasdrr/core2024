@@ -125,7 +125,13 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<Ticket> Tickets { get; set; }
 
+    public virtual DbSet<TicketAssignation> TicketAssignations { get; set; }
+
+    public virtual DbSet<TicketFile> TicketFiles { get; set; }
+
     public virtual DbSet<TicketHistory> TicketHistories { get; set; }
+
+    public virtual DbSet<TicketReceptor> TicketReceptors { get; set; }
 
     public virtual DbSet<Traduction> Traductions { get; set; }
 
@@ -3223,6 +3229,80 @@ public partial class SqlCoreContext : DbContext
                 .HasConstraintName("FK__Ticket__idSubscr__71BCD978");
         });
 
+        modelBuilder.Entity<TicketAssignation>(entity =>
+        {
+            entity.HasKey(e => e.IdTicket).HasName("PK__TicketAs__22B1456F745AAD8A");
+
+            entity.ToTable("TicketAssignation");
+
+            entity.Property(e => e.IdTicket)
+                .ValueGeneratedNever()
+                .HasColumnName("idTicket");
+            entity.Property(e => e.Commentary)
+                .IsUnicode(false)
+                .HasColumnName("commentary");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdEmployee).HasColumnName("idEmployee");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.TicketAssignations)
+                .HasForeignKey(d => d.IdEmployee)
+                .HasConstraintName("FK__TicketAss__idEmp__7DEDA633");
+
+            entity.HasOne(d => d.IdTicketNavigation).WithOne(p => p.TicketAssignation)
+                .HasForeignKey<TicketAssignation>(d => d.IdTicket)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__TicketAss__idTic__7CF981FA");
+        });
+
+        modelBuilder.Entity<TicketFile>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__TicketFi__3213E83F750F1F4A");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.Extension)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("extension");
+            entity.Property(e => e.IdTicket).HasColumnName("idTicket");
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.Path)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("path");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdTicketNavigation).WithMany(p => p.TicketFiles)
+                .HasForeignKey(d => d.IdTicket)
+                .HasConstraintName("FK__TicketFil__idTic__6ADAD1BF");
+        });
+
         modelBuilder.Entity<TicketHistory>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__TicketHi__3213E83F5A652818");
@@ -3257,6 +3337,40 @@ public partial class SqlCoreContext : DbContext
             entity.HasOne(d => d.IdTicketNavigation).WithMany(p => p.TicketHistories)
                 .HasForeignKey(d => d.IdTicket)
                 .HasConstraintName("FK__TicketHis__idTic__18D6A699");
+        });
+
+        modelBuilder.Entity<TicketReceptor>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__TicketRe__3213E83F9C977F5B");
+
+            entity.ToTable("TicketReceptor");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdCountry).HasColumnName("idCountry");
+            entity.Property(e => e.IdEmployee).HasColumnName("idEmployee");
+            entity.Property(e => e.IsDobleFecha)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("isDobleFecha");
+            entity.Property(e => e.IsEnFecha)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("isEnFecha");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.TicketReceptors)
+                .HasForeignKey(d => d.IdEmployee)
+                .HasConstraintName("FK__TicketRec__idEmp__764C846B");
         });
 
         modelBuilder.Entity<Traduction>(entity =>

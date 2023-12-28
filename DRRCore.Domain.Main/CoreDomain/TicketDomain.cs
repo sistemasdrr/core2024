@@ -26,12 +26,18 @@ namespace DRRCore.Domain.Main.CoreDomain
            return await _ticketRepository.GetAllAsync();
         }
 
+        public async Task<List<Ticket>> GetAllPendingTickets()
+        {
+            return await _ticketRepository.GetAllPendingTickets();
+           
+        }
+
         public async Task<Ticket> GetByIdAsync(int id)
         {
           return await _ticketRepository.GetByIdAsync(id);
         }
 
-        public Task<List<Ticket>> GetByNameAsync(string name)
+        public async Task<List<Ticket>> GetByNameAsync(string name)
         {
             throw new NotImplementedException();
         }

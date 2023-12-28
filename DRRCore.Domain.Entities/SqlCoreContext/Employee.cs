@@ -83,5 +83,9 @@ public partial class Employee
 
     public virtual Job? IdJobNavigation { get; set; }
 
+    public virtual ICollection<TicketAssignation> TicketAssignations { get; set; } = new List<TicketAssignation>();
+
+    public virtual ICollection<TicketReceptor> TicketReceptors { get; set; } = new List<TicketReceptor>();
+
     public virtual ICollection<UserLogin> UserLogins { get; set; } = new List<UserLogin>();
 }

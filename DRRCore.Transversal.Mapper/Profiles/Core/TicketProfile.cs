@@ -77,6 +77,17 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
 
                  .ForMember(dest => dest.Price, opt => opt?.MapFrom(src => src.Price == null ? 0 : src.Price))
                  .ReverseMap();
+
+
+            CreateMap<Ticket, GetListPendingTicketResponseDto>()      
+                .ForMember(dest => dest.Name, opt => opt?.MapFrom(src => src.RequestedName))
+                .ForMember(dest => dest.Commentary, opt => opt?.MapFrom(src => src.TicketAssignation==null?string.Empty:src.TicketAssignation.Commentary??string.Empty))
+                .ForMember(dest => dest.Receptor, opt => opt?.MapFrom(src => src.TicketAssignation == null?0:src.TicketAssignation.IdEmployee))
+                .ForMember(dest => dest.HasFiles, opt => opt?.MapFrom(src => src.TicketFiles.Count>0))
+                .ForMember(dest => dest.Files, opt => opt?.MapFrom(src => src.TicketFiles))
+                .ReverseMap();
+
+            CreateMap<TicketFileResponseDto, TicketFile>().ReverseMap();
         }
         private static string GetProcedureType(string? tram)
         {

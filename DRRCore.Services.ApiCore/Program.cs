@@ -9,6 +9,7 @@ using DRRCore.Domain.Main.CoreDomain;
 using DRRCore.Domain.Main.MysqlDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Infraestructure.Interfaces.MySqlRepository;
+using DRRCore.Infraestructure.Repository;
 using DRRCore.Infraestructure.Repository.CoreRepository;
 using DRRCore.Infraestructure.Repository.MYSQLRepository;
 using DRRCore.Transversal.Common;
@@ -118,6 +119,7 @@ builder.Services.AddScoped<IBusinessActivityRepository, BusinessActivityReposito
 builder.Services.AddScoped<ILandOwnershipRepository, LandOwnershipRepository>();
 builder.Services.AddScoped<ITCuponRepository, TCuponRepository>();
 builder.Services.AddScoped<IImportsAndExportsRepository, ImportsAndExportsRepository>();
+builder.Services.AddScoped<ITicketReceptorRepository, TicketReceptorRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -170,6 +172,7 @@ builder.Services.AddScoped<IBusinessActivityDomain, BusinessActivityDomain>();
 builder.Services.AddScoped<ILandOwnershipDomain, LandOwnershipDomain>();
 builder.Services.AddScoped<ITCuponDomain, TCuponDomain>();
 builder.Services.AddScoped<IImportsAndExportsDomain, ImportsAndExportsDomain>();
+builder.Services.AddScoped<ITicketReceptorDomain, TicketReceptorDomain>();
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();

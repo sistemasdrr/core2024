@@ -1,25 +1,24 @@
-﻿using DRRCore.Application.DTO.Enum;
-using DRRCore.Domain.Entities.SqlCoreContext;
+﻿using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace DRRCore.Infraestructure.Repository.CoreRepository
+namespace DRRCore.Infraestructure.Repository
 {
-    public class TicketRepository : ITicketRepository
+    public class TicketReceptorRepository : ITicketReceptorRepository
     {
         private readonly ILogger _logger;
-        public TicketRepository(ILogger logger)
+        public TicketReceptorRepository(ILogger logger)
         {
             _logger = logger;
         }
-        public async Task<bool> AddAsync(Ticket obj)
+        public async Task<bool> AddAsync(TicketReceptor obj)
         {
             try
             {
                 using (var context = new SqlCoreContext())
                 {
-                    await context.Tickets.AddAsync(obj);
+                    await context.TicketReceptors.AddAsync(obj);
                     await context.SaveChangesAsync();
                     return true;
                 }
@@ -37,10 +36,9 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using (var context = new SqlCoreContext())
                 {
-                    var obj = await context.Tickets.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
+                    var obj = await context.TicketReceptors.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
                     obj.Enable = false;
-                    obj.DeleteDate = DateTime.Now;
-                    context.Tickets.Update(obj);
+                    context.TicketReceptors.Update(obj);
                     await context.SaveChangesAsync();
                     return true;
                 }
@@ -52,94 +50,88 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public async Task<List<Ticket>> GetAllAsync()
+        public async Task<List<TicketReceptor>> GetAllAsync()
         {
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Include(x=>x.IdSubscriberNavigation).Include(x => x.IdSubscriberNavigation.IdCountryNavigation)
-                    .Include(x => x.IdContinentNavigation).Include(x => x.IdCompanyNavigation).Include(x => x.IdCompanyNavigation.IdCountryNavigation).Include(x => x.IdCompanyNavigation.IdCountryNavigation.IdContinentNavigation)
-                    .Include(x => x.IdCountryNavigation).Where(x => x.Status!=(int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
+                return await context.TicketReceptors.Where(x => x.Enable == true).ToListAsync();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Ticket>();
+                return new List<TicketReceptor>();
             }
         }
 
-        public async Task<List<Ticket>> GetAllPendingTickets()
+        public async Task<TicketReceptor> GetByIdAsync(int id)
         {
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Include(x=>x.TicketAssignation).Include(x => x.TicketFiles).Where(x => x.Status == (int?)TicketStatusEnum.Pendiente && x.Enable == true).ToListAsync();
+                return await context.TicketReceptors.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Ticket>();
+                return new TicketReceptor();
             }
         }
 
-        public async Task<Ticket> GetByIdAsync(int id)
-        {
-            try
-            {
-                using var context = new SqlCoreContext();
-                return await context.Tickets.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return null;
-            }
-        }
-
-        public Task<List<Ticket>> GetByNameAsync(string name)
+        public Task<List<TicketReceptor>> GetByNameAsync(string name)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<List<Ticket>> GetTicketByCompany(int id)
+        public async Task<TicketReceptor> GetReceptorDoubleDate()
         {
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Include(x=>x.IdSubscriberNavigation).Where(x => x.IdCompany == id).ToListAsync();
+                return await context.TicketReceptors.Where(x=>x.IsDobleFecha==true).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Ticket>();
+                return new TicketReceptor();
             }
         }
 
-        public async Task<List<Ticket>> GetTicketByPerson(int id)
+        public async Task<TicketReceptor> GetReceptorInDate(int idCountry)
         {
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Where(x => x.IdPerson == id).ToListAsync();
+                return await context.TicketReceptors.Where(x => x.IsEnFecha == true && x.IdCountry==idCountry).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Ticket>();
+                return new TicketReceptor();
             }
         }
 
-      
+        public async Task<TicketReceptor> GetReceptorOtherCase(int idCountry)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.TicketReceptors.Where(x => x.IdCountry == idCountry).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new TicketReceptor();
+            }
+        }
 
-        public async Task<bool> UpdateAsync(Ticket obj)
+        public async Task<bool> UpdateAsync(TicketReceptor obj)
         {
             try
             {
                 using (var context = new SqlCoreContext())
                 {
-
-                    obj.UpdateDate = DateTime.Now;
-                    context.Tickets.Update(obj);
+                    context.TicketReceptors.Update(obj);
                     await context.SaveChangesAsync();
                     return true;
                 }
@@ -147,7 +139,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                throw new Exception(ex.Message);
+                return false;
             }
         }
     }
