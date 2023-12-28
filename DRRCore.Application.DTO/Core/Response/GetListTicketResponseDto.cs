@@ -3,7 +3,7 @@
     public class GetListTicketResponseDto
     {
         public int Id { get; set; }
-        public int Number { get; set; }
+        public string Number { get; set; }
         public int? IdSubscriber { get; set; }
         public string? Language { get; set; }
         public string About { get; set; } = null!;
@@ -13,8 +13,10 @@
         public int? IdPerson { get; set; }
         public int? Creditrisk { get; set; }
         public bool? Enable { get; set; }
+        public string? Quality { get; set; }
 
         //ABONADO
+        public string? SubscriberCode{ get; set; }
         public string? SubscriberName { get; set; }
         public string? SubscriberCountry { get; set; }
         public string? SubscriberFlag { get; set; }
@@ -47,5 +49,6 @@
         public string? OrderDate { get; set; }
         public string? ExpireDate { get; set; }
         public string? RealExpireDate { get; set; }
+        public string? DispatchDate { get; set; }
     }
 }

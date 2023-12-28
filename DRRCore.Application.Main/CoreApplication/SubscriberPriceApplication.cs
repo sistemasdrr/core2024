@@ -167,36 +167,31 @@ namespace DRRCore.Application.Main.CoreApplication
                 if (idSubscriber > 0)
                 {
                     var subscriberPrice = await _subscriberPriceDomain.GetPriceBySubscriberIds(idSubscriber, idContinent, idCountry);
-                    if(subscriberPrice.PriceT1 > 0 && subscriberPrice.DayT1 > 0)
-                    {
+                    
                         var T1 = new GetPricesResponseDto();
                         T1.Name = "T1";
                         T1.Price = (int)subscriberPrice.PriceT1;
                         T1.Days = (int)subscriberPrice.DayT1;
                         list.Add((GetPricesResponseDto)T1);
-                    }
-                    if(subscriberPrice.PriceT2 > 0 && subscriberPrice.DayT2 > 0)
-                    {
+                    
                         var T2 = new GetPricesResponseDto();
                         T2.Name = "T2";
                         T2.Price = (int)subscriberPrice.PriceT2;
                         T2.Days = (int)subscriberPrice.DayT2;
                         list.Add((GetPricesResponseDto)T2);
-                    }
-                    if (subscriberPrice.PriceT3 > 0 && subscriberPrice.DayT3 > 0)
-                    {
+                  
                         var T3 = new GetPricesResponseDto();
                         T3.Name = "T3";
                         T3.Price = (int)subscriberPrice.PriceT3;
                         T3.Days = (int)subscriberPrice.DayT3;
                         list.Add((GetPricesResponseDto)T3);
-                    }
-                    if (subscriberPrice.PriceB > 0)
-                    {
+                    
                         var TB = new GetPricesResponseDto();
                         TB.Name = "B";
                         TB.Price = (int)subscriberPrice.PriceB;
-                    }
+                        TB.Days = (int)subscriberPrice.PriceB;
+                        list.Add((GetPricesResponseDto)TB);
+
                     response.Data = list;
                 }
             }
