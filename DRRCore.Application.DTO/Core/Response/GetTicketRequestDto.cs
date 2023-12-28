@@ -1,6 +1,6 @@
-﻿namespace DRRCore.Application.DTO.Core.Request
+﻿namespace DRRCore.Application.DTO.Core.Response
 {
-    public class AddOrUpdateTicketRequestDto
+    public class GetTicketRequestDto
     {
         public int Id { get; set; }
 
@@ -59,8 +59,8 @@
         public string? Telephone { get; set; }
 
         public int? Creditrisk { get; set; }
-       
-        public bool? Enable { get; set; }     
+
+        public bool? Enable { get; set; }
 
         public string? RequestedName { get; set; }
 

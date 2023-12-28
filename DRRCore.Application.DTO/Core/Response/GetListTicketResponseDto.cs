@@ -1,0 +1,51 @@
+﻿namespace DRRCore.Application.DTO.Core.Response
+{
+    public class GetListTicketResponseDto
+    {
+        public int Id { get; set; }
+        public int Number { get; set; }
+        public int? IdSubscriber { get; set; }
+        public string? Language { get; set; }
+        public string About { get; set; } = null!;
+        public int? IdContinent { get; set; }
+        public int? IdCountry { get; set; }
+        public int? IdCompany { get; set; }
+        public int? IdPerson { get; set; }
+        public int? Creditrisk { get; set; }
+        public bool? Enable { get; set; }
+
+        //ABONADO
+        public string? SubscriberName { get; set; }
+        public string? SubscriberCountry { get; set; }
+        public string? SubscriberFlag { get; set; }
+        public string? QueryCredit { get; set; }
+        public string? TimeLimit { get; set; }
+        public bool? RevealName { get; set; }
+        public string? NameRevealed { get; set; }
+        public string? ReferenceNumber { get; set; }
+        public string? AditionalData { get; set; }
+        public string? SubscriberIndications { get; set; }
+
+        //EMPRESA
+        public string? BusineesName { get; set; }
+        public string? ComercialName { get; set; }
+        public string? RequestedName { get; set; }
+        public string? TaxType { get; set; }
+        public string? TaxCode { get; set; }
+        public string? InvestigatedContinent{ get; set; }
+        public string? InvestigatedCountry { get; set; }
+        public string? InvestigatedFlag { get; set; }
+        public string? City { get; set; }
+        public string? Email { get; set; }
+        public string? Address { get; set; }
+        public string? Telephone { get; set; }
+
+        //INFORME
+        public string ReportType { get; set; } = null!;
+        public string ProcedureType { get; set; } = null!;
+        public decimal? Price { get; set; }
+        public string? OrderDate { get; set; }
+        public string? ExpireDate { get; set; }
+        public string? RealExpireDate { get; set; }
+    }
+}
