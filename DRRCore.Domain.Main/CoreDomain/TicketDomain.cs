@@ -26,6 +26,11 @@ namespace DRRCore.Domain.Main.CoreDomain
            return await _ticketRepository.GetAllAsync();
         }
 
+        public async Task<List<Ticket>> GetAllByAsync(string ticket, string name, string subscriber, string type, string procedure)
+        {
+            return await _ticketRepository.GetAllByAsync(ticket,name,subscriber,type,procedure);
+        }
+
         public async Task<List<Ticket>> GetAllPendingTickets()
         {
             return await _ticketRepository.GetAllPendingTickets();

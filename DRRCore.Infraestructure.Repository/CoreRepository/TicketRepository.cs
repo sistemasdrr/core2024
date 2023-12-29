@@ -74,6 +74,50 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<List<Ticket>> GetAllByAsync(string ticket, string name, string subscriber, string type, string procedure)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var list= await context.Tickets.Include(x => x.IdSubscriberNavigation)
+                    .Include(x => x.IdSubscriberNavigation.IdCountryNavigation)
+                    .Include(x => x.IdContinentNavigation).Include(x => x.IdCompanyNavigation)
+                    .Include(x => x.IdCompanyNavigation.IdCountryNavigation)
+                    .Include(x => x.IdCompanyNavigation.IdCountryNavigation.IdContinentNavigation)
+                    .Include(x => x.IdPersonNavigation)
+                    .Include(x => x.IdPersonNavigation.IdCountryNavigation)
+                    .Include(x => x.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
+                    .Include(x => x.IdCountryNavigation).Where(x => x.Status != (int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
+
+                if (!string.IsNullOrEmpty(ticket))
+                {
+                    list = list.Where(x => x.Number == int.Parse(ticket)).ToList();
+                }
+                if (!string.IsNullOrEmpty(name))
+                {
+                    list = list.Where(x => x.RequestedName.Contains(name)).ToList();
+                }
+                if (!string.IsNullOrEmpty(subscriber))
+                {
+                    list = list.Where(x => x.IdSubscriberNavigation.Code==subscriber).ToList();
+                }
+                if (!string.IsNullOrEmpty(type))
+                {
+                    list = list.Where(x => x.ReportType == type).ToList();
+                }
+                if (!string.IsNullOrEmpty(procedure))
+                {
+                    list = list.Where(x => x.ProcedureType == procedure).ToList();
+                }
+                return list;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new List<Ticket>();
+            }
+        }
+
         public async Task<List<Ticket>> GetAllPendingTickets()
         {
             try

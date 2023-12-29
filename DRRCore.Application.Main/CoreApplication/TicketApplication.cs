@@ -372,5 +372,29 @@ namespace DRRCore.Application.Main.CoreApplication
                 Password = "drrti2023"
             };
        }
+
+        public async Task<Response<List<GetListTicketResponseDto>>> GetTicketListByAsync(string ticket, string name, string subscriber, string type, string procedure)
+        {
+            var response = new Response<List<GetListTicketResponseDto>>();
+            try
+            {
+                var list = await _ticketDomain.GetAllByAsync(ticket,name, subscriber,type,procedure);
+                if (list != null)
+                {
+                    response.Data = _mapper.Map<List<GetListTicketResponseDto>>(list);
+                }
+                else
+                {
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
     }
 }

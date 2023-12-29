@@ -14,5 +14,6 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetListTicketResponseDto>>> GetTicketListAsync();
         Task<Response<bool>> DeleteTicket(int id);
         Task<Response<List<GetListPendingTicketResponseDto>>> GetTicketListPendingAsync();
+        Task<Response<List<GetListTicketResponseDto>>> GetTicketListByAsync(string ticket, string name, string subscriber, string type, string procedure);
     }
 }

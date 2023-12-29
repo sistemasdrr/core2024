@@ -45,6 +45,12 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _ticketApplication.GetTicketListAsync());
         }
+        [HttpGet()]
+        [Route("getListby")]
+        public async Task<ActionResult> getListBy(string ticket, string name, string subscriber, string type, string procedure)
+        {
+            return Ok(await _ticketApplication.GetTicketListByAsync(ticket,name,subscriber,type,procedure));
+        }
         [HttpPost()]
         [Route("deleteTicket")]
         public async Task<ActionResult> deleteTicket(int id)
