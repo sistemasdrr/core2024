@@ -95,6 +95,8 @@ public partial class Person
 
     public bool? OnWeb { get; set; }
 
+    public int? IdPersonSituation { get; set; }
+
     public virtual CivilStatus? IdCivilStatusNavigation { get; set; }
 
     public virtual Country? IdCountryNavigation { get; set; }
@@ -106,6 +108,10 @@ public partial class Person
     public virtual LegalRegisterSituation? IdLegalRegisterSituationNavigation { get; set; }
 
     public virtual PaymentPolicy? IdPaymentPolicyNavigation { get; set; }
+
+    public virtual PersonSituation? IdPersonSituationNavigation { get; set; }
+
+    public virtual Profession? IdProfessionNavigation { get; set; }
 
     public virtual Reputation? IdReputationNavigation { get; set; }
 

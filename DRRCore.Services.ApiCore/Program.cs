@@ -119,6 +119,8 @@ builder.Services.AddScoped<ILandOwnershipRepository, LandOwnershipRepository>();
 builder.Services.AddScoped<ITCuponRepository, TCuponRepository>();
 builder.Services.AddScoped<IImportsAndExportsRepository, ImportsAndExportsRepository>();
 builder.Services.AddScoped<ITicketReceptorRepository, TicketReceptorRepository>();
+builder.Services.AddScoped<IPersonSituationRepository, PersonSituationRepository>();
+builder.Services.AddScoped<IProfessionRepository, ProfessionRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -172,6 +174,8 @@ builder.Services.AddScoped<ILandOwnershipDomain, LandOwnershipDomain>();
 builder.Services.AddScoped<ITCuponDomain, TCuponDomain>();
 builder.Services.AddScoped<IImportsAndExportsDomain, ImportsAndExportsDomain>();
 builder.Services.AddScoped<ITicketReceptorDomain, TicketReceptorDomain>();
+builder.Services.AddScoped<IPersonSituationDomain, PersonSituationDomain>();
+builder.Services.AddScoped<IProfessionDomain, ProfessionDomain>();
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
