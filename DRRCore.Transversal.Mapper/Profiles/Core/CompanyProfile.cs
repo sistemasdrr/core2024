@@ -62,7 +62,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation != null ? src.IdCountryNavigation.FlagIso : string.Empty))
                 .ForMember(dest => dest.Quality, opt => opt?.MapFrom(src => src.Quality))
                 //Falta implementar
-                .ForMember(dest => dest.TraductionPercentage, opt => opt?.MapFrom(src =>GetTraductionPercentage()))
+                .ForMember(dest => dest.TraductionPercentage, opt => opt?.MapFrom(src =>GetTraductionPercentage(src.Traductions)))
                 .ForMember(dest => dest.Manager, opt => opt?.MapFrom(src => string.Empty))
                 .ReverseMap();
             CreateMap<Traduction, TraductionDto>()
@@ -207,13 +207,21 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
           .ReverseMap();
         }
 
-        private int GetTraductionPercentage()
+        private int GetTraductionPercentage(ICollection<Traduction> traductions)
         {
-            int min = 1;
-            int max = 100;
+            int total = traductions.Count;
+            int existTraduction = 0;
+            foreach (var item in traductions)
+            {
+               if(!string.IsNullOrEmpty(item.ShortValue) || !string.IsNullOrEmpty(item.LargeValue))
+                {
+                    existTraduction++;
+                }
+            }
+            if (total == 0) return 0;
 
-            Random rnd = new Random();
-            return rnd.Next(min, max + 1);
+            return existTraduction*100 / total;
         }
+       
     }
 }

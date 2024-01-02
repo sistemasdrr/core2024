@@ -178,12 +178,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 {
                     if (idCountry == 0)
                     {
-                        companys = await context.Companies.Include(x=>x.IdCreditRiskNavigation).
+                        companys = await context.Companies.Include(x=>x.Traductions).Include(x=>x.IdCreditRiskNavigation).
                             Include(x => x.IdCountryNavigation).Where(x => x.Name.Contains(name) || x.SocialName.Contains(name)).Take(100).ToListAsync();
                     }
                     else
                     {
-                        companys = await context.Companies.Include(x => x.IdCreditRiskNavigation).
+                        companys = await context.Companies.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
                             Include(x => x.IdCountryNavigation).Where(x =>x.IdCountry==idCountry && (x.Name.Contains(name) || x.SocialName.Contains(name))).Take(100).ToListAsync();
                     }
                     
@@ -192,12 +192,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 {
                     if (idCountry == 0)
                     {
-                        companys = await context.Companies.Include(x => x.IdCreditRiskNavigation).
+                        companys = await context.Companies.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
                             Include(x => x.IdCountryNavigation).Where(x => x.Name.StartsWith(name) || x.SocialName.StartsWith(name)).Take(100).ToListAsync();
                     }
                     else
                     {
-                        companys = await context.Companies.Include(x => x.IdCreditRiskNavigation).
+                        companys = await context.Companies.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
                             Include(x => x.IdCountryNavigation).Where(x => x.IdCountry == idCountry && ( x.Name.StartsWith(name) || x.SocialName.StartsWith(name))).Take(100).ToListAsync();
                     }
                   

@@ -5,11 +5,6 @@ using DRRCore.Application.DTO.Enum;
 using DRRCore.Domain.Entities.MYSQLContext;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Transversal.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DRRCore.Transversal.Mapper.Profiles.Core
 {
@@ -118,19 +113,6 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 default:
                     return string.Empty;
             }
-        }
-
-        private string GetStatusColor(ICollection<TicketHistory> ticketHistories)
-        {
-            throw new NotImplementedException();
-        }
-
-        private string GetStatus(ICollection<TicketHistory> ticketHistories)
-        {
-           
-            
-            
-            return string.Empty;
         }
 
         private static string GetProcedureType(string? tram)
