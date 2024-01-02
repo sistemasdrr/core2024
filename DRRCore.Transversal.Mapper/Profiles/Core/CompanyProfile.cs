@@ -8,7 +8,6 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
 {
     public class CompanyProfile : Profile
     {
-       
         public CompanyProfile() {
 
             CreateMap<AddOrUpdateCompanyRequestDto, Company>()

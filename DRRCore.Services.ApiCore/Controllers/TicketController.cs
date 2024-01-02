@@ -47,9 +47,9 @@ namespace DRRCore.Services.ApiCore.Controllers
         }
         [HttpGet()]
         [Route("getListby")]
-        public async Task<ActionResult> getListBy(string ticket, string name, string subscriber, string type, string procedure)
+        public async Task<ActionResult> getListBy(string? ticket, string? name, string? subscriber, string? type, string? procedure)
         {
-            return Ok(await _ticketApplication.GetTicketListByAsync(ticket,name,subscriber,type,procedure));
+            return Ok(await _ticketApplication.GetTicketListByAsync(ticket??string.Empty,name ?? string.Empty, subscriber ?? string.Empty, type ?? string.Empty, procedure ?? string.Empty));
         }
         [HttpPost()]
         [Route("deleteTicket")]

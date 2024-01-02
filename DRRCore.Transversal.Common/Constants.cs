@@ -93,6 +93,7 @@
                                                                 "S_F_JOB","L_F_COMENT","L_F_PRINCACTIV","L_F_SELECTFIN","L_F_ANALISTCOM",
                                                                 "L_S_COMENTARY", "L_S_BANCARIOS","L_S_AVALES","L_S_LITIG","L_S_CREDHIS",
                                                                 "S_O_QUERYCREDIT","S_O_SUGCREDIT","L_O_COMENTARY",
-                                                                 "L_I_GENERAL","S_IMG_1","S_IMG_2","S_IMG_3","S_IMG_4"} ;
+                                                                 "L_I_GENERAL","S_IMG_1","S_IMG_2","S_IMG_3","S_IMG_4"};
+        public static readonly string[] TRADUCTIONS_FORMS_PERSON = { "S_P_NACIONALITY", "S_P_BIRTHDATE" ,"S_P_MARRIEDTO" };
     }
 }

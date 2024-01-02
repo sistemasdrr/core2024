@@ -89,7 +89,9 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdPersonNavigation)
                     .Include(x => x.IdPersonNavigation.IdCountryNavigation)
                     .Include(x => x.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
-                    .Include(x => x.IdCountryNavigation).Where(x => x.IdStatusTicket != (int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
+                    .Include(x => x.IdStatusTicketNavigation)
+                    .Include(x => x.IdCountryNavigation).Where(x => x.IdStatusTicket != (int?)TicketStatusEnum.Despachado && x.Enable == true).Include(x => x.TicketHistories.OrderByDescending(x => x.Id)).Where(x => x.IdStatusTicket != (int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
+
 
                 if (!string.IsNullOrEmpty(ticket))
                 {
@@ -97,7 +99,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 }
                 if (!string.IsNullOrEmpty(name))
                 {
-                    list = list.Where(x => x.RequestedName.Contains(name)).ToList();
+                    list = list.Where(x => x.BusineesName.Contains(name)).ToList();
                 }
                 if (!string.IsNullOrEmpty(subscriber))
                 {
