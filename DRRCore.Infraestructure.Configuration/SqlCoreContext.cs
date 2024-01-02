@@ -117,6 +117,8 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<SearchedName> SearchedNames { get; set; }
 
+    public virtual DbSet<StatusTicket> StatusTickets { get; set; }
+
     public virtual DbSet<Subscriber> Subscribers { get; set; }
 
     public virtual DbSet<SubscriberCategory> SubscriberCategories { get; set; }
@@ -2844,6 +2846,40 @@ public partial class SqlCoreContext : DbContext
                 .HasConstraintName("FK__SearchedN__idPer__5F691F13");
         });
 
+        modelBuilder.Entity<StatusTicket>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__StatusTi__3213E83F548F6ACD");
+
+            entity.ToTable("StatusTicket");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Abrev)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("abrev");
+            entity.Property(e => e.Color)
+                .HasMaxLength(25)
+                .IsUnicode(false)
+                .HasColumnName("color");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Description)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("description");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+        });
+
         modelBuilder.Entity<Subscriber>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Subscrib__3213E83FAAFFFEEC");
@@ -3141,6 +3177,7 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.IdContinent).HasColumnName("idContinent");
             entity.Property(e => e.IdCountry).HasColumnName("idCountry");
             entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.IdStatusTicket).HasColumnName("idStatusTicket");
             entity.Property(e => e.IdSubscriber).HasColumnName("idSubscriber");
             entity.Property(e => e.Language)
                 .HasMaxLength(1)
@@ -3185,9 +3222,6 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.RevealName)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("revealName");
-            entity.Property(e => e.Status)
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("status");
             entity.Property(e => e.TaxCode)
                 .HasMaxLength(30)
                 .IsUnicode(false)
@@ -3223,6 +3257,10 @@ public partial class SqlCoreContext : DbContext
             entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.IdPerson)
                 .HasConstraintName("FK__Ticket__idPerson__66161CA2");
+
+            entity.HasOne(d => d.IdStatusTicketNavigation).WithMany(p => p.Tickets)
+                .HasForeignKey(d => d.IdStatusTicket)
+                .HasConstraintName("FK__Ticket__idStatus__058EC7FB");
 
             entity.HasOne(d => d.IdSubscriberNavigation).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.IdSubscriber)
@@ -3310,6 +3348,10 @@ public partial class SqlCoreContext : DbContext
             entity.ToTable("TicketHistory");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AsignedTo)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("asignedTo");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -3320,8 +3362,8 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
+            entity.Property(e => e.IdStatusTicket).HasColumnName("idStatusTicket");
             entity.Property(e => e.IdTicket).HasColumnName("idTicket");
-            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
@@ -3333,6 +3375,10 @@ public partial class SqlCoreContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("userTo");
+
+            entity.HasOne(d => d.IdStatusTicketNavigation).WithMany(p => p.TicketHistories)
+                .HasForeignKey(d => d.IdStatusTicket)
+                .HasConstraintName("FK__TicketHis__idSta__049AA3C2");
 
             entity.HasOne(d => d.IdTicketNavigation).WithMany(p => p.TicketHistories)
                 .HasForeignKey(d => d.IdTicket)

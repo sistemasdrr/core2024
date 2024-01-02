@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
+using DRRCore.Application.DTO.Enum;
 using DRRCore.Domain.Entities.MYSQLContext;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Transversal.Common;
@@ -28,7 +29,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             CreateMap<Ticket, GetListSameSearchedReportResponseDto>()
                   .ForMember(dest => dest.TypeReport, opt => opt?.MapFrom(src => src.ReportType))
                   .ForMember(dest => dest.DispatchtDate, opt => opt?.MapFrom(src => src.DispatchtDate))
-                  .ForMember(dest => dest.IsPending, opt => opt?.MapFrom(src => src.Status==1))
+                  .ForMember(dest => dest.IsPending, opt => opt?.MapFrom(src => src.IdStatusTicket==(int?)TicketStatusEnum.Pendiente))
                   .ForMember(dest => dest.TicketNumber, opt => opt?.MapFrom(src =>"N"+ src.Number.ToString("D6")))
                   .ForMember(dest => dest.RequestedName, opt => opt?.MapFrom(src => src.RequestedName))
                   .ForMember(dest => dest.Dispatch, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DispatchtDate)))
@@ -61,6 +62,9 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == null ? 0 : src.IdCompany))
                  .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == null ? 0 : src.IdPerson))
                  .ForMember(dest => dest.Number, opt => opt?.MapFrom(src => src.Number.ToString("D6")))
+                 .ForMember(dest => dest.Status, opt => opt?.MapFrom(src => src.IdStatusTicketNavigation.Abrev))
+                 .ForMember(dest => dest.StatusColor, opt => opt?.MapFrom(src => src.IdStatusTicketNavigation.Color))
+                 .ForMember(dest => dest.StatusFinalOwner, opt => opt?.MapFrom(src => GetStatusFinalOwner(src.TicketHistories)))
 
                  .ForMember(dest => dest.SubscriberCode, opt => opt?.MapFrom(src => src.IdSubscriberNavigation.Code))
                  .ForMember(dest => dest.SubscriberName, opt => opt?.MapFrom(src => src.IdSubscriberNavigation.Name))
@@ -93,6 +97,42 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
 
             CreateMap<TicketFileResponseDto, TicketFile>().ReverseMap();
         }
+
+        private string GetStatusFinalOwner(ICollection<TicketHistory> ticketHistories)
+        {
+            var lastHistory = ticketHistories.FirstOrDefault();
+
+            if (lastHistory == null) return string.Empty;
+
+            switch (lastHistory.IdStatusTicket)
+            {
+                case (int?)TicketStatusEnum.Asig_Agente:
+                case (int?)TicketStatusEnum.Asig_Digitidor:
+                case (int?)TicketStatusEnum.Asig_Reportero:
+                case (int?)TicketStatusEnum.Asig_Traductor:
+                case (int?)TicketStatusEnum.Asig_Supervisor:
+                case (int?)TicketStatusEnum.Asig_Multiple:
+                    return lastHistory.AsignedTo??string.Empty;
+                case (int?)TicketStatusEnum.En_Consulta:
+                    return "Abonado";
+                default:
+                    return string.Empty;
+            }
+        }
+
+        private string GetStatusColor(ICollection<TicketHistory> ticketHistories)
+        {
+            throw new NotImplementedException();
+        }
+
+        private string GetStatus(ICollection<TicketHistory> ticketHistories)
+        {
+           
+            
+            
+            return string.Empty;
+        }
+
         private static string GetProcedureType(string? tram)
         {
             if (!string.IsNullOrEmpty(tram))

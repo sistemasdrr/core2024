@@ -9,8 +9,6 @@ public partial class TicketHistory
 
     public int? IdTicket { get; set; }
 
-    public int? Status { get; set; }
-
     public string? UserFrom { get; set; }
 
     public string? UserTo { get; set; }
@@ -22,6 +20,12 @@ public partial class TicketHistory
     public DateTime? DeleteDate { get; set; }
 
     public bool? Enable { get; set; }
+
+    public int? IdStatusTicket { get; set; }
+
+    public string? AsignedTo { get; set; }
+
+    public virtual StatusTicket? IdStatusTicketNavigation { get; set; }
 
     public virtual Ticket? IdTicketNavigation { get; set; }
 }

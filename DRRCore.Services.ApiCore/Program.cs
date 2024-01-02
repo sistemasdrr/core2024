@@ -9,7 +9,6 @@ using DRRCore.Domain.Main.CoreDomain;
 using DRRCore.Domain.Main.MysqlDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Infraestructure.Interfaces.MySqlRepository;
-using DRRCore.Infraestructure.Repository;
 using DRRCore.Infraestructure.Repository.CoreRepository;
 using DRRCore.Infraestructure.Repository.MYSQLRepository;
 using DRRCore.Transversal.Common;

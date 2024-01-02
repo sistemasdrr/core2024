@@ -52,10 +52,10 @@ namespace DRRCore.Application.Main.CoreApplication
                 if (request.Id == 0)
                 {
                     var newTicket = _mapper.Map<Ticket>(request);
-                    newTicket.Status = (int?)TicketStatusEnum.Pendiente;
+                    newTicket.IdStatusTicket = (int?)TicketStatusEnum.Pendiente;
                     newTicket.TicketHistories.Add(new TicketHistory
                     {
-                        Status= (int?)TicketStatusEnum.Pendiente,
+                        IdStatusTicket= (int?)TicketStatusEnum.Pendiente,
                         UserFrom="1"
                     });
                     newTicket.TicketAssignation = new TicketAssignation

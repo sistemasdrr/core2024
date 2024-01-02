@@ -65,7 +65,9 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdPersonNavigation)
                     .Include(x => x.IdPersonNavigation.IdCountryNavigation)
                     .Include(x => x.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
-                    .Include(x => x.IdCountryNavigation).Where(x => x.Status!=(int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
+                    .Include(x => x.IdCountryNavigation)
+                    .Include(x => x.IdStatusTicketNavigation)
+                    .Include(x => x.TicketHistories.OrderByDescending(x=>x.Id)).Where(x => x.IdStatusTicket !=(int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -87,7 +89,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdPersonNavigation)
                     .Include(x => x.IdPersonNavigation.IdCountryNavigation)
                     .Include(x => x.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
-                    .Include(x => x.IdCountryNavigation).Where(x => x.Status != (int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
+                    .Include(x => x.IdCountryNavigation).Where(x => x.IdStatusTicket != (int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
 
                 if (!string.IsNullOrEmpty(ticket))
                 {
@@ -123,7 +125,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Include(x=>x.TicketAssignation).Include(x => x.TicketFiles).Where(x => x.Status == (int?)TicketStatusEnum.Pendiente && x.Enable == true).ToListAsync();
+                return await context.Tickets.Include(x=>x.TicketAssignation).Include(x => x.TicketFiles).Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Pendiente && x.Enable == true).ToListAsync();
             }
             catch (Exception ex)
             {

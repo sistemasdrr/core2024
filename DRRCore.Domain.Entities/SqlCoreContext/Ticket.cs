@@ -63,8 +63,6 @@ public partial class Ticket
 
     public int? Creditrisk { get; set; }
 
-    public int? Status { get; set; }
-
     public DateTime CreationDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
@@ -79,6 +77,8 @@ public partial class Ticket
 
     public decimal? Price { get; set; }
 
+    public int? IdStatusTicket { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Continent? IdContinentNavigation { get; set; }
@@ -86,6 +86,8 @@ public partial class Ticket
     public virtual Country? IdCountryNavigation { get; set; }
 
     public virtual Person? IdPersonNavigation { get; set; }
+
+    public virtual StatusTicket? IdStatusTicketNavigation { get; set; }
 
     public virtual Subscriber? IdSubscriberNavigation { get; set; }
 

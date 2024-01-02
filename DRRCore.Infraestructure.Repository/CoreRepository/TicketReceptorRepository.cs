@@ -3,7 +3,7 @@ using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace DRRCore.Infraestructure.Repository
+namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
     public class TicketReceptorRepository : ITicketReceptorRepository
     {
@@ -88,7 +88,7 @@ namespace DRRCore.Infraestructure.Repository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.TicketReceptors.Where(x=>x.IsDobleFecha==true).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
+                return await context.TicketReceptors.Where(x => x.IsDobleFecha == true).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {
@@ -102,7 +102,7 @@ namespace DRRCore.Infraestructure.Repository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.TicketReceptors.Where(x => x.IsEnFecha == true && x.IdCountry==idCountry).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
+                return await context.TicketReceptors.Where(x => x.IsEnFecha == true && x.IdCountry == idCountry).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {
