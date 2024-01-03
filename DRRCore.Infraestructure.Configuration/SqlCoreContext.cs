@@ -2491,7 +2491,6 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.IdLegalRegisterSituation).HasColumnName("idLegalRegisterSituation");
             entity.Property(e => e.IdPaymentPolicy).HasColumnName("idPaymentPolicy");
             entity.Property(e => e.IdPersonSituation).HasColumnName("idPersonSituation");
-            entity.Property(e => e.IdProfession).HasColumnName("idProfession");
             entity.Property(e => e.IdReputation).HasColumnName("idReputation");
             entity.Property(e => e.Insurance)
                 .HasMaxLength(100)
@@ -2535,6 +2534,10 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.PrivateCommentary)
                 .IsUnicode(false)
                 .HasColumnName("privateCommentary");
+            entity.Property(e => e.Profession)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("profession");
             entity.Property(e => e.RelationshipCodeDocument)
                 .HasMaxLength(30)
                 .IsUnicode(false)
@@ -2589,10 +2592,6 @@ public partial class SqlCoreContext : DbContext
             entity.HasOne(d => d.IdPersonSituationNavigation).WithMany(p => p.People)
                 .HasForeignKey(d => d.IdPersonSituation)
                 .HasConstraintName("FK_Person_PersonSituation01");
-
-            entity.HasOne(d => d.IdProfessionNavigation).WithMany(p => p.People)
-                .HasForeignKey(d => d.IdProfession)
-                .HasConstraintName("FK__Person__idProfes__0A537D18");
 
             entity.HasOne(d => d.IdReputationNavigation).WithMany(p => p.People)
                 .HasForeignKey(d => d.IdReputation)
@@ -3548,6 +3547,10 @@ public partial class SqlCoreContext : DbContext
             entity.HasOne(d => d.IdLanguageNavigation).WithMany(p => p.Traductions)
                 .HasForeignKey(d => d.IdLanguage)
                 .HasConstraintName("FK__Traductio__idLan__68687968");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.Traductions)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK_Traduction_PersonFK");
         });
 
         modelBuilder.Entity<UserLogin>(entity =>

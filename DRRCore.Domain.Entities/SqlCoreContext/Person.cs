@@ -63,8 +63,6 @@ public partial class Person
 
     public string? Cellphone { get; set; }
 
-    public int? IdProfession { get; set; }
-
     public string? ClubMember { get; set; }
 
     public string? Insurance { get; set; }
@@ -97,6 +95,8 @@ public partial class Person
 
     public int? IdPersonSituation { get; set; }
 
+    public string? Profession { get; set; }
+
     public virtual CivilStatus? IdCivilStatusNavigation { get; set; }
 
     public virtual Country? IdCountryNavigation { get; set; }
@@ -111,8 +111,6 @@ public partial class Person
 
     public virtual PersonSituation? IdPersonSituationNavigation { get; set; }
 
-    public virtual Profession? IdProfessionNavigation { get; set; }
-
     public virtual Reputation? IdReputationNavigation { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
@@ -122,4 +120,6 @@ public partial class Person
     public virtual ICollection<SearchedName> SearchedNames { get; set; } = new List<SearchedName>();
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+
+    public virtual ICollection<Traduction> Traductions { get; set; } = new List<Traduction>();
 }

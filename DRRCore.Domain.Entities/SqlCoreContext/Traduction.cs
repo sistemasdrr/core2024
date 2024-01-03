@@ -42,4 +42,6 @@ public partial class Traduction
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Language? IdLanguageNavigation { get; set; }
+
+    public virtual Person? IdPersonNavigation { get; set; }
 }

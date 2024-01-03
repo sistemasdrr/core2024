@@ -62,6 +62,7 @@ builder.Services.AddAutoMapper(typeof(EmployeeProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(SubscriberProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(ComboProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(CompanyProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(PersonProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(AnniversaryProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(TicketProfile).Assembly);
 builder.Services.AddHttpContextAccessor();
@@ -121,6 +122,7 @@ builder.Services.AddScoped<IImportsAndExportsRepository, ImportsAndExportsReposi
 builder.Services.AddScoped<ITicketReceptorRepository, TicketReceptorRepository>();
 builder.Services.AddScoped<IPersonSituationRepository, PersonSituationRepository>();
 builder.Services.AddScoped<IProfessionRepository, ProfessionRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -176,6 +178,7 @@ builder.Services.AddScoped<IImportsAndExportsDomain, ImportsAndExportsDomain>();
 builder.Services.AddScoped<ITicketReceptorDomain, TicketReceptorDomain>();
 builder.Services.AddScoped<IPersonSituationDomain, PersonSituationDomain>();
 builder.Services.AddScoped<IProfessionDomain, ProfessionDomain>();
+builder.Services.AddScoped<IPersonDomain, PersonDomain>();
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
@@ -188,6 +191,7 @@ builder.Services.AddScoped<IAgentApplication, AgentApplication>();
 builder.Services.AddScoped<IAgentPriceApplication, AgentPriceApplication>();
 builder.Services.AddScoped<ICouponBillingSubscriberApplication, CouponBillingSubscriberApplication>();
 builder.Services.AddScoped<ITicketApplication, TicketApplication>();
+builder.Services.AddScoped<IPersonApplication, PersonApplication>();
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
