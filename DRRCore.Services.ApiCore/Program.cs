@@ -123,6 +123,14 @@ builder.Services.AddScoped<ITicketReceptorRepository, TicketReceptorRepository>(
 builder.Services.AddScoped<IPersonSituationRepository, PersonSituationRepository>();
 builder.Services.AddScoped<IProfessionRepository, ProfessionRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IPersonHomeRepository, PersonHomeRepository>();
+builder.Services.AddScoped<IPersonJobRepository, PersonJobRepository>();
+builder.Services.AddScoped<IPersonActivitiesRepository, PersonActivitiesRepository>();
+builder.Services.AddScoped<IPersonPropertiesRepository, PersonPropertiesRepository>();
+builder.Services.AddScoped<IPersonHistoryRepository, PersonHistoryRepository>();
+builder.Services.AddScoped<IPersonGeneralInfoRepository, PersonGeneralInfoRepository>();
+builder.Services.AddScoped<IPersonImagesRepository, PersonImagesRepository>();
+builder.Services.AddScoped<IPersonSBSDomain, PersonSBSDomain>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -179,6 +187,14 @@ builder.Services.AddScoped<ITicketReceptorDomain, TicketReceptorDomain>();
 builder.Services.AddScoped<IPersonSituationDomain, PersonSituationDomain>();
 builder.Services.AddScoped<IProfessionDomain, ProfessionDomain>();
 builder.Services.AddScoped<IPersonDomain, PersonDomain>();
+builder.Services.AddScoped<IPersonHomeDomain, PersonHomeDomain>();
+builder.Services.AddScoped<IPersonJobDomain, PersonJobDomain>();
+builder.Services.AddScoped<IPersonActivitiesDomain, PersonActivitiesDomain>();
+builder.Services.AddScoped<IPersonPropertyDomain, PersonPropertyDomain>();
+builder.Services.AddScoped<IPersonHistoryDomain, PersonHistoryDomain>();
+builder.Services.AddScoped<IPersonGeneralInfoDomain, PersonGeneralInfoDomain>();
+builder.Services.AddScoped<IPersonImagesDomain, PersonImagesDomain>();
+builder.Services.AddScoped<IPersonSBSDomain, PersonSBSDomain>();
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
@@ -192,6 +208,7 @@ builder.Services.AddScoped<IAgentPriceApplication, AgentPriceApplication>();
 builder.Services.AddScoped<ICouponBillingSubscriberApplication, CouponBillingSubscriberApplication>();
 builder.Services.AddScoped<ITicketApplication, TicketApplication>();
 builder.Services.AddScoped<IPersonApplication, PersonApplication>();
+builder.Services.AddScoped<IPersonImagesApplication, PersonImagesApplication>();
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();

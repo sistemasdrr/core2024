@@ -30,10 +30,14 @@
 
         public string? Profession { get; set; }
 
+        public int TraductionPercentage { get; set; }
+
         public string? CreditRisk { get; set; }
 
         public bool? OnWeb { get; set; }
 
         public bool? Enable { get; set; }
+
+        public string? Quality { get; set; }
     }
 }

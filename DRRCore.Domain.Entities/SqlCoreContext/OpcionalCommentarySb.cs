@@ -22,4 +22,6 @@ public partial class OpcionalCommentarySb
     public bool? Enable { get; set; }
 
     public virtual ICollection<CompanySb> CompanySbs { get; set; } = new List<CompanySb>();
+
+    public virtual ICollection<PersonSb> PersonSbs { get; set; } = new List<PersonSb>();
 }

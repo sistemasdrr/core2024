@@ -1,7 +1,6 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.Interfaces.CoreApplication;
 using Microsoft.AspNetCore.Mvc;
-using MySqlX.XDevAPI.Common;
 
 namespace DRRCore.Services.ApiCore.Controllers
 {
@@ -311,8 +310,15 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> getImageByPath(string path)
         {
             var result = await _companyImagesApplication.GetImageByPath(path);
-            return File(result.Data.File.ToArray(), result.Data.ContentType, result.Data.FileName);
 
+            if (result != null && result.Data != null)
+            {
+                return File(result.Data.File?.ToArray(), result.Data.ContentType, result.Data.FileName);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         [HttpPost()]
         [Route("deleteImportAndExport")]

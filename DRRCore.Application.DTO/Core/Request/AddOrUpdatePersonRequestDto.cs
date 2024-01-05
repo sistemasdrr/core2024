@@ -81,6 +81,7 @@
         public int? IdReputation { get; set; }
 
         public int? IdPersonSituation { get; set; }
+        public string? Quality { get; set; }
 
         public List<TraductionDto> Traductions { get; set; } = new List<TraductionDto>();
     }

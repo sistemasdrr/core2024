@@ -169,12 +169,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 {
                     if (idCountry == 0)
                     {
-                        persons = await context.People.Include(x => x.IdCreditRiskNavigation).Include(x => x.IdDocumentTypeNavigation).
+                        persons = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).Include(x => x.IdDocumentTypeNavigation).
                             Include(x => x.IdCountryNavigation).Where(x => x.Fullname.Contains(fullname)).Take(100).ToListAsync();
                     }
                     else
                     {
-                        persons = await context.People.Include(x => x.IdCreditRiskNavigation).Include(x => x.IdDocumentTypeNavigation).
+                        persons = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).Include(x => x.IdDocumentTypeNavigation).
                             Include(x => x.IdCountryNavigation).Where(x => x.IdCountry == idCountry && (x.Fullname.Contains(fullname))).Take(100).ToListAsync();
                     }
 
@@ -183,12 +183,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 {
                     if (idCountry == 0)
                     {
-                        persons = await context.People.Include(x => x.IdCreditRiskNavigation).Include(x => x.IdDocumentTypeNavigation).
+                        persons = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).Include(x => x.IdDocumentTypeNavigation).
                             Include(x => x.IdCountryNavigation).Where(x => x.Fullname.StartsWith(fullname)).Take(100).ToListAsync();
                     }
                     else
                     {
-                        persons = await context.People.Include(x => x.IdCreditRiskNavigation).Include(x => x.IdDocumentTypeNavigation).
+                        persons = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).Include(x => x.IdDocumentTypeNavigation).
                             Include(x => x.IdCountryNavigation).Where(x => x.IdCountry == idCountry && (x.Fullname.StartsWith(fullname))).Take(100).ToListAsync();
                     }
 
@@ -239,7 +239,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
 
                     foreach (var item in existTraduction)
                     {
-                        var modifierTraduction = await context.Traductions.Where(x => x.IdCompany == obj.Id && x.Identifier == item.Identifier).FirstOrDefaultAsync();
+                        var modifierTraduction = await context.Traductions.Where(x => x.IdPerson == obj.Id && x.Identifier == item.Identifier).FirstOrDefaultAsync();
                         if (modifierTraduction != null)
                         {
                             modifierTraduction.ShortValue = item.ShortValue;

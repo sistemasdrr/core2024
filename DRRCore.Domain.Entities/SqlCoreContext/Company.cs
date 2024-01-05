@@ -119,6 +119,8 @@ public partial class Company
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
+    public virtual ICollection<PersonJob> PersonJobs { get; set; } = new List<PersonJob>();
+
     public virtual ICollection<Provider> Providers { get; set; } = new List<Provider>();
 
     public virtual ICollection<SalesHistory> SalesHistories { get; set; } = new List<SalesHistory>();

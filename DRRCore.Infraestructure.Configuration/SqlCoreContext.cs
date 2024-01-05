@@ -107,6 +107,22 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<Person> People { get; set; }
 
+    public virtual DbSet<PersonActivity> PersonActivities { get; set; }
+
+    public virtual DbSet<PersonGeneralInformation> PersonGeneralInformations { get; set; }
+
+    public virtual DbSet<PersonHistory> PersonHistories { get; set; }
+
+    public virtual DbSet<PersonHome> PersonHomes { get; set; }
+
+    public virtual DbSet<PersonImage> PersonImages { get; set; }
+
+    public virtual DbSet<PersonJob> PersonJobs { get; set; }
+
+    public virtual DbSet<PersonProperty> PersonProperties { get; set; }
+
+    public virtual DbSet<PersonSb> PersonSbs { get; set; }
+
     public virtual DbSet<PersonSituation> PersonSituations { get; set; }
 
     public virtual DbSet<Process> Processes { get; set; }
@@ -2538,6 +2554,11 @@ public partial class SqlCoreContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("profession");
+            entity.Property(e => e.Quality)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("quality");
             entity.Property(e => e.RelationshipCodeDocument)
                 .HasMaxLength(30)
                 .IsUnicode(false)
@@ -2600,6 +2621,330 @@ public partial class SqlCoreContext : DbContext
             entity.HasOne(d => d.RelationshipDocumentTypeNavigation).WithMany(p => p.PersonRelationshipDocumentTypeNavigations)
                 .HasForeignKey(d => d.RelationshipDocumentType)
                 .HasConstraintName("FK__Person__relation__2E06CDA9");
+        });
+
+        modelBuilder.Entity<PersonActivity>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PersonAc__3213E83FA6A3F3E4");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ActivitiesCommentary)
+                .IsUnicode(false)
+                .HasColumnName("activitiesCommentary");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.PersonActivities)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__PersonAct__idPer__1A89E4E1");
+        });
+
+        modelBuilder.Entity<PersonGeneralInformation>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PersonGe__3213E83F13C7AC44");
+
+            entity.ToTable("PersonGeneralInformation");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.GeneralInformation)
+                .IsUnicode(false)
+                .HasColumnName("generalInformation");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.PersonGeneralInformations)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__PersonGen__idPer__28D80438");
+        });
+
+        modelBuilder.Entity<PersonHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PersonHi__3213E83FF7F6F854");
+
+            entity.ToTable("PersonHistory");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.HistoryCommentary)
+                .IsUnicode(false)
+                .HasColumnName("historyCommentary");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.PersonHistories)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__PersonHis__idPer__24134F1B");
+        });
+
+        modelBuilder.Entity<PersonHome>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PersonHo__3213E83FEB0DE03E");
+
+            entity.ToTable("PersonHome");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.HomeCommentary)
+                .IsUnicode(false)
+                .HasColumnName("homeCommentary");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.OwnHome).HasColumnName("ownHome");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+            entity.Property(e => e.Value)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("value");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.PersonHomes)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__PersonHom__idPer__15C52FC4");
+        });
+
+        modelBuilder.Entity<PersonImage>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PersonIm__3213E83F05CB1C6A");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.ImgDesc1)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("imgDesc1");
+            entity.Property(e => e.ImgDesc2)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("imgDesc2");
+            entity.Property(e => e.ImgDesc3)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("imgDesc3");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.Path1)
+                .IsUnicode(false)
+                .HasColumnName("path1");
+            entity.Property(e => e.Path2)
+                .IsUnicode(false)
+                .HasColumnName("path2");
+            entity.Property(e => e.Path3)
+                .IsUnicode(false)
+                .HasColumnName("path3");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.PersonImages)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__PersonIma__idPer__335592AB");
+        });
+
+        modelBuilder.Entity<PersonJob>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PersonJo__3213E83F43751508");
+
+            entity.ToTable("PersonJob");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AnnualIncome)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("annualIncome");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.CurrentJob)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("currentJob");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EndDate)
+                .HasColumnType("datetime")
+                .HasColumnName("endDate");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.JobDetails)
+                .IsUnicode(false)
+                .HasColumnName("jobDetails");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.MonthlyIncome)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("monthlyIncome");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("startDate");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.PersonJobs)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__PersonJob__idCom__2E90DD8E");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.PersonJobs)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__PersonJob__idPer__2D9CB955");
+        });
+
+        modelBuilder.Entity<PersonProperty>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PersonPr__3213E83F81876EFB");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.PropertiesCommentary)
+                .IsUnicode(false)
+                .HasColumnName("propertiesCommentary");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.PersonProperties)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__PersonPro__idPer__1F4E99FE");
+        });
+
+        modelBuilder.Entity<PersonSb>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PersonSB__3213E83F0F206D6B");
+
+            entity.ToTable("PersonSBS");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AditionalCommentaryRiskCenter)
+                .IsUnicode(false)
+                .HasColumnName("aditionalCommentaryRiskCenter");
+            entity.Property(e => e.BankingCommentary)
+                .IsUnicode(false)
+                .HasColumnName("bankingCommentary");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.CreditHistoryCommentary)
+                .IsUnicode(false)
+                .HasColumnName("creditHistoryCommentary");
+            entity.Property(e => e.Date)
+                .HasColumnType("datetime")
+                .HasColumnName("date");
+            entity.Property(e => e.DebtRecordedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("debtRecordedDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.EndorsementsObservations)
+                .IsUnicode(false)
+                .HasColumnName("endorsementsObservations");
+            entity.Property(e => e.ExchangeRate)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnName("exchangeRate");
+            entity.Property(e => e.GuaranteesOfferedFc)
+                .HasColumnType("decimal(15, 2)")
+                .HasColumnName("guaranteesOfferedFC");
+            entity.Property(e => e.GuaranteesOfferedNc)
+                .HasColumnType("decimal(15, 2)")
+                .HasColumnName("guaranteesOfferedNC");
+            entity.Property(e => e.IdOpcionalCommentarySbs).HasColumnName("idOpcionalCommentarySBS");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.LitigationsCommentary)
+                .IsUnicode(false)
+                .HasColumnName("litigationsCommentary");
+            entity.Property(e => e.ReferentOrAnalyst)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("referentOrAnalyst");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdOpcionalCommentarySbsNavigation).WithMany(p => p.PersonSbs)
+                .HasForeignKey(d => d.IdOpcionalCommentarySbs)
+                .HasConstraintName("FK__PersonSBS__idOpc__390E6C01");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.PersonSbs)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__PersonSBS__idPer__381A47C8");
         });
 
         modelBuilder.Entity<PersonSituation>(entity =>

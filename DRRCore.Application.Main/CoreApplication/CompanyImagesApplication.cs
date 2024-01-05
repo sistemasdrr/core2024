@@ -218,7 +218,6 @@ namespace DRRCore.Application.Main.CoreApplication
                 response.Message = ex.Message;
             }
             return response;
-
         }
     }
 }
