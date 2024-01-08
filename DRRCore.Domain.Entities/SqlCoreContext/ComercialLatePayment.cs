@@ -35,5 +35,9 @@ public partial class ComercialLatePayment
 
     public string? DocumentTypeEng { get; set; }
 
+    public int? IdPerson { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
+
+    public virtual Person? IdPersonNavigation { get; set; }
 }

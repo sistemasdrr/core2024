@@ -19,8 +19,6 @@ public partial class PersonSb
 
     public string? BankingCommentary { get; set; }
 
-    public string? EndorsementsObservations { get; set; }
-
     public string? ReferentOrAnalyst { get; set; }
 
     public DateTime? Date { get; set; }

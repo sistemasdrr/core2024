@@ -99,7 +99,7 @@
                                                                      "S_C_CURJOB", "S_C_STARTDT", "S_C_ENDDT", "S_C_INCOME", "L_C_DETAILS",
                                                                      "L_A_OTHERACT",
                                                                      "L_PR_DETAILS",
-                                                                     "L_SBS_ANTEC", "L_SBS_RISKCNT", "L_SBS_COMMENTSBS", "L_SBS_COMMENTBANK","L_SBS_LITIG",
+                                                                     "L_SBS_ANTEC", "L_SBS_RISKCNT", "L_SBS_COMMENTBANK","L_SBS_LITIG",
                                                                      "L_H_DETAILS",
                                                                      "L_IG_DETAILS",
                                                                      "S_IP_IMG1", "S_IP_IMG2", "S_IP_IMG3" };

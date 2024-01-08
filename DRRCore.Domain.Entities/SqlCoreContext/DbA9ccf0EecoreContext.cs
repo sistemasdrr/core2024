@@ -53,7 +53,11 @@ public partial class DbA9ccf0EecoreContext : DbContext
 
     public virtual DbSet<CompanyImage> CompanyImages { get; set; }
 
+    public virtual DbSet<CompanyPartner> CompanyPartners { get; set; }
+
     public virtual DbSet<CompanySb> CompanySbs { get; set; }
+
+    public virtual DbSet<CompanyShareHolder> CompanyShareHolders { get; set; }
 
     public virtual DbSet<Continent> Continents { get; set; }
 
@@ -160,6 +164,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
     public virtual DbSet<UserLogin> UserLogins { get; set; }
 
     public virtual DbSet<UserProcess> UserProcesses { get; set; }
+
+    public virtual DbSet<WorkersHistory> WorkersHistories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -388,6 +394,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
             entity.Property(e => e.Memo)
                 .IsUnicode(false)
@@ -407,6 +414,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.BankDebts)
                 .HasForeignKey(d => d.IdCompany)
                 .HasConstraintName("FK__BankDebt__idComp__3EFC4F81");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.BankDebts)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK_BankDebt_Person");
         });
 
         modelBuilder.Entity<BranchSector>(entity =>
@@ -611,6 +622,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
             entity.Property(e => e.PendingPaymentDate)
                 .HasColumnType("datetime")
@@ -622,6 +634,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.ComercialLatePayments)
                 .HasForeignKey(d => d.IdCompany)
                 .HasConstraintName("FK__Comercial__idCom__3A379A64");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.ComercialLatePayments)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK_ComercialLatePayment_Person");
         });
 
         modelBuilder.Entity<Company>(entity =>
@@ -1215,6 +1231,47 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasConstraintName("FK__CompanyIm__idCom__5B988E2F");
         });
 
+        modelBuilder.Entity<CompanyPartner>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CompanyP__3213E83FC9DD179E");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.IdProfession).HasColumnName("idProfession");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.MainExecutive).HasColumnName("mainExecutive");
+            entity.Property(e => e.Participation).HasColumnName("participation");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("startDate");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.CompanyPartners)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__CompanyPa__idCom__457442E6");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.CompanyPartners)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK__CompanyPa__idPer__4668671F");
+
+            entity.HasOne(d => d.IdProfessionNavigation).WithMany(p => p.CompanyPartners)
+                .HasForeignKey(d => d.IdProfession)
+                .HasConstraintName("FK__CompanyPa__idPro__475C8B58");
+        });
+
         modelBuilder.Entity<CompanySb>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__CompanyS__3213E83F150D6A9A");
@@ -1280,6 +1337,48 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.HasOne(d => d.IdOpcionalCommentarySbsNavigation).WithMany(p => p.CompanySbs)
                 .HasForeignKey(d => d.IdOpcionalCommentarySbs)
                 .HasConstraintName("FK__CompanySB__idOpc__4885B9BB");
+        });
+
+        modelBuilder.Entity<CompanyShareHolder>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CompanyS__3213E83FBBB4A4F5");
+
+            entity.ToTable("CompanyShareHolder");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.IdCompanyShareHolder).HasColumnName("idCompanyShareHolder");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.Participation).HasColumnName("participation");
+            entity.Property(e => e.Relation)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("relation");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("startDate");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.CompanyShareHolderIdCompanyNavigations)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__CompanySh__idCom__4C214075");
+
+            entity.HasOne(d => d.IdCompanyShareHolderNavigation).WithMany(p => p.CompanyShareHolderIdCompanyShareHolderNavigations)
+                .HasForeignKey(d => d.IdCompanyShareHolder)
+                .HasConstraintName("FK__CompanySh__idCom__4D1564AE");
         });
 
         modelBuilder.Entity<Continent>(entity =>
@@ -2912,9 +3011,6 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
-            entity.Property(e => e.EndorsementsObservations)
-                .IsUnicode(false)
-                .HasColumnName("endorsementsObservations");
             entity.Property(e => e.ExchangeRate)
                 .HasColumnType("decimal(5, 2)")
                 .HasColumnName("exchangeRate");
@@ -3082,6 +3178,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdCountry).HasColumnName("idCountry");
             entity.Property(e => e.IdCurrency).HasColumnName("idCurrency");
+            entity.Property(e => e.IdPerson).HasColumnName("idPerson");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
             entity.Property(e => e.MaximumAmount)
                 .HasMaxLength(100)
@@ -3141,6 +3238,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.HasOne(d => d.IdCurrencyNavigation).WithMany(p => p.Providers)
                 .HasForeignKey(d => d.IdCurrency)
                 .HasConstraintName("FK__Providers__idCur__3572E547");
+
+            entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.Providers)
+                .HasForeignKey(d => d.IdPerson)
+                .HasConstraintName("FK_Providers_Person");
         });
 
         modelBuilder.Entity<Reputation>(entity =>
@@ -3963,6 +4064,36 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.UserProcesses)
                 .HasForeignKey(d => d.IdUser)
                 .HasConstraintName("FK__UserProce__idUse__1940BAED");
+        });
+
+        modelBuilder.Entity<WorkersHistory>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__WorkersH__3213E83F7C89E77E");
+
+            entity.ToTable("WorkersHistory");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdCompany).HasColumnName("idCompany");
+            entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.NumberWorker).HasColumnName("numberWorker");
+            entity.Property(e => e.NumberYear).HasColumnName("numberYear");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.WorkersHistories)
+                .HasForeignKey(d => d.IdCompany)
+                .HasConstraintName("FK__WorkersHi__idCom__40AF8DC9");
         });
 
         OnModelCreatingPartial(modelBuilder);

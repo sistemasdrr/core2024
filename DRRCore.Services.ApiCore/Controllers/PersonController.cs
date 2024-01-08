@@ -1,6 +1,7 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Application.Main.CoreApplication;
+using DRRCore.Domain.Entities.SqlCoreContext;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DRRCore.Services.ApiCore.Controllers
@@ -139,6 +140,78 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> getPersonSbs(int idPerson)
         {
             return Ok(await _personApplication.GetPersonSBSById(idPerson));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateProvider")]
+        public async Task<ActionResult> addOrUpdateProvider(AddOrUpdateProviderRequestDto obj)
+        {
+            return Ok(await _personApplication.AddOrUpdateProviderAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getListProvider")]
+        public async Task<ActionResult> getListProvider(int idPerson)
+        {
+            return Ok(await _personApplication.GetListProvidersAsync(idPerson));
+        }
+        [HttpGet()]
+        [Route("getProviderById")]
+        public async Task<ActionResult> getProviderById(int id)
+        {
+            return Ok(await _personApplication.GetProviderById(id));
+        }
+        [HttpPost()]
+        [Route("deleteProvider")]
+        public async Task<ActionResult> deleteProvider(int id)
+        {
+            return Ok(await _personApplication.DeleteProvider(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateLatePayment")]
+        public async Task<ActionResult> addOrUpdateLatePayment(AddOrUpdateComercialLatePaymentRequestDto obj)
+        {
+            return Ok(await _personApplication.AddOrUpdateComercialLatePaymentAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getListLatePayment")]
+        public async Task<ActionResult> getListLatePayment(int idPerson)
+        {
+            return Ok(await _personApplication.GetListComercialLatePaymentAsync(idPerson));
+        }
+        [HttpGet()]
+        [Route("getLatePaymentById")]
+        public async Task<ActionResult> getLatePaymentById(int id)
+        {
+            return Ok(await _personApplication.GetComercialLatePaymentById(id));
+        }
+        [HttpPost()]
+        [Route("deleteLatePayment")]
+        public async Task<ActionResult> deleteLatePayment(int id)
+        {
+            return Ok(await _personApplication.DeleteComercialLatePayment(id));
+        }
+        [HttpPost()]
+        [Route("addOrUpdateBankDebt")]
+        public async Task<ActionResult> addOrUpdateBankDebt(AddOrUpdateBankDebtRequestDto obj)
+        {
+            return Ok(await _personApplication.AddOrUpdateBankDebtAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getListBankDebt")]
+        public async Task<ActionResult> getListBankDebt(int idPerson)
+        {
+            return Ok(await _personApplication.GetListBankDebtAsync(idPerson));
+        }
+        [HttpGet()]
+        [Route("getBankDebtById")]
+        public async Task<ActionResult> getBankDebtById(int id)
+        {
+            return Ok(await _personApplication.GetBankDebtById(id));
+        }
+        [HttpPost()]
+        [Route("deleteBankDebt")]
+        public async Task<ActionResult> deleteBankDebt(int id)
+        {
+            return Ok(await _personApplication.DeleteBankDebt(id));
         }
 
 

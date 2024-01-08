@@ -130,7 +130,8 @@ builder.Services.AddScoped<IPersonPropertiesRepository, PersonPropertiesReposito
 builder.Services.AddScoped<IPersonHistoryRepository, PersonHistoryRepository>();
 builder.Services.AddScoped<IPersonGeneralInfoRepository, PersonGeneralInfoRepository>();
 builder.Services.AddScoped<IPersonImagesRepository, PersonImagesRepository>();
-builder.Services.AddScoped<IPersonSBSDomain, PersonSBSDomain>();
+builder.Services.AddScoped<IPersonSBSRepository, PersonSBSRepository>();
+builder.Services.AddScoped<ICompanyPartnersRepository, CompanyPartnersRepository>();
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -195,6 +196,7 @@ builder.Services.AddScoped<IPersonHistoryDomain, PersonHistoryDomain>();
 builder.Services.AddScoped<IPersonGeneralInfoDomain, PersonGeneralInfoDomain>();
 builder.Services.AddScoped<IPersonImagesDomain, PersonImagesDomain>();
 builder.Services.AddScoped<IPersonSBSDomain, PersonSBSDomain>();
+builder.Services.AddScoped<ICompanyPartnersDomain, CompanyPartnersDomain>();
 
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();

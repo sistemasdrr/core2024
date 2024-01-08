@@ -6,6 +6,8 @@
 
         public int? IdCompany { get; set; }
 
+        public int? IdPerson { get; set; }
+
         public string? BankName { get; set; }
 
         public string? Qualification { get; set; }

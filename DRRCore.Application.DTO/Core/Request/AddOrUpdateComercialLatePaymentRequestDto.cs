@@ -6,6 +6,8 @@
 
         public int? IdCompany { get; set; }
 
+        public int? IdPerson{ get; set; }
+
         public string? CreditorOrSupplier { get; set; }
 
         public string? DocumentType { get; set; }

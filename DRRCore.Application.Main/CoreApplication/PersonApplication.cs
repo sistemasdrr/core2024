@@ -18,12 +18,16 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IPersonJobDomain _personJobDomain;
         private readonly IPersonActivitiesDomain _personActivitiesDomain;
         private readonly IPersonPropertyDomain _personPropertyDomain;
+        private readonly IProviderDomain _providerDomain;
+        private readonly IComercialLatePaymentDomain _comercialLatePaymentDomain;
+        private readonly IBankDebtDomain _bankDebtDomain;
         private readonly IPersonSBSDomain _personSBSDomain;
         private readonly IPersonHistoryDomain _personHistoryDomain;
         private readonly IPersonGeneralInfoDomain _personGeneralInfoDomain;
        
         public PersonApplication(IMapper mapper, ILogger logger, IPersonDomain personDomain, IPersonHomeDomain personHomeDomain,
-            IPersonJobDomain personJobDomain, IPersonSBSDomain personSBSDomain,
+            IPersonJobDomain personJobDomain, IPersonSBSDomain personSBSDomain, IProviderDomain providerDomain, 
+            IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain,
             IPersonActivitiesDomain personActivitiesDomain, IPersonPropertyDomain personPropertyDomain, 
             IPersonHistoryDomain personHistoryDomain, IPersonGeneralInfoDomain personGeneralInfoDomain)
         {
@@ -36,6 +40,9 @@ namespace DRRCore.Application.Main.CoreApplication
             _personHistoryDomain = personHistoryDomain;
             _personGeneralInfoDomain = personGeneralInfoDomain;
             _personJobDomain = personJobDomain;
+            _providerDomain = providerDomain;
+            _comercialLatePaymentDomain = comercialLatePaymentDomain;
+            _bankDebtDomain = bankDebtDomain;
             _personSBSDomain = personSBSDomain;
         }
 
@@ -51,6 +58,72 @@ namespace DRRCore.Application.Main.CoreApplication
                     _logger.LogError(response.Message);
                 }
                 response.Data = await _personDomain.ActivateWebAsync(id);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateBankDebtAsync(AddOrUpdateBankDebtRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newBankDebt = _mapper.Map<BankDebt>(obj);
+                    response.Data = await _bankDebtDomain.AddAsync(newBankDebt);
+                }
+                else
+                {
+                    var existingBankDebt = await _bankDebtDomain.GetByIdAsync(obj.Id);
+                    existingBankDebt = _mapper.Map(obj, existingBankDebt);
+                    response.Data = await _bankDebtDomain.UpdateAsync(existingBankDebt);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateComercialLatePaymentAsync(AddOrUpdateComercialLatePaymentRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newComercialLatePayment = _mapper.Map<ComercialLatePayment>(obj);
+                    response.Data = await _comercialLatePaymentDomain.AddAsync(newComercialLatePayment);
+                }
+                else
+                {
+                    var existingComercialLatePayment = await _comercialLatePaymentDomain.GetByIdAsync(obj.Id);
+                    existingComercialLatePayment = _mapper.Map(obj, existingComercialLatePayment);
+                    response.Data = await _comercialLatePaymentDomain.UpdateAsync(existingComercialLatePayment);
+                }
             }
             catch (Exception ex)
             {
@@ -584,6 +657,93 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<bool>> AddOrUpdateProviderAsync(AddOrUpdateProviderRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newProvider = _mapper.Map<Provider>(obj);
+                    response.Data = await _providerDomain.AddAsync(newProvider);
+                }
+                else
+                {
+                    var existingProvider = await _providerDomain.GetByIdAsync(obj.Id);
+                    existingProvider = _mapper.Map(obj, existingProvider);
+                    response.Data = await _providerDomain.UpdateAsync(existingProvider);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteBankDebt(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var bankDebt = await _bankDebtDomain.GetByIdAsync(id);
+                if (bankDebt == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _bankDebtDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteComercialLatePayment(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var comercialLatePayment = await _comercialLatePaymentDomain.GetByIdAsync(id);
+                if (comercialLatePayment == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _comercialLatePaymentDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         public async Task<Response<bool>> DeletePerson(int id)
         {
             var response = new Response<bool>();
@@ -596,6 +756,33 @@ namespace DRRCore.Application.Main.CoreApplication
                     _logger.LogError(response.Message);
                 }
                 response.Data = await _personDomain.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteProvider(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var provider = await _providerDomain.GetByIdAsync(id);
+                if (provider == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _providerDomain.DeleteAsync(id);
+                }
             }
             catch (Exception ex)
             {
@@ -628,6 +815,102 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<GetBankDebtResponseDto>> GetBankDebtById(int id)
+        {
+            var response = new Response<GetBankDebtResponseDto>();
+            try
+            {
+                var bankDebt = await _bankDebtDomain.GetByIdAsync(id);
+                if (bankDebt == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetBankDebtResponseDto>(bankDebt);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetComercialLatePaymentResponseDto>> GetComercialLatePaymentById(int id)
+        {
+            var response = new Response<GetComercialLatePaymentResponseDto>();
+            try
+            {
+                var comercialLatePayment = await _comercialLatePaymentDomain.GetByIdAsync(id);
+                if (comercialLatePayment == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetComercialLatePaymentResponseDto>(comercialLatePayment);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetListBankDebtResponseDto>>> GetListBankDebtAsync(int idPerson)
+        {
+            var response = new Response<List<GetListBankDebtResponseDto>>();
+            try
+            {
+                var list = await _bankDebtDomain.GetBankDebtsByIdPerson(idPerson);
+                if (list == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<List<GetListBankDebtResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetListComercialLatePaymentResponseDto>>> GetListComercialLatePaymentAsync(int idPerson)
+        {
+            var response = new Response<List<GetListComercialLatePaymentResponseDto>>();
+            try
+            {
+                var list = await _comercialLatePaymentDomain.GetComercialLatePaymetByIdPerson(idPerson);
+                if (list == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<List<GetListComercialLatePaymentResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         public async Task<Response<List<GetListPersonResponseDto>>> GetListPerson(string fullname, string form, int idCountry, bool haveReport)
         {
             var response = new Response<List<GetListPersonResponseDto>>();
@@ -641,6 +924,30 @@ namespace DRRCore.Application.Main.CoreApplication
                     _logger.LogError(response.Message);
                 }
                 response.Data = _mapper.Map<List<GetListPersonResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetListProviderResponseDto>>> GetListProvidersAsync(int idPerson)
+        {
+            var response = new Response<List<GetListProviderResponseDto>>();
+            try
+            {
+                var list = await _providerDomain.GetProviderByIdPerson(idPerson);
+                if (list == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<List<GetListProviderResponseDto>>(list);
             }
             catch (Exception ex)
             {
@@ -833,6 +1140,30 @@ namespace DRRCore.Application.Main.CoreApplication
                     return response;
                 }
                 response.Data = _mapper.Map<GetPersonSbsResponseDto>(obj);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetProviderResponseDto>> GetProviderById(int id)
+        {
+            var response = new Response<GetProviderResponseDto>();
+            try
+            {
+                var provider = await _providerDomain.GetByIdAsync(id);
+                if (provider == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetProviderResponseDto>(provider);
             }
             catch (Exception ex)
             {

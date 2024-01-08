@@ -25,6 +25,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICompanyCreditOpinionDomain _companyCreditOpinionDomain;
         private readonly ICompanyGeneralInformationDomain _companyGeneralInformationDomain;
         private readonly IImportsAndExportsDomain _importsAndExportsDomain;
+        private readonly ICompanyPartnersDomain _companyPartnersDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
@@ -33,7 +34,7 @@ namespace DRRCore.Application.Main.CoreApplication
             IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain,
             IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain,
             ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain,
-            ICompanyGeneralInformationDomain companyGeneralInformationDomain, IImportsAndExportsDomain importsAndExportsDomain)
+            ICompanyGeneralInformationDomain companyGeneralInformationDomain, IImportsAndExportsDomain importsAndExportsDomain, ICompanyPartnersDomain companyPartnersDomain)
         {
             _companyDomain = companyDomain;
             _companyBackgroundDomain = companyBackgroundDomain;
@@ -49,6 +50,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _companyCreditOpinionDomain = companyCreditOpinionDomain;
             _companyGeneralInformationDomain = companyGeneralInformationDomain;
             _importsAndExportsDomain = importsAndExportsDomain;
+            _companyPartnersDomain = companyPartnersDomain;
             _mapper = mapper;
             _logger = logger;
         }
@@ -778,6 +780,7 @@ namespace DRRCore.Application.Main.CoreApplication
             catch (Exception ex)
             {
                 response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
                 response.Message = Messages.BadQuery;
                 _logger.LogError(response.Message, ex);
             }
@@ -1592,6 +1595,122 @@ namespace DRRCore.Application.Main.CoreApplication
                 {
                     var list = await _importsAndExportsDomain.GetExports(idCompany);
                     response.Data = _mapper.Map<List<GetImportsAndExportResponseDto>>(list);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateCompanyPartner(AddOrUpdateCompanyPartnersRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newObj= _mapper.Map<CompanyPartner>(obj);
+                    response.Data = await _companyPartnersDomain.AddAsync(newObj);
+                }
+                else
+                {
+                    var existingObj= await _companyPartnersDomain.GetByIdAsync((int)obj.Id);
+                    if (existingObj == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = Messages.MessageNoDataCompany;
+                        _logger.LogError(response.Message);
+                        return response;
+                    }
+                    existingObj = _mapper.Map(obj, existingObj);
+                    existingObj.UpdateDate = DateTime.Now;
+                    response.Data = await _companyPartnersDomain.UpdateAsync(existingObj);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetCompanyPartnersResponseDto>> GetCompanyPartnerById(int id)
+        {
+            var response = new Response<GetCompanyPartnersResponseDto>();
+            try
+            {
+                var obj = await _companyPartnersDomain.GetByIdAsync(id);
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetCompanyPartnersResponseDto>(obj);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteCompanyPartner(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var obj = await _companyPartnersDomain.GetByIdAsync(id);
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _companyPartnersDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetListCompanyPartnersResponseDto>>> GetListCompanyPartnerByIdCompany(int idCompany)
+        {
+            var response = new Response<List<GetListCompanyPartnersResponseDto>>();
+            try
+            {
+                var list = await _companyPartnersDomain.GetPartnersByIdCompany(idCompany);
+                if(list != null)
+                {
+                    response.Data = _mapper.Map<List<GetListCompanyPartnersResponseDto>>(list);
+                }
+                else
+                {
+                    response.Data = null;
                 }
             }
             catch (Exception ex)

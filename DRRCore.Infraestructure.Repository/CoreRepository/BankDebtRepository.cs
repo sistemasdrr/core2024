@@ -74,6 +74,21 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<List<BankDebt>> GetBankDebtsByIdPerson(int idPerson)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var list = await context.BankDebts.Where(x => x.IdPerson == idPerson && x.Enable == true).ToListAsync();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return null;
+            }
+        }
+
         public async Task<BankDebt> GetByIdAsync(int id)
         {
             try

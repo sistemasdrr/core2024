@@ -99,6 +99,21 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<List<Provider>> GetProviderByIdPerson(int idPerson)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var list = await context.Providers.Include(x => x.IdCountryNavigation).Where(x => x.IdPerson == idPerson && x.Enable == true).ToListAsync();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
         public async Task<bool> UpdateAsync(Provider obj)
         {
             try

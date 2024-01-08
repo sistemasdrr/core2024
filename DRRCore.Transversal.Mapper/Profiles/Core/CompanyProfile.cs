@@ -110,18 +110,21 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
              .ReverseMap();
             CreateMap<AddOrUpdateProviderRequestDto, Provider>()
                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
                 .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
                 .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountry))
              .ReverseMap();
             CreateMap<Provider, GetProviderResponseDto>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
                  .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountry))
                  .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
                  .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
              .ReverseMap();
             CreateMap<Provider, GetListProviderResponseDto>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
                  .ForMember(dest => dest.Country, opt => opt?.MapFrom(src => src.IdCountryNavigation.Name))
                  .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation.FlagIso))
                  .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
@@ -129,30 +132,36 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
              .ReverseMap();
             CreateMap<AddOrUpdateComercialLatePaymentRequestDto, ComercialLatePayment>()
                .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
                .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
                .ForMember(dest => dest.PendingPaymentDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.PendingPaymentDate)))
            .ReverseMap();
             CreateMap<ComercialLatePayment, GetComercialLatePaymentResponseDto>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
                  .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
                  .ForMember(dest => dest.PendingPaymentDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.PendingPaymentDate)))
              .ReverseMap();
             CreateMap<ComercialLatePayment, GetListComercialLatePaymentResponseDto>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
                  .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
                  .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
                  .ForMember(dest => dest.PendingPaymentDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.PendingPaymentDate)))
              .ReverseMap();
             CreateMap<AddOrUpdateBankDebtRequestDto, BankDebt>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
                .ForMember(dest => dest.DebtDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.DebtDate)))
            .ReverseMap();
             CreateMap<BankDebt, GetBankDebtResponseDto>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
                  .ForMember(dest => dest.DebtDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DebtDate)))
              .ReverseMap();
             CreateMap<BankDebt, GetListBankDebtResponseDto>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
                  .ForMember(dest => dest.DebtDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DebtDate)))
                  .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
              .ReverseMap();
@@ -203,6 +212,29 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
           .ReverseMap();
             CreateMap<AddOrUpdateImportsAndExportsRequestDto, ImportsAndExport>()
                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+          .ReverseMap();
+
+            CreateMap<CompanyPartner, GetCompanyPartnersResponseDto>()
+            .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+            .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
+            .ForMember(dest => dest.IdProfession, opt => opt?.MapFrom(src => src.IdProfession == 0 ? null : src.IdProfession))
+            .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.StartDate)))
+      .ReverseMap();
+            CreateMap<CompanyPartner, GetListCompanyPartnersResponseDto>()
+            .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+            .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
+            .ForMember(dest => dest.Name, opt => opt?.MapFrom(src => src.IdPersonNavigation.Fullname))
+            .ForMember(dest => dest.Nationality, opt => opt?.MapFrom(src => src.IdPersonNavigation.Nationality))
+            .ForMember(dest => dest.BirthDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.IdPersonNavigation.BirthDate)))
+            .ForMember(dest => dest.IdentificationDocument, opt => opt?.MapFrom(src => src.IdPersonNavigation.IdDocumentTypeNavigation.Name + " - " + src.IdPersonNavigation.CodeDocumentType))
+            .ForMember(dest => dest.Profession, opt => opt?.MapFrom(src => src.IdProfessionNavigation.Name))
+            .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.StartDate)))
+      .ReverseMap();
+            CreateMap<AddOrUpdateCompanyPartnersRequestDto, CompanyPartner>()
+             .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+            .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
+            .ForMember(dest => dest.IdProfession, opt => opt?.MapFrom(src => src.IdProfession == 0 ? null : src.IdProfession))
+                 .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.StartDate)))
           .ReverseMap();
         }
 

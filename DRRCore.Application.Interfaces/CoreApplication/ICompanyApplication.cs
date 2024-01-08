@@ -55,5 +55,11 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> AddOrUpdateImportAndExport(AddOrUpdateImportsAndExportsRequestDto obj);
         Task<Response<GetImportsAndExportResponseDto>> GetImportAndExportById(int id);
         Task<Response<List<GetImportsAndExportResponseDto>>> GetListImportAndExportByIdCompany(int idCompany, string type);
+
+
+        Task<Response<bool>> AddOrUpdateCompanyPartner(AddOrUpdateCompanyPartnersRequestDto obj);
+        Task<Response<GetCompanyPartnersResponseDto>> GetCompanyPartnerById(int id);
+        Task<Response<bool>> DeleteCompanyPartner(int id);
+        Task<Response<List<GetListCompanyPartnersResponseDto>>> GetListCompanyPartnerByIdCompany(int idCompany);
     }
 }
