@@ -12,7 +12,7 @@ namespace DRRCore.Domain.Main.CoreDomain
         {
             _companyBackgroundRepository= companyBackgroundRepository;
         }
-        public async Task<bool> AddAsync(CompanyBackground obj, List<Traduction> traductions)
+        public async Task<int?> AddAsync(CompanyBackground obj, List<Traduction> traductions)
         {
             return await _companyBackgroundRepository.AddAsync(obj,traductions);
         }
@@ -42,7 +42,7 @@ namespace DRRCore.Domain.Main.CoreDomain
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UpdateAsync(CompanyBackground obj, List<Traduction> traductions)
+        public async Task<int?> UpdateAsync(CompanyBackground obj, List<Traduction> traductions)
         {
             return await _companyBackgroundRepository.UpdateAsync(obj, traductions);   
         }

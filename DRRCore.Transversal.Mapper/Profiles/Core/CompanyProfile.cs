@@ -226,7 +226,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             .ForMember(dest => dest.Name, opt => opt?.MapFrom(src => src.IdPersonNavigation.Fullname))
             .ForMember(dest => dest.Nationality, opt => opt?.MapFrom(src => src.IdPersonNavigation.Nationality))
             .ForMember(dest => dest.BirthDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.IdPersonNavigation.BirthDate)))
-            .ForMember(dest => dest.IdentificationDocument, opt => opt?.MapFrom(src => src.IdPersonNavigation.IdDocumentTypeNavigation.Name + " - " + src.IdPersonNavigation.CodeDocumentType))
+            .ForMember(dest => dest.IdentificationDocument, opt => opt?.MapFrom(src => src.IdPersonNavigation.IdDocumentTypeNavigation.Abreviation + " - " + src.IdPersonNavigation.CodeDocumentType))
             .ForMember(dest => dest.Profession, opt => opt?.MapFrom(src => src.IdProfessionNavigation.Name))
             .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.StartDate)))
       .ReverseMap();
@@ -235,6 +235,27 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
             .ForMember(dest => dest.IdProfession, opt => opt?.MapFrom(src => src.IdProfession == 0 ? null : src.IdProfession))
                  .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.StartDate)))
+          .ReverseMap();
+
+            CreateMap<CompanyShareHolder, GetCompanyShareHolderResponseDto>()
+            .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+            .ForMember(dest => dest.IdCompanyShareHolder, opt => opt?.MapFrom(src => src.IdCompanyShareHolder == 0 ? null : src.IdCompanyShareHolder))
+            .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.StartDate)))
+      .ReverseMap();
+            CreateMap<CompanyShareHolder, GetListCompanyShareHolderResponseDto>()
+            .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+            .ForMember(dest => dest.IdCompanyShareHolder, opt => opt?.MapFrom(src => src.IdCompanyShareHolder == 0 ? null : src.IdCompanyShareHolder))
+            .ForMember(dest => dest.Name, opt => opt?.MapFrom(src => src.IdCompanyShareHolderNavigation.Name))
+            .ForMember(dest => dest.Country, opt => opt?.MapFrom(src => src.IdCompanyShareHolderNavigation.IdCountryNavigation.Iso))
+            .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCompanyShareHolderNavigation.IdCountryNavigation.FlagIso))
+            .ForMember(dest => dest.TaxTypeName, opt => opt?.MapFrom(src => src.IdCompanyShareHolderNavigation.TaxTypeName))
+            .ForMember(dest => dest.TaxTypeCode, opt => opt?.MapFrom(src => src.IdCompanyShareHolderNavigation.TaxTypeCode))
+            .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.StartDate)))
+      .ReverseMap();
+            CreateMap<AddOrUpdateCompanyShareHolderRequestDto, CompanyShareHolder>()
+            .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+            .ForMember(dest => dest.IdCompanyShareHolder, opt => opt?.MapFrom(src => src.IdCompanyShareHolder == 0 ? null : src.IdCompanyShareHolder))
+            .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.StartDate)))
           .ReverseMap();
         }
 

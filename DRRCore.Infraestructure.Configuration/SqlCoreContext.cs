@@ -157,6 +157,8 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<TicketHistory> TicketHistories { get; set; }
 
+    public virtual DbSet<TicketQuery> TicketQueries { get; set; }
+
     public virtual DbSet<TicketReceptor> TicketReceptors { get; set; }
 
     public virtual DbSet<Traduction> Traductions { get; set; }
@@ -1359,9 +1361,12 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdCompanyShareHolder).HasColumnName("idCompanyShareHolder");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
-            entity.Property(e => e.Participation).HasColumnName("participation");
+            entity.Property(e => e.Participation)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("participation");
             entity.Property(e => e.Relation)
-                .HasMaxLength(2)
+                .HasMaxLength(30)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("relation");
@@ -3903,6 +3908,63 @@ public partial class SqlCoreContext : DbContext
                 .HasConstraintName("FK__TicketHis__idTic__18D6A699");
         });
 
+        modelBuilder.Entity<TicketQuery>(entity =>
+        {
+            entity.HasKey(e => e.IdTicket).HasName("PK__TicketQu__22B1456FBA14309C");
+
+            entity.ToTable("TicketQuery");
+
+            entity.Property(e => e.IdTicket)
+                .ValueGeneratedNever()
+                .HasColumnName("idTicket");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Email)
+                .IsUnicode(false)
+                .HasColumnName("email");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdEmployee).HasColumnName("idEmployee");
+            entity.Property(e => e.IdSubscriber).HasColumnName("idSubscriber");
+            entity.Property(e => e.Language)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("language");
+            entity.Property(e => e.Message)
+                .IsUnicode(false)
+                .HasColumnName("message");
+            entity.Property(e => e.QueryDate)
+                .HasColumnType("datetime")
+                .HasColumnName("queryDate");
+            entity.Property(e => e.Response)
+                .IsUnicode(false)
+                .HasColumnName("response");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.TicketQueries)
+                .HasForeignKey(d => d.IdEmployee)
+                .HasConstraintName("FK__TicketQue__idEmp__60283922");
+
+            entity.HasOne(d => d.IdSubscriberNavigation).WithMany(p => p.TicketQueries)
+                .HasForeignKey(d => d.IdSubscriber)
+                .HasConstraintName("FK__TicketQue__idSub__5F3414E9");
+
+            entity.HasOne(d => d.IdTicketNavigation).WithOne(p => p.TicketQuery)
+                .HasForeignKey<TicketQuery>(d => d.IdTicket)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__TicketQue__idTic__5E3FF0B0");
+        });
+
         modelBuilder.Entity<TicketReceptor>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__TicketRe__3213E83F9C977F5B");
@@ -4013,6 +4075,10 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.DeleteDate)
                 .HasColumnType("datetime")
                 .HasColumnName("deleteDate");
+            entity.Property(e => e.EmailPassword)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("emailPassword");
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
@@ -4025,7 +4091,7 @@ public partial class SqlCoreContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
             entity.Property(e => e.UserLogin1)
-                .HasMaxLength(15)
+                .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("userLogin");
 

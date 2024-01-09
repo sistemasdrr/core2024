@@ -368,5 +368,29 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _companyApplication.GetListCompanyPartnerByIdCompany(idCompany));
         }
+        [HttpPost()]
+        [Route("addCompanyShareHolder")]
+        public async Task<ActionResult> addCompanyShareHolder(AddOrUpdateCompanyShareHolderRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCompanyShareHolder(obj));
+        }
+        [HttpGet()]
+        [Route("getCompanyShareHolder")]
+        public async Task<ActionResult> getCompanyShareHolder(int id)
+        {
+            return Ok(await _companyApplication.GetCompanyShareHolderById(id));
+        }
+        [HttpPost()]
+        [Route("deleteCompanyShareHolder")]
+        public async Task<ActionResult> deleteCompanyShareHolder(int id)
+        {
+            return Ok(await _companyApplication.DeleteCompanyShareHolder(id));
+        }
+        [HttpGet()]
+        [Route("getListCompanyShareHolder")]
+        public async Task<ActionResult> getListCompanyShareHolder(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListCompanyShareHolderByIdCompany(idCompany));
+        }
     }
 }

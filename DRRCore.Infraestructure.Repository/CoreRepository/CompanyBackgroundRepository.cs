@@ -12,7 +12,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
         {
             _logger = logger;
         }
-        public async Task<bool> AddAsync(CompanyBackground obj, List<Traduction> traductions)
+        public async Task<int?> AddAsync(CompanyBackground obj, List<Traduction> traductions)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                         }
                     }
                     await context.SaveChangesAsync();
-                    return true;
+                    return obj.Id;
                 }
             }
             catch (Exception ex)
@@ -84,7 +84,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UpdateAsync(CompanyBackground obj,List<Traduction> traductions)
+        public async Task<int?> UpdateAsync(CompanyBackground obj,List<Traduction> traductions)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                         }
                     }
                     await context.SaveChangesAsync();
-                    return true;
+                    return obj.Id;
                 }
             }
             catch (Exception ex)
