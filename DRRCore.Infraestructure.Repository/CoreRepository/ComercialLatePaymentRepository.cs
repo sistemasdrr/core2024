@@ -102,6 +102,21 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<List<ComercialLatePayment>> GetComercialLatePaymetByIdPerson(int idPerson)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var list = await context.ComercialLatePayments.Where(x => x.IdPerson == idPerson).ToListAsync();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return null;
+            }
+        }
+
         public async Task<bool> UpdateAsync(ComercialLatePayment obj)
         {
             try

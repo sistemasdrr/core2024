@@ -42,6 +42,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _repository.GetComercialLatePaymetByIdCompany(idCompany);
         }
 
+        public async Task<List<ComercialLatePayment>> GetComercialLatePaymetByIdPerson(int idPerson)
+        {
+            return await _repository.GetComercialLatePaymetByIdPerson(idPerson);
+        }
+
         public async Task<bool> UpdateAsync(ComercialLatePayment obj)
         {
             return await _repository.UpdateAsync(obj);

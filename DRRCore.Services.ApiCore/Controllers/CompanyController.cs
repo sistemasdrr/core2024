@@ -1,7 +1,6 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.Interfaces.CoreApplication;
 using Microsoft.AspNetCore.Mvc;
-using MySqlX.XDevAPI.Common;
 
 namespace DRRCore.Services.ApiCore.Controllers
 {
@@ -311,8 +310,15 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> getImageByPath(string path)
         {
             var result = await _companyImagesApplication.GetImageByPath(path);
-            return File(result.Data.File.ToArray(), result.Data.ContentType, result.Data.FileName);
 
+            if (result != null && result.Data != null)
+            {
+                return File(result.Data.File?.ToArray(), result.Data.ContentType, result.Data.FileName);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         [HttpPost()]
         [Route("deleteImportAndExport")]
@@ -337,6 +343,54 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> getImportAndExportById(int idCompany, string type)
         {
             return Ok(await _companyApplication.GetListImportAndExportByIdCompany(idCompany, type));
+        }
+        [HttpPost()]
+        [Route("addCompanyPartner")]
+        public async Task<ActionResult> addCompanyPartner(AddOrUpdateCompanyPartnersRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCompanyPartner(obj));
+        }
+        [HttpGet()]
+        [Route("getCompanyPartner")]
+        public async Task<ActionResult> getCompanyPartner(int id)
+        {
+            return Ok(await _companyApplication.GetCompanyPartnerById(id));
+        }
+        [HttpPost()]
+        [Route("deleteCompanyPartner")]
+        public async Task<ActionResult> deleteCompanyPartner(int id)
+        {
+            return Ok(await _companyApplication.DeleteCompanyPartner(id));
+        }
+        [HttpGet()]
+        [Route("getListCompanyPartner")]
+        public async Task<ActionResult> getListCompanyPartner(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListCompanyPartnerByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("addCompanyShareHolder")]
+        public async Task<ActionResult> addCompanyShareHolder(AddOrUpdateCompanyShareHolderRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCompanyShareHolder(obj));
+        }
+        [HttpGet()]
+        [Route("getCompanyShareHolder")]
+        public async Task<ActionResult> getCompanyShareHolder(int id)
+        {
+            return Ok(await _companyApplication.GetCompanyShareHolderById(id));
+        }
+        [HttpPost()]
+        [Route("deleteCompanyShareHolder")]
+        public async Task<ActionResult> deleteCompanyShareHolder(int id)
+        {
+            return Ok(await _companyApplication.DeleteCompanyShareHolder(id));
+        }
+        [HttpGet()]
+        [Route("getListCompanyShareHolder")]
+        public async Task<ActionResult> getListCompanyShareHolder(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListCompanyShareHolderByIdCompany(idCompany));
         }
     }
 }

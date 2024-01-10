@@ -4,7 +4,7 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
     public interface ICompanyBackgroundRepository:IBaseRepository<CompanyBackground>
     {
-        Task<bool> UpdateAsync(CompanyBackground obj, List<Traduction> traductions);
-        Task<bool> AddAsync(CompanyBackground obj, List<Traduction> traductions);
+        Task<int?> UpdateAsync(CompanyBackground obj, List<Traduction> traductions);
+        Task<int?> AddAsync(CompanyBackground obj, List<Traduction> traductions);
     }
 }

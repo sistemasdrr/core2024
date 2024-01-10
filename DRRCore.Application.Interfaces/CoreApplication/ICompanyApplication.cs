@@ -10,7 +10,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetCompanyResponseDto>> GetCompanyById(int id);
         Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name,string form,int idCountry,bool haveReport);
         Task<Response<bool>> DeleteAsync(int id);
-        Task<Response<bool>> AddOrUpdateCompanyBackGroundAsync(AddOrUpdateCompanyBackgroundRequestDto obj);
+        Task<Response<int?>> AddOrUpdateCompanyBackGroundAsync(AddOrUpdateCompanyBackgroundRequestDto obj);
         Task<Response<int>> AddOrUpdateCompanyFinancialInformationAsync(AddOrUpdateCompanyFinancialInformationRequestDto obj);
         Task<Response<GetCompanyBackgroundResponseDto>> GetCompanyBackgroundById(int id);
         Task<Response<int>> AddOrUpdateCompanyBranchAsync(AddOrUpdateCompanyBranchRequestDto obj);
@@ -55,5 +55,15 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> AddOrUpdateImportAndExport(AddOrUpdateImportsAndExportsRequestDto obj);
         Task<Response<GetImportsAndExportResponseDto>> GetImportAndExportById(int id);
         Task<Response<List<GetImportsAndExportResponseDto>>> GetListImportAndExportByIdCompany(int idCompany, string type);
+
+
+        Task<Response<bool>> AddOrUpdateCompanyPartner(AddOrUpdateCompanyPartnersRequestDto obj);
+        Task<Response<GetCompanyPartnersResponseDto>> GetCompanyPartnerById(int id);
+        Task<Response<bool>> DeleteCompanyPartner(int id);
+        Task<Response<List<GetListCompanyPartnersResponseDto>>> GetListCompanyPartnerByIdCompany(int idCompany);
+        Task<Response<bool>> AddOrUpdateCompanyShareHolder(AddOrUpdateCompanyShareHolderRequestDto obj);
+        Task<Response<GetCompanyShareHolderResponseDto>> GetCompanyShareHolderById(int id);
+        Task<Response<bool>> DeleteCompanyShareHolder(int id);
+        Task<Response<List<GetListCompanyShareHolderResponseDto>>> GetListCompanyShareHolderByIdCompany(int idCompany);
     }
 }

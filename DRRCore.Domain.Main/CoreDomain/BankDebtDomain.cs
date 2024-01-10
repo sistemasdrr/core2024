@@ -32,6 +32,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _repository.GetBankDebtsByIdCompany(idCompany);
         }
 
+        public async Task<List<BankDebt>> GetBankDebtsByIdPerson(int idPerson)
+        {
+            return await _repository.GetBankDebtsByIdPerson(idPerson);
+        }
+
         public async Task<BankDebt> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
