@@ -79,6 +79,8 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.Price, opt => opt?.MapFrom(src => src.Price == null ? 0 : src.Price))
                  .ForMember(dest => dest.Quality, opt => opt?.MapFrom(src => src.About == "E" ? src.IdCompanyNavigation.Quality : src.IdPersonNavigation.Language))
                  .ForMember(dest => dest.DispatchDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DispatchtDate)))
+                 .ForMember(dest => dest.StatusQuery, opt => opt?.MapFrom(src => src.TicketQuery!=null?src.TicketQuery.Status:0))
+                  .ForMember(dest => dest.HasQuery, opt => opt?.MapFrom(src => src.TicketQuery!=null))
                  .ReverseMap();
 
 
@@ -95,6 +97,16 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ReverseMap();
 
             CreateMap<TicketFileResponseDto, TicketFile>().ReverseMap();
+            CreateMap<TicketQuery, GetTicketQueryResponseDto>()
+             .ForMember(dest => dest.QueryDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.QueryDate)))
+             .ForMember(dest => dest.SubscriberName, opt => opt?.MapFrom(src =>src.IdSubscriberNavigation==null?string.Empty: src.IdSubscriberNavigation.Code +"||"+src.IdSubscriberNavigation.Name))
+             .ForMember(dest => dest.Report, opt => opt?.MapFrom(src => src.IdTicketNavigation == null ? string.Empty : src.IdTicketNavigation.RequestedName))
+            .ReverseMap();
+            CreateMap<SendTicketQueryRequestDto, TicketQuery>()
+            .ForMember(dest => dest.QueryDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.QueryDate)))
+            .ForMember(dest => dest.Status, opt => opt?.MapFrom(src =>(int?)TicketQueryEnum.En_Consulta))          
+            .ReverseMap();
+
         }
 
         private string GetStatusFinalOwner(ICollection<TicketHistory> ticketHistories)

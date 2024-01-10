@@ -97,7 +97,13 @@ public partial class Company
 
     public virtual ICollection<CompanyImage> CompanyImages { get; set; } = new List<CompanyImage>();
 
+    public virtual ICollection<CompanyPartner> CompanyPartners { get; set; } = new List<CompanyPartner>();
+
     public virtual ICollection<CompanySb> CompanySbs { get; set; } = new List<CompanySb>();
+
+    public virtual ICollection<CompanyShareHolder> CompanyShareHolderIdCompanyNavigations { get; set; } = new List<CompanyShareHolder>();
+
+    public virtual ICollection<CompanyShareHolder> CompanyShareHolderIdCompanyShareHolderNavigations { get; set; } = new List<CompanyShareHolder>();
 
     public virtual ICollection<Endorsement> Endorsements { get; set; } = new List<Endorsement>();
 
@@ -119,6 +125,8 @@ public partial class Company
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
+    public virtual ICollection<PersonJob> PersonJobs { get; set; } = new List<PersonJob>();
+
     public virtual ICollection<Provider> Providers { get; set; } = new List<Provider>();
 
     public virtual ICollection<SalesHistory> SalesHistories { get; set; } = new List<SalesHistory>();
@@ -128,4 +136,6 @@ public partial class Company
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual ICollection<Traduction> Traductions { get; set; } = new List<Traduction>();
+
+    public virtual ICollection<WorkersHistory> WorkersHistories { get; set; } = new List<WorkersHistory>();
 }

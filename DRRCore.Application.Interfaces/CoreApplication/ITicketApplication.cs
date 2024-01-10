@@ -9,11 +9,13 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> AddTicketAsync(AddOrUpdateTicketRequestDto request);
         Task<Response<GetExistingTicketResponseDto>> GetReportType(int id, string type);
         Task<Response<GetNumerationResponseDto>> GetTicketNumberAsync();
-
         Task<Response<GetTicketRequestDto>> GetTicketRequestAsync(int id);
         Task<Response<List<GetListTicketResponseDto>>> GetTicketListAsync();
         Task<Response<bool>> DeleteTicket(int id);
         Task<Response<List<GetListPendingTicketResponseDto>>> GetTicketListPendingAsync();
         Task<Response<List<GetListTicketResponseDto>>> GetTicketListByAsync(string ticket, string name, string subscriber, string type, string procedure);
+        Task<Response<GetTicketQueryResponseDto>> GetTicketQuery(int idTicket);
+        Task<Response<bool>> AnswerTicket(int idTicket);
+        Task<Response<bool>> SendTicketQuery(SendTicketQueryRequestDto request);
     }
 }

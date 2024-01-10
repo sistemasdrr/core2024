@@ -1,6 +1,7 @@
 ﻿using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
@@ -59,7 +60,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.UserLogins.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
+                return await context.UserLogins.Include(x=>x.IdEmployeeNavigation).Where(x=>x.Id==id).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {

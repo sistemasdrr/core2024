@@ -35,6 +35,8 @@ namespace DRRCore.Transversal.Common
                 case Constants.DRR_WORKFLOW_ESP_0038:
                 case Constants.DRR_WORKFLOW_ESP_0039:
                 case Constants.DRR_WORKFLOW_ESP_0039_ERROR:
+                case Constants.DRR_EECORE_ENG_QUERYTICKET:
+                case Constants.DRR_EECORE_ESP_QUERYTICKET:
                     return GetHtmlStringBody(body,parameters);
                 case Constants.DRR_WORKFLOW_ENG_0001:
                 case Constants.DRR_WORKFLOW_ESP_0001:

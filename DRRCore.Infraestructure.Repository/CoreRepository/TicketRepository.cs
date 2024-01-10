@@ -31,6 +31,24 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<bool> AddTicketQuery(TicketQuery query)
+        {
+            try
+            {
+                using (var context = new SqlCoreContext())
+                {
+                    await context.TicketQueries.AddAsync(query);
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             try
@@ -67,7 +85,9 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
                     .Include(x => x.IdCountryNavigation)
                     .Include(x => x.IdStatusTicketNavigation)
-                    .Include(x => x.TicketHistories.OrderByDescending(x=>x.Id)).Where(x => x.IdStatusTicket !=(int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
+                    .Include(x => x.TicketQuery)
+                    .Include(x => x.TicketHistories.OrderByDescending(x=>x.Id)).Where(x => x.IdStatusTicket !=(int?)TicketStatusEnum.Despachado && x.Enable == true)
+                    .OrderByDescending(x => x.OrderDate).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -88,6 +108,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdCompanyNavigation.IdCountryNavigation.IdContinentNavigation)
                     .Include(x => x.IdPersonNavigation)
                     .Include(x => x.IdPersonNavigation.IdCountryNavigation)
+                    .Include(x => x.TicketQuery)
                     .Include(x => x.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
                     .Include(x => x.IdStatusTicketNavigation)
                     .Include(x => x.IdCountryNavigation).Where(x => x.IdStatusTicket != (int?)TicketStatusEnum.Despachado && x.Enable == true).Include(x => x.TicketHistories.OrderByDescending(x => x.Id)).Where(x => x.IdStatusTicket != (int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
@@ -141,7 +162,8 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.FindAsync(id) ?? throw new Exception("No existe el objeto solicitado");
+                return await context.Tickets.Include(x => x.IdCountryNavigation)
+                    .Include(x => x.IdSubscriberNavigation).Where(x=>x.Id==id).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {
@@ -183,7 +205,43 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-      
+        public async Task<TicketQuery> GetTicketQuery(int idTicket)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.TicketQueries.Include(x => x.IdSubscriberNavigation)
+                    .Include(x => x.IdTicketNavigation)
+                    .Include(x => x.IdEmployeeNavigation).Where(x=>x.IdTicket==idTicket).FirstOrDefaultAsync()??throw new Exception("No se ha encontrado valores");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new TicketQuery();
+            }
+        }
+
+        public async Task<bool> TicketQueryAnswered(int idTicket)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var query= await context.TicketQueries.Where(x => x.IdTicket == idTicket).FirstOrDefaultAsync() ?? throw new Exception("No se ha encontrado valores");
+
+                query.Status = (int)TicketQueryEnum.Resuelta;
+                query.UpdateDate= DateTime.Now;
+
+                context.TicketQueries.Update(query);
+                await context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
 
         public async Task<bool> UpdateAsync(Ticket obj)
         {

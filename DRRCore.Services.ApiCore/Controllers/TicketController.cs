@@ -64,5 +64,24 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _ticketApplication.GetTicketListPendingAsync());
 
         }
+        [HttpGet()]
+        [Route("getTicketQuery")]
+        public async Task<ActionResult> getTicketQuery(int idTicket)
+        {
+            return Ok(await _ticketApplication.GetTicketQuery(idTicket));
+
+        }
+        [HttpPost()]
+        [Route("answeredTicketQuery")]
+        public async Task<ActionResult> answeredTicketQuery(int idTicket)
+        {
+            return Ok(await _ticketApplication.AnswerTicket(idTicket));
+        }
+        [HttpPost()]
+        [Route("sendQuery")]
+        public async Task<ActionResult> sendQuery(SendTicketQueryRequestDto request)
+        {
+            return Ok(await _ticketApplication.SendTicketQuery(request));
+        }
     }
 }

@@ -19,7 +19,7 @@
         public string? StatusFinalOwner { get; set; }
 
         //ABONADO
-        public string? SubscriberCode{ get; set; }
+        public string? SubscriberCode { get; set; }
         public string? SubscriberName { get; set; }
         public string? SubscriberCountry { get; set; }
         public string? SubscriberFlag { get; set; }
@@ -37,7 +37,7 @@
         public string? RequestedName { get; set; }
         public string? TaxType { get; set; }
         public string? TaxCode { get; set; }
-        public string? InvestigatedContinent{ get; set; }
+        public string? InvestigatedContinent { get; set; }
         public string? InvestigatedCountry { get; set; }
         public string? InvestigatedFlag { get; set; }
         public string? City { get; set; }
@@ -53,5 +53,10 @@
         public string? ExpireDate { get; set; }
         public string? RealExpireDate { get; set; }
         public string? DispatchDate { get; set; }
+
+        //Consulta
+        public bool HasQuery { get; set; }
+        public int StatusQuery { get; set; }
+
     }
 }

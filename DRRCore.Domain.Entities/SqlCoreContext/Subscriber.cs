@@ -97,5 +97,7 @@ public partial class Subscriber
 
     public virtual ICollection<SubscriberPrice> SubscriberPrices { get; set; } = new List<SubscriberPrice>();
 
+    public virtual ICollection<TicketQuery> TicketQueries { get; set; } = new List<TicketQuery>();
+
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

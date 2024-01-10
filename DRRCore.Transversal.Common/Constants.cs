@@ -84,6 +84,8 @@
         public const string DRR_WORKFLOW_ESP_0039_ERROR = "DRR_WORKFLOW_ESP_0039_ERROR";
         public const string DRR_WORKFLOW_ESP_0039 = "DRR_WORKFLOW_ESP_0039";
         public const string DRR_WORKFLOW_ESP_0040 = "DRR_WORKFLOW_ESP_0040";
+        public const string DRR_EECORE_ESP_QUERYTICKET = "DRR_EECORE_ESP_QUERYTICKET";
+        public const string DRR_EECORE_ENG_QUERYTICKET = "DRR_EECORE_ENG_QUERYTICKET";
 
         public static readonly string[] TRADUCTIONS_FORMS =  {"L_E_COMIDE","S_E_DURATION","L_E_REPUTATION","L_E_NEW",
                                                                "S_B_DURATION","S_B_REGISTERIN","S_B_PUBLICREGIS","L_B_PAIDCAPITAL","S_B_INCREASEDATE",

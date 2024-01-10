@@ -9,5 +9,8 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 
         Task<List<Ticket>> GetTicketByPerson(int id);
         Task<List<Ticket>> GetAllByAsync(string ticket, string name, string subscriber, string type, string procedure);
+        Task<bool> AddTicketQuery(TicketQuery query);
+        Task<TicketQuery> GetTicketQuery(int idTicket);
+        Task<bool> TicketQueryAnswered(int idTicket);
     }
 }

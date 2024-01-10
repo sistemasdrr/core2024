@@ -1,16 +1,22 @@
 using DRRCore.Application.Interfaces.CoreApplication;
+using DRRCore.Application.Interfaces.EmailApplication;
+using DRRCore.Application.Main;
 using DRRCore.Application.Main.CoreApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Domain.Interfaces.CoreDomain;
+using DRRCore.Domain.Interfaces.EmailDomain;
 using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Domain.Main;
 using DRRCore.Domain.Main.CoreDomain;
+using DRRCore.Domain.Main.EmailDomain;
 using DRRCore.Domain.Main.MysqlDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Infraestructure.Interfaces.MySqlRepository;
+using DRRCore.Infraestructure.Interfaces.Repository;
 using DRRCore.Infraestructure.Repository.CoreRepository;
 using DRRCore.Infraestructure.Repository.MYSQLRepository;
+using DRRCore.Infraestructure.Repository.SQLRepository;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using DRRCore.Transversal.Common.JsonReader;
@@ -124,6 +130,10 @@ builder.Services.AddScoped<IPersonSituationRepository, PersonSituationRepository
 builder.Services.AddScoped<IProfessionRepository, ProfessionRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
+builder.Services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
+builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
+builder.Services.AddScoped<IAttachmentsNotSendRepository, AttachmentsNotSendRepository>();
+
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
 builder.Services.AddScoped<IEmployeeDomain, EmployeeDomain>();
@@ -180,6 +190,10 @@ builder.Services.AddScoped<IPersonSituationDomain, PersonSituationDomain>();
 builder.Services.AddScoped<IProfessionDomain, ProfessionDomain>();
 builder.Services.AddScoped<IPersonDomain, PersonDomain>();
 
+builder.Services.AddScoped<IEmailHistoryDomain, EmailHistoryDomain>();
+builder.Services.AddScoped<IAttachmentsNotSendDomain, AttachmentsNotSendDomain>();
+builder.Services.AddScoped<IEmailConfigurationDomain, EmailConfigurationDomain>();
+
 builder.Services.AddScoped<IComboboxApplication, ComboboxApplication>();
 builder.Services.AddScoped<IEmployeeApplication, EmployeeAplication>();
 builder.Services.AddScoped<ICompanyApplication, CompanyApplication>();
@@ -192,6 +206,8 @@ builder.Services.AddScoped<IAgentPriceApplication, AgentPriceApplication>();
 builder.Services.AddScoped<ICouponBillingSubscriberApplication, CouponBillingSubscriberApplication>();
 builder.Services.AddScoped<ITicketApplication, TicketApplication>();
 builder.Services.AddScoped<IPersonApplication, PersonApplication>();
+
+builder.Services.AddScoped<IEmailApplication, EmailApplication>();
 
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();

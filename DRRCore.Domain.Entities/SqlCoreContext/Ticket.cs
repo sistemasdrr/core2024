@@ -96,4 +96,6 @@ public partial class Ticket
     public virtual ICollection<TicketFile> TicketFiles { get; set; } = new List<TicketFile>();
 
     public virtual ICollection<TicketHistory> TicketHistories { get; set; } = new List<TicketHistory>();
+
+    public virtual TicketQuery? TicketQuery { get; set; }
 }

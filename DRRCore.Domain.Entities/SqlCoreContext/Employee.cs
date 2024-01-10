@@ -85,6 +85,8 @@ public partial class Employee
 
     public virtual ICollection<TicketAssignation> TicketAssignations { get; set; } = new List<TicketAssignation>();
 
+    public virtual ICollection<TicketQuery> TicketQueries { get; set; } = new List<TicketQuery>();
+
     public virtual ICollection<TicketReceptor> TicketReceptors { get; set; } = new List<TicketReceptor>();
 
     public virtual ICollection<UserLogin> UserLogins { get; set; } = new List<UserLogin>();

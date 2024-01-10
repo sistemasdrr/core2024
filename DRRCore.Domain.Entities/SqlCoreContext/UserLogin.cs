@@ -9,7 +9,7 @@ public partial class UserLogin
 
     public int? IdEmployee { get; set; }
 
-    public string UserLogin1 { get; set; } = null!;
+    public string? UserLogin1 { get; set; }
 
     public string Password { get; set; } = null!;
 
@@ -20,6 +20,8 @@ public partial class UserLogin
     public DateTime? DeleteDate { get; set; }
 
     public bool? Enable { get; set; }
+
+    public string? EmailPassword { get; set; }
 
     public virtual Employee? IdEmployeeNavigation { get; set; }
 

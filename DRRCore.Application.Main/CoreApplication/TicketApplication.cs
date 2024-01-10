@@ -4,12 +4,14 @@ using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.DTO.Enum;
 using DRRCore.Application.Interfaces.CoreApplication;
+using DRRCore.Application.Interfaces.EmailApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using log4net.Util;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -21,11 +23,15 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICompanyDomain _companyDomain;
         private readonly ITCuponDomain _tCuponDomain;
         private readonly ITicketReceptorDomain _ticketReceptorDomain;
+        private readonly IUserLoginDomain _userLoginDomain;
+        private readonly IEmailApplication _emailApplication;
         private IMapper _mapper;
         private ILogger _logger;
+       
         public TicketApplication(INumerationDomain numerationDomain,
             ITCuponDomain tCuponDomain,ITicketDomain ticketDomain,
-            ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain,ICompanyDomain companyDomain,IMapper mapper, ILogger logger)
+            ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain,
+            ICompanyDomain companyDomain,IMapper mapper, ILogger logger,IEmailApplication emailApplication,IUserLoginDomain userLoginDomain)
         {
             _numerationDomain = numerationDomain;
             _ticketDomain = ticketDomain;
@@ -34,7 +40,9 @@ namespace DRRCore.Application.Main.CoreApplication
             _companyDomain = companyDomain;
             _tCuponDomain = tCuponDomain;
             _ticketReceptorDomain= ticketReceptorDomain;
-            _logger = logger;
+            _logger = logger;           
+            _userLoginDomain = userLoginDomain;
+            _emailApplication = emailApplication;
         }
 
         public async Task<Response<bool>> AddTicketAsync(AddOrUpdateTicketRequestDto request)
@@ -387,6 +395,98 @@ namespace DRRCore.Application.Main.CoreApplication
                 {
                     response.Data = null;
                 }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetTicketQueryResponseDto>> GetTicketQuery(int idTicket)
+        {
+            var response = new Response<GetTicketQueryResponseDto>();
+            try
+            {
+                var query = await _ticketDomain.GetTicketQuery(idTicket);
+                response.Data = _mapper.Map<GetTicketQueryResponseDto>(query);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AnswerTicket(int idTicket)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                response.Data= await _ticketDomain.TicketQueryAnswered(idTicket);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> SendTicketQuery(SendTicketQueryRequestDto request)
+        {
+            var listEmailTo=new List<string>();
+            var response = new Response<bool>();
+            try
+            {
+                var query = _mapper.Map<TicketQuery>(request);
+                query.IdEmployee = 1;
+                response.Data = await _ticketDomain.AddTicketQuery(query);
+
+                var user = await _userLoginDomain.GetByIdAsync(19);
+
+                var ticket = await _ticketDomain.GetByIdAsync(request.IdTicket);
+
+                listEmailTo.AddRange(request.Email.Split(';'));
+                listEmailTo.Add(user.IdEmployeeNavigation.Email);
+
+                string subject;
+                if (request.Language == "I")
+                {
+                    subject = "Requirement query : " + ticket.RequestedName + "| Order Date : " + ticket.OrderDate;
+                }
+                else
+                {
+                    subject = "Consulta al requerimiento : " + ticket.RequestedName + "| Fecha : " + ticket.OrderDate.ToString("dd/MM/yyyy");
+                }
+                await _emailApplication.SendMailAsync(new DTO.Email.EmailDataDTO
+                {
+                    BeAuthenticated = true,
+                    UserName=user.IdEmployeeNavigation.Email,
+                    Password=user.EmailPassword,
+                    EmailKey = request.Language == "I" ? Constants.DRR_EECORE_ENG_QUERYTICKET : Constants.DRR_EECORE_ESP_QUERYTICKET,
+                    From = user.IdEmployeeNavigation.Email,
+                    To = listEmailTo,
+                    DisplayName = user.IdEmployeeNavigation.FirstName + ' ' + user.IdEmployeeNavigation.LastName,
+                    User = "19",
+                    IsBodyHTML = true,
+                    Subject = subject,
+                    Parameters = new List<string>
+                    {
+                        ticket.IdSubscriberNavigation.Name,
+                        ticket.RequestedName,
+                        ticket.OrderDate.ToString("dd/MM/yyyy"),
+                        request.Language=="I"? ticket.IdCountryNavigation.EnglishName:ticket.IdCountryNavigation.Name,
+                        ticket.ReferenceNumber,
+                        request.Message,
+                        user.IdEmployeeNavigation.Email
+                    }
+                }); 
             }
             catch (Exception ex)
             {

@@ -16,7 +16,10 @@
         public List<string> Parameters { get; set; } = new List<string>();
         public List<List<string>> Table { get; set; }= new List<List<string>>();
         public List<AttachmentDto> Attachments { get; set; } = new List<AttachmentDto>();
-       
+        public string UserName { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public bool BeAuthenticated { get; set; } = false;
+
     }
     public class AttachmentDto
     {

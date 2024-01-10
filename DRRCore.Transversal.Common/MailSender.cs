@@ -1,15 +1,8 @@
 ﻿using DRRCore.Transversal.Common.Interface;
 using DRRCore.Transversal.Common.JsonReader;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DRRCore.Transversal.Common
 {
@@ -23,6 +16,9 @@ namespace DRRCore.Transversal.Common
         public string? Body { get; set; } = string.Empty;
         public bool IsHtml { get; set; } = true;
         public List<Attachment> Attachments { get; set; }= new List<Attachment>();
+        public string UserName { get; set; } = string.Empty;    
+        public string Password { get; set; }=string.Empty;
+        public bool BeAuthenticated { get; set; } 
 
      }
     public class Attachment
@@ -73,6 +69,20 @@ namespace DRRCore.Transversal.Common
                             }                            
                         }
                     }
+                }else if (values.BeAuthenticated)
+                {
+                    var client = smtpClient(values.UserName,values.Password);
+                    try
+                    {
+                        await client.SendMailAsync(mailMessage(values));
+                        _logger.LogInformation(Messages.MailSuccessSend);
+                        response = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogInformation(string.Format(Messages.ErrorMailSend, ex.Message));
+                        return false;
+                    }
                 }
                 else
                 {
@@ -93,6 +103,19 @@ namespace DRRCore.Transversal.Common
                
             }
             return response;
+        }
+        private SmtpClient smtpClient(string user, string password)
+        {
+            return new SmtpClient()
+            {
+                Host = _emailSettings.PrincipalDomain.Host,
+                //EnableSsl = _emailSettings.PrincipalDomain.EnableSsl,
+                Port = _emailSettings.PrincipalDomain.Port,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                // UseDefaultCredentials = _emailSettings.PrincipalDomain.UseDefaultCredentials,
+                Credentials = new NetworkCredential(user,password)
+            };
+
         }
         private SmtpClient smtpClient()
         {

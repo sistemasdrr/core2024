@@ -59,9 +59,13 @@ public partial class Provider
 
     public string? QualificationEng { get; set; }
 
+    public int? IdPerson { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Country? IdCountryNavigation { get; set; }
 
     public virtual Currency? IdCurrencyNavigation { get; set; }
+
+    public virtual Person? IdPersonNavigation { get; set; }
 }

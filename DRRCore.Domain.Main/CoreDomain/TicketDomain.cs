@@ -16,6 +16,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _ticketRepository.AddAsync(obj);
         }
 
+        public async Task<bool> AddTicketQuery(TicketQuery query)
+        {
+            return await _ticketRepository.AddTicketQuery(query);
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
            return await _ticketRepository.DeleteAsync(id);
@@ -55,6 +60,16 @@ namespace DRRCore.Domain.Main.CoreDomain
         public async Task<List<Ticket>> GetTicketByPerson(int id)
         {
            return await _ticketRepository.GetTicketByPerson(id);
+        }
+
+        public async Task<TicketQuery> GetTicketQuery(int idTicket)
+        {
+            return await _ticketRepository.GetTicketQuery(idTicket);
+        }
+
+        public async Task<bool> TicketQueryAnswered(int idTicket)
+        {
+            return await _ticketRepository.TicketQueryAnswered(idTicket);
         }
 
         public async Task<bool> UpdateAsync(Ticket obj)

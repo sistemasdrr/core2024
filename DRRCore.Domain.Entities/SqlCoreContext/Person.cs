@@ -97,6 +97,14 @@ public partial class Person
 
     public string? Profession { get; set; }
 
+    public string? Quality { get; set; }
+
+    public virtual ICollection<BankDebt> BankDebts { get; set; } = new List<BankDebt>();
+
+    public virtual ICollection<ComercialLatePayment> ComercialLatePayments { get; set; } = new List<ComercialLatePayment>();
+
+    public virtual ICollection<CompanyPartner> CompanyPartners { get; set; } = new List<CompanyPartner>();
+
     public virtual CivilStatus? IdCivilStatusNavigation { get; set; }
 
     public virtual Country? IdCountryNavigation { get; set; }
@@ -114,6 +122,24 @@ public partial class Person
     public virtual Reputation? IdReputationNavigation { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual ICollection<PersonActivity> PersonActivities { get; set; } = new List<PersonActivity>();
+
+    public virtual ICollection<PersonGeneralInformation> PersonGeneralInformations { get; set; } = new List<PersonGeneralInformation>();
+
+    public virtual ICollection<PersonHistory> PersonHistories { get; set; } = new List<PersonHistory>();
+
+    public virtual ICollection<PersonHome> PersonHomes { get; set; } = new List<PersonHome>();
+
+    public virtual ICollection<PersonImage> PersonImages { get; set; } = new List<PersonImage>();
+
+    public virtual ICollection<PersonJob> PersonJobs { get; set; } = new List<PersonJob>();
+
+    public virtual ICollection<PersonProperty> PersonProperties { get; set; } = new List<PersonProperty>();
+
+    public virtual ICollection<PersonSb> PersonSbs { get; set; } = new List<PersonSb>();
+
+    public virtual ICollection<Provider> Providers { get; set; } = new List<Provider>();
 
     public virtual DocumentType? RelationshipDocumentTypeNavigation { get; set; }
 
