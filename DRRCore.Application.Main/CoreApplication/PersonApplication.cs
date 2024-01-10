@@ -24,10 +24,11 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IPersonSBSDomain _personSBSDomain;
         private readonly IPersonHistoryDomain _personHistoryDomain;
         private readonly IPersonGeneralInfoDomain _personGeneralInfoDomain;
-       
+        private readonly ICompanyPartnersDomain _companyPartnersDomain;
+
         public PersonApplication(IMapper mapper, ILogger logger, IPersonDomain personDomain, IPersonHomeDomain personHomeDomain,
             IPersonJobDomain personJobDomain, IPersonSBSDomain personSBSDomain, IProviderDomain providerDomain, 
-            IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain,
+            IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain, ICompanyPartnersDomain companyPartnersDomain,
             IPersonActivitiesDomain personActivitiesDomain, IPersonPropertyDomain personPropertyDomain, 
             IPersonHistoryDomain personHistoryDomain, IPersonGeneralInfoDomain personGeneralInfoDomain)
         {
@@ -44,6 +45,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _comercialLatePaymentDomain = comercialLatePaymentDomain;
             _bankDebtDomain = bankDebtDomain;
             _personSBSDomain = personSBSDomain;
+            _companyPartnersDomain = companyPartnersDomain;
         }
 
         public async Task<Response<bool>> ActivateWebPerson(int id)
@@ -527,6 +529,47 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<bool>> AddOrUpdatePersonPartner(AddOrUpdateCompanyPartnersRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newObj = _mapper.Map<CompanyPartner>(obj);
+                    response.Data = await _companyPartnersDomain.AddAsync(newObj);
+                }
+                else
+                {
+                    var existingObj = await _companyPartnersDomain.GetByIdAsync((int)obj.Id);
+                    if (existingObj == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = Messages.MessageNoDataCompany;
+                        _logger.LogError(response.Message);
+                        return response;
+                    }
+                    existingObj = _mapper.Map(obj, existingObj);
+                    existingObj.UpdateDate = DateTime.Now;
+                    response.Data = await _companyPartnersDomain.UpdateAsync(existingObj);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         public async Task<Response<int?>> AddOrUpdatePersonPropertyAsync(AddOrUpdatePersonPropertyRequestDto obj)
         {
             List<Traduction> traductions = new List<Traduction>();
@@ -766,6 +809,33 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<bool>> DeletePersonPartner(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var provider = await _companyPartnersDomain.GetByIdAsync(id);
+                if (provider == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _companyPartnersDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         public async Task<Response<bool>> DeleteProvider(int id)
         {
             var response = new Response<bool>();
@@ -934,6 +1004,29 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<List<GetListPersonPartnerResponseDto>>> GetListPersonPartnerByIdPerson(int idPerson)
+        {
+            var response = new Response<List<GetListPersonPartnerResponseDto>>();
+            try
+            {
+                var list = await _companyPartnersDomain.GetPartnersByIdPerson(idPerson);
+                if (list == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                }
+                response.Data = _mapper.Map<List<GetListPersonPartnerResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         public async Task<Response<List<GetListProviderResponseDto>>> GetListProvidersAsync(int idPerson)
         {
             var response = new Response<List<GetListProviderResponseDto>>();
@@ -1092,6 +1185,30 @@ namespace DRRCore.Application.Main.CoreApplication
                     return response;
                 }
                 response.Data = _mapper.Map<GetPersonJobResponseDto>(obj);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetCompanyPartnersResponseDto>> GetPersonPartnerById(int id)
+        {
+            var response = new Response<GetCompanyPartnersResponseDto>();
+            try
+            {
+                var obj = await _companyPartnersDomain.GetByIdAsync(id);
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetCompanyPartnersResponseDto>(obj);
             }
             catch (Exception ex)
             {

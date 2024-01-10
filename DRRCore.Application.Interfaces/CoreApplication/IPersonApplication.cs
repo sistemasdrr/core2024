@@ -43,5 +43,9 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetPersonHistoryResponseDto>> GetPersonHistoryByIdPerson(int idPerson);
         Task<Response<int?>> AddOrUpdatePersonGeneralInfoAsync(AddOrUpdatePersonGeneralInfoRequestDto obj);
         Task<Response<GetPersonGeneralInfoResponseDto>> GetPersonGeneralInfoByIdPerson(int idPerson);
+        Task<Response<bool>> AddOrUpdatePersonPartner(AddOrUpdateCompanyPartnersRequestDto obj);
+        Task<Response<GetCompanyPartnersResponseDto>> GetPersonPartnerById(int id);
+        Task<Response<bool>> DeletePersonPartner(int id);
+        Task<Response<List<GetListPersonPartnerResponseDto>>> GetListPersonPartnerByIdPerson(int idPerson);
     }
 }

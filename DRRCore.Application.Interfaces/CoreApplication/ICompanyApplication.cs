@@ -65,5 +65,13 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetCompanyShareHolderResponseDto>> GetCompanyShareHolderById(int id);
         Task<Response<bool>> DeleteCompanyShareHolder(int id);
         Task<Response<List<GetListCompanyShareHolderResponseDto>>> GetListCompanyShareHolderByIdCompany(int idCompany);
+        Task<Response<bool>> AddOrUpdateWorkerHistory(AddOrUpdateWorkerHistoryRequestDto obj);
+        Task<Response<GetWorkersHistoryResponseDto>> GetWorkerHistoryById(int id);
+        Task<Response<bool>> DeleteWorkerHistory(int id);
+        Task<Response<List<GetListWorkersHistoryResponseDto>>> GetListWorkerHistoryByIdCompany(int idCompany);
+        Task<Response<bool>> AddOrUpdateCompanyRelation(AddOrUpdateCompanyRelationRequestDto obj);
+        Task<Response<GetCompanyRelationResponseDto>> GetCompanyRelationById(int id);
+        Task<Response<bool>> DeleteCompanyRelation(int id);
+        Task<Response<List<GetListCompanyRelationResponseDto>>> GetListCompanyRelationByIdCompany(int idCompany);
     }
 }
