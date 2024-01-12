@@ -249,5 +249,29 @@ namespace DRRCore.Services.ApiCore.Controllers
                 return NotFound();
             }
         }
+        [HttpPost()]
+        [Route("addPersonPartner")]
+        public async Task<ActionResult> addPersonPartner(AddOrUpdateCompanyPartnersRequestDto obj)
+        {
+            return Ok(await _personApplication.AddOrUpdatePersonPartner(obj));
+        }
+        [HttpGet()]
+        [Route("getPersonPartner")]
+        public async Task<ActionResult> getPersonPartner(int id)
+        {
+            return Ok(await _personApplication.GetPersonPartnerById(id));
+        }
+        [HttpPost()]
+        [Route("deletePersonPartner")]
+        public async Task<ActionResult> deletePersonPartner(int id)
+        {
+            return Ok(await _personApplication.DeletePersonPartner(id));
+        }
+        [HttpGet()]
+        [Route("getListPersonPartner")]
+        public async Task<ActionResult> getListPersonPartner(int idPerson)
+        {
+            return Ok(await _personApplication.GetListPersonPartnerByIdPerson(idPerson));
+        }
     }
 }

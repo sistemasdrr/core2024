@@ -42,6 +42,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _companyPartnersRepository.GetPartnersByIdCompany(idCompany);
         }
 
+        public async Task<List<CompanyPartner>> GetPartnersByIdPerson(int idPerson)
+        {
+            return await _companyPartnersRepository.GetPartnersByIdPerson(idPerson);
+        }
+
         public async Task<bool> UpdateAsync(CompanyPartner obj)
         {
             return await _companyPartnersRepository.UpdateAsync(obj);

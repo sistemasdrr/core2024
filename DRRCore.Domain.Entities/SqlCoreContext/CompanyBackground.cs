@@ -33,11 +33,11 @@ public partial class CompanyBackground
 
     public int? Currency { get; set; }
 
-    public bool? Traded { get; set; }
+    public string? Traded { get; set; }
 
     public string? TradedBy { get; set; }
 
-    public decimal? CurrentExchangeRate { get; set; }
+    public string? CurrentExchangeRate { get; set; }
 
     public DateTime? LastQueryRrpp { get; set; }
 

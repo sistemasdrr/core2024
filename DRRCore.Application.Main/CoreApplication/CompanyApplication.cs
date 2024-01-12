@@ -27,13 +27,15 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IImportsAndExportsDomain _importsAndExportsDomain;
         private readonly ICompanyPartnersDomain _companyPartnersDomain;
         private readonly ICompanyShareHolderDomain _companyShareHolderDomain;
+        private readonly IWorkerHistoryDomain _workerHistoryDomain;
+        private readonly ICompanyRelationDomain _companyRelationDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
         public CompanyApplication(ICompanyDomain companyDomain,ICompanyBackgroundDomain companyBackgroundDomain, ICompanyBranchDomain companyBranchDomain,
             ICompanyFinancialInformationDomain companyFinancialInformationDomain, IMapper mapper, ILogger logger, ICompanyShareHolderDomain companyShareHolderDomain,
-            IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain,
-            IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain,
+            IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain, IWorkerHistoryDomain workerHistoryDomain,
+            IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain, ICompanyRelationDomain companyRelationDomain,
             ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain,
             ICompanyGeneralInformationDomain companyGeneralInformationDomain, IImportsAndExportsDomain importsAndExportsDomain, ICompanyPartnersDomain companyPartnersDomain)
         {
@@ -53,6 +55,8 @@ namespace DRRCore.Application.Main.CoreApplication
             _importsAndExportsDomain = importsAndExportsDomain;
             _companyPartnersDomain = companyPartnersDomain;
             _companyShareHolderDomain = companyShareHolderDomain;
+            _workerHistoryDomain = workerHistoryDomain;
+            _companyRelationDomain = companyRelationDomain;
             _mapper = mapper;
             _logger = logger;
         }
@@ -1825,6 +1829,238 @@ namespace DRRCore.Application.Main.CoreApplication
                 if (list != null)
                 {
                     response.Data = _mapper.Map<List<GetListCompanyShareHolderResponseDto>>(list);
+                }
+                else
+                {
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateWorkerHistory(AddOrUpdateWorkerHistoryRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newObj = _mapper.Map<WorkersHistory>(obj);
+                    response.Data = await _workerHistoryDomain.AddAsync(newObj);
+                }
+                else
+                {
+                    var existingObj = await _workerHistoryDomain.GetByIdAsync((int)obj.Id);
+                    if (existingObj == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = Messages.MessageNoDataCompany;
+                        _logger.LogError(response.Message);
+                        return response;
+                    }
+                    existingObj = _mapper.Map(obj, existingObj);
+                    existingObj.UpdateDate = DateTime.Now;
+                    response.Data = await _workerHistoryDomain.UpdateAsync(existingObj);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetWorkersHistoryResponseDto>> GetWorkerHistoryById(int id)
+        {
+            var response = new Response<GetWorkersHistoryResponseDto>();
+            try
+            {
+                var obj = await _workerHistoryDomain.GetByIdAsync(id);
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetWorkersHistoryResponseDto>(obj);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteWorkerHistory(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var obj = await _workerHistoryDomain.GetByIdAsync(id);
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _workerHistoryDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetListWorkersHistoryResponseDto>>> GetListWorkerHistoryByIdCompany(int idCompany)
+        {
+            var response = new Response<List<GetListWorkersHistoryResponseDto>>();
+            try
+            {
+                var list = await _workerHistoryDomain.GetByIdCompanyAsync(idCompany);
+                if (list != null)
+                {
+                    response.Data = _mapper.Map<List<GetListWorkersHistoryResponseDto>>(list);
+                }
+                else
+                {
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateCompanyRelation(AddOrUpdateCompanyRelationRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.WrongParameter;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newObj = _mapper.Map<CompanyRelation>(obj);
+                    response.Data = await _companyRelationDomain.AddAsync(newObj);
+                }
+                else
+                {
+                    var existingObj = await _companyRelationDomain.GetByIdAsync((int)obj.Id);
+                    if (existingObj == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = Messages.MessageNoDataCompany;
+                        _logger.LogError(response.Message);
+                        return response;
+                    }
+                    existingObj = _mapper.Map(obj, existingObj);
+                    existingObj.UpdateDate = DateTime.Now;
+                    response.Data = await _companyRelationDomain.UpdateAsync(existingObj);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetCompanyRelationResponseDto>> GetCompanyRelationById(int id)
+        {
+            var response = new Response<GetCompanyRelationResponseDto>();
+            try
+            {
+                var obj = await _companyRelationDomain.GetByIdAsync(id);
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetCompanyRelationResponseDto>(obj);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteCompanyRelation(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var obj = await _companyRelationDomain.GetByIdAsync(id);
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _companyRelationDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetListCompanyRelationResponseDto>>> GetListCompanyRelationByIdCompany(int idCompany)
+        {
+            var response = new Response<List<GetListCompanyRelationResponseDto>>();
+            try
+            {
+                var list = await _companyRelationDomain.GetCompanyRelationByIdCompany(idCompany);
+                if (list != null)
+                {
+                    response.Data = _mapper.Map<List<GetListCompanyRelationResponseDto>>(list);
                 }
                 else
                 {

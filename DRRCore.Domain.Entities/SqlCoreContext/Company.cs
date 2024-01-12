@@ -99,6 +99,10 @@ public partial class Company
 
     public virtual ICollection<CompanyPartner> CompanyPartners { get; set; } = new List<CompanyPartner>();
 
+    public virtual ICollection<CompanyRelation> CompanyRelationIdCompanyNavigations { get; set; } = new List<CompanyRelation>();
+
+    public virtual ICollection<CompanyRelation> CompanyRelationIdCompanyRelationNavigations { get; set; } = new List<CompanyRelation>();
+
     public virtual ICollection<CompanySb> CompanySbs { get; set; } = new List<CompanySb>();
 
     public virtual ICollection<CompanyShareHolder> CompanyShareHolderIdCompanyNavigations { get; set; } = new List<CompanyShareHolder>();

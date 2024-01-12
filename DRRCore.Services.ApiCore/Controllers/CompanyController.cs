@@ -392,5 +392,53 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _companyApplication.GetListCompanyShareHolderByIdCompany(idCompany));
         }
+        [HttpPost()]
+        [Route("addWorkerHistory")]
+        public async Task<ActionResult> addWorkerHistory(AddOrUpdateWorkerHistoryRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateWorkerHistory(obj));
+        }
+        [HttpGet()]
+        [Route("getWorkerHistory")]
+        public async Task<ActionResult> getWorkerHistory(int id)
+        {
+            return Ok(await _companyApplication.GetWorkerHistoryById(id));
+        }
+        [HttpPost()]
+        [Route("deleteWorkerHistory")]
+        public async Task<ActionResult> deleteWorkerHistory(int id)
+        {
+            return Ok(await _companyApplication.DeleteWorkerHistory(id));
+        }
+        [HttpGet()]
+        [Route("getListWorkerHistory")]
+        public async Task<ActionResult> getListWorkerHistory(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListWorkerHistoryByIdCompany(idCompany));
+        }
+        [HttpPost()]
+        [Route("addCompanyRelation")]
+        public async Task<ActionResult> addCompanyRelation(AddOrUpdateCompanyRelationRequestDto obj)
+        {
+            return Ok(await _companyApplication.AddOrUpdateCompanyRelation(obj));
+        }
+        [HttpGet()]
+        [Route("getCompanyRelation")]
+        public async Task<ActionResult> getCompanyRelation(int id)
+        {
+            return Ok(await _companyApplication.GetCompanyRelationById(id));
+        }
+        [HttpPost()]
+        [Route("deleteCompanyRelation")]
+        public async Task<ActionResult> deleteCompanyRelation(int id)
+        {
+            return Ok(await _companyApplication.DeleteCompanyRelation(id));
+        }
+        [HttpGet()]
+        [Route("getListCompanyRelation")]
+        public async Task<ActionResult> getListCompanyRelation(int idCompany)
+        {
+            return Ok(await _companyApplication.GetListCompanyRelationByIdCompany(idCompany));
+        }
     }
 }
