@@ -820,7 +820,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("currentExchangeRate");
             entity.Property(e => e.CurrentPaidCapital)
-                .HasColumnType("decimal(10, 2)")
+                .HasColumnType("decimal(15, 2)")
                 .HasColumnName("currentPaidCapital");
             entity.Property(e => e.CurrentPaidCapitalComentary)
                 .IsUnicode(false)
@@ -875,6 +875,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.Traded)
                 .HasMaxLength(2)
                 .IsUnicode(false)
+                .IsFixedLength()
                 .HasColumnName("traded");
             entity.Property(e => e.TradedBy)
                 .HasMaxLength(1)
@@ -918,11 +919,9 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("cashSalePercentage");
             entity.Property(e => e.CountriesExport)
-                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("countriesExport");
             entity.Property(e => e.CountriesImport)
-                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("countriesImport");
             entity.Property(e => e.CreationDate)
@@ -963,7 +962,6 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("nationalPurchasesPercentage");
             entity.Property(e => e.OtherLocations)
-                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("otherLocations");
             entity.Property(e => e.PreviousAddress)
