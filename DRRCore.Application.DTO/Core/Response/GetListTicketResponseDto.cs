@@ -57,6 +57,10 @@
         //Consulta
         public bool HasQuery { get; set; }
         public int StatusQuery { get; set; }
+        public int Receptor { get; set; }
+        public string Commentary { get; set; } = string.Empty;
+        public bool HasFiles { get; set; }
+        public List<TicketFileResponseDto> Files { get; set; } = new List<TicketFileResponseDto>();
 
     }
 }

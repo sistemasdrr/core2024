@@ -233,6 +233,7 @@ builder.Services.AddScoped<IEmailApplication, EmailApplication>();
 builder.Services.AddScoped<IMailSender, MailSender>();
 builder.Services.AddScoped<IFileManager, FileManager>();
 builder.Services.AddScoped<IMailFormatter, MailFormatter>();
+builder.Services.AddScoped<IReportingDownload, ReportingDownload>();
 builder.Services.AddScoped<IFunction, Functions>();
 builder.Services.AddScoped<DRRCore.Transversal.Common.Interface.ILogger, LoggerManager>();
 

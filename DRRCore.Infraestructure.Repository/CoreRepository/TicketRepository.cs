@@ -86,7 +86,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdCountryNavigation)
                     .Include(x => x.IdStatusTicketNavigation)
                     .Include(x => x.TicketQuery)
-                    .Include(x => x.TicketHistories.OrderByDescending(x=>x.Id)).Where(x => x.IdStatusTicket !=(int?)TicketStatusEnum.Despachado && x.Enable == true)
+                    .Include(x => x.TicketHistories.OrderByDescending(x=>x.Id)).Where(x => x.Enable == true)
                     .OrderByDescending(x => x.OrderDate).ToListAsync();
             }
             catch (Exception ex)
@@ -111,7 +111,9 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.TicketQuery)
                     .Include(x => x.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
                     .Include(x => x.IdStatusTicketNavigation)
-                    .Include(x => x.IdCountryNavigation).Where(x => x.IdStatusTicket != (int?)TicketStatusEnum.Despachado && x.Enable == true).Include(x => x.TicketHistories.OrderByDescending(x => x.Id)).Where(x => x.IdStatusTicket != (int?)TicketStatusEnum.Despachado && x.Enable == true).ToListAsync();
+                    .Include(x => x.IdCountryNavigation)
+                    .Include(x => x.TicketHistories.OrderByDescending(x => x.Id))
+                    .Where(x => x.Enable == true).OrderByDescending(x => x.OrderDate).ToListAsync();
 
 
                 if (!string.IsNullOrEmpty(ticket))
@@ -148,7 +150,21 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Include(x=>x.TicketAssignation).Include(x => x.TicketFiles).Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Pendiente && x.Enable == true).ToListAsync();
+                return await context.Tickets.Include(x => x.IdSubscriberNavigation)
+                    .Include(x => x.IdSubscriberNavigation.IdCountryNavigation)
+                    .Include(x => x.IdContinentNavigation).Include(x => x.IdCompanyNavigation)
+                    .Include(x => x.IdCompanyNavigation.IdCountryNavigation)
+                    .Include(x => x.IdCompanyNavigation.IdCountryNavigation.IdContinentNavigation)
+                    .Include(x => x.IdPersonNavigation)
+                    .Include(x => x.IdPersonNavigation.IdCountryNavigation)
+                    .Include(x => x.TicketQuery)
+                    .Include(x => x.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
+                    .Include(x => x.IdStatusTicketNavigation)
+                    .Include(x => x.IdCountryNavigation)
+                    .Include(x => x.TicketHistories.OrderByDescending(x => x.Id))
+                    .Include(x=>x.TicketAssignation)
+                    .Include(x => x.TicketFiles)
+                    .Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Pendiente && x.Enable == true).ToListAsync();
             }
             catch (Exception ex)
             {

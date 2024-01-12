@@ -83,5 +83,12 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _ticketApplication.SendTicketQuery(request));
         }
+        [HttpGet()]
+        [Route("report")]
+        public async Task<IActionResult> Report()
+        {
+            var result = await _ticketApplication.DownloadReport();
+            return File(result.Data, "application/vnd.ms-excel", "ReporteTickets"+DateTime.Now.ToString("ddMMyyyy")+".xls");
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AspNetCore.Reporting;
+using AutoMapper;
 using CoreFtp;
 using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
@@ -11,7 +12,6 @@ using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
-using log4net.Util;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -25,13 +25,15 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ITicketReceptorDomain _ticketReceptorDomain;
         private readonly IUserLoginDomain _userLoginDomain;
         private readonly IEmailApplication _emailApplication;
+        private readonly IReportingDownload _reportingDownload;
         private IMapper _mapper;
         private ILogger _logger;
        
         public TicketApplication(INumerationDomain numerationDomain,
             ITCuponDomain tCuponDomain,ITicketDomain ticketDomain,
             ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain,
-            ICompanyDomain companyDomain,IMapper mapper, ILogger logger,IEmailApplication emailApplication,IUserLoginDomain userLoginDomain)
+            ICompanyDomain companyDomain,IMapper mapper, ILogger logger,IReportingDownload reportingDownload,
+            IEmailApplication emailApplication,IUserLoginDomain userLoginDomain)
         {
             _numerationDomain = numerationDomain;
             _ticketDomain = ticketDomain;
@@ -43,6 +45,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _logger = logger;           
             _userLoginDomain = userLoginDomain;
             _emailApplication = emailApplication;
+            _reportingDownload = reportingDownload;
         }
 
         public async Task<Response<bool>> AddTicketAsync(AddOrUpdateTicketRequestDto request)
@@ -236,13 +239,13 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<List<GetListPendingTicketResponseDto>>> GetTicketListPendingAsync()
+        public async Task<Response<List<GetListTicketResponseDto>>> GetTicketListPendingAsync()
         {
-            var response = new Response<List<GetListPendingTicketResponseDto>>();
+            var response = new Response<List<GetListTicketResponseDto>>();
             try
             {
                 var tickets = await _ticketDomain.GetAllPendingTickets();
-                response.Data= _mapper.Map<List<GetListPendingTicketResponseDto>>(tickets);
+                response.Data= _mapper.Map<List<GetListTicketResponseDto>>(tickets);
 
                 return response;
             }
@@ -411,7 +414,25 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var query = await _ticketDomain.GetTicketQuery(idTicket);
-                response.Data = _mapper.Map<GetTicketQueryResponseDto>(query);
+
+               
+                if (query.Status == 0)
+                {
+                    var ticket = await _ticketDomain.GetByIdAsync(idTicket);
+                    response.Data = new GetTicketQueryResponseDto
+                    {
+                        IdTicket=ticket.Id,
+                        QueryDate = DateTime.Now,
+                        IdSubscriber = ticket.IdSubscriber,
+                        Report=ticket.RequestedName??string.Empty,
+                        Email=ticket.IdSubscriberNavigation.Email,
+                        SubscriberName = ticket.IdSubscriberNavigation == null ? string.Empty :ticket.IdSubscriberNavigation.Code+"||"+ ticket.IdSubscriberNavigation.Name ?? string.Empty
+                       
+                    };
+                }
+                else {
+                    response.Data = _mapper.Map<GetTicketQueryResponseDto>(query);
+                }                
             }
             catch (Exception ex)
             {
@@ -427,6 +448,11 @@ namespace DRRCore.Application.Main.CoreApplication
             var response = new Response<bool>();
             try
             {
+                var ticket = await _ticketDomain.GetByIdAsync(idTicket);
+                ticket.IdStatusTicket = (int?)TicketStatusEnum.Pendiente;
+
+                await _ticketDomain.UpdateAsync(ticket);
+
                 response.Data= await _ticketDomain.TicketQueryAnswered(idTicket);
             }
             catch (Exception ex)
@@ -464,7 +490,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 {
                     subject = "Consulta al requerimiento : " + ticket.RequestedName + "| Fecha : " + ticket.OrderDate.ToString("dd/MM/yyyy");
                 }
-                await _emailApplication.SendMailAsync(new DTO.Email.EmailDataDTO
+                var responseEmail=await _emailApplication.SendMailAsync(new DTO.Email.EmailDataDTO
                 {
                     BeAuthenticated = true,
                     UserName=user.IdEmployeeNavigation.Email,
@@ -486,7 +512,28 @@ namespace DRRCore.Application.Main.CoreApplication
                         request.Message,
                         user.IdEmployeeNavigation.Email
                     }
-                }); 
+                });
+                if (responseEmail.Data)
+                {
+                    ticket.IdStatusTicket = (int?)TicketStatusEnum.En_Consulta;
+                    await _ticketDomain.UpdateAsync(ticket);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<byte[]>> DownloadReport()
+        {
+            var response = new Response<byte[]>();
+            try
+            {
+                response.Data= await _reportingDownload.GenerateReportAsync("reporteTicket", ReportRenderType.Excel, null);
             }
             catch (Exception ex)
             {
