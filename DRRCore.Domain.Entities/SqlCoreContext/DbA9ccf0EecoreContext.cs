@@ -816,7 +816,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasColumnName("creationDate");
             entity.Property(e => e.Currency).HasColumnName("currency");
             entity.Property(e => e.CurrentExchangeRate)
-                .HasColumnType("decimal(10, 2)")
+                .HasMaxLength(100)
+                .IsUnicode(false)
                 .HasColumnName("currentExchangeRate");
             entity.Property(e => e.CurrentPaidCapital)
                 .HasColumnType("decimal(10, 2)")
@@ -868,11 +869,13 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("registerPlace");
             entity.Property(e => e.StartFunctionYear)
-                .HasMaxLength(4)
+                .HasMaxLength(100)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("startFunctionYear");
-            entity.Property(e => e.Traded).HasColumnName("traded");
+            entity.Property(e => e.Traded)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .HasColumnName("traded");
             entity.Property(e => e.TradedBy)
                 .HasMaxLength(1)
                 .IsUnicode(false)
