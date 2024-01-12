@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AspNetCore.Reporting;
+using AutoMapper;
 using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.Interfaces.CoreApplication;
@@ -29,6 +30,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICompanyShareHolderDomain _companyShareHolderDomain;
         private readonly IWorkerHistoryDomain _workerHistoryDomain;
         private readonly ICompanyRelationDomain _companyRelationDomain;
+        private readonly IReportingDownload _reportingDownload;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
@@ -37,7 +39,9 @@ namespace DRRCore.Application.Main.CoreApplication
             IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain, IWorkerHistoryDomain workerHistoryDomain,
             IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain, ICompanyRelationDomain companyRelationDomain,
             ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain,
-            ICompanyGeneralInformationDomain companyGeneralInformationDomain, IImportsAndExportsDomain importsAndExportsDomain, ICompanyPartnersDomain companyPartnersDomain)
+            ICompanyGeneralInformationDomain companyGeneralInformationDomain,
+            IReportingDownload reportingDownload,
+            IImportsAndExportsDomain importsAndExportsDomain, ICompanyPartnersDomain companyPartnersDomain)
         {
             _companyDomain = companyDomain;
             _companyBackgroundDomain = companyBackgroundDomain;
@@ -59,6 +63,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _companyRelationDomain = companyRelationDomain;
             _mapper = mapper;
             _logger = logger;
+            _reportingDownload=reportingDownload;
         }
         public async Task<Response<int>> AddOrUpdateAsync(AddOrUpdateCompanyRequestDto obj)
         {
@@ -2066,6 +2071,43 @@ namespace DRRCore.Application.Main.CoreApplication
                 {
                     response.Data = null;
                 }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetFileResponseDto>> DownloadF1(int idCompany,string language, string format)
+        {            
+            var response = new Response<GetFileResponseDto>();
+            try
+            {
+                var company = await _companyDomain.GetByIdAsync(idCompany);
+
+                string companyCode = company.OldCode ?? "N" + company.Id.ToString("D6");
+                string languageFileName = language == "I" ? "ENG" : "ESP";
+                string fileFormat ="{0}_{1}{2}" ;
+                string report = language == "I" ? "EIECORE-F1-EMPRESAS" : "EIECORE-F1-EMPRESAS_ES";
+                var reportRenderType = StaticFunctions.GetReportRenderType(format);
+                var extension = StaticFunctions.FileExtension(reportRenderType);
+                var contentType= StaticFunctions.GetContentType(reportRenderType);
+
+                var dictionary = new Dictionary<string, string>
+                {
+                    { "idCompany", idCompany.ToString() }
+                };
+
+                response.Data = new GetFileResponseDto
+                {
+                    File = await _reportingDownload.GenerateReportAsync(report, reportRenderType, dictionary),
+                    ContentType = contentType,
+                    Name = string.Format(fileFormat, companyCode, languageFileName, extension)
+                };
+               
             }
             catch (Exception ex)
             {

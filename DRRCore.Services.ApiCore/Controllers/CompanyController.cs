@@ -1,6 +1,8 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.Interfaces.CoreApplication;
+using DRRCore.Application.Main.CoreApplication;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace DRRCore.Services.ApiCore.Controllers
 {
@@ -439,6 +441,14 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> getListCompanyRelation(int idCompany)
         {
             return Ok(await _companyApplication.GetListCompanyRelationByIdCompany(idCompany));
+        }
+        [HttpGet()]
+        [Route("getf1")]
+        public async Task<IActionResult> GetF1(int idCompany,string language, string format)
+        {
+            var result = await _companyApplication.DownloadF1(idCompany,language,format);
+            
+            return File(result.Data.File, result.Data.ContentType, result.Data.Name);
         }
     }
 }

@@ -73,5 +73,6 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetCompanyRelationResponseDto>> GetCompanyRelationById(int id);
         Task<Response<bool>> DeleteCompanyRelation(int id);
         Task<Response<List<GetListCompanyRelationResponseDto>>> GetListCompanyRelationByIdCompany(int idCompany);
+        Task<Response<GetFileResponseDto>> DownloadF1(int idCompany,string language, string format);
     }
 }
