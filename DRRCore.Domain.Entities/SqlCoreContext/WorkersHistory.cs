@@ -23,5 +23,7 @@ public partial class WorkersHistory
 
     public bool? Enable { get; set; }
 
+    public string? Observations { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 }

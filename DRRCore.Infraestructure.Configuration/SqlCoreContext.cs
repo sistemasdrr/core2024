@@ -4185,6 +4185,7 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
             entity.Property(e => e.NumberWorker).HasColumnName("numberWorker");
             entity.Property(e => e.NumberYear).HasColumnName("numberYear");
+            entity.Property(e => e.Observations).IsUnicode(false);
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");

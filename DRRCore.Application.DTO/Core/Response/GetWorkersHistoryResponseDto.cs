@@ -9,5 +9,6 @@
         public int? NumberWorker { get; set; }
 
         public int? NumberYear { get; set; }
+        public string? Observations { get; set; }
     }
 }
