@@ -1,4 +1,4 @@
-﻿using DRRCore.Domain.Entities.SQLContext;
+﻿using DRRCore.Domain.Entities.SqlContext;
 using DRRCore.Infraestructure.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
 

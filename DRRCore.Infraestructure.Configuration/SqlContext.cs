@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
-namespace DRRCore.Domain.Entities.SQLContext;
+namespace DRRCore.Domain.Entities.SqlContext;
 
 public partial class SqlContext : DbContext
 {
@@ -272,6 +274,9 @@ public partial class SqlContext : DbContext
             entity.Property(e => e.Importa)
                 .IsUnicode(false)
                 .HasColumnName("importa");
+            entity.Property(e => e.Migrado)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("migrado");
             entity.Property(e => e.NombreEmpresa)
                 .IsUnicode(false)
                 .HasColumnName("nombreEmpresa");

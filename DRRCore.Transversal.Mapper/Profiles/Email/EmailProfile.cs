@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DRRCore.Application.DTO.Email;
-using DRRCore.Domain.Entities.SQLContext;
+using DRRCore.Domain.Entities.SqlContext;
 using DRRCore.Transversal.Common;
 
 namespace DRRCore.Transversal.Mapper.Profiles.Email

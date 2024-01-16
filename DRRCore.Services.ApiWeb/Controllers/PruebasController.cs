@@ -1,7 +1,5 @@
 ﻿using DRRCore.Application.DTO.API;
 using DRRCore.Application.Interfaces;
-using DRRCore.Domain.Entities.SQLContext;
-using DRRCore.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

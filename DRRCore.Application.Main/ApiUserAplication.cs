@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DRRCore.Application.DTO.API;
 using DRRCore.Application.Interfaces;
-using DRRCore.Domain.Entities.SQLContext;
+using DRRCore.Domain.Entities.SqlContext;
 using DRRCore.Domain.Interfaces.EmailDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;

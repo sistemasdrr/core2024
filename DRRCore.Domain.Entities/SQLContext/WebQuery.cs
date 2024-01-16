@@ -1,4 +1,7 @@
-﻿namespace DRRCore.Domain.Entities.SQLContext;
+﻿using System;
+using System.Collections.Generic;
+
+namespace DRRCore.Domain.Entities.SqlContext;
 
 public partial class WebQuery
 {
@@ -67,4 +70,6 @@ public partial class WebQuery
     public string? RamoIngles { get; set; }
 
     public string? RamoActividadIngles { get; set; }
+
+    public bool? Migrado { get; set; }
 }

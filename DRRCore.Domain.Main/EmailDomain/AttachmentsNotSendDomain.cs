@@ -1,4 +1,4 @@
-﻿using DRRCore.Domain.Entities.SQLContext;
+﻿using DRRCore.Domain.Entities.SqlContext;
 using DRRCore.Domain.Interfaces.EmailDomain;
 using DRRCore.Infraestructure.Interfaces.Repository;
 

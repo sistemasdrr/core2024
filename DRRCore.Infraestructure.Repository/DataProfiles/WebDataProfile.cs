@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DRRCore.Domain.Entities.MYSQLContext;
-using DRRCore.Domain.Entities.SQLContext;
+using DRRCore.Domain.Entities.SqlContext;
 
 namespace DRRCore.Infraestructure.Repository.DataProfiles
 {
@@ -10,6 +10,7 @@ namespace DRRCore.Infraestructure.Repository.DataProfiles
         {
             CreateMap<ViewConsultaWeb, WebQuery>()
               .ForMember(dest => dest.NombreEmpresa, opt => opt?.MapFrom(src => src.Empresa ?? string.Empty))
+              .ForMember(dest => dest.Migrado, opt => opt?.MapFrom(src => true))
               .ForMember(dest => dest.RamoIngles, opt => opt?.MapFrom(src => src.RamoIngles ?? string.Empty))
               .ForMember(dest => dest.RamoActividadIngles, opt => opt?.MapFrom(src => src.RamoActividadIngles ?? string.Empty))
               .ForMember(dest => dest.CodigoEmpresaWeb, opt => opt?.MapFrom(src => src.CodigoEmpresa+DateTime.Now.ToString("HHmmss") ?? string.Empty));

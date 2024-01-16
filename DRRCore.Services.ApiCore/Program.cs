@@ -1,3 +1,4 @@
+using DRRCore.Application.Interfaces;
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Application.Interfaces.EmailApplication;
 using DRRCore.Application.Main;
@@ -74,6 +75,11 @@ builder.Services.AddAutoMapper(typeof(TicketProfile).Assembly);
 builder.Services.AddHttpContextAccessor();
 
 
+builder.Services.AddScoped<IWebQueryRepository, WebQueryRepository>();
+builder.Services.AddScoped<IMySqlWebRepository, MySqlWebRepository>();
+builder.Services.AddScoped<IApiUserRepository, ApiUserRepository>();
+
+
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IDocumentTypeRepository, DocumentTypeRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
@@ -145,6 +151,10 @@ builder.Services.AddScoped<ICompanyRelationRepository, CompanyRelationRepository
 builder.Services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
 builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
 builder.Services.AddScoped<IAttachmentsNotSendRepository, AttachmentsNotSendRepository>();
+
+builder.Services.AddScoped<IWebDataDomain, WebDataDomain>();
+builder.Services.AddScoped<IApiUserDomain, ApiUserDomain>();
+
 
 builder.Services.AddScoped<ICountryDomain, CountryDomain>();
 builder.Services.AddScoped<IDocumentTypeDomain, DocumentTypeDomain>();
@@ -231,6 +241,8 @@ builder.Services.AddScoped<ICouponBillingSubscriberApplication, CouponBillingSub
 builder.Services.AddScoped<ITicketApplication, TicketApplication>();
 builder.Services.AddScoped<IPersonApplication, PersonApplication>();
 builder.Services.AddScoped<IPersonImagesApplication, PersonImagesApplication>();
+builder.Services.AddScoped<IApiApplication, ApiApplication>();
+builder.Services.AddScoped<ITokenValidationApplication, TokenValidationApplication>();
 
 builder.Services.AddScoped<IEmailApplication, EmailApplication>();
 

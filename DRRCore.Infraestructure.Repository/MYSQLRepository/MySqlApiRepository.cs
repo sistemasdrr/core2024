@@ -1,5 +1,5 @@
 ﻿using DRRCore.Domain.Entities.MYSQLContext;
-using DRRCore.Domain.Entities.SQLContext;
+using DRRCore.Domain.Entities.SqlContext;
 using DRRCore.Infraestructure.Interfaces.MySqlRepository;
 using Microsoft.EntityFrameworkCore;
 

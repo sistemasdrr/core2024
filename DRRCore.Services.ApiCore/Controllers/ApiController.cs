@@ -57,6 +57,7 @@ namespace DRRCore.Services.ApiCore.Controllers
             {
                 return Unauthorized();
             }
+            
             return Ok(await _apiApplication.GetDummyReportAsync(requestDto));
         }
         [HttpPost()]

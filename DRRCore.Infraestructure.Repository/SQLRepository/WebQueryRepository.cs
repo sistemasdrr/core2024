@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DRRCore.Domain.Entities.MYSQLContext;
-using DRRCore.Domain.Entities.SQLContext;
+using DRRCore.Domain.Entities.SqlContext;
 using DRRCore.Infraestructure.Interfaces.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,24 +14,29 @@ namespace DRRCore.Infraestructure.Repository.SQLRepository
             Mapper = mapper;
         }
         public async Task<bool> UpdateData(List<ViewConsultaWeb> listWebData)
-        {
-            int i = 0;
+        {            
             using (var context = new SqlContext())
             {
+                int i = 0;
                 foreach (var webData in listWebData)
             {
                     i++;
                     var data = await context.WebQueries.Where(x => x.CodigoEmpresa == webData.CodigoEmpresa).FirstOrDefaultAsync();
                     if (data != null)
-                    {                        
-                       context.WebQueries.Update(Mapper.Map(webData,data));
+                    {
+                        if (!data.Migrado.Value)
+                        {
+                            context.WebQueries.Update(Mapper.Map(webData, data));
+                            await context.SaveChangesAsync();
+                        }
                     }
                     else
                     {
                         await context.WebQueries.AddAsync(Mapper.Map<WebQuery>(webData));
+                        await context.SaveChangesAsync();
                     }
                 }
-                await context.SaveChangesAsync();
+              
             }
             
             return false;

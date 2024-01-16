@@ -1,6 +1,5 @@
-﻿using DRRCore.Domain.Entities.SQLContext;
+﻿using DRRCore.Domain.Entities.SqlContext;
 using DRRCore.Infraestructure.Interfaces.Repository;
-using DRRCore.Transversal.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Infraestructure.Repository.SQLRepository

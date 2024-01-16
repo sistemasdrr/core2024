@@ -23,7 +23,7 @@ namespace DRRCore.Application.DTO
                 PaymentRecords= PaymentRecords(),
                 BankingInformation= BankingInformation(),
                 FinancialInformation= FinancialInformation(),
-                News=""
+                News= "Alicorp: ventas en negocio de consumo masivo crecieron 4,7% en primer trimestre de 2023\r\n\r\nas ventas consolidadas de la empresa alcanzaron los S/3.326 millones, que, comparado al mismo periodo del 2022, decrece ligeramente en un 0,6%.\r\n\r\nAlicorp presentó sus resultados financieros del primer trimestre del año, periodo en el que la inflación se mantuvo a niveles elevados. En este escenario, la compañía informó que mantiene resiliencia gracias al soporte que le brindan ventajas competitivas como el valor marca, innovación y diversificación de sus negocios.\r\n\r\nAl cierre del primer trimestre, se observó un menor volumen de ventas, explicado por una reducción del consumo privado debido a los conflictos internos del país y al desempeño del negocio de Molienda, que vio afectada su abastecimiento de insumos por el bloqueo en la frontera con Bolivia, originado por los conflictos en el sur. Así las ventas consolidadas de Alicorp alcanzaron los S/3.326 millones, que, comparado al mismo periodo del 2022, decrece ligeramente en un 0,6%."
 
             };
         }
@@ -500,6 +500,42 @@ namespace DRRCore.Application.DTO
                         },
                         Sales = 3325546654,
                         ProfitLoss = 222654321
+                    },
+                     new BalanceSheetDto
+                    {
+                        Date = "09/30/2020",
+                        TypeBalanceSheet = "Interim",
+                        Period = "3 months",
+                        IsoCurrency = "PEN",
+                        ExchangeRate = "3.70",
+                        Assets = new AssetsDto
+                        {
+                            CashBanks = 26000000,
+                            Receivables = 50000000,
+                            Inventory = 250000,
+                            OthersAssets = 30000065.25,
+                            CurrentAssets = 69777777,
+                            Fixed = 23000000,
+                            OthersCurrentAssets = 12000000,
+                            TotalAssets = 100000000
+                        },
+                        Liabilities = new LiabilitiesDto
+                        {
+                            BankSuppliers = 4552465465,
+                            OthersLiabilities = 1545645465,
+                            CurrentLiabilities = 1321354564,
+                            OthersCurrentLiabilities = 123165454
+                        },
+                        ShareholdersEquity = new ShareholdersEquityDto
+                        {
+                            Capital = 456545465546,
+                            Reserves = 986455665,
+                            ProfitsLoots = 32154546,
+                            TotalLiabilitiesShareholderEquity = 65546546,
+                            TotalShareholderEquity = 323123132
+                        },
+                        Sales = 3325546654,
+                        ProfitLoss = 222654321
                     }
                 },
                 RatioSituation = new RatioSituationDto
@@ -597,6 +633,42 @@ namespace DRRCore.Application.DTO
                         },
                         Sales = 3325546654,
                         ProfitLoss = 222654321
+                    },
+                          new BalanceSheetDto
+                    {
+                        Date = "09/30/2019",
+                        TypeBalanceSheet = "Interim",
+                        Period = "3 months",
+                        IsoCurrency = "PEN",
+                        ExchangeRate = "3.80",
+                        Assets = new AssetsDto
+                        {
+                            CashBanks = 1051239000,
+                            Receivables = 454545200,
+                            Inventory = 123000000,
+                            OthersAssets = 16400000,
+                            CurrentAssets = 12345600,
+                            Fixed = 15975300,
+                            OthersCurrentAssets = 45612300,
+                            TotalAssets = 78912300
+                        },
+                        Liabilities = new LiabilitiesDto
+                        {
+                            BankSuppliers = 12345600,
+                            OthersLiabilities = 778994500,
+                            CurrentLiabilities = 765213400,
+                            OthersCurrentLiabilities = 12455550
+                        },
+                        ShareholdersEquity = new ShareholdersEquityDto
+                        {
+                            Capital = 122311240,
+                            Reserves = 780000000,
+                            ProfitsLoots = 950000000,
+                            TotalLiabilitiesShareholderEquity = 9600002300,
+                            TotalShareholderEquity = 14000000
+                        },
+                        Sales = 15000000,
+                        ProfitLoss = 18000000
                     }
                 }
             };

@@ -2,7 +2,7 @@
 using DRRCore.Application.DTO.API;
 using DRRCore.Application.DTO.Web;
 using DRRCore.Domain.Entities;
-using DRRCore.Domain.Entities.SQLContext;
+using DRRCore.Domain.Entities.SqlContext;
 using DRRCore.Transversal.Common;
 
 namespace DRRCore.Transversal.Mapper.Profiles.Web

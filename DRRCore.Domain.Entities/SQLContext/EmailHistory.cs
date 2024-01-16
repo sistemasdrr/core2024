@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DRRCore.Domain.Entities.SQLContext;
+namespace DRRCore.Domain.Entities.SqlContext;
 
 public partial class EmailHistory
 {
