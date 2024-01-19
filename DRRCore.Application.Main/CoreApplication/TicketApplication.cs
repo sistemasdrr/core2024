@@ -12,6 +12,7 @@ using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -26,6 +27,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IUserLoginDomain _userLoginDomain;
         private readonly IEmailApplication _emailApplication;
         private readonly IReportingDownload _reportingDownload;
+        private readonly IPersonDomain _personDomain;
         private IMapper _mapper;
         private ILogger _logger;
        
@@ -33,7 +35,7 @@ namespace DRRCore.Application.Main.CoreApplication
             ITCuponDomain tCuponDomain,ITicketDomain ticketDomain,
             ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain,
             ICompanyDomain companyDomain,IMapper mapper, ILogger logger,IReportingDownload reportingDownload,
-            IEmailApplication emailApplication,IUserLoginDomain userLoginDomain)
+            IEmailApplication emailApplication,IUserLoginDomain userLoginDomain,IPersonDomain personDomain)
         {
             _numerationDomain = numerationDomain;
             _ticketDomain = ticketDomain;
@@ -46,6 +48,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _userLoginDomain = userLoginDomain;
             _emailApplication = emailApplication;
             _reportingDownload = reportingDownload;
+            _personDomain= personDomain;
         }
 
         public async Task<Response<bool>> AddTicketAsync(AddOrUpdateTicketRequestDto request)
@@ -76,16 +79,34 @@ namespace DRRCore.Application.Main.CoreApplication
                   
                     if ( await _ticketDomain.AddAsync(newTicket))
                     {
-                        await CopyReportForm(request.Number);
-                        await CopyReportPerson(request.Number);
+                       // await CopyReportForm(request.Number);
+                       // await CopyReportPerson(request.Number);
                         await _numerationDomain.UpdateTicketNumberAsync();
-                        if(request.IdCompany==null)
+                        if(request.About == "E" && newTicket.IdCompany==null  )
                         {
-                            await _companyDomain.AddAsync(new Company
+                          var company=  await _companyDomain.AddCompanyAsync(new Company
                             {
-                                Name = request.RequestedName ?? string.Empty
+                                Name = request.RequestedName ?? string.Empty,
+                                Language=request.Language
+
                             });
-                        }                       
+                            var ticket=await _ticketDomain.GetByIdAsync(newTicket.Id);
+                            ticket.IdCompany = company;
+                            await _ticketDomain.UpdateAsync(ticket);
+
+                        }
+                        if (request.About == "P" && newTicket.IdPerson == null )
+                        {
+                           var person= await _personDomain.AddPersonAsync(new Person
+                            {
+                                Fullname = request.RequestedName ?? string.Empty,
+                                Language= request.Language
+                            });
+                            var ticket = await _ticketDomain.GetByIdAsync(newTicket.Id);
+                            ticket.IdPerson = person;
+                            await _ticketDomain.UpdateAsync(ticket);
+                        }
+                        
                         response.Data = true;
                     }
                 }
