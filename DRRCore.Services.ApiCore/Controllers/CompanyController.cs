@@ -450,5 +450,13 @@ namespace DRRCore.Services.ApiCore.Controllers
             
             return File(result.Data.File, result.Data.ContentType, result.Data.Name);
         }
+        [HttpGet()]
+        [Route("getf8")]
+        public async Task<IActionResult> GetF8(int idCompany, string language, string format)
+        {
+            var result = await _companyApplication.DownloadF8(idCompany, language, format);
+
+            return File(result.Data.File, result.Data.ContentType, result.Data.Name);
+        }
     }
 }

@@ -2117,5 +2117,42 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
+
+        public async Task<Response<GetFileResponseDto>> DownloadF8(int idCompany, string language, string format)
+        {
+            var response = new Response<GetFileResponseDto>();
+            try
+            {
+                var company = await _companyDomain.GetByIdAsync(idCompany);
+
+                string companyCode = company.OldCode ?? "N" + company.Id.ToString("D6");
+                string languageFileName = language == "I" ? "ENG" : "ESP";
+                string fileFormat = "{0}_{1}{2}";
+                string report = language == "I" ? "EIECORE-F8-EMPRESAS" : "EIECORE-F8-EMPRESAS_ES";
+                var reportRenderType = StaticFunctions.GetReportRenderType(format);
+                var extension = StaticFunctions.FileExtension(reportRenderType);
+                var contentType = StaticFunctions.GetContentType(reportRenderType);
+
+                var dictionary = new Dictionary<string, string>
+                {
+                    { "idCompany", idCompany.ToString() }
+                };
+
+                response.Data = new GetFileResponseDto
+                {
+                    File = await _reportingDownload.GenerateReportAsync(report, reportRenderType, dictionary),
+                    ContentType = contentType,
+                    Name = string.Format(fileFormat, companyCode, languageFileName, extension)
+                };
+
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
     }
 }
