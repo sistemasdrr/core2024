@@ -2135,8 +2135,8 @@ namespace DRRCore.Application.Main.CoreApplication
 
                 var dictionary = new Dictionary<string, string>
                 {
-                    { "idCompany", idCompany.ToString() }
-                };
+                    { "idCompany", idCompany.ToString() },
+                 };
 
                 response.Data = new GetFileResponseDto
                 {
