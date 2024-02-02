@@ -13,13 +13,13 @@ public partial class ComercialLatePayment
 
     public string? DocumentType { get; set; }
 
-    public DateTime? Date { get; set; }
+    public string? Date { get; set; }
 
     public decimal? AmountNc { get; set; }
 
     public decimal? AmountFc { get; set; }
 
-    public DateTime? PendingPaymentDate { get; set; }
+    public string? PendingPaymentDate { get; set; }
 
     public int? DaysLate { get; set; }
 

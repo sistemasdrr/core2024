@@ -21,6 +21,10 @@ public partial class CompanyRelation
 
     public bool? Enable { get; set; }
 
+    public string? Relation { get; set; }
+
+    public string? RelationEng { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Company? IdCompanyRelationNavigation { get; set; }

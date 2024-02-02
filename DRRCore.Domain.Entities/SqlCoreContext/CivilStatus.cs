@@ -19,5 +19,7 @@ public partial class CivilStatus
 
     public bool? Enable { get; set; }
 
+    public string? EnglishName { get; set; }
+
     public virtual ICollection<Person> People { get; set; } = new List<Person>();
 }

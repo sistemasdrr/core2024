@@ -121,13 +121,13 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<List<GetComboValueResponseDto>>> GetBusinessActivity(int idBusinessBranch)
+        public async Task<Response<List<GetComboValueEngResponseDto>>> GetBusinessActivity(int idBusinessBranch)
         {
-            var response = new Response<List<GetComboValueResponseDto>>();
+            var response = new Response<List<GetComboValueEngResponseDto>>();
             try
             {
                 var list = await _businessActivityDomain.GetAllByIdBranch(idBusinessBranch);
-                response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+                response.Data = _mapper.Map<List<GetComboValueEngResponseDto>>(list);
             }
             catch (Exception ex)
             {

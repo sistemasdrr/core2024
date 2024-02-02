@@ -12,7 +12,6 @@
         public string? TypeRegister { get; set; }
         public string? YearFundation { get; set; }
         //Datetime
-        public string? ConstitutionDate { get; set; }
         public string? Quality { get; set; }
         public int? IdLegalPersonType { get; set; }
         public string? TaxTypeName { get; set; }
@@ -23,7 +22,6 @@
         public string? Place { get; set; }
         public int? IdCountry { get; set; }
         public string? SubTelephone { get; set; }
-        public string? Tellphone { get; set; }
         public string? Cellphone { get; set; }
         public string? Telephone { get; set; }
         public string? PostalCode { get; set; }
@@ -39,7 +37,9 @@
         public string? IdentificacionCommentary { get; set; }
         public bool IsRelationed { get; set; }  
         public int CodeRelationed { get; set; }
-      
+
+        public bool? Print { get; set; }
+
         public List<TraductionDto> Traductions { get; set; }=new List<TraductionDto>();
     }
     public class TraductionDto

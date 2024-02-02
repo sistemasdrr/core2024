@@ -27,6 +27,8 @@ public partial class CompanyShareHolder
 
     public bool? Enable { get; set; }
 
+    public string? RelationEng { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Company? IdCompanyShareHolderNavigation { get; set; }

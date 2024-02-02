@@ -55,5 +55,7 @@ public partial class CompanyBackground
 
     public bool? Enable { get; set; }
 
+    public string? TradedByEng { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 }

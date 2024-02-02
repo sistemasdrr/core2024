@@ -19,8 +19,6 @@ namespace DRRCore.Application.DTO.Core.Response
         public string? TypeRegister { get; set; }
 
         public string? YearFundation { get; set; }
-        //Datetime
-        public string? ConstitutionDate { get; set; }
 
         public string? Quality { get; set; }
 
@@ -41,8 +39,6 @@ namespace DRRCore.Application.DTO.Core.Response
         public int? IdCountry { get; set; }
 
         public string? SubTelephone { get; set; }
-
-        public string? Tellphone { get; set; }
 
         public string? Cellphone { get; set; }
 
@@ -69,6 +65,7 @@ namespace DRRCore.Application.DTO.Core.Response
         public string? NewsComentary { get; set; }
         public string? IdentificacionCommentary { get; set; }
         public bool Enable { get; set; }
+        public bool? Print { get; set; }
 
         public List<TraductionDto> Traductions { get; set; } = new List<TraductionDto>();
     }

@@ -85,6 +85,10 @@ public partial class FinancialBalance
 
     public bool? Enable { get; set; }
 
+    public string? BalanceTypeEng { get; set; }
+
+    public string? DurationEng { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Currency? IdCurrencyNavigation { get; set; }

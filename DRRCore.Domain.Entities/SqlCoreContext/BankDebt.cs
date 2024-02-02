@@ -35,6 +35,8 @@ public partial class BankDebt
 
     public int? IdPerson { get; set; }
 
+    public string? QualificationEng { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Person? IdPersonNavigation { get; set; }

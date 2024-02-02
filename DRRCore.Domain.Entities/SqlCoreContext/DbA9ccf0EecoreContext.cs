@@ -407,10 +407,13 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("memoEng");
             entity.Property(e => e.Qualification)
-                .HasMaxLength(4)
+                .HasMaxLength(30)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("qualification");
+            entity.Property(e => e.QualificationEng)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("qualificationEng");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
@@ -461,8 +464,6 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Businees__3213E83F3B6533B9");
 
             entity.ToTable("BusineesActivity");
-
-            entity.HasIndex(e => e.Name, "UQ__Businees__72E12F1B1F5F2F87").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreationDate)
@@ -542,6 +543,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
+            entity.Property(e => e.EnglishName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("englishName");
             entity.Property(e => e.Level).HasColumnName("level");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
@@ -608,7 +613,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("creditorOrSupplier");
             entity.Property(e => e.Date)
-                .HasColumnType("datetime")
+                .HasMaxLength(100)
+                .IsUnicode(false)
                 .HasColumnName("date");
             entity.Property(e => e.DaysLate).HasColumnName("daysLate");
             entity.Property(e => e.DeleteDate)
@@ -629,7 +635,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.IdPerson).HasColumnName("idPerson");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
             entity.Property(e => e.PendingPaymentDate)
-                .HasColumnType("datetime")
+                .HasMaxLength(100)
+                .IsUnicode(false)
                 .HasColumnName("pendingPaymentDate");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
@@ -659,9 +666,6 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("cellphone");
-            entity.Property(e => e.ConstitutionDate)
-                .HasColumnType("datetime")
-                .HasColumnName("constitutionDate");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -719,8 +723,9 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("postalCode");
+            entity.Property(e => e.Print).HasColumnName("print");
             entity.Property(e => e.Quality)
-                .HasMaxLength(1)
+                .HasMaxLength(2)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("quality");
@@ -746,10 +751,6 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("telephone");
-            entity.Property(e => e.Tellphone)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("tellphone");
             entity.Property(e => e.TypeRegister)
                 .HasMaxLength(2)
                 .IsUnicode(false)
@@ -856,9 +857,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("operationDuration");
             entity.Property(e => e.Origin)
-                .HasMaxLength(1)
+                .HasMaxLength(25)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("origin");
             entity.Property(e => e.PublicRegister)
                 .HasMaxLength(80)
@@ -878,10 +878,13 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("traded");
             entity.Property(e => e.TradedBy)
-                .HasMaxLength(1)
+                .HasMaxLength(20)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("tradedBy");
+            entity.Property(e => e.TradedByEng)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("tradedByEng");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
@@ -921,9 +924,15 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.CountriesExport)
                 .IsUnicode(false)
                 .HasColumnName("countriesExport");
+            entity.Property(e => e.CountriesExportEng)
+                .IsUnicode(false)
+                .HasColumnName("countriesExportEng");
             entity.Property(e => e.CountriesImport)
                 .IsUnicode(false)
                 .HasColumnName("countriesImport");
+            entity.Property(e => e.CountriesImportEng)
+                .IsUnicode(false)
+                .HasColumnName("countriesImportEng");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -971,6 +980,9 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.SpecificActivities)
                 .IsUnicode(false)
                 .HasColumnName("specificActivities");
+            entity.Property(e => e.SpecificActivitiesEng)
+                .IsUnicode(false)
+                .HasColumnName("specificActivitiesEng");
             entity.Property(e => e.TabCommentary)
                 .IsUnicode(false)
                 .HasColumnName("tabCommentary");
@@ -1094,7 +1106,6 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("analystCommentary");
             entity.Property(e => e.Auditors)
-                .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("auditors");
             entity.Property(e => e.CreationDate)
@@ -1297,6 +1308,16 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdCompanyRelation).HasColumnName("idCompanyRelation");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.Relation)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Empresa Relacionada')")
+                .HasColumnName("relation");
+            entity.Property(e => e.RelationEng)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Related Company')")
+                .HasColumnName("relationEng");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
@@ -1402,6 +1423,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("relation");
+            entity.Property(e => e.RelationEng)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("relationEng");
             entity.Property(e => e.StartDate)
                 .HasColumnType("datetime")
                 .HasColumnName("startDate");
@@ -1931,10 +1956,13 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasColumnType("decimal(20, 2)")
                 .HasColumnName("aToCollect");
             entity.Property(e => e.BalanceType)
-                .HasMaxLength(1)
+                .HasMaxLength(20)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("balanceType");
+            entity.Property(e => e.BalanceTypeEng)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("balanceTypeEng");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -1952,6 +1980,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("duration");
+            entity.Property(e => e.DurationEng)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("durationEng");
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
@@ -3195,10 +3227,13 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("clientSinceEng");
             entity.Property(e => e.Compliance)
-                .HasMaxLength(4)
+                .HasMaxLength(50)
                 .IsUnicode(false)
-                .IsFixedLength()
                 .HasColumnName("compliance");
+            entity.Property(e => e.ComplianceEng)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("complianceEng");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -3226,7 +3261,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("maximumAmountEng");
             entity.Property(e => e.Name)
-                .HasMaxLength(100)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("name");
             entity.Property(e => e.ProductsTheySell)
@@ -3337,7 +3372,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Amount)
-                .HasColumnType("decimal(10, 2)")
+                .HasColumnType("decimal(15, 2)")
                 .HasColumnName("amount");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")

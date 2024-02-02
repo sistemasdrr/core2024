@@ -15,13 +15,11 @@ public partial class Company
 
     public DateTime? LastSearched { get; set; }
 
-    public string Language { get; set; } = null!;
+    public string? Language { get; set; }
 
     public string? TypeRegister { get; set; }
 
     public string? YearFundation { get; set; }
-
-    public DateTime? ConstitutionDate { get; set; }
 
     public string? Quality { get; set; }
 
@@ -42,8 +40,6 @@ public partial class Company
     public int? IdCountry { get; set; }
 
     public string? SubTelephone { get; set; }
-
-    public string? Tellphone { get; set; }
 
     public string? Cellphone { get; set; }
 
@@ -80,6 +76,8 @@ public partial class Company
     public string? IdentificacionCommentary { get; set; }
 
     public bool? OnWeb { get; set; }
+
+    public bool? Print { get; set; }
 
     public virtual ICollection<BankDebt> BankDebts { get; set; } = new List<BankDebt>();
 

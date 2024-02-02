@@ -55,7 +55,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
 
             CreateMap<Currency, GetComboValueResponseDto>()
         .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
-        .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Symbol+"-"+src.Name+"("+src.Abreviation+")"))
+        .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Abreviation + "-"+src.Name+"("+src.Symbol+")"))
         .ReverseMap();
 
             CreateMap<CreditRisk, GetComboCreditRiskResponseDto>()
@@ -112,9 +112,10 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
          .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
          .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
          .ReverseMap();
-            CreateMap<BusineesActivity, GetComboValueResponseDto>()
+            CreateMap<BusineesActivity, GetComboValueEngResponseDto>()
          .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
          .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+         .ForMember(dest => dest.ValorEng, opt => opt?.MapFrom(src => src.EnglishName))
          .ReverseMap();
             CreateMap<LandOwnership, GetComboValueResponseDto>()
          .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))

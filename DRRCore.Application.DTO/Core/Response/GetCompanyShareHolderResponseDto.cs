@@ -10,7 +10,10 @@
 
         public string? Relation { get; set; }
 
+        public string? RelationEng { get; set; }
+
         public int? Participation { get; set; }
+
         public string? StartDate { get; set; }
     }
 }

@@ -32,6 +32,8 @@
 
         public string? Compliance { get; set; }
 
+        public string? ComplianceEng { get; set; }
+
         public string? ClientSince { get; set; }
 
         public string? ClientSinceEng { get; set; }

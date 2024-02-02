@@ -61,6 +61,8 @@ public partial class Provider
 
     public int? IdPerson { get; set; }
 
+    public string? ComplianceEng { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Country? IdCountryNavigation { get; set; }
