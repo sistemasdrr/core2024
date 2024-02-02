@@ -258,7 +258,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             {
                 using (var context = new MySqlContext())
                 {
-                    return await context.MEmpresas.Where(x=>x.Migra==0).Take(5).ToListAsync();
+                    return await context.MEmpresas.Where(x=>x.Migra==0).Take(10000).ToListAsync();
                 }
             }
             catch (Exception ex)
