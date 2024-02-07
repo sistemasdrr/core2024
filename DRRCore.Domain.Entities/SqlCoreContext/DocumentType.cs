@@ -31,6 +31,8 @@ public partial class DocumentType
 
     public bool? Enable { get; set; }
 
+    public string? EnglishName { get; set; }
+
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
     public virtual ICollection<Person> PersonIdDocumentTypeNavigations { get; set; } = new List<Person>();

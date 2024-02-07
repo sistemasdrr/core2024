@@ -243,6 +243,7 @@ builder.Services.AddScoped<IPersonApplication, PersonApplication>();
 builder.Services.AddScoped<IPersonImagesApplication, PersonImagesApplication>();
 builder.Services.AddScoped<IApiApplication, ApiApplication>();
 builder.Services.AddScoped<ITokenValidationApplication, TokenValidationApplication>();
+builder.Services.AddScoped<IUserApplication, UserApplication>();
 
 builder.Services.AddScoped<IEmailApplication, EmailApplication>();
 

@@ -8,5 +8,6 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
         Task<bool> ActiveWebVision(int id);
         Task<bool> DesactiveWebVision(int id);
         Task<int> AddCompanyAsync(Company obj);
+        Task<Company> GetByOldCode(string oldCode);
     }
 }

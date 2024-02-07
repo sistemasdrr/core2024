@@ -56,6 +56,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             throw new NotImplementedException();
         }
 
+        public async Task<Company> GetByOldCode(string oldCode)
+        {
+            return await _companyRepository.GetByOldCode(oldCode);
+        }
+
         public async Task<bool> UpdateAsync(Company obj)
         {
             return await _companyRepository.UpdateAsync(obj);

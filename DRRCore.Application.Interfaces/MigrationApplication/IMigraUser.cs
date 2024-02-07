@@ -4,5 +4,6 @@
     {
         Task MigrateUser();
         Task<bool> MigrateCompany();
+        Task<bool> MigratePerson();
     }
 }

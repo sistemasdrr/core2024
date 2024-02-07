@@ -14,6 +14,7 @@ namespace DRRCore.Application.Main.MigrationApplication
     {
        
         private readonly IMEmpresaDomain _mempresaDomain;
+        private readonly IMPersonaDomain _impersonaDomain;
         private readonly ICompanyDomain _companyDomain;
         private readonly ICompanyBackgroundDomain _companyBackgroundDomain;
         private readonly ICompanyBranchDomain _companyBranchDomain;
@@ -28,6 +29,15 @@ namespace DRRCore.Application.Main.MigrationApplication
         private readonly IComercialLatePaymentDomain _comercialLatePaymentDomain;
         private readonly IBankDebtDomain _bankDebtDomain;
 
+        private readonly IPersonDomain _personDomain;
+        private readonly IPersonHomeDomain _personHomeDomain;
+        private readonly IPersonJobDomain _personJobDomain;
+        private readonly IPersonActivitiesDomain _personActivitiesDomain;
+        private readonly IPersonPropertyDomain _personPropertyDomain;
+        private readonly IPersonSBSDomain _personSBSDomain;
+        private readonly IPersonHistoryDomain _personHistoryDomain;
+        private readonly IPersonGeneralInfoDomain _personGeneralInfoDomain;
+
         private readonly ILogger _logger;
         public MigraUser( IMEmpresaDomain mempresaDomain, ILogger logger,ICompanyDomain companyDomain, 
             ICompanyBackgroundDomain companyBackgroundDomain, ICompanyBranchDomain companyBranchDomain,
@@ -35,7 +45,11 @@ namespace DRRCore.Application.Main.MigrationApplication
             ICompanyCreditOpinionDomain companyCreditOpinionDomain, ICompanyGeneralInformationDomain companyGeneralInformationDomain,
             IFinancialBalanceDomain financialBalanceDomain, IImportsAndExportsDomain importsAndExportsDomain,
             IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain,
-            IBankDebtDomain bankDebtDomain )
+            IBankDebtDomain bankDebtDomain
+            , IMPersonaDomain mPersonaDomain, IPersonDomain personDomain, IPersonHomeDomain personHomeDomain, 
+            IPersonJobDomain personJobDomain, IPersonActivitiesDomain personActivitiesDomain, IPersonPropertyDomain personPropertyDomain,
+            IPersonSBSDomain personSBSDomain, IPersonHistoryDomain personHistoryDomain, IPersonGeneralInfoDomain personGeneralInfoDomain
+            )
         {
           
             _mempresaDomain = mempresaDomain;
@@ -52,6 +66,15 @@ namespace DRRCore.Application.Main.MigrationApplication
             _providerDomain = providerDomain;
             _comercialLatePaymentDomain = comercialLatePaymentDomain;
             _bankDebtDomain = bankDebtDomain;
+            _impersonaDomain = mPersonaDomain;
+            _personDomain = personDomain;
+            _personHomeDomain = personHomeDomain;
+            _personJobDomain = personJobDomain;
+            _personActivitiesDomain = personActivitiesDomain;
+            _personPropertyDomain = personPropertyDomain;
+            _personHistoryDomain = personHistoryDomain;
+            _personGeneralInfoDomain = personGeneralInfoDomain;
+            _personSBSDomain = personSBSDomain;
     }
 
         public async Task<bool> MigrateCompany()
@@ -1443,6 +1466,687 @@ namespace DRRCore.Application.Main.MigrationApplication
             return true;
         }
 
+        public async Task<bool> MigratePerson()
+        {
+            var personas = await _impersonaDomain.GetNotMigratedPersona();
+            foreach (var persona in personas)
+            {
+                var reputacion = await _impersonaDomain.GetmPersonaReputacionByCodigoAsync(persona.PeCodigo);
+                int idReputacion = 0;
+                if (reputacion != null)
+                {
+                    idReputacion = reputacion.RcCodigo == "EAD" ? 1 : reputacion.RcCodigo == "ECC" ? 25 : reputacion.RcCodigo == "EDJ" ? 33 :
+                        reputacion.RcCodigo == "EJA" ? 34 : reputacion.RcCodigo == "ELQ" ? 39 : reputacion.RcCodigo == "EMO" ? 42 :
+                        reputacion.RcCodigo == "ENC" ? 4 : reputacion.RcCodigo == "ERC" ? 49 : reputacion.RcCodigo == "EXX" ? 2 :
+                        reputacion.RcCodigo == "PA1" ? 20 : reputacion.RcCodigo == "PCC" ? 10 : reputacion.RcCodigo == "PDJ" ? 11 :
+                        reputacion.RcCodigo == "PEF" ? 12 : reputacion.RcCodigo == "PRE" ? 13 : reputacion.RcCodigo == "PEX" ? 14 :
+                        reputacion.RcCodigo == "PQL" ? 24 : reputacion.RcCodigo == "PIT" ? 26 : reputacion.RcCodigo == "PNC" ? 17 :
+                        reputacion.RcCodigo == "PNN" ? 18 : reputacion.RcCodigo == "PTC" ? 19 : reputacion.RcCodigo == "PVC" ? 22 :
+                        reputacion.RcCodigo == "PBC" ? 21 : reputacion.RcCodigo == "PNX" ? 29 : reputacion.RcCodigo == "EBC" ? 6 :
+                        reputacion.RcCodigo == "ERN" ? 58 : reputacion.RcCodigo == "PXX" ? 15 : reputacion.RcCodigo == "ENR" ? 9 :
+                        reputacion.RcCodigo == "ELD" ? 37 : reputacion.RcCodigo == "PLB" ? 16 : reputacion.RcCodigo == "EDI" ? 3 :
+                        reputacion.RcCodigo == "PRP" ? 31 : reputacion.RcCodigo == "EAE" ? 32 : reputacion.RcCodigo == "EMR" ? 87 :
+                        reputacion.RcCodigo == "ETF" ? 23 : reputacion.RcCodigo == "PMR" ? 46 : reputacion.RcCodigo == "PTF" ? 47 :
+                        reputacion.RcCodigo == "ELC" ? 8 : reputacion.RcCodigo == "PLC" ? 38 : reputacion.RcCodigo == "ETR" ? 88 :
+                        reputacion.RcCodigo == "PTR" ? 55 : reputacion.RcCodigo == "PVP" ? 63 : reputacion.RcCodigo == "PAS" ? 64 :
+                        reputacion.RcCodigo == "PBS" ? 65 : reputacion.RcCodigo == "PCS" ? 66 : reputacion.RcCodigo == "PDS" ? 70 :
+                        reputacion.RcCodigo == "PSS" ? 71 : reputacion.RcCodigo == "PRD" ? 48 : reputacion.RcCodigo == "EAA" ? 7 :
+                        reputacion.RcCodigo == "PSC" ? 50 : reputacion.RcCodigo == "PBR" ? 51 : reputacion.RcCodigo == "PIA" ? 52 :
+                        reputacion.RcCodigo == "PDC" ? 53 : reputacion.RcCodigo == "PDM" ? 54 : reputacion.RcCodigo == "PRM" ? 35 :
+                        reputacion.RcCodigo == "PHE" ? 56 : reputacion.RcCodigo == "PCP" ? 57 : reputacion.RcCodigo == "ERD" ? 28 :
+                        reputacion.RcCodigo == "ENT" ? 27 : reputacion.RcCodigo == "ERF" ? 30 : reputacion.RcCodigo == "EBM" ? 5 :
+                        reputacion.RcCodigo == "EMN" ? 59 : reputacion.RcCodigo == "PCT" ? 36 : reputacion.RcCodigo == "PMC" ? 40 :
+                        reputacion.RcCodigo == "PCV" ? 41 : reputacion.RcCodigo == "PGA" ? 43 : reputacion.RcCodigo == "EMP" ? 60 :
+                        reputacion.RcCodigo == "EMB" ? 61 : reputacion.RcCodigo == "ENX" ? 62 : reputacion.RcCodigo == "PIR" ? 44 :
+                        reputacion.RcCodigo == "PDF" ? 45 : reputacion.RcCodigo == "PDZ" ? 72 : reputacion.RcCodigo == "PPJ" ? 73 :
+                        reputacion.RcCodigo == "PMZ" ? 74 : reputacion.RcCodigo == "PRS" ? 75 : reputacion.RcCodigo == "ESC" ? 67 :
+                        reputacion.RcCodigo == "ESO" ? 68 : reputacion.RcCodigo == "ECP" ? 69 : reputacion.RcCodigo == "ECN" ? 76 :
+                        reputacion.RcCodigo == "EQC" ? 77 : reputacion.RcCodigo == "EQD" ? 78 : reputacion.RcCodigo == "EQO" ? 79 :
+                        reputacion.RcCodigo == "EAR" ? 80 : reputacion.RcCodigo == "EFS" ? 81 : reputacion.RcCodigo == "ETP" ? 82 :
+                        reputacion.RcCodigo == "ETC" ? 83 : reputacion.RcCodigo == "EAQ" ? 84 : reputacion.RcCodigo == "ETO" ? 85 :
+                        reputacion.RcCodigo == "EDF" ? 86 : 0;
+                }
+                try
+                {
+                    var inserted = await _personDomain.AddPersonAsync(new Person
+                    {
+                        Id = 0,
+                        OldCode = persona.PeCodigo,
+                        Fullname = persona.PeNombre,
+                        LastSearched = persona.PeFecinf,
+                        Language = Dictionary.LanguageMigra[persona.IdiCodigo.Value],
+                        Nationality = persona.PeNacion,
+                        BirthDate =  persona.PeFecnac,
+                        BirthPlace = persona.PeLugnac,
+                        IdDocumentType = persona.TiCodigo == "CExt" ? 2 : persona.TiCodigo == "C.I." ? 6 :
+                         persona.TiCodigo == "C.C." ? 7 : persona.TiCodigo == "CPF/MF" ? 9 :
+                         persona.TiCodigo == "CURP" ? 10 : persona.TiCodigo == "D.I." ? 11 :
+                         persona.TiCodigo == "DNI" ? 1 : persona.TiCodigo == "DPI" ? 12 :
+                         persona.TiCodigo == "DUI" ? 13 : persona.TiCodigo == "IDEH" ? 14 :
+                         persona.TiCodigo == "LE" ? 15 : persona.TiCodigo == "LC" ? 16 :
+                         persona.TiCodigo == "Pas." ? 4 : persona.TiCodigo == "RUT" ? 20 :
+                         persona.TiCodigo == "S.S." ? 17 : persona.TiCodigo == "RUN" ? 18 :
+                         persona.TiCodigo == "T.I." ? 19 : persona.TiCodigo == "DIM" ? 21 : null,
+                        CodeDocumentType = persona.PeDocide,
+                        TaxTypeCode = persona.PeRegtri,
+                        IdPersonSituation = persona.EsCodigo == "01" ? null : persona.EsCodigo == "02" ? 1 :
+                        persona.EsCodigo == "05" ? 2 : persona.EsCodigo == "03" ? 3 :
+                        persona.EsCodigo == "04" ? 4 : persona.EsCodigo == "06" ? 5 :
+                        persona.EsCodigo == "07" ? 6 : null,
+                        IdLegalRegisterSituation = persona.ErCodigo == "" ? null : persona.ErCodigo == "AC" ? 1 :
+                        persona.ErCodigo == "BP" ? 4 : persona.ErCodigo == "BD" ? 3 :
+                        persona.ErCodigo == "ST" ? 16 : persona.ErCodigo == "NL" ? 13 :
+                        persona.ErCodigo == "BO" ? 2 : persona.ErCodigo == "IN" ? 10 : null,
+                        Address = persona.PeDirecc,
+                        Cp = persona.PeCodpos,
+                        City = persona.PeCiudad,
+                        OtherDirecctions = persona.PeDireccCome,
+                        TradeName = persona.PeNombreCome,
+                        IdCountry = persona.PaiCodigo == "001" ? 11 : persona.PaiCodigo == "002" ? 29 : persona.PaiCodigo == "003" ? 34 :
+                        persona.PaiCodigo == "004" ? 54  : persona.PaiCodigo == "005" ? 57  : persona.PaiCodigo == "006" ? 49 :
+                        persona.PaiCodigo == "007" ? 70  : persona.PaiCodigo == "008" ? 72  : persona.PaiCodigo == "009" ? 100 :
+                        persona.PaiCodigo == "010" ? 108 : persona.PaiCodigo == "012" ? 168 : persona.PaiCodigo == "013" ? 179 :
+                        persona.PaiCodigo == "014" ? 181 : persona.PaiCodigo == "015" ? 182 : persona.PaiCodigo == "016" ? 187 :
+                        persona.PaiCodigo == "017" ? 69  : persona.PaiCodigo == "018" ? 237 : persona.PaiCodigo == "019" ? 250 :
+                        persona.PaiCodigo == "020" ? 249 : persona.PaiCodigo == "021" ? 253 : persona.PaiCodigo == "022" ? 105 :
+                        persona.PaiCodigo == "023" ? 147 : persona.PaiCodigo == "024" ? 98  : persona.PaiCodigo == "025" ? 104 :
+                        persona.PaiCodigo == "026" ? 46  : persona.PaiCodigo == "027" ? 60  : persona.PaiCodigo == "029" ? 256 :
+                        persona.PaiCodigo == "030" ? 255 : persona.PaiCodigo == "031" ? 43  : persona.PaiCodigo == "032" ? 25 :
+                        persona.PaiCodigo == "033" ? 18  : persona.PaiCodigo == "034" ? 120 : persona.PaiCodigo == "035" ? 183 :
+                        persona.PaiCodigo == "036" ? 92  : persona.PaiCodigo == "037" ? 15  : persona.PaiCodigo == "038" ? 21 :
+                        persona.PaiCodigo == "039" ? 151 : persona.PaiCodigo == "040" ? 59  : persona.PaiCodigo == "041" ? 220 :
+                        persona.PaiCodigo == "042" ? 186 : persona.PaiCodigo == "043" ? 13  : persona.PaiCodigo == "044" ? 16 :
+                        persona.PaiCodigo == "045" ? 24  : persona.PaiCodigo == "046" ? 27  : persona.PaiCodigo == "047" ? 68 :
+                        persona.PaiCodigo == "048" ? 84  : persona.PaiCodigo == "049" ? 97  : persona.PaiCodigo == "064" ? 123 :
+                        persona.PaiCodigo == "051" ? 109 : persona.PaiCodigo == "052" ? 119 : persona.PaiCodigo == "053" ? 121 :
+                        persona.PaiCodigo == "054" ? 218 : persona.PaiCodigo == "055" ? 196 : persona.PaiCodigo == "056" ? 197 :
+                        persona.PaiCodigo == "057" ? 198 : persona.PaiCodigo == "058" ? 224 : persona.PaiCodigo == "059" ? 8 :
+                        persona.PaiCodigo == "060" ? 149 : persona.PaiCodigo == "061" ? 50  : persona.PaiCodigo == "062" ? 229 :
+                        persona.PaiCodigo == "063" ? 10  : persona.PaiCodigo == "065" ? 65  : persona.PaiCodigo == "066" ? 239 :
+                        persona.PaiCodigo == "067" ? 205 : persona.PaiCodigo == "068" ? 83  : persona.PaiCodigo == "069" ? 175 :
+                        persona.PaiCodigo == "070" ? 62  : persona.PaiCodigo == "071" ? 191 : persona.PaiCodigo == "072" ? 245 :
+                        persona.PaiCodigo == "073" ? 247 : persona.PaiCodigo == "074" ? 200 : persona.PaiCodigo == "076" ? 156 :
+                        persona.PaiCodigo == "078" ? 194 : persona.PaiCodigo == "080" ? 241 : persona.PaiCodigo == "081" ? 265 :
+                        persona.PaiCodigo == "079" ? 264 : persona.PaiCodigo == "083" ? 227 : persona.PaiCodigo == "084" ? 226 :
+                        persona.PaiCodigo == "085" ? 131 : persona.PaiCodigo == "086" ? 112 : persona.PaiCodigo == "087" ? 118 :
+                        persona.PaiCodigo == "088" ? 185 : persona.PaiCodigo == "089" ? 137 : persona.PaiCodigo == "090" ? 165 :
+                        persona.PaiCodigo == "091" ? 94  : persona.PaiCodigo == "092" ? 142 : persona.PaiCodigo == "093" ? 243 :
+                        persona.PaiCodigo == "095" ? 246 : persona.PaiCodigo == "096" ? 124 : persona.PaiCodigo == "097" ? 4 :
+                        persona.PaiCodigo == "099" ? 91  : persona.PaiCodigo == "100" ? 95  : persona.PaiCodigo == "101" ? 266 :
+                        persona.PaiCodigo == "102" ? 210 : persona.PaiCodigo == "103" ? 136 : persona.PaiCodigo == "104" ? 177 :
+                        persona.PaiCodigo == "105" ? 7   : persona.PaiCodigo == "106" ? 26  : persona.PaiCodigo == "107" ? 32 :
+                        persona.PaiCodigo == "108" ? 38  : persona.PaiCodigo == "109" ? 39  : persona.PaiCodigo == "110" ? 42 :
+                        persona.PaiCodigo == "111" ? 47  : persona.PaiCodigo == "113" ? 48  : persona.PaiCodigo == "114" ? 55 :
+                        persona.PaiCodigo == "115" ? 267 : persona.PaiCodigo == "116" ? 71  : persona.PaiCodigo == "117" ? 102 :
+                        persona.PaiCodigo == "118" ? 75  : persona.PaiCodigo == "119" ? 78  : persona.PaiCodigo == "120" ? 88 :
+                        persona.PaiCodigo == "121" ? 90  : persona.PaiCodigo == "122" ? 93  : persona.PaiCodigo == "123" ? 103 :
+                        persona.PaiCodigo == "124" ? 125 : persona.PaiCodigo == "125" ? 134 : persona.PaiCodigo == "126" ? 135 :
+                        persona.PaiCodigo == "127" ? 140 : persona.PaiCodigo == "128" ? 141 : persona.PaiCodigo == "129" ? 144 :
+                        persona.PaiCodigo == "130" ? 148 : persona.PaiCodigo == "132" ? 157 : persona.PaiCodigo == "133" ? 158 :
+                        persona.PaiCodigo == "134" ? 160 : persona.PaiCodigo == "135" ? 168 : persona.PaiCodigo == "136" ? 192 :
+                        persona.PaiCodigo == "137" ? 259 : persona.PaiCodigo == "139" ? 206 : persona.PaiCodigo == "140" ? 209 :
+                        persona.PaiCodigo == "141" ? 215 : persona.PaiCodigo == "142" ? 223 : persona.PaiCodigo == "143" ? 77 :
+                        persona.PaiCodigo == "145" ? 234 : persona.PaiCodigo == "147" ? 244 : persona.PaiCodigo == "148" ? 268 :
+                        persona.PaiCodigo == "149" ? 261 : persona.PaiCodigo == "150" ? 262 : persona.PaiCodigo == "152" ? 1 :
+                        persona.PaiCodigo == "153" ? 12  : persona.PaiCodigo == "154" ? 17  : persona.PaiCodigo == "155" ? 19 :
+                        persona.PaiCodigo == "156" ? 20  : persona.PaiCodigo == "157" ? 28  : persona.PaiCodigo == "158" ? 36 :
+                        persona.PaiCodigo == "159" ? 281 : persona.PaiCodigo == "160" ? 41  : persona.PaiCodigo == "161" ? 61 :
+                        persona.PaiCodigo == "162" ? 113 : persona.PaiCodigo == "163" ? 114 : persona.PaiCodigo == "164" ? 115 :
+                        persona.PaiCodigo == "166" ? 129 : persona.PaiCodigo == "167" ? 128 : persona.PaiCodigo == "168" ? 130 :
+                        persona.PaiCodigo == "169" ? 154 : persona.PaiCodigo == "170" ? 162 : persona.PaiCodigo == "171" ? 176 :
+                        persona.PaiCodigo == "172" ? 222 : persona.PaiCodigo == "173" ? 188 : persona.PaiCodigo == "174" ? 204 :
+                        persona.PaiCodigo == "175" ? 221 : persona.PaiCodigo == "176" ? 228 : persona.PaiCodigo == "177" ? 230 :
+                        persona.PaiCodigo == "178" ? 232 : persona.PaiCodigo == "179" ? 240 : persona.PaiCodigo == "181" ? 251 :
+                        persona.PaiCodigo == "182" ? 254 : persona.PaiCodigo == "183" ? 260 : persona.PaiCodigo == "185" ? 3 :
+                        persona.PaiCodigo == "186" ? 6   : persona.PaiCodigo == "187" ? 31  : persona.PaiCodigo == "188" ? 37 :
+                        persona.PaiCodigo == "189" ? 23  : persona.PaiCodigo == "190" ? 58  : persona.PaiCodigo == "191" ? 76 :
+                        persona.PaiCodigo == "192" ? 80  : persona.PaiCodigo == "193" ? 110 : persona.PaiCodigo == "194" ? 111 :
+                        persona.PaiCodigo == "195" ? 116 : persona.PaiCodigo == "197" ? 138 : persona.PaiCodigo == "198" ? 172 :
+                        persona.PaiCodigo == "199" ? 145 : persona.PaiCodigo == "200" ? 152 : persona.PaiCodigo == "201" ? 153 :
+                        persona.PaiCodigo == "202" ? 190 : persona.PaiCodigo == "203" ? 202 : persona.PaiCodigo == "204" ? 155 :
+                        persona.PaiCodigo == "205" ? 212 : persona.PaiCodigo == "206" ? 213 : persona.PaiCodigo == "208" ? 214 :
+                        persona.PaiCodigo == "209" ? 252 : persona.PaiCodigo == "210" ? 82  : persona.PaiCodigo == "211" ? 161 :
+                        persona.PaiCodigo == "212" ? 146 : persona.PaiCodigo == "213" ? 99  : persona.PaiCodigo == "214" ? 201 :
+                        persona.PaiCodigo == "215" ? 178 : persona.PaiCodigo == "216" ? 236 : persona.PaiCodigo == "217" ? 86 :
+                        persona.PaiCodigo == "221" ? 171 : persona.PaiCodigo == "222" ? 282 : persona.PaiCodigo == "219" ? 85 :
+                        persona.PaiCodigo == "224" ? 117 : persona.PaiCodigo == "220" ? 143 : persona.PaiCodigo == "225" ? 139 :
+                        persona.PaiCodigo == "011" ? 169 : persona.PaiCodigo == "028" ? 164 : persona.PaiCodigo == "207" ? 283 :
+                        persona.PaiCodigo == "218" ? 284 : persona.PaiCodigo == "223" ? 285 : persona.PaiCodigo == "226" ? 63 :
+                        persona.PaiCodigo == "227" ? 180 : persona.PaiCodigo == "228" ? 286 : persona.PaiCodigo == "229" ? 143 :
+                        persona.PaiCodigo == "230" ? 208 : persona.PaiCodigo == "231" ? 64  : persona.PaiCodigo == "232" ? 263 :
+                        persona.PaiCodigo == "233" ? 60  : persona.PaiCodigo == "234" ? 30  : persona.PaiCodigo == "235" ? 217 :
+                        persona.PaiCodigo == "236" ? 231 : persona.PaiCodigo == "237" ? 30  : persona.PaiCodigo == "238" ? 30 :
+                        persona.PaiCodigo == "239" ? 18  : persona.PaiCodigo == "240" ? 207 : persona.PaiCodigo == "241" ? 155 : null,
+                        CodePhone = persona.PePrftlf,
+                        NumberPhone = persona.PeTelefo,
+                        IdCivilStatus = persona.EcCodigo == "01" ? 5 : persona.EcCodigo == "02" ? 2 :
+                        persona.EcCodigo == "03" ? 1 : persona.EcCodigo == "04" ? 4 :
+                        persona.EcCodigo == "05" ? 6 : persona.EcCodigo == "06" ? 3 : null,
+                        RelationshipWith = persona.PeRelciv,
+                        RelationshipDocumentType = string.IsNullOrEmpty(persona.PeRelcivDni) ? 1 : null,
+                        RelationshipCodeDocument = persona.PeRelcivDni,
+                        FatherName = persona.PePadre,
+                        MotherName = persona.PeMadre,
+                        Email = persona.PeEmail,
+                        Cellphone = persona.PeCelula,
+                        ClubMember = persona.PeClub,
+                        Insurance = persona.PeAsegur,
+                        NewsCommentary = persona.PePrensasel,
+                        PrintNewsCommentary = persona.PeLogpre == 1 ? true : false,
+                        ReputationCommentary = persona.PeComRep,
+                        IdCreditRisk = persona.CrCodigo == "0005" ? 1 : persona.CrCodigo == "0000" ? 2 : persona.CrCodigo == "0001" ? 3 :
+                       persona.CrCodigo == "0002" ? 4 : persona.CrCodigo == "0003" ? 5 : persona.CrCodigo == "0011" ? 6 : persona.CrCodigo == "0004" ? 7 : null,
+                        IdPaymentPolicy = persona.PaCodigo == "01" ? 8 : persona.PaCodigo == "02" ? 9 : persona.PaCodigo == "03" ? 10 : persona.PaCodigo == "04" ? 11 :
+                       persona.PaCodigo == "05" ? 12 : persona.PaCodigo == "06" ? 13 : persona.PaCodigo == "07" ? 14 : null,
+                        IdReputation = idReputacion != 0 ? idReputacion : null,
+                        Profession = persona.PfNombre,
+                    });
+                    if(inserted != 0)
+                    {
+                        using var context = new SqlCoreContext();
+                        var listTraductionPerson = new List<Traduction>();
+                        listTraductionPerson.AddRange(await context.Traductions.Where(x => x.IdPerson == inserted && x.Identifier.Contains("_P_")).ToListAsync());
+                        foreach (var item in listTraductionPerson)
+                        {
+                            if (item.Identifier == "S_P_NACIONALITY")
+                            {
+                                if (persona.PeNacionIng != null)
+                                {
+                                    item.ShortValue= persona.PeNacionIng;
+                                }
+                            }
+                            else if (item.Identifier == "S_P_BIRTHDATE")
+                            {
+                                if (persona.PeFecnacIng != null)
+                                {
+                                    item.ShortValue = persona.PeFecnacIng;
+                                }
+                            }
+                            else if (item.Identifier == "S_P_MARRIEDTO")
+                            {
+                                if (persona.PeRelcivIng != null)
+                                {
+                                    item.ShortValue = persona.PeRelcivIng;
+                                }
+                            }
+                            else if (item.Identifier == "S_P_PROFESSION")
+                            {
+                                if (persona.PfNombreIng != null)
+                                {
+                                    item.ShortValue = persona.PfNombreIng;
+                                }
+                            }
+                            else if (item.Identifier == "L_P_NEWSCOMM")
+                            {
+                                if (persona.PePrensaselIng != null)
+                                {
+                                    item.LargeValue = persona.PePrensaselIng;
+                                }
+                            }
+                            else if (item.Identifier == "L_P_REPUTATION")
+                            {
+                                if (persona.PeComRepIng != null)
+                                {
+                                    item.LargeValue = persona.PeComRepIng;
+                                }
+                            }
+                        }
+                        await _impersonaDomain.MigratePersona(persona.PeCodigo);
+                        var pers = await _personDomain.GetByIdAsync(inserted);
+                        pers.Traductions = listTraductionPerson;
+                        var ins = await _personDomain.UpdateAsync(pers);
+                        if (ins == true)
+                        {
+
+                        }
+                        await _mempresaDomain.MigrateEmpresa(persona.PeCodigo);
+
+                        //domicilio
+                        var listTraductionPersonDom = new List<Traduction>();
+                        listTraductionPersonDom.AddRange(await context.Traductions.Where(x => x.IdPerson == inserted && x.Identifier.Contains("_D_")).ToListAsync());
+                        foreach (var item in listTraductionPersonDom)
+                        {
+                            if (item.Identifier == "S_D_VALUE")
+                            {
+                                if (persona.PeValdomIng != null)
+                                {
+                                    item.ShortValue = persona.PeValdomIng;
+                                }
+                            }
+                            else if (item.Identifier == "L_D_RESIDENCE")
+                            {
+                                if (persona.PeCondocIng != null)
+                                {
+                                    item.LargeValue = persona.PeCondocIng;
+                                }
+                            }
+                        }
+                        var insertedDomicilio = await _personHomeDomain.AddPersonHomeAsync(new PersonHome
+                        {
+                            Id = 0,
+                            IdPerson = inserted,
+                            OwnHome = persona.PeTipdom == "" ? null : persona.PeTipdom == "Si" ? true : false,
+                            Value = persona.PeValdom,
+                            HomeCommentary = persona.PeCondoc
+                        }, listTraductionPersonDom);
+                        if (insertedDomicilio != 0)
+                        {
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error en persona domicilio :" + inserted);
+                        }
+                        //centro de trabajo
+                        var trabajo = await _impersonaDomain.GetmPersonaTrabajoByCodigoAsync(persona.PeCodigo);
+                        if(trabajo != null)
+                        {
+                            int idCompany = 0;
+                            var emp = await _companyDomain.GetByOldCode(trabajo.EmCodigo);
+                            if(emp != null)
+                            {
+                                idCompany = emp.Id;
+                            }
+                            var listTraductionPersonTrab = new List<Traduction>();
+                            listTraductionPersonTrab.AddRange(await context.Traductions.Where(x => x.IdPerson == inserted && x.Identifier.Contains("_C_")).ToListAsync());
+                            foreach (var item in listTraductionPersonTrab)
+                            {
+                                if (item.Identifier == "S_C_CURJOB")
+                                {
+                                    if (trabajo.CaNombreIng != null)
+                                    {
+                                        item.ShortValue = trabajo.CaNombreIng;
+                                    }
+                                }
+                                else if (item.Identifier == "S_C_STARTDT")
+                                {
+                                    if (trabajo.PtFecingIng != null)
+                                    {
+                                        item.ShortValue = trabajo.PtFecingIng;
+                                    }
+                                }
+                                else if (item.Identifier == "S_C_ENDDT")
+                                {
+                                    if (trabajo.PtFeccesIng != null)
+                                    {
+                                        item.ShortValue = trabajo.PtFeccesIng;
+                                    }
+                                }
+                                else if (item.Identifier == "S_C_INCOME")
+                                {
+                                    if (trabajo.PtInganuIng != null)
+                                    {
+                                        item.ShortValue = trabajo.PtInganuIng;
+                                    }
+                                }
+                                else if (item.Identifier == "L_C_DETAILS")
+                                {
+                                    if (trabajo.PtDetallIng != null)
+                                    {
+                                        item.LargeValue = trabajo.PtDetallIng;
+                                    }
+                                }
+                            }
+                            var insertTrab = await _personJobDomain.AddPersonJobAsync(new PersonJob
+                            {
+                                Id = 0,
+                                IdPerson = inserted,
+                                IdCompany = idCompany == 0 ? null : idCompany,
+                                CurrentJob = trabajo.CaNombre,
+                                StartDate = trabajo.PtFecing,
+                                EndDate = trabajo.PtFecces,
+                                MonthlyIncome = trabajo.PtEstadi + "",
+                                AnnualIncome = trabajo.PtInganu,
+                                JobDetails = trabajo.PtDetall
+                            }, listTraductionPersonTrab);
+                            if (insertTrab != 0) 
+                            {
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error en persona trabajo :" + inserted); 
+                            }
+                        }
+                        //otras actividades
+                        var listTraductionPersonAct = new List<Traduction>();
+                        listTraductionPersonAct.AddRange(await context.Traductions.Where(x => x.IdPerson == inserted && x.Identifier.Contains("_A_")).ToListAsync());
+                        foreach (var item in listTraductionPersonAct)
+                        {
+                            if (item.Identifier == "L_A_OTHERACT")
+                            {
+                                if (persona.PeOtrRecIng != null)
+                                {
+                                    item.LargeValue = persona.PeOtrRecIng;
+                                }
+                            }
+                        }
+                        var insertActiv = await _personActivitiesDomain.AddPersonActivitiesAsync(new PersonActivity
+                        {
+                            Id = 0,
+                            IdPerson = inserted,
+                            ActivitiesCommentary = persona.PeOtrrec,
+                        }, listTraductionPersonAct);
+                        if (insertActiv != 0)
+                        {
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error en persona actividades :" + inserted);
+                        }
+
+                        //propiedades
+                        var listTraductionPersonPro = new List<Traduction>();
+                        listTraductionPersonPro.AddRange(await context.Traductions.Where(x => x.IdPerson == inserted && x.Identifier.Contains("_PR_")).ToListAsync());
+                        foreach (var item in listTraductionPersonPro)
+                        {
+                            if (item.Identifier == "L_PR_DETAILS")
+                            {
+                                if (persona.PeCombieIng != null)
+                                {
+                                    item.LargeValue = persona.PeCombieIng;
+                                }
+                            }
+                        }
+                        var insertProp = await _personPropertyDomain.AddPersonPropertiesAsync(new PersonProperty
+                        {
+                            Id = 0,
+                            IdPerson = inserted,
+                            PropertiesCommentary = persona.PeCombie,
+                        }, listTraductionPersonPro);
+                        if (insertProp != 0)
+                        {
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error en persona propiedades :" + inserted);
+                        }
+
+                        //sbs
+                        var listTraductionPersonSbs = new List<Traduction>();
+                        listTraductionPersonSbs.AddRange(await context.Traductions.Where(x => x.IdPerson == inserted && x.Identifier.Contains("_PR_")).ToListAsync());
+                        foreach (var item in listTraductionPersonSbs)
+                        {
+                            if (item.Identifier == "L_SBS_ANTEC")
+                            {
+                                if (persona.PeAntcredIng != null)
+                                {
+                                    item.LargeValue = persona.PeAntcredIng;
+                                }
+                            }
+                            else if (item.Identifier == "L_SBS_RISKCNT")
+                            {
+                                if (persona.PeCenRieIng != null)
+                                {
+                                    item.LargeValue = persona.PeCenRieIng;
+                                }
+                            }
+                            else if (item.Identifier == "L_SBS_COMMENTSBS")
+                            {
+                                if (persona.PeSupbanIng != null)
+                                {
+                                    item.LargeValue = persona.PeSupbanIng;
+                                }
+                            }
+                            else if (item.Identifier == "L_SBS_COMMENTBANK")
+                            {
+                                if (persona.PeSubacuIng != null)
+                                {
+                                    item.LargeValue = persona.PeSubacuIng;
+                                }
+                            }
+                            else if (item.Identifier == "L_SBS_LITIG")
+                            {
+                                if (persona.PeComlitIng != null)
+                                {
+                                    item.LargeValue = persona.PeComlitIng;
+                                }
+                            }
+                        }
+                        var insertSbs = await _personSBSDomain.AddPersonSBS(new PersonSb
+                        {
+                            Id = 0,
+                            IdPerson = inserted,
+                            AditionalCommentaryRiskCenter = persona.PeCenrie,
+                            DebtRecordedDate = persona.PeFecreg,
+                            ExchangeRate = (decimal)persona.PeTcsbs,
+                            BankingCommentary = persona.PeSubacu,
+                            ReferentOrAnalyst = persona.PerCodref,
+                            Date = StaticFunctions.VerifyDate(persona.PeFecref),
+                            LitigationsCommentary = persona.PeComlit,
+                            CreditHistoryCommentary = persona.PeAntcred,
+                            GuaranteesOfferedNc = (decimal)persona.PeGaomn,
+                            GuaranteesOfferedFc = (decimal)persona.PeGaome,
+                            SbsCommentary = persona.PeSupban
+
+                        }, listTraductionPersonSbs);
+                        if (insertSbs != 0)
+                        {
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error en persona Sbs :" + inserted);
+                        }
+                        //proveedores
+
+                        var providers = await _impersonaDomain.GetmPersonaProvByCodigoAsync(persona.PeCodigo);
+                        if (providers.Count > 0)
+                        {
+                            foreach (var item in providers)
+                            {
+                                var insertProv = await _providerDomain.AddAsync(new Provider
+                                {
+                                    Id = 0,
+                                    IdPerson = inserted,
+                                    IdCountry = item.PaiCodigo == "001" ? 11 : item.PaiCodigo == "002" ? 29 : item.PaiCodigo == "003" ? 34 :
+                                       item.PaiCodigo == "004" ? 54 : item.PaiCodigo == "005" ? 57 : item.PaiCodigo == "006" ? 49 :
+                                       item.PaiCodigo == "007" ? 70 : item.PaiCodigo == "008" ? 72 : item.PaiCodigo == "009" ? 100 :
+                                       item.PaiCodigo == "010" ? 108 : item.PaiCodigo == "012" ? 168 : item.PaiCodigo == "013" ? 179 :
+                                       item.PaiCodigo == "014" ? 181 : item.PaiCodigo == "015" ? 182 : item.PaiCodigo == "016" ? 187 :
+                                       item.PaiCodigo == "017" ? 69 : item.PaiCodigo == "018" ? 237 : item.PaiCodigo == "019" ? 250 :
+                                       item.PaiCodigo == "020" ? 249 : item.PaiCodigo == "021" ? 253 : item.PaiCodigo == "022" ? 105 :
+                                       item.PaiCodigo == "023" ? 147 : item.PaiCodigo == "024" ? 98 : item.PaiCodigo == "025" ? 104 :
+                                       item.PaiCodigo == "026" ? 46 : item.PaiCodigo == "027" ? 60 : item.PaiCodigo == "029" ? 256 :
+                                       item.PaiCodigo == "030" ? 255 : item.PaiCodigo == "031" ? 43 : item.PaiCodigo == "032" ? 25 :
+                                       item.PaiCodigo == "033" ? 18 : item.PaiCodigo == "034" ? 120 : item.PaiCodigo == "035" ? 183 :
+                                       item.PaiCodigo == "036" ? 92 : item.PaiCodigo == "037" ? 15 : item.PaiCodigo == "038" ? 21 :
+                                       item.PaiCodigo == "039" ? 151 : item.PaiCodigo == "040" ? 59 : item.PaiCodigo == "041" ? 220 :
+                                       item.PaiCodigo == "042" ? 186 : item.PaiCodigo == "043" ? 13 : item.PaiCodigo == "044" ? 16 :
+                                       item.PaiCodigo == "045" ? 24 : item.PaiCodigo == "046" ? 27 : item.PaiCodigo == "047" ? 68 :
+                                       item.PaiCodigo == "048" ? 84 : item.PaiCodigo == "049" ? 97 : item.PaiCodigo == "064" ? 123 :
+                                       item.PaiCodigo == "051" ? 109 : item.PaiCodigo == "052" ? 119 : item.PaiCodigo == "053" ? 121 :
+                                       item.PaiCodigo == "054" ? 218 : item.PaiCodigo == "055" ? 196 : item.PaiCodigo == "056" ? 197 :
+                                       item.PaiCodigo == "057" ? 198 : item.PaiCodigo == "058" ? 224 : item.PaiCodigo == "059" ? 8 :
+                                       item.PaiCodigo == "060" ? 149 : item.PaiCodigo == "061" ? 50 : item.PaiCodigo == "062" ? 229 :
+                                       item.PaiCodigo == "063" ? 10 : item.PaiCodigo == "065" ? 65 : item.PaiCodigo == "066" ? 239 :
+                                       item.PaiCodigo == "067" ? 205 : item.PaiCodigo == "068" ? 83 : item.PaiCodigo == "069" ? 175 :
+                                       item.PaiCodigo == "070" ? 62 : item.PaiCodigo == "071" ? 191 : item.PaiCodigo == "072" ? 245 :
+                                       item.PaiCodigo == "073" ? 247 : item.PaiCodigo == "074" ? 200 : item.PaiCodigo == "076" ? 156 :
+                                       item.PaiCodigo == "078" ? 194 : item.PaiCodigo == "080" ? 241 : item.PaiCodigo == "081" ? 265 :
+                                       item.PaiCodigo == "079" ? 264 : item.PaiCodigo == "083" ? 227 : item.PaiCodigo == "084" ? 226 :
+                                       item.PaiCodigo == "085" ? 131 : item.PaiCodigo == "086" ? 112 : item.PaiCodigo == "087" ? 118 :
+                                       item.PaiCodigo == "088" ? 185 : item.PaiCodigo == "089" ? 137 : item.PaiCodigo == "090" ? 165 :
+                                       item.PaiCodigo == "091" ? 94 : item.PaiCodigo == "092" ? 142 : item.PaiCodigo == "093" ? 243 :
+                                       item.PaiCodigo == "095" ? 246 : item.PaiCodigo == "096" ? 124 : item.PaiCodigo == "097" ? 4 :
+                                       item.PaiCodigo == "099" ? 91 : item.PaiCodigo == "100" ? 95 : item.PaiCodigo == "101" ? 266 :
+                                       item.PaiCodigo == "102" ? 210 : item.PaiCodigo == "103" ? 136 : item.PaiCodigo == "104" ? 177 :
+                                       item.PaiCodigo == "105" ? 7 : item.PaiCodigo == "106" ? 26 : item.PaiCodigo == "107" ? 32 :
+                                       item.PaiCodigo == "108" ? 38 : item.PaiCodigo == "109" ? 39 : item.PaiCodigo == "110" ? 42 :
+                                       item.PaiCodigo == "111" ? 47 : item.PaiCodigo == "113" ? 48 : item.PaiCodigo == "114" ? 55 :
+                                       item.PaiCodigo == "115" ? 267 : item.PaiCodigo == "116" ? 71 : item.PaiCodigo == "117" ? 102 :
+                                       item.PaiCodigo == "118" ? 75 : item.PaiCodigo == "119" ? 78 : item.PaiCodigo == "120" ? 88 :
+                                       item.PaiCodigo == "121" ? 90 : item.PaiCodigo == "122" ? 93 : item.PaiCodigo == "123" ? 103 :
+                                       item.PaiCodigo == "124" ? 125 : item.PaiCodigo == "125" ? 134 : item.PaiCodigo == "126" ? 135 :
+                                       item.PaiCodigo == "127" ? 140 : item.PaiCodigo == "128" ? 141 : item.PaiCodigo == "129" ? 144 :
+                                       item.PaiCodigo == "130" ? 148 : item.PaiCodigo == "132" ? 157 : item.PaiCodigo == "133" ? 158 :
+                                       item.PaiCodigo == "134" ? 160 : item.PaiCodigo == "135" ? 168 : item.PaiCodigo == "136" ? 192 :
+                                       item.PaiCodigo == "137" ? 259 : item.PaiCodigo == "139" ? 206 : item.PaiCodigo == "140" ? 209 :
+                                       item.PaiCodigo == "141" ? 215 : item.PaiCodigo == "142" ? 223 : item.PaiCodigo == "143" ? 77 :
+                                       item.PaiCodigo == "145" ? 234 : item.PaiCodigo == "147" ? 244 : item.PaiCodigo == "148" ? 268 :
+                                       item.PaiCodigo == "149" ? 261 : item.PaiCodigo == "150" ? 262 : item.PaiCodigo == "152" ? 1 :
+                                       item.PaiCodigo == "153" ? 12 : item.PaiCodigo == "154" ? 17 : item.PaiCodigo == "155" ? 19 :
+                                       item.PaiCodigo == "156" ? 20 : item.PaiCodigo == "157" ? 28 : item.PaiCodigo == "158" ? 36 :
+                                       item.PaiCodigo == "159" ? 281 : item.PaiCodigo == "160" ? 41 : item.PaiCodigo == "161" ? 61 :
+                                       item.PaiCodigo == "162" ? 113 : item.PaiCodigo == "163" ? 114 : item.PaiCodigo == "164" ? 115 :
+                                       item.PaiCodigo == "166" ? 129 : item.PaiCodigo == "167" ? 128 : item.PaiCodigo == "168" ? 130 :
+                                       item.PaiCodigo == "169" ? 154 : item.PaiCodigo == "170" ? 162 : item.PaiCodigo == "171" ? 176 :
+                                       item.PaiCodigo == "172" ? 222 : item.PaiCodigo == "173" ? 188 : item.PaiCodigo == "174" ? 204 :
+                                       item.PaiCodigo == "175" ? 221 : item.PaiCodigo == "176" ? 228 : item.PaiCodigo == "177" ? 230 :
+                                       item.PaiCodigo == "178" ? 232 : item.PaiCodigo == "179" ? 240 : item.PaiCodigo == "181" ? 251 :
+                                       item.PaiCodigo == "182" ? 254 : item.PaiCodigo == "183" ? 260 : item.PaiCodigo == "185" ? 3 :
+                                       item.PaiCodigo == "186" ? 6 : item.PaiCodigo == "187" ? 31 : item.PaiCodigo == "188" ? 37 :
+                                       item.PaiCodigo == "189" ? 23 : item.PaiCodigo == "190" ? 58 : item.PaiCodigo == "191" ? 76 :
+                                       item.PaiCodigo == "192" ? 80 : item.PaiCodigo == "193" ? 110 : item.PaiCodigo == "194" ? 111 :
+                                       item.PaiCodigo == "195" ? 116 : item.PaiCodigo == "197" ? 138 : item.PaiCodigo == "198" ? 172 :
+                                       item.PaiCodigo == "199" ? 145 : item.PaiCodigo == "200" ? 152 : item.PaiCodigo == "201" ? 153 :
+                                       item.PaiCodigo == "202" ? 190 : item.PaiCodigo == "203" ? 202 : item.PaiCodigo == "204" ? 155 :
+                                       item.PaiCodigo == "205" ? 212 : item.PaiCodigo == "206" ? 213 : item.PaiCodigo == "208" ? 214 :
+                                       item.PaiCodigo == "209" ? 252 : item.PaiCodigo == "210" ? 82 : item.PaiCodigo == "211" ? 161 :
+                                       item.PaiCodigo == "212" ? 146 : item.PaiCodigo == "213" ? 99 : item.PaiCodigo == "214" ? 201 :
+                                       item.PaiCodigo == "215" ? 178 : item.PaiCodigo == "216" ? 236 : item.PaiCodigo == "217" ? 86 :
+                                       item.PaiCodigo == "221" ? 171 : item.PaiCodigo == "222" ? 282 : item.PaiCodigo == "219" ? 85 :
+                                       item.PaiCodigo == "224" ? 117 : item.PaiCodigo == "220" ? 143 : item.PaiCodigo == "225" ? 139 :
+                                       item.PaiCodigo == "011" ? 169 : item.PaiCodigo == "028" ? 164 : item.PaiCodigo == "207" ? 283 :
+                                       item.PaiCodigo == "218" ? 284 : item.PaiCodigo == "223" ? 285 : item.PaiCodigo == "226" ? 63 :
+                                       item.PaiCodigo == "227" ? 180 : item.PaiCodigo == "228" ? 286 : item.PaiCodigo == "229" ? 143 :
+                                       item.PaiCodigo == "230" ? 208 : item.PaiCodigo == "231" ? 64 : item.PaiCodigo == "232" ? 263 :
+                                       item.PaiCodigo == "233" ? 60 : item.PaiCodigo == "234" ? 30 : item.PaiCodigo == "235" ? 217 :
+                                       item.PaiCodigo == "236" ? 231 : item.PaiCodigo == "237" ? 30 : item.PaiCodigo == "238" ? 30 :
+                                       item.PaiCodigo == "239" ? 18 : item.PaiCodigo == "240" ? 207 : item.PaiCodigo == "241" ? 155 : null,
+                                    Name = item.ProvNombre,
+                                    Qualification = item.CumCodigo == "02" ? "Puntual" : item.CumCodigo == "03" ? "Lento Eventual" :
+                                     item.CumCodigo == "04" ? "Lento Siempre" : item.CumCodigo == "05" ? "Moroso" :
+                                      item.CumCodigo == "06" ? "Sin Experiencia" : item.CumCodigo == "01" ? "" : null,
+                                    QualificationEng = item.CumCodigo == "02" ? "Prompt" : item.CumCodigo == "03" ? "Sometimes delayed" :
+                                     item.CumCodigo == "04" ? "Always delayed" : item.CumCodigo == "05" ? "Delinquent" :
+                                      item.CumCodigo == "06" ? "No experience" : item.CumCodigo == "01" ? "" : null,
+                                    Date = item.ProvFecha,
+                                    Telephone = item.ProvTelefo,
+                                    AttendedBy = item.ProvAtendio,
+                                    IdCurrency = item.ProvMnLiCr == "US$" ? 1 : item.ProvMnLiCr == "MN" ? 31 : item.ProvMnLiCr == "EUR" ? 2 : null,
+                                    MaximumAmount = item.ProvLinCre,
+                                    MaximumAmountEng = item.ProvLinCreIng,
+                                    TimeLimit = item.ProvPlazos,
+                                    TimeLimitEng = item.ProvPlazosIng,
+                                    Compliance = item.ProvCumple,
+                                    ClientSince = item.ProvTiempo,
+                                    ClientSinceEng = item.ProvTiempoIng,
+                                    ProductsTheySell = item.ProvVenden,
+                                    ProductsTheySellEng = item.ProvVendenIng,
+                                    AdditionalCommentary = item.ProvComen,
+                                    AdditionalCommentaryEng = item.ProvComenIng,
+                                    ReferentCommentary = item.ProvTexto,
+                                });
+                            }
+                        }
+                        //morosidad comercial
+                        var morComercial = await _impersonaDomain.GetmPersonaMorComByCodigoAsync(persona.PeCodigo);
+                        if (morComercial.Count > 0)
+                        {
+                            foreach (var item in morComercial)
+                            {
+                                var insertMorCom = await _comercialLatePaymentDomain.AddAsync(new ComercialLatePayment
+                                {
+                                    Id = 0,
+                                    IdPerson = inserted,
+                                    CreditorOrSupplier = item.PaGirador,
+                                    DocumentType = item.PaTitulo,
+                                    DocumentTypeEng = item.PaTituloIng,
+                                    Date = item.PaFecpro,
+                                    AmountNc = (decimal)item.PaMonmn,
+                                    AmountFc = (decimal)item.PaMonme,
+                                    PendingPaymentDate = item.PaFecreg,
+                                    DaysLate = 0,
+                                });
+                            }
+                        }
+
+                        //endeudamiento bancario
+                        var endBancario = await _impersonaDomain.GetmPersonaEndBancByCodigoAsync(persona.PeCodigo);
+                        if (endBancario.Count > 0)
+                        {
+                            foreach (var item in endBancario)
+                            {
+                                var insertMorCom = await _bankDebtDomain.AddAsync(new BankDebt
+                                {
+                                    Id = 0,
+                                    IdPerson = inserted,
+                                    BankName = item.SbdNombre,
+                                    Qualification = item.SbdCalifi,
+                                    QualificationEng = item.SbdCalifiIng,
+                                    DebtNc = (decimal)item.SbdMonmn,
+                                    DebtFc = (decimal)item.SbdMonme,
+                                });
+                            }
+                        }
+
+                        //historial de quien es quien
+                        var listTraductionPersonHis = new List<Traduction>();
+                        listTraductionPersonHis.AddRange(await context.Traductions.Where(x => x.IdPerson == inserted && x.Identifier.Contains("_H_")).ToListAsync());
+                        foreach (var item in listTraductionPersonHis)
+                        {
+                            if (item.Identifier == "L_H_DETAILS")
+                            {
+                                if (persona.PeAnteceIng != null)
+                                {
+                                    item.LargeValue = persona.PeAnteceIng;
+                                }
+                            }
+                        }
+                        var insertHist = await _personHistoryDomain.AddPersonHistoryAsync(new PersonHistory
+                        {
+                            Id = 0,
+                            IdPerson = inserted,
+                            HistoryCommentary = persona.PeAntece
+                        }, listTraductionPersonHis);
+                        if (insertHist != 0)
+                        {
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error en persona Historia :" + inserted);
+                        }
+
+                        //informacion general
+                        var listTraductionPersonInf = new List<Traduction>();
+                        listTraductionPersonInf.AddRange(await context.Traductions.Where(x => x.IdPerson == inserted && x.Identifier.Contains("_IG_")).ToListAsync());
+                        foreach (var item in listTraductionPersonInf)
+                        {
+                            if (item.Identifier == "L_IG_DETAILS")
+                            {
+                                if (persona.PeObservIng != null)
+                                {
+                                    item.LargeValue = persona.PeObservIng;
+                                }
+                            }
+                        }
+                        var insertInf = await _personGeneralInfoDomain.AddPersonGeneralInfoAsync(new PersonGeneralInformation
+                        {
+                            Id = 0,
+                            IdPerson = inserted,
+                            GeneralInformation = persona.PeObserv
+                        }, listTraductionPersonInf);
+                        if (insertInf != 0)
+                        {
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error en persona Info General :" + inserted);
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogError("Error persona :" + persona.PeCodigo);
+                        continue;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Error persona :" + persona.PeCodigo);
+                    continue;
+                }
+            }
+
+            return true;
+        }
        
         public Task MigrateUser()
         {

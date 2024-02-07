@@ -93,7 +93,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Employees.Where(x=>x.Id==id).Include(x=>x.HealthInsurances).FirstOrDefaultAsync() ?? throw new Exception("No existe el empleado solicitado");
+                return await context.Employees.Include(x => x.IdJobNavigation).Include(x => x.IdJobDepartmentNavigation).Where(x=>x.Id==id).Include(x=>x.HealthInsurances).FirstOrDefaultAsync() ?? throw new Exception("No existe el empleado solicitado");
             }
             catch (Exception ex)
             {

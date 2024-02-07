@@ -6,8 +6,6 @@
 
         public int? IdPerson { get; set; }
 
-        public int? IdOpcionalCommentarySbs { get; set; }
-
         public string? AditionalCommentaryRiskCenter { get; set; }
 
         public string? DebtRecordedDate { get; set; }
@@ -25,6 +23,8 @@
         public string? LitigationsCommentary { get; set; }
 
         public string? CreditHistoryCommentary { get; set; }
+
+        public string? SbsCommentary { get; set; }
 
         public decimal? GuaranteesOfferedNc { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
@@ -49,9 +50,18 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public Task<List<Process>> GetAllAsync()
+        public async Task<List<Process>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.Processes.Where(x => x.Enable == true).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
         }
 
         public async Task<Process> GetByIdAsync(int id)

@@ -9,11 +9,9 @@ public partial class PersonSb
 
     public int? IdPerson { get; set; }
 
-    public int? IdOpcionalCommentarySbs { get; set; }
-
     public string? AditionalCommentaryRiskCenter { get; set; }
 
-    public DateTime? DebtRecordedDate { get; set; }
+    public string? DebtRecordedDate { get; set; }
 
     public decimal? ExchangeRate { get; set; }
 
@@ -41,7 +39,7 @@ public partial class PersonSb
 
     public bool? Enable { get; set; }
 
-    public virtual OpcionalCommentarySb? IdOpcionalCommentarySbsNavigation { get; set; }
+    public string? SbsCommentary { get; set; }
 
     public virtual Person? IdPersonNavigation { get; set; }
 }

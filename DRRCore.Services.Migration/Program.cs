@@ -21,6 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IMEmpresaRepository, MEmpresaRepository>();
+builder.Services.AddScoped<IMPersonaRepository, MPersonaRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICompanyBackgroundRepository, CompanyBackgroundRepository>();
 builder.Services.AddScoped<ICompanyBranchRepository, CompanyBranchRepository>();
@@ -35,7 +36,18 @@ builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
 builder.Services.AddScoped<IImportsAndExportsRepository, ImportsAndExportsRepository>();
 builder.Services.AddScoped<IFinancialSalesHistoryRepository, FinancialSalesHistoryRepository>();
 
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IPersonHomeRepository, PersonHomeRepository>();
+builder.Services.AddScoped<IPersonJobRepository, PersonJobRepository>();
+builder.Services.AddScoped<IPersonActivitiesRepository, PersonActivitiesRepository>();
+builder.Services.AddScoped<IPersonPropertiesRepository, PersonPropertiesRepository>();
+builder.Services.AddScoped<IPersonSBSRepository, PersonSBSRepository>();
+builder.Services.AddScoped<IPersonHistoryRepository, PersonHistoryRepository>();
+builder.Services.AddScoped<IPersonGeneralInfoRepository, PersonGeneralInfoRepository>();
+
+
 builder.Services.AddScoped<IMEmpresaDomain, MEmpresaDomain>();
+builder.Services.AddScoped<IMPersonaDomain, MPersonaDomain>();
 builder.Services.AddScoped<ICompanyDomain, CompanyDomain>();
 builder.Services.AddScoped<ICompanyBackgroundDomain, CompanyBackgroundDomain>();
 builder.Services.AddScoped<ICompanyBranchDomain, CompanyBranchDomain>();
@@ -49,6 +61,15 @@ builder.Services.AddScoped<IComercialLatePaymentDomain, ComercialLatePaymentDoma
 builder.Services.AddScoped<IProviderDomain, ProviderDomain>();
 builder.Services.AddScoped<IImportsAndExportsDomain, ImportsAndExportsDomain>();
 builder.Services.AddScoped<IFinancialSalesHistoryDomain, FinancialSalesHistoryDomain>();
+
+builder.Services.AddScoped<IPersonDomain, PersonDomain>();
+builder.Services.AddScoped<IPersonHomeDomain, PersonHomeDomain>();
+builder.Services.AddScoped<IPersonJobDomain, PersonJobDomain>();
+builder.Services.AddScoped<IPersonActivitiesDomain, PersonActivitiesDomain>();
+builder.Services.AddScoped<IPersonPropertyDomain, PersonPropertyDomain>();
+builder.Services.AddScoped<IPersonSBSDomain, PersonSBSDomain>();
+builder.Services.AddScoped<IPersonHistoryDomain, PersonHistoryDomain>();
+builder.Services.AddScoped<IPersonGeneralInfoDomain, PersonGeneralInfoDomain>();
 
 builder.Services.AddScoped<IMigraUser, MigraUser>();
 

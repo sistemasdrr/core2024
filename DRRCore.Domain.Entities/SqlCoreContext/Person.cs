@@ -17,7 +17,7 @@ public partial class Person
 
     public string? Nationality { get; set; }
 
-    public DateTime? BirthDate { get; set; }
+    public string? BirthDate { get; set; }
 
     public string? BirthPlace { get; set; }
 
@@ -98,6 +98,8 @@ public partial class Person
     public string? Profession { get; set; }
 
     public string? Quality { get; set; }
+
+    public bool? Print { get; set; }
 
     public virtual ICollection<BankDebt> BankDebts { get; set; } = new List<BankDebt>();
 

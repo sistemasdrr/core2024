@@ -4,7 +4,7 @@ using DRRCore.Infraestructure.Interfaces.CoreRepository;
 
 namespace DRRCore.Domain.Main.CoreDomain
 {
-    public class UserLoginDomain:IUserLoginDomain
+    public class UserLoginDomain : IUserLoginDomain
     {
         private readonly IUserLoginRepository _repository;
         public UserLoginDomain(IUserLoginRepository repository)
@@ -37,9 +37,19 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _repository.GetByNameAsync(name);
         }
 
+        public async Task<int?> GetIdUserByIdEmployee(int idEmployee)
+        {
+            return await _repository.GetIdUserByIdEmployee(idEmployee);
+        }
+
         public async Task<bool> UpdateAsync(UserLogin obj)
         {
             return await _repository.UpdateAsync(obj);
+        }
+
+        public async Task<UserLogin> UserLogin(string username, string password)
+        {
+            return await _repository.UserLogin(username, password);
         }
     }
 }

@@ -7,11 +7,17 @@ using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
     public class CompanyApplication : ICompanyApplication
     {
+        private readonly int idUser;
+        private readonly ClaimsIdentity claims;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private readonly ICompanyDomain _companyDomain;
         private readonly ICompanyBackgroundDomain _companyBackgroundDomain;
         private readonly ICompanyBranchDomain _companyBranchDomain;
@@ -41,7 +47,7 @@ namespace DRRCore.Application.Main.CoreApplication
             ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain,
             ICompanyGeneralInformationDomain companyGeneralInformationDomain,
             IReportingDownload reportingDownload,
-            IImportsAndExportsDomain importsAndExportsDomain, ICompanyPartnersDomain companyPartnersDomain)
+            IImportsAndExportsDomain importsAndExportsDomain, ICompanyPartnersDomain companyPartnersDomain, IHttpContextAccessor httpContextAccessor)
         {
             _companyDomain = companyDomain;
             _companyBackgroundDomain = companyBackgroundDomain;
@@ -64,6 +70,8 @@ namespace DRRCore.Application.Main.CoreApplication
             _mapper = mapper;
             _logger = logger;
             _reportingDownload=reportingDownload;
+            _httpContextAccessor = httpContextAccessor;
+            claims = (ClaimsIdentity)_httpContextAccessor.HttpContext.User.Identity;
         }
         public async Task<Response<int>> AddOrUpdateAsync(AddOrUpdateCompanyRequestDto obj)
         {
@@ -121,6 +129,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     existingCompany.Traductions= traductions;
                     existingCompany.UpdateDate = DateTime.Now;
                     await _companyDomain.UpdateAsync(existingCompany);
+                    Console.WriteLine("zzzzzzzzzzzzzzz"+idUser);
                     response.Data = existingCompany.Id;
                 }
             }

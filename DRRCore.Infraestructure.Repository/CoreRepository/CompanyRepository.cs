@@ -217,6 +217,21 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
+        public async Task<Company> GetByOldCode(string oldCode)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var company = await context.Companies.FirstOrDefaultAsync(x => x.OldCode == oldCode);
+                return company;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
         public async Task<bool> UpdateAsync(Company obj)
         {
             try

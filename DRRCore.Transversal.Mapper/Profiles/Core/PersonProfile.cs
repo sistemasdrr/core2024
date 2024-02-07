@@ -21,7 +21,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.RelationshipDocumentType, opt => opt?.MapFrom(src => src.RelationshipDocumentType == 0 ? null : src.RelationshipDocumentType))
                  .ForMember(dest => dest.IdPersonSituation, opt => opt?.MapFrom(src => src.IdPersonSituation == 0 ? null : src.IdPersonSituation))
                  .ForMember(dest => dest.LastSearched, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.LastSearched)))
-                 .ForMember(dest => dest.BirthDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.BirthDate)))
+                 .ForMember(dest => dest.BirthDate, opt => opt?.MapFrom(src => src.BirthDate))
               .ReverseMap();
             CreateMap<Person, GetPersonResponseDto>()
                  .ForMember(dest => dest.IdCivilStatus, opt => opt?.MapFrom(src => src.IdCivilStatus == 0 ? null : src.IdCivilStatus))
@@ -35,7 +35,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.Profession, opt => opt?.MapFrom(src => src.Profession))
                  .ForMember(dest => dest.IdPersonSituation, opt => opt?.MapFrom(src => src.IdPersonSituation == 0 ? null : src.IdPersonSituation))
                  .ForMember(dest => dest.LastSearched, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.LastSearched)))
-                 .ForMember(dest => dest.BirthDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.BirthDate)))
+                 .ForMember(dest => dest.BirthDate, opt => opt?.MapFrom(src => src.BirthDate))
               .ReverseMap();
             CreateMap<Person, GetListPersonResponseDto>()
                  .ForMember(dest => dest.CreditRisk, opt => opt?.MapFrom(src => src.IdCreditRiskNavigation.Identifier))
@@ -45,7 +45,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.TraductionPercentage, opt => opt?.MapFrom(src => GetTraductionPercentage(src.Traductions)))
                  .ForMember(dest => dest.Profession, opt => opt?.MapFrom(src => src.Profession))
                  .ForMember(dest => dest.LastSearched, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.LastSearched)))
-                 .ForMember(dest => dest.BirthDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.BirthDate)))
+                 .ForMember(dest => dest.BirthDate, opt => opt?.MapFrom(src => src.BirthDate))
                  .ForMember(dest => dest.OnWeb, opt => opt?.MapFrom(src => src.OnWeb))
                  .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
               .ReverseMap();
@@ -87,14 +87,14 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                .ForMember(dest => dest.TaxTypeName, opt => opt?.MapFrom(src => src.IdCompanyNavigation.TaxTypeName))
                .ForMember(dest => dest.SubTelephone, opt => opt?.MapFrom(src => src.IdCompanyNavigation.SubTelephone))
                .ForMember(dest => dest.Telephone, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Telephone))
-               .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.StartDate)))
-               .ForMember(dest => dest.EndDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.EndDate)))
+               .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => src.StartDate))
+               .ForMember(dest => dest.EndDate, opt => opt?.MapFrom(src => src.EndDate))
              .ReverseMap();
             CreateMap<AddOrUpdatePersonJobRequestDto, PersonJob>()
                  .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
-                 .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.StartDate)))
-                 .ForMember(dest => dest.EndDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.EndDate)))
+                 .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => src.StartDate))
+                 .ForMember(dest => dest.EndDate, opt => opt?.MapFrom(src => src.EndDate))
               .ReverseMap();
             CreateMap<AddOrUpdatePersonImagesRequestDto, PersonImage>()
              .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
@@ -105,14 +105,12 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
            .ReverseMap();
             CreateMap<AddOrUpdatePersonSbsRequestDto, PersonSb>()
                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
-                .ForMember(dest => dest.IdOpcionalCommentarySbs, opt => opt?.MapFrom(src => src.IdOpcionalCommentarySbs == 0 ? null : src.IdOpcionalCommentarySbs))
-                .ForMember(dest => dest.DebtRecordedDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.DebtRecordedDate)))
+                .ForMember(dest => dest.DebtRecordedDate, opt => opt?.MapFrom(src => src.DebtRecordedDate))
                 .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
           .ReverseMap();
             CreateMap<PersonSb, GetPersonSbsResponseDto>()
                  .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
-                 .ForMember(dest => dest.IdOpcionalCommentarySbs, opt => opt?.MapFrom(src => src.IdOpcionalCommentarySbs == 0 ? null : src.IdOpcionalCommentarySbs))
-                 .ForMember(dest => dest.DebtRecordedDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DebtRecordedDate)))
+                 .ForMember(dest => dest.DebtRecordedDate, opt => opt?.MapFrom(src => src.DebtRecordedDate))
                  .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
                  .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdPersonNavigation.Traductions))
              .ReverseMap();

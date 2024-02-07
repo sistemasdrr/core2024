@@ -1709,6 +1709,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
+            entity.Property(e => e.EnglishName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("englishName");
             entity.Property(e => e.Flag1)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("flag1");
@@ -2616,7 +2620,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("address");
             entity.Property(e => e.BirthDate)
-                .HasColumnType("datetime")
+                .HasMaxLength(30)
+                .IsUnicode(false)
                 .HasColumnName("birthDate");
             entity.Property(e => e.BirthPlace)
                 .HasMaxLength(200)
@@ -2714,6 +2719,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.OtherDirecctions)
                 .IsUnicode(false)
                 .HasColumnName("otherDirecctions");
+            entity.Property(e => e.Print).HasColumnName("print");
             entity.Property(e => e.PrintNewsCommentary).HasColumnName("printNewsCommentary");
             entity.Property(e => e.PrivateCommentary)
                 .IsUnicode(false)
@@ -2991,7 +2997,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
             entity.Property(e => e.EndDate)
-                .HasColumnType("datetime")
+                .HasMaxLength(30)
+                .IsUnicode(false)
                 .HasColumnName("endDate");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdPerson).HasColumnName("idPerson");
@@ -3004,7 +3011,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("monthlyIncome");
             entity.Property(e => e.StartDate)
-                .HasColumnType("datetime")
+                .HasMaxLength(30)
+                .IsUnicode(false)
                 .HasColumnName("startDate");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
@@ -3072,7 +3080,8 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("date");
             entity.Property(e => e.DebtRecordedDate)
-                .HasColumnType("datetime")
+                .HasMaxLength(30)
+                .IsUnicode(false)
                 .HasColumnName("debtRecordedDate");
             entity.Property(e => e.DeleteDate)
                 .HasColumnType("datetime")
@@ -3089,7 +3098,6 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.GuaranteesOfferedNc)
                 .HasColumnType("decimal(15, 2)")
                 .HasColumnName("guaranteesOfferedNC");
-            entity.Property(e => e.IdOpcionalCommentarySbs).HasColumnName("idOpcionalCommentarySBS");
             entity.Property(e => e.IdPerson).HasColumnName("idPerson");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
             entity.Property(e => e.LitigationsCommentary)
@@ -3099,13 +3107,12 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("referentOrAnalyst");
+            entity.Property(e => e.SbsCommentary)
+                .IsUnicode(false)
+                .HasColumnName("sbsCommentary");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
-
-            entity.HasOne(d => d.IdOpcionalCommentarySbsNavigation).WithMany(p => p.PersonSbs)
-                .HasForeignKey(d => d.IdOpcionalCommentarySbs)
-                .HasConstraintName("FK__PersonSBS__idOpc__390E6C01");
 
             entity.HasOne(d => d.IdPersonNavigation).WithMany(p => p.PersonSbs)
                 .HasForeignKey(d => d.IdPerson)
