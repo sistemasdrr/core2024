@@ -258,7 +258,13 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             {
                 using (var context = new MySqlContext())
                 {
-                    return await context.MEmpresas.Where(x=>x.Migra==0).Take(10000).ToListAsync();
+                    var empresas = await context.MEmpresas
+                        .Where(x => x.Migra == 0 && x.EmActivo == 1 && x.EmNombre != null).Take(1000)
+                        .ToListAsync();
+
+                    empresas = empresas.Where(x => !x.EmCodigo.StartsWith('Z')).ToList();
+
+                    return empresas;
                 }
             }
             catch (Exception ex)
@@ -266,6 +272,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
                 throw new Exception(ex.Message);
             }
         }
+
 
         public async Task<bool> MigrateEmpresa(string code)
         {

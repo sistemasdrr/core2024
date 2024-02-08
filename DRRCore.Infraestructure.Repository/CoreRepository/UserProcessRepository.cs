@@ -190,9 +190,15 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using (var context = new SqlCoreContext())
                 {
-                    obj.UpdateDate = DateTime.Now;
-                    context.UserProcesses.Update(obj);
-                    await context.SaveChangesAsync();
+                    var usrProcess = new UserProcess();
+                    usrProcess.Id = obj.Id;
+                    usrProcess.IdProcess = obj.IdProcess;
+                    usrProcess.IdUser = obj.IdUser;
+                    usrProcess.UpdateDate = DateTime.Now;
+                    usrProcess.CreationDate = obj.CreationDate;
+                    usrProcess.Enable = obj.Enable;
+                    context.UserProcesses.Update(usrProcess);
+                    context.SaveChanges();
                     return true;
                 }
             }

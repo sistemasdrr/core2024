@@ -35,9 +35,9 @@ namespace DRRCore.Services.ApiCore.Controllers
         }
         [HttpGet()]
         [Route("UserProcess")]
-        public async Task<ActionResult> UserProcess(int id)
+        public async Task<ActionResult> UserProcess(int idEmployee)
         {
-            return Ok(await _userApplication.getProcessByIdEmployee(id));
+            return Ok(await _userApplication.getProcessByIdEmployee(idEmployee));
         }
         [HttpPost()]
         [Route("UpdateProcess")]

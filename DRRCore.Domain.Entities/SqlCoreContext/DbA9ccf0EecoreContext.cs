@@ -3166,6 +3166,12 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
+            entity.Property(e => e.Father).HasColumnName("father");
+            entity.Property(e => e.Icon)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("icon");
+            entity.Property(e => e.Level).HasColumnName("level");
             entity.Property(e => e.Menu)
                 .HasMaxLength(30)
                 .IsUnicode(false)
@@ -3175,9 +3181,17 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("name");
             entity.Property(e => e.OrderItem).HasColumnName("orderItem");
+            entity.Property(e => e.Path)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("path");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.FatherNavigation).WithMany(p => p.InverseFatherNavigation)
+                .HasForeignKey(d => d.Father)
+                .HasConstraintName("FK__Process__father__705EA0EB");
         });
 
         modelBuilder.Entity<Profession>(entity =>

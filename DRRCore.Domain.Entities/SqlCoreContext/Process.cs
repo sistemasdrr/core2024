@@ -21,5 +21,17 @@ public partial class Process
 
     public bool? Enable { get; set; }
 
+    public string? Path { get; set; }
+
+    public string? Icon { get; set; }
+
+    public int? Level { get; set; }
+
+    public int? Father { get; set; }
+
+    public virtual Process? FatherNavigation { get; set; }
+
+    public virtual ICollection<Process> InverseFatherNavigation { get; set; } = new List<Process>();
+
     public virtual ICollection<UserProcess> UserProcesses { get; set; } = new List<UserProcess>();
 }

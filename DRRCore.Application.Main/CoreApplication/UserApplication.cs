@@ -70,6 +70,7 @@ namespace DRRCore.Application.Main.CoreApplication
             var listGerencia = new List<UserProcessDto>();
             var listProduccion = new List<UserProcessDto>();
             var listAdministracion = new List<UserProcessDto>();
+            var listFacturacion= new List<UserProcessDto>();
             try
             {
                 var idUser = await _userLoginDomain.GetIdUserByIdEmployee(idEmployee);
@@ -78,19 +79,115 @@ namespace DRRCore.Application.Main.CoreApplication
                     var permissions = await _userProcessDomain.GetProcessByIdUser((int)idUser);
                     if (permissions != null && permissions.Count != 0)
                     {
-                        foreach (var item in permissions)
+                        var list1 = new List<UserProcess>();
+                        var list2 = new List<UserProcess>();
+                        var list3 = new List<UserProcess>();
+
+                        list1 = permissions.Where(x => x.IdProcessNavigation.Level == 1).ToList();
+                        list2 = permissions.Where(x => x.IdProcessNavigation.Level == 2).ToList();
+                        list3 = permissions.Where(x => x.IdProcessNavigation.Level == 3).ToList();
+                        foreach (var item1 in list1)
                         {
-                            if (item.IdProcessNavigation.Menu == "Gerencia")
+                            if (item1.IdProcessNavigation.Menu == "Gerencia")
                             {
-                                listGerencia.Add(_mapper.Map<UserProcessDto>(item));
+                                var subLevel1 = new List<UserProcessDto>();
+                                var obj1 = _mapper.Map<UserProcessDto>(item1);
+                                foreach (var item2 in list2.Where(x => x.IdProcessNavigation.Menu == "Gerencia"))
+                                {
+                                    if (item2.IdProcessNavigation.Father == item1.IdProcess)
+                                    {
+                                        var subLevel2 = new List<UserProcessDto>();
+                                        var obj2 = _mapper.Map<UserProcessDto>(item2);
+                                        subLevel2.Clear();
+                                        foreach (var item3 in list3.Where(x => x.IdProcessNavigation.Menu == "Gerencia"))
+                                        {
+                                            if (item3.IdProcessNavigation.Father == item2.IdProcess)
+                                            {
+                                                var obj3 = _mapper.Map<UserProcessDto>(item3);
+                                                subLevel2.Add(obj3);
+                                            }
+                                        }
+                                        obj2.SubLevel = subLevel2;
+                                        subLevel1.Add(obj2);
+                                    }
+                                }
+                                obj1.SubLevel = subLevel1;
+                                listGerencia.Add(_mapper.Map<UserProcessDto>(obj1));
                             }
-                            else if (item.IdProcessNavigation.Menu == "Administración")
+                            else if (item1.IdProcessNavigation.Menu == "Administración")
                             {
-                                listAdministracion.Add(_mapper.Map<UserProcessDto>(item));
+                                var subLevel3 = new List<UserProcessDto>();
+                                var obj1 = _mapper.Map<UserProcessDto>(item1);
+                                foreach (var item2 in list2.Where(x => x.IdProcessNavigation.Menu == "Administración"))
+                                {
+                                    if (item2.IdProcessNavigation.Father == item1.IdProcess)
+                                    {
+                                        var subLevel4 = new List<UserProcessDto>();
+                                        var obj2 = _mapper.Map<UserProcessDto>(item2);
+                                        foreach (var item3 in list3.Where(x => x.IdProcessNavigation.Menu == "Administración"))
+                                        {
+                                            if (item3.IdProcessNavigation.Father == item2.IdProcess)
+                                            {
+                                                var obj3 = _mapper.Map<UserProcessDto>(item3);
+                                                subLevel4.Add(obj3);
+                                            }
+                                        }
+                                        obj2.SubLevel = subLevel4;
+                                        subLevel3.Add(obj2);
+                                    }
+                                }
+                                obj1.SubLevel = subLevel3;
+                                listAdministracion.Add(_mapper.Map<UserProcessDto>(obj1));
                             }
-                            else if (item.IdProcessNavigation.Menu == "Producción")
+                            else if (item1.IdProcessNavigation.Menu == "Producción")
                             {
-                                listProduccion.Add(_mapper.Map<UserProcessDto>(item));
+                                var subLevel5 = new List<UserProcessDto>();
+                                var obj1 = _mapper.Map<UserProcessDto>(item1);
+                                foreach (var item2 in list2.Where(x => x.IdProcessNavigation.Menu == "Producción"))
+                                {
+                                    if (item2.IdProcessNavigation.Father == item1.IdProcess)
+                                    {
+                                        var subLevel6 = new List<UserProcessDto>();
+                                        var obj2 = _mapper.Map<UserProcessDto>(item2);
+                                        foreach (var item3 in list3.Where(x => x.IdProcessNavigation.Menu == "Producción"))
+                                        {
+                                            if (item3.IdProcessNavigation.Father == item2.IdProcess)
+                                            {
+                                                var obj3 = _mapper.Map<UserProcessDto>(item3);
+                                                subLevel6.Add(obj3);
+                                            }
+                                        }
+                                        obj2.SubLevel = subLevel6;
+                                        subLevel5.Add(obj2);
+                                    }
+                                }
+                                obj1.SubLevel = subLevel5;
+                                listProduccion.Add(_mapper.Map<UserProcessDto>(obj1));
+                            }
+                            else if (item1.IdProcessNavigation.Menu == "Facturación")
+                            {
+                                var subLevel7 = new List<UserProcessDto>();
+                                var obj1 = _mapper.Map<UserProcessDto>(item1);
+                                foreach (var item2 in list2.Where(x => x.IdProcessNavigation.Menu == "Facturación"))
+                                {
+                                    if (item2.IdProcessNavigation.Father == item1.IdProcess)
+                                    {
+                                        var subLevel8 = new List<UserProcessDto>();
+                                        var obj2 = _mapper.Map<UserProcessDto>(item2);
+                                        foreach (var item3 in list3.Where(x => x.IdProcessNavigation.Menu == "Facturación"))
+                                        {
+                                            if (item3.IdProcessNavigation.Father == item2.IdProcess)
+                                            {
+                                                var obj3 = _mapper.Map<UserProcessDto>(item3);
+                                                subLevel8.Add(obj3);
+                                            }
+                                        }
+                                        obj2.SubLevel = subLevel8;
+                                        subLevel7.Add(obj2);
+                                    }
+                                }
+                                obj1.SubLevel = subLevel7;
+                                listFacturacion.Add(_mapper.Map<UserProcessDto>(obj1));
                             }
                         }
                     }
@@ -102,19 +199,116 @@ namespace DRRCore.Application.Main.CoreApplication
                             permissions = await _userProcessDomain.GetProcessByIdUser((int)idUser);
                             if (permissions != null && permissions.Count != 0)
                             {
-                                foreach (var item in permissions)
+                                var list1 = new List<UserProcess>();
+                                var list2 = new List<UserProcess>();
+                                var list3 = new List<UserProcess>();
+
+                                list1 = permissions.Where(x => x.IdProcessNavigation.Level == 1).ToList();
+                                list2 = permissions.Where(x => x.IdProcessNavigation.Level == 2).ToList();
+                                list3 = permissions.Where(x => x.IdProcessNavigation.Level == 3).ToList();
+                                foreach (var item1 in list1)
                                 {
-                                    if (item.IdProcessNavigation.Menu == "Gerencia")
+                                    if (item1.IdProcessNavigation.Menu == "Gerencia")
                                     {
-                                        listGerencia.Add(_mapper.Map<UserProcessDto>(item));
+                                        var subLevel1 = new List<UserProcessDto>();
+                                        var obj1 = _mapper.Map<UserProcessDto>(item1);
+                                        foreach (var item2 in list2.Where(x => x.IdProcessNavigation.Menu == "Gerencia"))
+                                        {
+                                            if (item2.IdProcessNavigation.Father == item1.IdProcess)
+                                            {
+                                                var subLevel2 = new List<UserProcessDto>();
+                                                var obj2 = _mapper.Map<UserProcessDto>(item2);
+                                                subLevel2.Clear();
+                                                foreach (var item3 in list3.Where(x => x.IdProcessNavigation.Menu == "Gerencia"))
+                                                {
+                                                    if (item3.IdProcessNavigation.Father == item2.IdProcess)
+                                                    {
+                                                        var obj3 = _mapper.Map<UserProcessDto>(item3);
+                                                        subLevel2.Add(obj3);
+                                                    }
+                                                }
+                                                obj2.SubLevel = subLevel2;
+                                                subLevel1.Add(obj2);
+                                            }
+                                        }
+                                        obj1.SubLevel = subLevel1;
+                                        listGerencia.Add(_mapper.Map<UserProcessDto>(obj1));
                                     }
-                                    else if (item.IdProcessNavigation.Menu == "Administración")
+                                    else if (item1.IdProcessNavigation.Menu == "Administración")
                                     {
-                                        listAdministracion.Add(_mapper.Map<UserProcessDto>(item));
+                                        var subLevel3 = new List<UserProcessDto>();
+                                        var obj1 = _mapper.Map<UserProcessDto>(item1);
+                                        foreach (var item2 in list2.Where(x => x.IdProcessNavigation.Menu == "Administración"))
+                                        {
+                                            if (item2.IdProcessNavigation.Father == item1.IdProcess)
+                                            {
+                                                var subLevel4 = new List<UserProcessDto>();
+                                                var obj2 = _mapper.Map<UserProcessDto>(item2);
+                                                foreach (var item3 in list3.Where(x => x.IdProcessNavigation.Menu == "Administración"))
+                                                {
+                                                    if (item3.IdProcessNavigation.Father == item2.IdProcess)
+                                                    {
+                                                        var obj3 = _mapper.Map<UserProcessDto>(item3);
+                                                        subLevel4.Add(obj3);
+                                                    }
+                                                }
+                                                obj2.SubLevel = subLevel4;
+                                                subLevel3.Add(obj2);
+                                            }
+                                        }
+                                        obj1.SubLevel = subLevel3;
+                                        listAdministracion.Add(_mapper.Map<UserProcessDto>(obj1));
                                     }
-                                    else if (item.IdProcessNavigation.Menu == "Producción")
+                                    else if (item1.IdProcessNavigation.Menu == "Producción")
                                     {
-                                        listProduccion.Add(_mapper.Map<UserProcessDto>(item));
+                                        var subLevel5 = new List<UserProcessDto>();
+                                        var obj1 = _mapper.Map<UserProcessDto>(item1);
+                                        subLevel5.Clear();
+                                        foreach (var item2 in list2.Where(x => x.IdProcessNavigation.Menu == "Producción"))
+                                        {
+                                            if (item2.IdProcessNavigation.Father == item1.IdProcess)
+                                            {
+                                                var subLevel6 = new List<UserProcessDto>();
+                                                var obj2 = _mapper.Map<UserProcessDto>(item2);
+                                                foreach (var item3 in list3.Where(x => x.IdProcessNavigation.Menu == "Producción"))
+                                                {
+                                                    if (item3.IdProcessNavigation.Father == item2.IdProcess)
+                                                    {
+                                                        var obj3 = _mapper.Map<UserProcessDto>(item3);
+                                                        subLevel6.Add(obj3);
+                                                    }
+                                                }
+                                                obj2.SubLevel = subLevel6;
+                                                subLevel5.Add(obj2);
+                                            }
+                                        }
+                                        obj1.SubLevel = subLevel5;
+                                        listProduccion.Add(_mapper.Map<UserProcessDto>(obj1));
+                                    }
+                                    else if (item1.IdProcessNavigation.Menu == "Facturación")
+                                    {
+                                        var subLevel7 = new List<UserProcessDto>();
+                                        var obj1 = _mapper.Map<UserProcessDto>(item1);
+                                        foreach (var item2 in list2.Where(x => x.IdProcessNavigation.Menu == "Facturación"))
+                                        {
+                                            if (item2.IdProcessNavigation.Father == item1.IdProcess)
+                                            {
+                                                var subLevel8 = new List<UserProcessDto>();
+                                                var obj2 = _mapper.Map<UserProcessDto>(item2);
+                                                foreach (var item3 in list3.Where(x => x.IdProcessNavigation.Menu == "Facturación"))
+                                                {
+                                                    if (item3.IdProcessNavigation.Father == item2.IdProcess)
+                                                    {
+                                                        var obj3 = _mapper.Map<UserProcessDto>(item3);
+                                                        subLevel8.Add(obj3);
+                                                    }
+                                                }
+                                                obj2.SubLevel = subLevel8;
+                                                subLevel7.Add(obj2);
+                                            }
+                                        }
+                                        obj1.SubLevel = subLevel7;
+                                        listFacturacion.Add(_mapper.Map<UserProcessDto>(obj1));
                                     }
                                 }
                             }
@@ -123,6 +317,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     data.Gerencia = listGerencia;
                     data.Administracion = listAdministracion;
                     data.Produccion = listProduccion;
+                    data.Facturacion = listFacturacion;
                     response.Data = data;
                 }
             }
@@ -188,26 +383,134 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 foreach (var item in obj.Gerencia)
                 {
-                    var process = await _userProcessDomain.GetByIdAsync(item.Id);
-                    if(process != null)
+                    if(item.SubLevel.Count > 0)
                     {
-                        await _userProcessDomain.UpdateAsync(_mapper.Map(item, process));
+                        foreach (var item1 in item.SubLevel)
+                        {
+                            if (item1.SubLevel.Count > 0)
+                            {
+                                foreach (var item2 in item1.SubLevel)
+                                {
+                                    var process2 = await _userProcessDomain.GetByIdAsync(item2.Id);
+                                    if (process2 != null)
+                                    {
+                                        process2 = _mapper.Map(item2, process2);
+                                        await _userProcessDomain.UpdateAsync(process2);
+                                    }
+                                }
+                            }
+                            var process1 = await _userProcessDomain.GetByIdAsync(item1.Id);
+                            if (process1 != null)
+                            {
+                                process1 = _mapper.Map(item1, process1);
+                                await _userProcessDomain.UpdateAsync(process1);
+                            }
+                        }
+                    }
+                    var process = await _userProcessDomain.GetByIdAsync(item.Id);
+                    if (process != null)
+                    {
+                        process = _mapper.Map(item, process);
+                        await _userProcessDomain.UpdateAsync(process);
                     }
                 }
                 foreach (var item in obj.Produccion)
                 {
+                    if (item.SubLevel.Count > 0)
+                    {
+                        foreach (var item1 in item.SubLevel)
+                        {
+                            if (item1.SubLevel.Count > 0)
+                            {
+                                foreach (var item2 in item1.SubLevel)
+                                {
+                                    var process2 = await _userProcessDomain.GetByIdAsync(item2.Id);
+                                    if (process2 != null)
+                                    {
+                                        process2 = _mapper.Map(item2, process2);
+                                        await _userProcessDomain.UpdateAsync(process2);
+                                    }
+                                }
+                            }
+                            var process1 = await _userProcessDomain.GetByIdAsync(item1.Id);
+                            if (process1 != null)
+                            {
+                                process1 = _mapper.Map(item1, process1);
+                                await _userProcessDomain.UpdateAsync(process1);
+                            }
+                        }
+                    }
                     var process = await _userProcessDomain.GetByIdAsync(item.Id);
                     if (process != null)
                     {
-                        await _userProcessDomain.UpdateAsync(_mapper.Map(item, process));
+                        process = _mapper.Map(item, process);
+                        await _userProcessDomain.UpdateAsync(process);
                     }
                 }
                 foreach (var item in obj.Administracion)
                 {
+                    if (item.SubLevel.Count > 0)
+                    {
+                        foreach (var item1 in item.SubLevel)
+                        {
+                            if (item1.SubLevel.Count > 0)
+                            {
+                                foreach (var item2 in item1.SubLevel)
+                                {
+                                    var process2 = await _userProcessDomain.GetByIdAsync(item2.Id);
+                                    if (process2 != null)
+                                    {
+                                        process2 = _mapper.Map(item2, process2);
+                                        await _userProcessDomain.UpdateAsync(process2);
+                                    }
+                                }
+                            }
+                            var process1 = await _userProcessDomain.GetByIdAsync(item1.Id);
+                            if (process1 != null)
+                            {
+                                process1 = _mapper.Map(item1, process1);
+                                await _userProcessDomain.UpdateAsync(process1);
+                            }
+                        }
+                    }
                     var process = await _userProcessDomain.GetByIdAsync(item.Id);
                     if (process != null)
                     {
-                        await _userProcessDomain.UpdateAsync(_mapper.Map(item, process));
+                        process = _mapper.Map(item, process);
+                        await _userProcessDomain.UpdateAsync(process);
+                    }
+                }
+                foreach (var item in obj.Facturacion)
+                {
+                    if (item.SubLevel.Count > 0)
+                    {
+                        foreach (var item1 in item.SubLevel)
+                        {
+                            if (item1.SubLevel.Count > 0)
+                            {
+                                foreach (var item2 in item1.SubLevel)
+                                {
+                                    var process2 = await _userProcessDomain.GetByIdAsync(item2.Id);
+                                    if (process2 != null)
+                                    {
+                                        process2 = _mapper.Map(item2, process2);
+                                        await _userProcessDomain.UpdateAsync(process2);
+                                    }
+                                }
+                            }
+                            var process1 = await _userProcessDomain.GetByIdAsync(item1.Id);
+                            if (process1 != null)
+                            {
+                                process1 = _mapper.Map(item1, process1);
+                                await _userProcessDomain.UpdateAsync(process1);
+                            }
+                        }
+                    }
+                    var process = await _userProcessDomain.GetByIdAsync(item.Id);
+                    if (process != null)
+                    {
+                        process = _mapper.Map(item, process);
+                        await _userProcessDomain.UpdateAsync(process);
                     }
                 }
                 response.Data = true;
