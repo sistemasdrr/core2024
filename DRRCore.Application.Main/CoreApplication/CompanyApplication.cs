@@ -2137,7 +2137,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 string companyCode = company.OldCode ?? "N" + company.Id.ToString("D6");
                 string languageFileName = language == "I" ? "ENG" : "ESP";
                 string fileFormat = "{0}_{1}{2}";
-                string report = language == "I" ? "EIECORE-F8-EMPRESAS" : "EIECORE-F8-EMPRESAS_ES";
+                string report = language == "I" ? "F8-EMPRESAS" : "F8-EMPRESAS-ES";
                 var reportRenderType = StaticFunctions.GetReportRenderType(format);
                 var extension = StaticFunctions.FileExtension(reportRenderType);
                 var contentType = StaticFunctions.GetContentType(reportRenderType);

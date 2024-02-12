@@ -9,26 +9,35 @@ namespace DRRCore.Transversal.Common
     {
         public async Task<byte[]> GenerateReportAsync(string reportName, ReportRenderType render, Dictionary<string, string> parameters)
         {
-            ReportResponse result = null;          
-
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            Encoding.GetEncoding("windows-1252");
-           
-            return new ServerReport(new ReportSettings()
+            try
             {
-                ReportServer = "https://sql5090.site4now.net/ReportServer",
-                Credential = new NetworkCredential("admindrrreports-001", "drrti2023"),
 
-            }).Execute(new ReportRequest
+                ReportResponse result = null;
+
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                Encoding.GetEncoding("windows-1252");
+
+                return new ServerReport(new ReportSettings()
+                {
+                    ReportServer = "https://sql5090.site4now.net/ReportServer",
+                    Credential = new NetworkCredential("admindrrreports-001", "drrti2023"),
+
+                }).Execute(new ReportRequest
+                {
+                    Name = reportName,
+                    Path = "/admindrrreports-001/" + reportName,
+                    RenderType = render,
+                    ExecuteType = ReportExecuteType.Export,
+                    Reset = true,
+                    Parameters = parameters
+
+                }).Data.Stream;
+            }
+            catch (Exception ex)
             {
-                Name = reportName,
-                Path = "/admindrrreports-001/" + reportName,
-                RenderType = render,
-                ExecuteType = ReportExecuteType.Export,
-                Reset = true,
-                Parameters = parameters
-
-            }).Data.Stream;
+                var xx = ex.InnerException; 
+                throw new Exception(ex.Message, ex);
+            }
         }
     }
 
