@@ -24,5 +24,11 @@ namespace DRRCore.Services.Migration.Controllers
         {
             return Ok(await _migraUser.MigratePerson());
         }
+        [HttpPost()]
+        [Route("abonados")]
+        public async Task<ActionResult> MigrarAbonados()
+        {
+            return Ok(await _migraUser.MigrateSubscriber());
+        }
     }
 }

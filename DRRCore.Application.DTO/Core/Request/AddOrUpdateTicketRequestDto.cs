@@ -24,11 +24,11 @@
 
         public string About { get; set; } = null!;
 
-        public string? OrderDate { get; set; }
+        public DateTime OrderDate { get; set; }
 
-        public string? ExpireDate { get; set; }
+        public DateTime ExpireDate { get; set; }
 
-        public string? RealExpireDate { get; set; }
+        public DateTime RealExpireDate { get; set; }
 
         public int? IdContinent { get; set; }
 

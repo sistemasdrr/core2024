@@ -27,7 +27,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return false;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -45,7 +45,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return false;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -66,7 +66,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return false;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -92,7 +92,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Ticket>();
+                throw new Exception(ex.Message);
             }
         }
 
@@ -141,7 +141,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Ticket>();
+                throw new Exception(ex.Message);
             }
         }
 
@@ -169,7 +169,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Ticket>();
+                throw new Exception(ex.Message);
             }
         }
 
@@ -184,7 +184,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return null;
+                throw new Exception(ex.Message);
             }
         }
 
@@ -203,7 +203,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Ticket>();
+                throw new Exception(ex.Message);
             }
         }
 
@@ -217,7 +217,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new List<Ticket>();
+                throw new Exception(ex.Message);
             }
         }
 
@@ -233,7 +233,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new TicketQuery();
+                throw new Exception(ex.Message);
             }
         }
 
@@ -255,7 +255,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return false;
+                throw new Exception(ex.Message);
             }
         }
 

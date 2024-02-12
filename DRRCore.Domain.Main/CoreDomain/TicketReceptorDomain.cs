@@ -36,9 +36,9 @@ namespace DRRCore.Domain.Main.CoreDomain
             throw new NotImplementedException();
         }
 
-        public async Task<TicketReceptor> GetReceptorDoubleDate()
+        public async Task<TicketReceptor> GetReceptorDoubleDate(int idCountry)
         {
-           return await _repository.GetReceptorDoubleDate();
+           return await _repository.GetReceptorDoubleDate(idCountry);
         }
 
         public async Task<TicketReceptor> GetReceptorInDate(int idCountry)

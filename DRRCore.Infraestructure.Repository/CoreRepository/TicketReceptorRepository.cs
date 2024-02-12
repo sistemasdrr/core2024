@@ -83,12 +83,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
-        public async Task<TicketReceptor> GetReceptorDoubleDate()
+        public async Task<TicketReceptor> GetReceptorDoubleDate(int idCountry)
         {
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.TicketReceptors.Where(x => x.IsDobleFecha == true).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
+                return await context.TicketReceptors.Where(x => x.IsDobleFecha == true && x.IdCountry==idCountry).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {

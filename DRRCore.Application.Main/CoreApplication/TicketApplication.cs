@@ -28,6 +28,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IEmailApplication _emailApplication;
         private readonly IReportingDownload _reportingDownload;
         private readonly IPersonDomain _personDomain;
+        private readonly ISubscriberDomain _subscriberDomain;
         private IMapper _mapper;
         private ILogger _logger;
        
@@ -35,7 +36,7 @@ namespace DRRCore.Application.Main.CoreApplication
             ITCuponDomain tCuponDomain,ITicketDomain ticketDomain,
             ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain,
             ICompanyDomain companyDomain,IMapper mapper, ILogger logger,IReportingDownload reportingDownload,
-            IEmailApplication emailApplication,IUserLoginDomain userLoginDomain,IPersonDomain personDomain)
+            IEmailApplication emailApplication,IUserLoginDomain userLoginDomain,IPersonDomain personDomain,ISubscriberDomain subscriberDomain)
         {
             _numerationDomain = numerationDomain;
             _ticketDomain = ticketDomain;
@@ -48,6 +49,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _userLoginDomain = userLoginDomain;
             _emailApplication = emailApplication;
             _reportingDownload = reportingDownload;
+            _subscriberDomain = subscriberDomain;
             _personDomain= personDomain;
         }
 
@@ -74,7 +76,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     });
                     newTicket.TicketAssignation = new TicketAssignation
                     {
-                        IdEmployee = await GetReceptorDefault(request.IdCountry??0, request.ReportType)
+                        IdEmployee = await GetReceptorDefault(request.IdCountry??0, request.ReportType,request.IdSubscriber)
                     };
                   
                     if ( await _ticketDomain.AddAsync(newTicket))
@@ -137,21 +139,26 @@ namespace DRRCore.Application.Main.CoreApplication
 
         }
 
-        private async Task<int> GetReceptorDefault(int idCountry, string reportType)
+        private async Task<int?> GetReceptorDefault(int idCountry, string reportType,int? idSubscriber)
         {
             var getReceptor=new TicketReceptor();
+            var subscriber = await _subscriberDomain.GetSubscriberById(idSubscriber??0);
+            if((subscriber != null && subscriber.Code=="0107" )|| reportType=="BC")
+            {
+                return 42;
+            }
             if (reportType == "DF")
             {
-                getReceptor = await _ticketReceptorDomain.GetReceptorDoubleDate();
-                return getReceptor.IdEmployee ?? 0;
+                getReceptor = await _ticketReceptorDomain.GetReceptorDoubleDate(idCountry);
+                return getReceptor.IdEmployee ?? null;
             }
             if(reportType == "EF")
             {
                 getReceptor = await _ticketReceptorDomain.GetReceptorInDate(idCountry);
-                return getReceptor.IdEmployee ?? 0;
+                return getReceptor.IdEmployee ?? null;
             }
             getReceptor = await _ticketReceptorDomain.GetReceptorOtherCase(idCountry);
-            return getReceptor.IdEmployee ?? 0;
+            return getReceptor.IdEmployee ?? null;
         }
 
         public async Task<Response<bool>> DeleteTicket(int id)

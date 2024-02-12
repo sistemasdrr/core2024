@@ -90,36 +90,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                     int idReputacion = 0;
                     if (reputacion != null)
                     {
-                        idReputacion = reputacion.RcCodigo == "EAD" ? 1 : reputacion.RcCodigo == "ECC" ? 25 : reputacion.RcCodigo == "EDJ" ? 33 :
-                            reputacion.RcCodigo == "EJA" ? 34 : reputacion.RcCodigo == "ELQ" ? 39 : reputacion.RcCodigo == "EMO" ? 42 :
-                            reputacion.RcCodigo == "ENC" ? 4 : reputacion.RcCodigo == "ERC" ? 49 : reputacion.RcCodigo == "EXX" ? 2 :
-                            reputacion.RcCodigo == "PA1" ? 20 : reputacion.RcCodigo == "PCC" ? 10 : reputacion.RcCodigo == "PDJ" ? 11 :
-                            reputacion.RcCodigo == "PEF" ? 12 : reputacion.RcCodigo == "PRE" ? 13 : reputacion.RcCodigo == "PEX" ? 14 :
-                            reputacion.RcCodigo == "PQL" ? 24 : reputacion.RcCodigo == "PIT" ? 26 : reputacion.RcCodigo == "PNC" ? 17 :
-                            reputacion.RcCodigo == "PNN" ? 18 : reputacion.RcCodigo == "PTC" ? 19 : reputacion.RcCodigo == "PVC" ? 22 :
-                            reputacion.RcCodigo == "PBC" ? 21 : reputacion.RcCodigo == "PNX" ? 29 : reputacion.RcCodigo == "EBC" ? 6 :
-                            reputacion.RcCodigo == "ERN" ? 58 : reputacion.RcCodigo == "PXX" ? 15 : reputacion.RcCodigo == "ENR" ? 9 :
-                            reputacion.RcCodigo == "ELD" ? 37 : reputacion.RcCodigo == "PLB" ? 16 : reputacion.RcCodigo == "EDI" ? 3 :
-                            reputacion.RcCodigo == "PRP" ? 31 : reputacion.RcCodigo == "EAE" ? 32 : reputacion.RcCodigo == "EMR" ? 87 :
-                            reputacion.RcCodigo == "ETF" ? 23 : reputacion.RcCodigo == "PMR" ? 46 : reputacion.RcCodigo == "PTF" ? 47 :
-                            reputacion.RcCodigo == "ELC" ? 8 : reputacion.RcCodigo == "PLC" ? 38 : reputacion.RcCodigo == "ETR" ? 88 :
-                            reputacion.RcCodigo == "PTR" ? 55 : reputacion.RcCodigo == "PVP" ? 63 : reputacion.RcCodigo == "PAS" ? 64 :
-                            reputacion.RcCodigo == "PBS" ? 65 : reputacion.RcCodigo == "PCS" ? 66 : reputacion.RcCodigo == "PDS" ? 70 :
-                            reputacion.RcCodigo == "PSS" ? 71 : reputacion.RcCodigo == "PRD" ? 48 : reputacion.RcCodigo == "EAA" ? 7 :
-                            reputacion.RcCodigo == "PSC" ? 50 : reputacion.RcCodigo == "PBR" ? 51 : reputacion.RcCodigo == "PIA" ? 52 :
-                            reputacion.RcCodigo == "PDC" ? 53 : reputacion.RcCodigo == "PDM" ? 54 : reputacion.RcCodigo == "PRM" ? 35 :
-                            reputacion.RcCodigo == "PHE" ? 56 : reputacion.RcCodigo == "PCP" ? 57 : reputacion.RcCodigo == "ERD" ? 28 :
-                            reputacion.RcCodigo == "ENT" ? 27 : reputacion.RcCodigo == "ERF" ? 30 : reputacion.RcCodigo == "EBM" ? 5 :
-                            reputacion.RcCodigo == "EMN" ? 59 : reputacion.RcCodigo == "PCT" ? 36 : reputacion.RcCodigo == "PMC" ? 40 :
-                            reputacion.RcCodigo == "PCV" ? 41 : reputacion.RcCodigo == "PGA" ? 43 : reputacion.RcCodigo == "EMP" ? 60 :
-                            reputacion.RcCodigo == "EMB" ? 61 : reputacion.RcCodigo == "ENX" ? 62 : reputacion.RcCodigo == "PIR" ? 44 :
-                            reputacion.RcCodigo == "PDF" ? 45 : reputacion.RcCodigo == "PDZ" ? 72 : reputacion.RcCodigo == "PPJ" ? 73 :
-                            reputacion.RcCodigo == "PMZ" ? 74 : reputacion.RcCodigo == "PRS" ? 75 : reputacion.RcCodigo == "ESC" ? 67 :
-                            reputacion.RcCodigo == "ESO" ? 68 : reputacion.RcCodigo == "ECP" ? 69 : reputacion.RcCodigo == "ECN" ? 76 :
-                            reputacion.RcCodigo == "EQC" ? 77 : reputacion.RcCodigo == "EQD" ? 78 : reputacion.RcCodigo == "EQO" ? 79 :
-                            reputacion.RcCodigo == "EAR" ? 80 : reputacion.RcCodigo == "EFS" ? 81 : reputacion.RcCodigo == "ETP" ? 82 :
-                            reputacion.RcCodigo == "ETC" ? 83 : reputacion.RcCodigo == "EAQ" ? 84 : reputacion.RcCodigo == "ETO" ? 85 :
-                            reputacion.RcCodigo == "EDF" ? 86 : 0;
+                        idReputacion = ObtenerReputacion(reputacion.RcCodigo);                       
                     }
                     try
                     {
@@ -132,132 +103,10 @@ namespace DRRCore.Application.Main.MigrationApplication
                             Language = Dictionary.LanguageMigra[empresa.IdiCodigo.Value],
                             TypeRegister = empresa.EmTipper == 0 ? "PJ" : "PN",
                             YearFundation = empresa.EmAnofun,
-                            Quality = empresa.CalCodigo == "1" ? "A" : empresa.CalCodigo == "2" ? "A" : empresa.CalCodigo == "3" ? "B" :
-                            empresa.CalCodigo == "4" ? "B" : empresa.CalCodigo == "5" ? "C" : empresa.CalCodigo == "6" ? "C" :
-                            empresa.CalCodigo == "7" ? "D" : "",
-                            IdLegalPersonType = empresa.JuCodigo == "000" ? 376 : empresa.JuCodigo == "001" ? 280 :
-                            empresa.JuCodigo == "002" ? 288 : empresa.JuCodigo == "003" ? 289 : empresa.JuCodigo == "005" ? 290 :
-                            empresa.JuCodigo == "006" ? 291 : empresa.JuCodigo == "007" ? 292 : empresa.JuCodigo == "009" ? 294 :
-                            empresa.JuCodigo == "010" ? 297 : empresa.JuCodigo == "011" ? 298 : empresa.JuCodigo == "012" ? 299 :
-                            empresa.JuCodigo == "013" ? 302 : empresa.JuCodigo == "014" ? 301 : empresa.JuCodigo == "016" ? 305 :
-                            empresa.JuCodigo == "017" ? 306 : empresa.JuCodigo == "018" ? 307 : empresa.JuCodigo == "020" ? 314 :
-                            empresa.JuCodigo == "022" ? 310 : empresa.JuCodigo == "023" ? 322 : empresa.JuCodigo == "024" ? 329 :
-                            empresa.JuCodigo == "025" ? 325 : empresa.JuCodigo == "026" ? 326 : empresa.JuCodigo == "027" ? 327 :
-                            empresa.JuCodigo == "028" ? 328 : empresa.JuCodigo == "030" ? 342 : empresa.JuCodigo == "031" ? 343 :
-                            empresa.JuCodigo == "032" ? 346 : empresa.JuCodigo == "033" ? 347 : empresa.JuCodigo == "034" ? 349 :
-                            empresa.JuCodigo == "035" ? 350 : empresa.JuCodigo == "037" ? 352 : empresa.JuCodigo == "039" ? 353 :
-                            empresa.JuCodigo == "040" ? 354 : empresa.JuCodigo == "041" ? 355 : empresa.JuCodigo == "043" ? 358 :
-                            empresa.JuCodigo == "044" ? 360 : empresa.JuCodigo == "045" ? 362 : empresa.JuCodigo == "046" ? 364 :
-                            empresa.JuCodigo == "047" ? 371 : empresa.JuCodigo == "048" ? 373 : empresa.JuCodigo == "049" ? 374 :
-                            empresa.JuCodigo == "050" ? 377 : empresa.JuCodigo == "051" ? 381 : empresa.JuCodigo == "052" ? 382 :
-                            empresa.JuCodigo == "053" ? 383 : empresa.JuCodigo == "055" ? 384 : empresa.JuCodigo == "056" ? 385 :
-                            empresa.JuCodigo == "058" ? 391 : empresa.JuCodigo == "059" ? 396 : empresa.JuCodigo == "060" ? 397 :
-                            empresa.JuCodigo == "061" ? 406 : empresa.JuCodigo == "062" ? 408 : empresa.JuCodigo == "063" ? 409 :
-                            empresa.JuCodigo == "064" ? 411 : empresa.JuCodigo == "065" ? 414 : empresa.JuCodigo == "067" ? 286 :
-                            empresa.JuCodigo == "068" ? 413 : empresa.JuCodigo == "069" ? 293 : empresa.JuCodigo == "070" ? 361 :
-                            empresa.JuCodigo == "072" ? 339 : empresa.JuCodigo == "074" ? 304 : empresa.JuCodigo == "075" ? 300 :
-                            empresa.JuCodigo == "076" ? 379 : empresa.JuCodigo == "077" ? 283 : empresa.JuCodigo == "078" ? 394 :
-                            empresa.JuCodigo == "079" ? 285 : empresa.JuCodigo == "080" ? 407 : empresa.JuCodigo == "081" ? 336 :
-                            empresa.JuCodigo == "082" ? 296 : empresa.JuCodigo == "083" ? 303 : empresa.JuCodigo == "084" ? 281 :
-                            empresa.JuCodigo == "085" ? 395 : empresa.JuCodigo == "086" ? 405 : empresa.JuCodigo == "087" ? 393 :
-                            empresa.JuCodigo == "088" ? 334 : empresa.JuCodigo == "089" ? 333 : empresa.JuCodigo == "090" ? 375 :
-                            empresa.JuCodigo == "091" ? 388 : empresa.JuCodigo == "092" ? 311 : empresa.JuCodigo == "093" ? 351 :
-                            empresa.JuCodigo == "095" ? 324 : empresa.JuCodigo == "096" ? 357 : empresa.JuCodigo == "097" ? 338 :
-                            empresa.JuCodigo == "098" ? 282 : empresa.JuCodigo == "099" ? 378 : empresa.JuCodigo == "100" ? 348 :
-                            empresa.JuCodigo == "101" ? 404 : empresa.JuCodigo == "102" ? 320 : empresa.JuCodigo == "103" ? 368 :
-                            empresa.JuCodigo == "104" ? 380 : empresa.JuCodigo == "105" ? 369 : empresa.JuCodigo == "106" ? 359 :
-                            empresa.JuCodigo == "107" ? 389 : empresa.JuCodigo == "108" ? 315 : empresa.JuCodigo == "109" ? 370 :
-                            empresa.JuCodigo == "110" ? 392 : empresa.JuCodigo == "111" ? 284 : empresa.JuCodigo == "112" ? 366 :
-                            empresa.JuCodigo == "113" ? 335 : empresa.JuCodigo == "114" ? 402 : empresa.JuCodigo == "115" ? 321 :
-                            empresa.JuCodigo == "116" ? 416 : empresa.JuCodigo == "117" ? 417 : empresa.JuCodigo == "118" ? 337 :
-                            empresa.JuCodigo == "119" ? 400 : empresa.JuCodigo == "120" ? 390 : empresa.JuCodigo == "121" ? 365 :
-                            empresa.JuCodigo == "122" ? 367 : empresa.JuCodigo == "123" ? 403 : empresa.JuCodigo == "124" ? 345 :
-                            empresa.JuCodigo == "125" ? 331 : empresa.JuCodigo == "126" ? 410 : empresa.JuCodigo == "127" ? 312 :
-                            empresa.JuCodigo == "128" ? 363 : empresa.JuCodigo == "129" ? 412 : empresa.JuCodigo == "130" ? 317 :
-                            empresa.JuCodigo == "131" ? 341 : empresa.JuCodigo == "132" ? 330 : empresa.JuCodigo == "133" ? 287 :
-                            empresa.JuCodigo == "134" ? 344 : empresa.JuCodigo == "135" ? 279 : empresa.JuCodigo == "136" ? 313 :
-                            empresa.JuCodigo == "137" ? 318 : empresa.JuCodigo == "138" ? 356 : empresa.JuCodigo == "139" ? 316 :
-                            empresa.JuCodigo == "140" ? 323 : empresa.JuCodigo == "141" ? 401 : empresa.JuCodigo == "142" ? 399 :
-                            empresa.JuCodigo == "143" ? 332 : empresa.JuCodigo == "144" ? 340 : empresa.JuCodigo == "145" ? 372 :
-                            empresa.JuCodigo == "146" ? 387 : empresa.JuCodigo == "147" ? 309 : empresa.JuCodigo == "148" ? 415 :
-                            empresa.JuCodigo == "149" ? 319 : empresa.JuCodigo == "150" ? 295 : empresa.JuCodigo == "151" ? 398 :
-                            empresa.JuCodigo == "152" ? 308 : empresa.JuCodigo == "153" ? 386 : null,
+                            Quality = ObtenerCalidad(empresa.CalCodigo),                           
+                            IdLegalPersonType = ObtenerPersoneriaLegal(empresa.JuCodigo),
                             TaxTypeCode = empresa.EmRegtri,
-                            IdCountry = empresa.PaiCodigo == "001" ? 11 : empresa.PaiCodigo == "002" ? 29 : empresa.PaiCodigo == "003" ? 34 :
-                            empresa.PaiCodigo == "004" ? 54 : empresa.PaiCodigo == "005" ? 57 : empresa.PaiCodigo == "006" ? 49 :
-                            empresa.PaiCodigo == "007" ? 70 : empresa.PaiCodigo == "008" ? 72 : empresa.PaiCodigo == "009" ? 100 :
-                            empresa.PaiCodigo == "010" ? 108 : empresa.PaiCodigo == "012" ? 168 : empresa.PaiCodigo == "013" ? 179 :
-                            empresa.PaiCodigo == "014" ? 181 : empresa.PaiCodigo == "015" ? 182 : empresa.PaiCodigo == "016" ? 187 :
-                            empresa.PaiCodigo == "017" ? 69 : empresa.PaiCodigo == "018" ? 237 : empresa.PaiCodigo == "019" ? 250 :
-                            empresa.PaiCodigo == "020" ? 249 : empresa.PaiCodigo == "021" ? 253 : empresa.PaiCodigo == "022" ? 105 :
-                            empresa.PaiCodigo == "023" ? 147 : empresa.PaiCodigo == "024" ? 98 : empresa.PaiCodigo == "025" ? 104 :
-                            empresa.PaiCodigo == "026" ? 46 : empresa.PaiCodigo == "027" ? 60 : empresa.PaiCodigo == "029" ? 256 :
-                            empresa.PaiCodigo == "030" ? 255 : empresa.PaiCodigo == "031" ? 43 : empresa.PaiCodigo == "032" ? 25 :
-                            empresa.PaiCodigo == "033" ? 18 : empresa.PaiCodigo == "034" ? 120 : empresa.PaiCodigo == "035" ? 183 :
-                            empresa.PaiCodigo == "036" ? 92 : empresa.PaiCodigo == "037" ? 15 : empresa.PaiCodigo == "038" ? 21 :
-                            empresa.PaiCodigo == "039" ? 151 : empresa.PaiCodigo == "040" ? 59 : empresa.PaiCodigo == "041" ? 220 :
-                            empresa.PaiCodigo == "042" ? 186 : empresa.PaiCodigo == "043" ? 13 : empresa.PaiCodigo == "044" ? 16 :
-                            empresa.PaiCodigo == "045" ? 24 : empresa.PaiCodigo == "046" ? 27 : empresa.PaiCodigo == "047" ? 68 :
-                            empresa.PaiCodigo == "048" ? 84 : empresa.PaiCodigo == "049" ? 97 : empresa.PaiCodigo == "064" ? 123 :
-                            empresa.PaiCodigo == "051" ? 109 : empresa.PaiCodigo == "052" ? 119 : empresa.PaiCodigo == "053" ? 121 :
-                            empresa.PaiCodigo == "054" ? 218 : empresa.PaiCodigo == "055" ? 196 : empresa.PaiCodigo == "056" ? 197 :
-                            empresa.PaiCodigo == "057" ? 198 : empresa.PaiCodigo == "058" ? 224 : empresa.PaiCodigo == "059" ? 8 :
-                            empresa.PaiCodigo == "060" ? 149 : empresa.PaiCodigo == "061" ? 50 : empresa.PaiCodigo == "062" ? 229 :
-                            empresa.PaiCodigo == "063" ? 10 : empresa.PaiCodigo == "065" ? 65 : empresa.PaiCodigo == "066" ? 239 :
-                            empresa.PaiCodigo == "067" ? 205 : empresa.PaiCodigo == "068" ? 83 : empresa.PaiCodigo == "069" ? 175 :
-                            empresa.PaiCodigo == "070" ? 62 : empresa.PaiCodigo == "071" ? 191 : empresa.PaiCodigo == "072" ? 245 :
-                            empresa.PaiCodigo == "073" ? 247 : empresa.PaiCodigo == "074" ? 200 : empresa.PaiCodigo == "076" ? 156 :
-                            empresa.PaiCodigo == "078" ? 194 : empresa.PaiCodigo == "080" ? 241 : empresa.PaiCodigo == "081" ? 265 :
-                            empresa.PaiCodigo == "079" ? 264 : empresa.PaiCodigo == "083" ? 227 : empresa.PaiCodigo == "084" ? 226 :
-                            empresa.PaiCodigo == "085" ? 131 : empresa.PaiCodigo == "086" ? 112 : empresa.PaiCodigo == "087" ? 118 :
-                            empresa.PaiCodigo == "088" ? 185 : empresa.PaiCodigo == "089" ? 137 : empresa.PaiCodigo == "090" ? 165 :
-                            empresa.PaiCodigo == "091" ? 94 : empresa.PaiCodigo == "092" ? 142 : empresa.PaiCodigo == "093" ? 243 :
-                            empresa.PaiCodigo == "095" ? 246 : empresa.PaiCodigo == "096" ? 124 : empresa.PaiCodigo == "097" ? 4 :
-                            empresa.PaiCodigo == "099" ? 91 : empresa.PaiCodigo == "100" ? 95 : empresa.PaiCodigo == "101" ? 266 :
-                            empresa.PaiCodigo == "102" ? 210 : empresa.PaiCodigo == "103" ? 136 : empresa.PaiCodigo == "104" ? 177 :
-                            empresa.PaiCodigo == "105" ? 7 : empresa.PaiCodigo == "106" ? 26 : empresa.PaiCodigo == "107" ? 32 :
-                            empresa.PaiCodigo == "108" ? 38 : empresa.PaiCodigo == "109" ? 39 : empresa.PaiCodigo == "110" ? 42 :
-                            empresa.PaiCodigo == "111" ? 47 : empresa.PaiCodigo == "113" ? 48 : empresa.PaiCodigo == "114" ? 55 :
-                            empresa.PaiCodigo == "115" ? 267 : empresa.PaiCodigo == "116" ? 71 : empresa.PaiCodigo == "117" ? 102 :
-                            empresa.PaiCodigo == "118" ? 75 : empresa.PaiCodigo == "119" ? 78 : empresa.PaiCodigo == "120" ? 88 :
-                            empresa.PaiCodigo == "121" ? 90 : empresa.PaiCodigo == "122" ? 93 : empresa.PaiCodigo == "123" ? 103 :
-                            empresa.PaiCodigo == "124" ? 125 : empresa.PaiCodigo == "125" ? 134 : empresa.PaiCodigo == "126" ? 135 :
-                            empresa.PaiCodigo == "127" ? 140 : empresa.PaiCodigo == "128" ? 141 : empresa.PaiCodigo == "129" ? 144 :
-                            empresa.PaiCodigo == "130" ? 148 : empresa.PaiCodigo == "132" ? 157 : empresa.PaiCodigo == "133" ? 158 :
-                            empresa.PaiCodigo == "134" ? 160 : empresa.PaiCodigo == "135" ? 168 : empresa.PaiCodigo == "136" ? 192 :
-                            empresa.PaiCodigo == "137" ? 259 : empresa.PaiCodigo == "139" ? 206 : empresa.PaiCodigo == "140" ? 209 :
-                            empresa.PaiCodigo == "141" ? 215 : empresa.PaiCodigo == "142" ? 223 : empresa.PaiCodigo == "143" ? 77 :
-                            empresa.PaiCodigo == "145" ? 234 : empresa.PaiCodigo == "147" ? 244 : empresa.PaiCodigo == "148" ? 268 :
-                            empresa.PaiCodigo == "149" ? 261 : empresa.PaiCodigo == "150" ? 262 : empresa.PaiCodigo == "152" ? 1 :
-                            empresa.PaiCodigo == "153" ? 12 : empresa.PaiCodigo == "154" ? 17 : empresa.PaiCodigo == "155" ? 19 :
-                            empresa.PaiCodigo == "156" ? 20 : empresa.PaiCodigo == "157" ? 28 : empresa.PaiCodigo == "158" ? 36 :
-                            empresa.PaiCodigo == "159" ? 281 : empresa.PaiCodigo == "160" ? 41 : empresa.PaiCodigo == "161" ? 61 :
-                            empresa.PaiCodigo == "162" ? 113 : empresa.PaiCodigo == "163" ? 114 : empresa.PaiCodigo == "164" ? 115 :
-                            empresa.PaiCodigo == "166" ? 129 : empresa.PaiCodigo == "167" ? 128 : empresa.PaiCodigo == "168" ? 130 :
-                            empresa.PaiCodigo == "169" ? 154 : empresa.PaiCodigo == "170" ? 162 : empresa.PaiCodigo == "171" ? 176 :
-                            empresa.PaiCodigo == "172" ? 222 : empresa.PaiCodigo == "173" ? 188 : empresa.PaiCodigo == "174" ? 204 :
-                            empresa.PaiCodigo == "175" ? 221 : empresa.PaiCodigo == "176" ? 228 : empresa.PaiCodigo == "177" ? 230 :
-                            empresa.PaiCodigo == "178" ? 232 : empresa.PaiCodigo == "179" ? 240 : empresa.PaiCodigo == "181" ? 251 :
-                            empresa.PaiCodigo == "182" ? 254 : empresa.PaiCodigo == "183" ? 260 : empresa.PaiCodigo == "185" ? 3 :
-                            empresa.PaiCodigo == "186" ? 6 : empresa.PaiCodigo == "187" ? 31 : empresa.PaiCodigo == "188" ? 37 :
-                            empresa.PaiCodigo == "189" ? 23 : empresa.PaiCodigo == "190" ? 58 : empresa.PaiCodigo == "191" ? 76 :
-                            empresa.PaiCodigo == "192" ? 80 : empresa.PaiCodigo == "193" ? 110 : empresa.PaiCodigo == "194" ? 111 :
-                            empresa.PaiCodigo == "195" ? 116 : empresa.PaiCodigo == "197" ? 138 : empresa.PaiCodigo == "198" ? 172 :
-                            empresa.PaiCodigo == "199" ? 145 : empresa.PaiCodigo == "200" ? 152 : empresa.PaiCodigo == "201" ? 153 :
-                            empresa.PaiCodigo == "202" ? 190 : empresa.PaiCodigo == "203" ? 202 : empresa.PaiCodigo == "204" ? 155 :
-                            empresa.PaiCodigo == "205" ? 212 : empresa.PaiCodigo == "206" ? 213 : empresa.PaiCodigo == "208" ? 214 :
-                            empresa.PaiCodigo == "209" ? 252 : empresa.PaiCodigo == "210" ? 82 : empresa.PaiCodigo == "211" ? 161 :
-                            empresa.PaiCodigo == "212" ? 146 : empresa.PaiCodigo == "213" ? 99 : empresa.PaiCodigo == "214" ? 201 :
-                            empresa.PaiCodigo == "215" ? 178 : empresa.PaiCodigo == "216" ? 236 : empresa.PaiCodigo == "217" ? 86 :
-                            empresa.PaiCodigo == "221" ? 171 : empresa.PaiCodigo == "222" ? 282 : empresa.PaiCodigo == "219" ? 85 :
-                            empresa.PaiCodigo == "224" ? 117 : empresa.PaiCodigo == "220" ? 143 : empresa.PaiCodigo == "225" ? 139 :
-                            empresa.PaiCodigo == "011" ? 169 : empresa.PaiCodigo == "028" ? 164 : empresa.PaiCodigo == "207" ? 283 :
-                            empresa.PaiCodigo == "218" ? 284 : empresa.PaiCodigo == "223" ? 285 : empresa.PaiCodigo == "226" ? 63 :
-                            empresa.PaiCodigo == "227" ? 180 : empresa.PaiCodigo == "228" ? 286 : empresa.PaiCodigo == "229" ? 143 :
-                            empresa.PaiCodigo == "230" ? 208 : empresa.PaiCodigo == "231" ? 64 : empresa.PaiCodigo == "232" ? 263 :
-                            empresa.PaiCodigo == "233" ? 60 : empresa.PaiCodigo == "234" ? 30 : empresa.PaiCodigo == "235" ? 217 :
-                            empresa.PaiCodigo == "236" ? 231 : empresa.PaiCodigo == "237" ? 30 : empresa.PaiCodigo == "238" ? 30 :
-                            empresa.PaiCodigo == "239" ? 18 : empresa.PaiCodigo == "240" ? 207 : empresa.PaiCodigo == "241" ? 155 : null,
+                            IdCountry = ObtenerCodigoPais(empresa.PaiCodigo),    
                             IdLegalRegisterSituation = empresa.SitCodigo == "03" ? 4 : empresa.SitCodigo == "04" ? 3 :
                             empresa.SitCodigo == "05" ? 16 : empresa.SitCodigo == "02" ? 1 : empresa.SitCodigo == "07" ? 2 :
                             empresa.SitCodigo == "06" ? 13 : empresa.SitCodigo == "08" ? 5 : empresa.SitCodigo == "09" ? 14 :
@@ -1481,6 +1330,177 @@ namespace DRRCore.Application.Main.MigrationApplication
             return true;
         }
 
+        private int? ObtenerCodigoPais(string? PaiCodigo)
+        {
+            return PaiCodigo == "001" ? 11 : PaiCodigo == "002" ? 29 : PaiCodigo == "003" ? 34 :
+            PaiCodigo == "004" ? 54 : PaiCodigo == "005" ? 57 : PaiCodigo == "006" ? 49 :
+            PaiCodigo == "007" ? 70 : PaiCodigo == "008" ? 72 : PaiCodigo == "009" ? 100 :
+            PaiCodigo == "010" ? 108 : PaiCodigo == "012" ? 168 : PaiCodigo == "013" ? 179 :
+            PaiCodigo == "014" ? 181 : PaiCodigo == "015" ? 182 : PaiCodigo == "016" ? 187 :
+            PaiCodigo == "017" ? 69 : PaiCodigo == "018" ? 237 : PaiCodigo == "019" ? 250 :
+            PaiCodigo == "020" ? 249 : PaiCodigo == "021" ? 253 : PaiCodigo == "022" ? 105 :
+            PaiCodigo == "023" ? 147 : PaiCodigo == "024" ? 98 : PaiCodigo == "025" ? 104 :
+            PaiCodigo == "026" ? 46 : PaiCodigo == "027" ? 60 : PaiCodigo == "029" ? 256 :
+            PaiCodigo == "030" ? 255 : PaiCodigo == "031" ? 43 : PaiCodigo == "032" ? 25 :
+            PaiCodigo == "033" ? 18 : PaiCodigo == "034" ? 120 : PaiCodigo == "035" ? 183 :
+            PaiCodigo == "036" ? 92 : PaiCodigo == "037" ? 15 : PaiCodigo == "038" ? 21 :
+            PaiCodigo == "039" ? 151 : PaiCodigo == "040" ? 59 : PaiCodigo == "041" ? 220 :
+            PaiCodigo == "042" ? 186 : PaiCodigo == "043" ? 13 : PaiCodigo == "044" ? 16 :
+            PaiCodigo == "045" ? 24 : PaiCodigo == "046" ? 27 : PaiCodigo == "047" ? 68 :
+            PaiCodigo == "048" ? 84 : PaiCodigo == "049" ? 97 : PaiCodigo == "064" ? 123 :
+            PaiCodigo == "051" ? 109 : PaiCodigo == "052" ? 119 : PaiCodigo == "053" ? 121 :
+            PaiCodigo == "054" ? 218 : PaiCodigo == "055" ? 196 : PaiCodigo == "056" ? 197 :
+            PaiCodigo == "057" ? 198 : PaiCodigo == "058" ? 224 : PaiCodigo == "059" ? 8 :
+            PaiCodigo == "060" ? 149 : PaiCodigo == "061" ? 50 : PaiCodigo == "062" ? 229 :
+            PaiCodigo == "063" ? 10 : PaiCodigo == "065" ? 65 : PaiCodigo == "066" ? 239 :
+            PaiCodigo == "067" ? 205 : PaiCodigo == "068" ? 83 : PaiCodigo == "069" ? 175 :
+            PaiCodigo == "070" ? 62 : PaiCodigo == "071" ? 191 : PaiCodigo == "072" ? 245 :
+            PaiCodigo == "073" ? 247 : PaiCodigo == "074" ? 200 : PaiCodigo == "076" ? 156 :
+            PaiCodigo == "078" ? 194 : PaiCodigo == "080" ? 241 : PaiCodigo == "081" ? 265 :
+            PaiCodigo == "079" ? 264 : PaiCodigo == "083" ? 227 : PaiCodigo == "084" ? 226 :
+            PaiCodigo == "085" ? 131 : PaiCodigo == "086" ? 112 : PaiCodigo == "087" ? 118 :
+            PaiCodigo == "088" ? 185 : PaiCodigo == "089" ? 137 : PaiCodigo == "090" ? 165 :
+            PaiCodigo == "091" ? 94 : PaiCodigo == "092" ? 142 : PaiCodigo == "093" ? 243 :
+            PaiCodigo == "095" ? 246 : PaiCodigo == "096" ? 124 : PaiCodigo == "097" ? 4 :
+            PaiCodigo == "099" ? 91 : PaiCodigo == "100" ? 95 : PaiCodigo == "101" ? 266 :
+            PaiCodigo == "102" ? 210 : PaiCodigo == "103" ? 136 : PaiCodigo == "104" ? 177 :
+            PaiCodigo == "105" ? 7 : PaiCodigo == "106" ? 26 : PaiCodigo == "107" ? 32 :
+            PaiCodigo == "108" ? 38 : PaiCodigo == "109" ? 39 : PaiCodigo == "110" ? 42 :
+            PaiCodigo == "111" ? 47 : PaiCodigo == "113" ? 48 : PaiCodigo == "114" ? 55 :
+            PaiCodigo == "115" ? 267 : PaiCodigo == "116" ? 71 : PaiCodigo == "117" ? 102 :
+            PaiCodigo == "118" ? 75 : PaiCodigo == "119" ? 78 : PaiCodigo == "120" ? 88 :
+            PaiCodigo == "121" ? 90 : PaiCodigo == "122" ? 93 : PaiCodigo == "123" ? 103 :
+            PaiCodigo == "124" ? 125 : PaiCodigo == "125" ? 134 : PaiCodigo == "126" ? 135 :
+            PaiCodigo == "127" ? 140 : PaiCodigo == "128" ? 141 : PaiCodigo == "129" ? 144 :
+            PaiCodigo == "130" ? 148 : PaiCodigo == "132" ? 157 : PaiCodigo == "133" ? 158 :
+            PaiCodigo == "134" ? 160 : PaiCodigo == "135" ? 168 : PaiCodigo == "136" ? 192 :
+            PaiCodigo == "137" ? 259 : PaiCodigo == "139" ? 206 : PaiCodigo == "140" ? 209 :
+            PaiCodigo == "141" ? 215 : PaiCodigo == "142" ? 223 : PaiCodigo == "143" ? 77 :
+            PaiCodigo == "145" ? 234 : PaiCodigo == "147" ? 244 : PaiCodigo == "148" ? 268 :
+            PaiCodigo == "149" ? 261 : PaiCodigo == "150" ? 262 : PaiCodigo == "152" ? 1 :
+            PaiCodigo == "153" ? 12 : PaiCodigo == "154" ? 17 : PaiCodigo == "155" ? 19 :
+            PaiCodigo == "156" ? 20 : PaiCodigo == "157" ? 28 : PaiCodigo == "158" ? 36 :
+            PaiCodigo == "159" ? 281 : PaiCodigo == "160" ? 41 : PaiCodigo == "161" ? 61 :
+            PaiCodigo == "162" ? 113 : PaiCodigo == "163" ? 114 : PaiCodigo == "164" ? 115 :
+            PaiCodigo == "166" ? 129 : PaiCodigo == "167" ? 128 : PaiCodigo == "168" ? 130 :
+            PaiCodigo == "169" ? 154 : PaiCodigo == "170" ? 162 : PaiCodigo == "171" ? 176 :
+            PaiCodigo == "172" ? 222 : PaiCodigo == "173" ? 188 : PaiCodigo == "174" ? 204 :
+            PaiCodigo == "175" ? 221 : PaiCodigo == "176" ? 228 : PaiCodigo == "177" ? 230 :
+            PaiCodigo == "178" ? 232 : PaiCodigo == "179" ? 240 : PaiCodigo == "181" ? 251 :
+            PaiCodigo == "182" ? 254 : PaiCodigo == "183" ? 260 : PaiCodigo == "185" ? 3 :
+            PaiCodigo == "186" ? 6 : PaiCodigo == "187" ? 31 : PaiCodigo == "188" ? 37 :
+            PaiCodigo == "189" ? 23 : PaiCodigo == "190" ? 58 : PaiCodigo == "191" ? 76 :
+            PaiCodigo == "192" ? 80 : PaiCodigo == "193" ? 110 : PaiCodigo == "194" ? 111 :
+            PaiCodigo == "195" ? 116 : PaiCodigo == "197" ? 138 : PaiCodigo == "198" ? 172 :
+            PaiCodigo == "199" ? 145 : PaiCodigo == "200" ? 152 : PaiCodigo == "201" ? 153 :
+            PaiCodigo == "202" ? 190 : PaiCodigo == "203" ? 202 : PaiCodigo == "204" ? 155 :
+            PaiCodigo == "205" ? 212 : PaiCodigo == "206" ? 213 : PaiCodigo == "208" ? 214 :
+            PaiCodigo == "209" ? 252 : PaiCodigo == "210" ? 82 : PaiCodigo == "211" ? 161 :
+            PaiCodigo == "212" ? 146 : PaiCodigo == "213" ? 99 : PaiCodigo == "214" ? 201 :
+            PaiCodigo == "215" ? 178 : PaiCodigo == "216" ? 236 : PaiCodigo == "217" ? 86 :
+            PaiCodigo == "221" ? 171 : PaiCodigo == "222" ? 282 : PaiCodigo == "219" ? 85 :
+            PaiCodigo == "224" ? 117 : PaiCodigo == "220" ? 143 : PaiCodigo == "225" ? 139 :
+            PaiCodigo == "011" ? 169 : PaiCodigo == "028" ? 164 : PaiCodigo == "207" ? 283 :
+            PaiCodigo == "218" ? 284 : PaiCodigo == "223" ? 285 : PaiCodigo == "226" ? 63 :
+            PaiCodigo == "227" ? 180 : PaiCodigo == "228" ? 286 : PaiCodigo == "229" ? 143 :
+            PaiCodigo == "230" ? 208 : PaiCodigo == "231" ? 64 : PaiCodigo == "232" ? 263 :
+            PaiCodigo == "233" ? 60 : PaiCodigo == "234" ? 30 : PaiCodigo == "235" ? 217 :
+            PaiCodigo == "236" ? 231 : PaiCodigo == "237" ? 30 : PaiCodigo == "238" ? 30 :
+            PaiCodigo == "239" ? 18 : PaiCodigo == "240" ? 207 : PaiCodigo == "241" ? 155 : null;
+        }
+
+        private int? ObtenerPersoneriaLegal(string? JuCodigo)
+        {
+            return JuCodigo == "000" ? 376 : JuCodigo == "001" ? 280 :
+            JuCodigo == "002" ? 288 : JuCodigo == "003" ? 289 : JuCodigo == "005" ? 290 :
+            JuCodigo == "006" ? 291 : JuCodigo == "007" ? 292 : JuCodigo == "009" ? 294 :
+            JuCodigo == "010" ? 297 : JuCodigo == "011" ? 298 : JuCodigo == "012" ? 299 :
+            JuCodigo == "013" ? 302 : JuCodigo == "014" ? 301 : JuCodigo == "016" ? 305 :
+            JuCodigo == "017" ? 306 : JuCodigo == "018" ? 307 : JuCodigo == "020" ? 314 :
+            JuCodigo == "022" ? 310 : JuCodigo == "023" ? 322 : JuCodigo == "024" ? 329 :
+            JuCodigo == "025" ? 325 : JuCodigo == "026" ? 326 : JuCodigo == "027" ? 327 :
+            JuCodigo == "028" ? 328 : JuCodigo == "030" ? 342 : JuCodigo == "031" ? 343 :
+            JuCodigo == "032" ? 346 : JuCodigo == "033" ? 347 : JuCodigo == "034" ? 349 :
+            JuCodigo == "035" ? 350 : JuCodigo == "037" ? 352 : JuCodigo == "039" ? 353 :
+            JuCodigo == "040" ? 354 : JuCodigo == "041" ? 355 : JuCodigo == "043" ? 358 :
+            JuCodigo == "044" ? 360 : JuCodigo == "045" ? 362 : JuCodigo == "046" ? 364 :
+            JuCodigo == "047" ? 371 : JuCodigo == "048" ? 373 : JuCodigo == "049" ? 374 :
+            JuCodigo == "050" ? 377 : JuCodigo == "051" ? 381 : JuCodigo == "052" ? 382 :
+            JuCodigo == "053" ? 383 : JuCodigo == "055" ? 384 : JuCodigo == "056" ? 385 :
+            JuCodigo == "058" ? 391 : JuCodigo == "059" ? 396 : JuCodigo == "060" ? 397 :
+            JuCodigo == "061" ? 406 : JuCodigo == "062" ? 408 : JuCodigo == "063" ? 409 :
+            JuCodigo == "064" ? 411 : JuCodigo == "065" ? 414 : JuCodigo == "067" ? 286 :
+            JuCodigo == "068" ? 413 : JuCodigo == "069" ? 293 : JuCodigo == "070" ? 361 :
+            JuCodigo == "072" ? 339 : JuCodigo == "074" ? 304 : JuCodigo == "075" ? 300 :
+            JuCodigo == "076" ? 379 : JuCodigo == "077" ? 283 : JuCodigo == "078" ? 394 :
+            JuCodigo == "079" ? 285 : JuCodigo == "080" ? 407 : JuCodigo == "081" ? 336 :
+            JuCodigo == "082" ? 296 : JuCodigo == "083" ? 303 : JuCodigo == "084" ? 281 :
+            JuCodigo == "085" ? 395 : JuCodigo == "086" ? 405 : JuCodigo == "087" ? 393 :
+            JuCodigo == "088" ? 334 : JuCodigo == "089" ? 333 : JuCodigo == "090" ? 375 :
+            JuCodigo == "091" ? 388 : JuCodigo == "092" ? 311 : JuCodigo == "093" ? 351 :
+            JuCodigo == "095" ? 324 : JuCodigo == "096" ? 357 : JuCodigo == "097" ? 338 :
+            JuCodigo == "098" ? 282 : JuCodigo == "099" ? 378 : JuCodigo == "100" ? 348 :
+            JuCodigo == "101" ? 404 : JuCodigo == "102" ? 320 : JuCodigo == "103" ? 368 :
+            JuCodigo == "104" ? 380 : JuCodigo == "105" ? 369 : JuCodigo == "106" ? 359 :
+            JuCodigo == "107" ? 389 : JuCodigo == "108" ? 315 : JuCodigo == "109" ? 370 :
+            JuCodigo == "110" ? 392 : JuCodigo == "111" ? 284 : JuCodigo == "112" ? 366 :
+            JuCodigo == "113" ? 335 : JuCodigo == "114" ? 402 : JuCodigo == "115" ? 321 :
+            JuCodigo == "116" ? 416 : JuCodigo == "117" ? 417 : JuCodigo == "118" ? 337 :
+            JuCodigo == "119" ? 400 : JuCodigo == "120" ? 390 : JuCodigo == "121" ? 365 :
+            JuCodigo == "122" ? 367 : JuCodigo == "123" ? 403 : JuCodigo == "124" ? 345 :
+            JuCodigo == "125" ? 331 : JuCodigo == "126" ? 410 : JuCodigo == "127" ? 312 :
+            JuCodigo == "128" ? 363 : JuCodigo == "129" ? 412 : JuCodigo == "130" ? 317 :
+            JuCodigo == "131" ? 341 : JuCodigo == "132" ? 330 : JuCodigo == "133" ? 287 :
+            JuCodigo == "134" ? 344 : JuCodigo == "135" ? 279 : JuCodigo == "136" ? 313 :
+            JuCodigo == "137" ? 318 : JuCodigo == "138" ? 356 : JuCodigo == "139" ? 316 :
+            JuCodigo == "140" ? 323 : JuCodigo == "141" ? 401 : JuCodigo == "142" ? 399 :
+            JuCodigo == "143" ? 332 : JuCodigo == "144" ? 340 : JuCodigo == "145" ? 372 :
+            JuCodigo == "146" ? 387 : JuCodigo == "147" ? 309 : JuCodigo == "148" ? 415 :
+            JuCodigo == "149" ? 319 : JuCodigo == "150" ? 295 : JuCodigo == "151" ? 398 :
+            JuCodigo == "152" ? 308 : JuCodigo == "153" ? 386 : null;
+        }
+
+        private string ObtenerCalidad(string? CalCodigo)
+        {
+            return CalCodigo == "1" ? "A" : CalCodigo == "2" ? "A" : CalCodigo == "3" ? "B" :
+            CalCodigo == "4" ? "B" : CalCodigo == "5" ? "C" : CalCodigo == "6" ? "C" :
+            CalCodigo == "7" ? "D" : "";
+        }
+
+        private int ObtenerReputacion(string RcCodigo)
+        {
+            return  RcCodigo == "EAD" ? 1 :  RcCodigo == "ECC" ? 25 : RcCodigo == "EDJ" ? 33 :
+                    RcCodigo == "EJA" ? 34 : RcCodigo == "ELQ" ? 39 : RcCodigo == "EMO" ? 42 :
+                    RcCodigo == "ENC" ? 4 :  RcCodigo == "ERC" ? 49 : RcCodigo == "EXX" ? 2 :
+                    RcCodigo == "PA1" ? 20 : RcCodigo == "PCC" ? 10 : RcCodigo == "PDJ" ? 11 :
+                    RcCodigo == "PEF" ? 12 : RcCodigo == "PRE" ? 13 : RcCodigo == "PEX" ? 14 :
+                    RcCodigo == "PQL" ? 24 : RcCodigo == "PIT" ? 26 : RcCodigo == "PNC" ? 17 :
+                    RcCodigo == "PNN" ? 18 : RcCodigo == "PTC" ? 19 : RcCodigo == "PVC" ? 22 :
+                    RcCodigo == "PBC" ? 21 : RcCodigo == "PNX" ? 29 : RcCodigo == "EBC" ? 6 :
+                    RcCodigo == "ERN" ? 58 : RcCodigo == "PXX" ? 15 : RcCodigo == "ENR" ? 9 :
+                    RcCodigo == "ELD" ? 37 : RcCodigo == "PLB" ? 16 : RcCodigo == "EDI" ? 3 :
+                    RcCodigo == "PRP" ? 31 : RcCodigo == "EAE" ? 32 : RcCodigo == "EMR" ? 87 :
+                    RcCodigo == "ETF" ? 23 : RcCodigo == "PMR" ? 46 : RcCodigo == "PTF" ? 47 :
+                    RcCodigo == "ELC" ? 8 :  RcCodigo == "PLC" ? 38 : RcCodigo == "ETR" ? 88 :
+                    RcCodigo == "PTR" ? 55 : RcCodigo == "PVP" ? 63 : RcCodigo == "PAS" ? 64 :
+                    RcCodigo == "PBS" ? 65 : RcCodigo == "PCS" ? 66 : RcCodigo == "PDS" ? 70 :
+                    RcCodigo == "PSS" ? 71 : RcCodigo == "PRD" ? 48 : RcCodigo == "EAA" ? 7 :
+                    RcCodigo == "PSC" ? 50 : RcCodigo == "PBR" ? 51 : RcCodigo == "PIA" ? 52 :
+                    RcCodigo == "PDC" ? 53 : RcCodigo == "PDM" ? 54 : RcCodigo == "PRM" ? 35 :
+                    RcCodigo == "PHE" ? 56 : RcCodigo == "PCP" ? 57 : RcCodigo == "ERD" ? 28 :
+                    RcCodigo == "ENT" ? 27 : RcCodigo == "ERF" ? 30 : RcCodigo == "EBM" ? 5 :
+                    RcCodigo == "EMN" ? 59 : RcCodigo == "PCT" ? 36 : RcCodigo == "PMC" ? 40 :
+                    RcCodigo == "PCV" ? 41 : RcCodigo == "PGA" ? 43 : RcCodigo == "EMP" ? 60 :
+                    RcCodigo == "EMB" ? 61 : RcCodigo == "ENX" ? 62 : RcCodigo == "PIR" ? 44 :
+                    RcCodigo == "PDF" ? 45 : RcCodigo == "PDZ" ? 72 : RcCodigo == "PPJ" ? 73 :
+                    RcCodigo == "PMZ" ? 74 : RcCodigo == "PRS" ? 75 : RcCodigo == "ESC" ? 67 :
+                    RcCodigo == "ESO" ? 68 : RcCodigo == "ECP" ? 69 : RcCodigo == "ECN" ? 76 :
+                    RcCodigo == "EQC" ? 77 : RcCodigo == "EQD" ? 78 : RcCodigo == "EQO" ? 79 :
+                    RcCodigo == "EAR" ? 80 : RcCodigo == "EFS" ? 81 : RcCodigo == "ETP" ? 82 :
+                    RcCodigo == "ETC" ? 83 : RcCodigo == "EAQ" ? 84 : RcCodigo == "ETO" ? 85 :
+                    RcCodigo == "EDF" ? 86 : 0; 
+        }
+
         public async Task<bool> MigratePerson()
         {
             var personas = await _impersonaDomain.GetNotMigratedPersona();
@@ -1531,7 +1551,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                         LastSearched = persona.PeFecinf,
                         Language = Dictionary.LanguageMigra[persona.IdiCodigo.Value],
                         Nationality = persona.PeNacion,
-                        BirthDate =  persona.PeFecnac,
+                        BirthDate = persona.PeFecnac,
                         BirthPlace = persona.PeLugnac,
                         IdDocumentType = persona.TiCodigo == "CExt" ? 2 : persona.TiCodigo == "C.I." ? 6 :
                          persona.TiCodigo == "C.C." ? 7 : persona.TiCodigo == "CPF/MF" ? 9 :
@@ -1807,7 +1827,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 IdPerson = inserted,
                                 IdCompany = idCompany == 0 ? null : idCompany,
                                 CurrentJob = trabajo.CaNombre,
-                                StartDate = trabajo.PtFecing,
+                                StartDate =trabajo.PtFecing,
                                 EndDate = trabajo.PtFecces,
                                 MonthlyIncome = trabajo.PtEstadi + "",
                                 AnnualIncome = trabajo.PtInganu,
@@ -1921,7 +1941,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                             Id = 0,
                             IdPerson = inserted,
                             AditionalCommentaryRiskCenter = persona.PeCenrie,
-                            DebtRecordedDate = persona.PeFecreg,
+                            DebtRecordedDate =persona.PeFecreg,
                             ExchangeRate = (decimal)persona.PeTcsbs,
                             BankingCommentary = persona.PeSubacu,
                             ReferentOrAnalyst = persona.PerCodref,
@@ -2162,12 +2182,19 @@ namespace DRRCore.Application.Main.MigrationApplication
 
             return true;
         }
-       
-        public Task MigrateUser()
+
+        public async Task<bool> MigrateSubscriber()
         {
-          throw new NotImplementedException();
+            throw new NotImplementedException();
+        }
+        public async Task<bool> MigrateSubscriberType()
+        {
+            throw new NotImplementedException();
         }
 
-       
+        public Task MigrateUser()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
