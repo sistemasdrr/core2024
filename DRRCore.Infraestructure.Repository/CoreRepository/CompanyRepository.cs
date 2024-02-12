@@ -96,9 +96,8 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 }
             }
             catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return 0;
+            {               
+                throw new Exception(ex.InnerException == null ? ex.Message : ex.InnerException.Message);
             }
         }
 

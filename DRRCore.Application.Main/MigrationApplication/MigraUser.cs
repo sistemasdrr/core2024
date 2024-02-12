@@ -244,38 +244,39 @@ namespace DRRCore.Application.Main.MigrationApplication
                                         }
                                     }
                                 }
-                                var insertBack = await _companyBackgroundDomain.AddAsync(new CompanyBackground
+                                try
                                 {
-                                    Id = 0,
-                                    IdCompany = inserted,
-                                    ConstitutionDate = StaticFunctions.VerifyDate(antecedentes.EmFecest),
-                                    StartFunctionYear = antecedentes.EmIniope,
-                                    OperationDuration = antecedentes.EmDuraci,
-                                    RegisterPlace = antecedentes.EmRegen,
-                                    NotaryRegister = antecedentes.EmNotari,
-                                    PublicRegister = antecedentes.EmRegist,
-                                    CurrentPaidCapitalComentary = antecedentes.EmCapac1,
-                                    Origin = antecedentes.EmOrigen,
-                                    IncreaceDateCapital = antecedentes.EmFecaum,
-                                    Traded = antecedentes.EmCotbol == "SI" ? "Si" : antecedentes.EmCotbol == "Si" ? "Si" : antecedentes.EmCotbol == "SÍ" ? "Si" :
-                                    antecedentes.EmCotbol == "Sí" ? "Si" : antecedentes.EmCotbol == "NO" ? "No" : antecedentes.EmCotbol == "No" ? "No" : "",
-                                    TradedBy = antecedentes.EmTipfecaum,
-                                    TradedByEng = antecedentes.EmTipfecaumIng,
-                                    CurrentExchangeRate = antecedentes.EmTipcam,
-                                    LastQueryRrpp = StaticFunctions.VerifyDate(antecedentes.EmRrppFecha),
-                                    LastQueryRrppBy = antecedentes.EmRrppPor,
-                                    Background = antecedentes.EmComent,
-                                    History = antecedentes.EmAntece
+                                    var insertBack = await _companyBackgroundDomain.AddAsync(new CompanyBackground
+                                    {
+                                        Id = 0,
+                                        IdCompany = inserted,
+                                        ConstitutionDate = StaticFunctions.VerifyDate(antecedentes.EmFecest),
+                                        StartFunctionYear = antecedentes.EmIniope,
+                                        OperationDuration = antecedentes.EmDuraci,
+                                        RegisterPlace = antecedentes.EmRegen,
+                                        NotaryRegister = antecedentes.EmNotari,
+                                        PublicRegister = antecedentes.EmRegist,
+                                        CurrentPaidCapitalComentary = antecedentes.EmCapac1,
+                                        Origin = antecedentes.EmOrigen,
+                                        IncreaceDateCapital = antecedentes.EmFecaum,
+                                        Traded = antecedentes.EmCotbol == "SI" ? "Si" : antecedentes.EmCotbol == "Si" ? "Si" : antecedentes.EmCotbol == "SÍ" ? "Si" :
+                                   antecedentes.EmCotbol == "Sí" ? "Si" : antecedentes.EmCotbol == "NO" ? "No" : antecedentes.EmCotbol == "No" ? "No" : "",
+                                        TradedBy = antecedentes.EmTipfecaum,
+                                        TradedByEng = antecedentes.EmTipfecaumIng,
+                                        CurrentExchangeRate = antecedentes.EmTipcam,
+                                        LastQueryRrpp = StaticFunctions.VerifyDate(antecedentes.EmRrppFecha),
+                                        LastQueryRrppBy = antecedentes.EmRrppPor,
+                                        Background = antecedentes.EmComent,
+                                        History = antecedentes.EmAntece
 
-                                }, listTraductionBack);
-                                if (insertBack != 0 && insertBack != null)
-                                {
-                                    await _mempresaDomain.MigrateEmpresaAspLeg(empresa.EmCodigo);
+                                    }, listTraductionBack);
                                 }
-                                else
+                                catch(Exception ex)
                                 {
                                     _logger.LogError("Error empresa antecedentes :" + empresa.EmCodigo);
+                                    continue;
                                 }
+                               
                             }
 
                             //ramo
@@ -318,50 +319,52 @@ namespace DRRCore.Application.Main.MigrationApplication
                                         }
                                     }
                                 }
-                                var insertBranch = await _companyBranchDomain.AddAsync(new CompanyBranch
+                                try
                                 {
-                                    Id = 0,
-                                    IdCompany = inserted,
-                                    IdBranchSector = ramo.EmCatciiu1 == "A" ? 3 : ramo.EmCatciiu1 == "B" ? 4 : ramo.EmCatciiu1 == "C" ? 5 : null,
-                                    IdBusinessBranch = ramo.CsCodigo == "0" ? 1 : ramo.CsCodigo == "1" ? 3 : ramo.CsCodigo == "2" ? 4 : ramo.CsCodigo == "3" ? 5 :
+                                    var insertBranch = await _companyBranchDomain.AddAsync(new CompanyBranch
+                                    {
+                                        Id = 0,
+                                        IdCompany = inserted,
+                                        IdBranchSector = ramo.EmCatciiu1 == "A" ? 3 : ramo.EmCatciiu1 == "B" ? 4 : ramo.EmCatciiu1 == "C" ? 5 : null,
+                                        IdBusinessBranch = ramo.CsCodigo == "0" ? 1 : ramo.CsCodigo == "1" ? 3 : ramo.CsCodigo == "2" ? 4 : ramo.CsCodigo == "3" ? 5 :
                                     ramo.CsCodigo == "4" ? 6 : ramo.CsCodigo == "5" ? 7 : ramo.CsCodigo == "6" ? 8 : ramo.CsCodigo == "7" ? 9 : ramo.CsCodigo == "8" ? 10 :
                                     ramo.CsCodigo == "9" ? 11 : ramo.CsCodigo == "10" ? 12 : ramo.CsCodigo == "11" ? 13 : ramo.CsCodigo == "12" ? 14 : ramo.CsCodigo == "13" ? 15 :
                                     ramo.CsCodigo == "14" ? 16 : ramo.CsCodigo == "15" ? 17 : ramo.CsCodigo == "16" ? 18 : ramo.CsCodigo == "17" ? 19 : ramo.CsCodigo == "18" ? 20 :
                                     ramo.CsCodigo == "19" ? 21 : ramo.CsCodigo == "20" ? 22 : ramo.CsCodigo == "21" ? 23 : ramo.CsCodigo == "22" ? 24 : ramo.CsCodigo == "23" ? 25 :
                                     ramo.CsCodigo == "24" ? 26 : ramo.CsCodigo == "25" ? 27 : ramo.CsCodigo == "26" ? 28 : ramo.CsCodigo == "27" ? 29 : ramo.CsCodigo == "28" ? 30 :
                                     ramo.CsCodigo == "29" ? 31 : ramo.CsCodigo == "30" ? 32 : null,
-                                    SpecificActivities = await _mempresaDomain.GetActividadesByCodigo(empresa.EmCodigo),
-                                    Import = ramo.EmLogimp == "Si" ? true : ramo.EmLogimp == "No" ? false : null,
-                                    Export = ramo.EmLogexp == "Si" ? true : ramo.EmLogexp == "No" ? false : null,
-                                    CountriesImport = ramo.EmImport1,
-                                    CountriesExport = ramo.EmExport1,
-                                    CountriesImportEng = ramo.EmImport1Ing,
-                                    CountriesExportEng = ramo.EmExport1Ing,
-                                    CashSaleComentary = ramo.EmVencon,
-                                    CreditSaleComentary = ramo.EmVencre,
-                                    TerritorySaleComentary = ramo.EmTervta,
-                                    AbroadSaleComentary = ramo.EmVtaext,
-                                    NationalPurchasesComentary = ramo.EmComnac,
-                                    InternationalPurchasesComentary = ramo.EmComext,
-                                    WorkerNumber = int.Parse(ramo.EmTraba1),
-                                    IdLandOwnership = ramo.EmTiploc == "Alquilado" ? 2 : ramo.EmTiploc == "Comodato" ? 3 :
+                                        SpecificActivities = await _mempresaDomain.GetActividadesByCodigo(empresa.EmCodigo),
+                                        Import = ramo.EmLogimp == "Si" ? true : ramo.EmLogimp == "No" ? false : null,
+                                        Export = ramo.EmLogexp == "Si" ? true : ramo.EmLogexp == "No" ? false : null,
+                                        CountriesImport = ramo.EmImport1,
+                                        CountriesExport = ramo.EmExport1,
+                                        CountriesImportEng = ramo.EmImport1Ing,
+                                        CountriesExportEng = ramo.EmExport1Ing,
+                                        CashSaleComentary = ramo.EmVencon,
+                                        CreditSaleComentary = ramo.EmVencre,
+                                        TerritorySaleComentary = ramo.EmTervta,
+                                        AbroadSaleComentary = ramo.EmVtaext,
+                                        NationalPurchasesComentary = ramo.EmComnac,
+                                        InternationalPurchasesComentary = ramo.EmComext,
+                                        WorkerNumber =string.IsNullOrEmpty(ramo.EmTraba1)?null:int.Parse(ramo.EmTraba1),
+                                        IdLandOwnership = ramo.EmTiploc == "Alquilado" ? 2 : ramo.EmTiploc == "Comodato" ? 3 :
                                      ramo.EmTiploc == "Compartido" ? 4 : ramo.EmTiploc == "No Revelado" ? 5 : ramo.EmTiploc == "Oficina Virtual" ? 6 :
                                       ramo.EmTiploc == "Propio Cancelado" ? 7 : ramo.EmTiploc == "Propio Pagandolo" ? 8 : null,
-                                    TotalArea = ramo.EmArea,
-                                    OtherLocations = ramo.EmObserv,
-                                    PreviousAddress = ramo.EmDomant,
-                                    ActivityDetailCommentary = ramo.EmActivi,
-                                    AditionalCommentary = ramo.EmComen,
-                                    TabCommentary = ramo.EmComenTab
-                                }, listTraductionBranch);
-                                if (insertBranch != 0)
-                                {
-                                    await _mempresaDomain.MigrateEmpresaRamo(empresa.EmCodigo);
+                                        TotalArea = ramo.EmArea,
+                                        OtherLocations = ramo.EmObserv,
+                                        PreviousAddress = ramo.EmDomant,
+                                        ActivityDetailCommentary = ramo.EmActivi,
+                                        AditionalCommentary = ramo.EmComen,
+                                        TabCommentary = ramo.EmComenTab
+                                    }, listTraductionBranch);
                                 }
-                                else
+                                catch(Exception ex)
                                 {
                                     _logger.LogError("Error empresa ramo :" + empresa.EmCodigo);
+                                    continue;
                                 }
+                               
+                                
                                 //finanzas
                                 var finanzas = await _mempresaDomain.GetmEmpresaFinanzasByCodigoAsync(empresa.EmCodigo);
 
@@ -409,31 +412,30 @@ namespace DRRCore.Application.Main.MigrationApplication
                                             }
                                         }
                                     }
-                                    var insertFinantial = await _companyFinancialInformationDomain.AddCompanyFinancialInformation(new CompanyFinancialInformation
+                                    try
                                     {
-                                        Id = 0,
-                                        IdCompany = inserted,
-                                        Interviewed = finanzas.EmEntrev,
-                                        WorkPosition = finanzas.EmCargos,
-                                        IdCollaborationDegree = finanzas.GcCodigo == 1 ? 1 : finanzas.GcCodigo == 2 ? 3 : finanzas.GcCodigo == 3 ? 4 :
+                                        var insertFinantial = await _companyFinancialInformationDomain.AddCompanyFinancialInformation(new CompanyFinancialInformation
+                                        {
+                                            Id = 0,
+                                            IdCompany = inserted,
+                                            Interviewed = finanzas.EmEntrev,
+                                            WorkPosition = finanzas.EmCargos,
+                                            IdCollaborationDegree = finanzas.GcCodigo == 1 ? 1 : finanzas.GcCodigo == 2 ? 3 : finanzas.GcCodigo == 3 ? 4 :
                                         finanzas.GcCodigo == 4 ? 5 : finanzas.GcCodigo == 5 ? 6 : finanzas.GcCodigo == 6 ? 7 : finanzas.GcCodigo == 7 ? 10 :
                                         finanzas.GcCodigo == 8 ? 8 : finanzas.GcCodigo == 9 ? 9 : finanzas.GcCodigo == 13 ? 2 : null,
-                                        InterviewCommentary = finanzas.EmConinf,
-                                        Auditors = empresa.EmAudito,
-                                        IdFinancialSituacion = finanzas.SfCodigo == "00" ? null : finanzas.SfCodigo == "01" ? 1 : finanzas.SfCodigo == "02" ? 2 :
-                                         finanzas.SfCodigo == "03" ? 3 : finanzas.SfCodigo == "04" ? 4 : finanzas.SfCodigo == "05" ? 5 : finanzas.SfCodigo == "06" ? 6 :
-                                          finanzas.SfCodigo == "07" ? 7 : null,
-                                        FinancialCommentarySelected = finanzas.EmSitfin,
-                                        MainFixedAssets = finanzas.EmPropie,
-                                        AnalystCommentary = finanzas.EmAnalista
-                                    }, listTraductionFinantial);
-                                    if (insertBranch != 0)
-                                    {
-                                        await _mempresaDomain.MigrateEmpresaFinanzas(empresa.EmCodigo);
+                                            InterviewCommentary = finanzas.EmConinf,
+                                            Auditors = empresa.EmAudito,
+                                            IdFinancialSituacion = finanzas.SfCodigo == "00" ? 8 : finanzas.SfCodigo == "01" ? 9 : finanzas.SfCodigo == "02" ? 10 :
+                                         finanzas.SfCodigo == "03" ? 11 : finanzas.SfCodigo == "04" ? 12 : finanzas.SfCodigo == "05" ? 13 : finanzas.SfCodigo == "06" ? 14 :
+                                          finanzas.SfCodigo == "07" ? 15 : null,
+                                            FinancialCommentarySelected = finanzas.EmSitfin,
+                                            MainFixedAssets = finanzas.EmPropie,
+                                            AnalystCommentary = finanzas.EmAnalista
+                                        }, listTraductionFinantial);
                                     }
-                                    else
+                                    catch (Exception ex)
                                     {
-                                        _logger.LogError("Error empresa finanzas :" + empresa.EmCodigo);
+                                        _logger.LogError("Error empresa ramo :" + empresa.EmCodigo);
                                         continue;
                                     }
                                 }
@@ -482,35 +484,33 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 }
                                 if (empresa != null)
                                 {
-                                    var insertSbs = await _companySBSDomain.AddCompanySBS(new CompanySb
+                                    try
                                     {
-                                        Id = 0,
-                                        IdCompany = inserted,
-                                        IdOpcionalCommentarySbs = 1,
-                                        AditionalCommentaryRiskCenter = empresa.EmCenrie,
-                                        DebtRecordedDate = StaticFunctions.VerifyDate(empresa.EmFecreg),
-                                        ExchangeRate = (decimal)empresa.EmTcsbs,
-                                        BankingCommentary = empresa.EmSupban,
-                                        EndorsementsObservations = aval != null ? aval.AvObservacion : "",
-                                        ReferentOrAnalyst = empresa.PerCodref,
-                                        Date = empresa.EmFecref,
-                                        LitigationsCommentary = empresa.EmComlit,
-                                        CreditHistoryCommentary = empresa.EmAntcre,
-                                        GuaranteesOfferedNc = (decimal)empresa.EmGaomn,
-                                        GuaranteesOfferedFc = (decimal)empresa.EmGaome
+                                        var insertSbs = await _companySBSDomain.AddCompanySBS(new CompanySb
+                                        {
+                                            Id = 0,
+                                            IdCompany = inserted,
+                                            IdOpcionalCommentarySbs = 1,
+                                            AditionalCommentaryRiskCenter = empresa.EmCenrie,
+                                            DebtRecordedDate = StaticFunctions.VerifyDate(empresa.EmFecreg),
+                                            ExchangeRate = (decimal)empresa.EmTcsbs,
+                                            BankingCommentary = empresa.EmSupban,
+                                            EndorsementsObservations = aval != null ? aval.AvObservacion : "",
+                                            ReferentOrAnalyst = empresa.PerCodref,
+                                            Date = empresa.EmFecref,
+                                            LitigationsCommentary = empresa.EmComlit,
+                                            CreditHistoryCommentary = empresa.EmAntcre,
+                                            GuaranteesOfferedNc = (decimal)empresa.EmGaomn,
+                                            GuaranteesOfferedFc = (decimal)empresa.EmGaome
 
-                                    }, listTraductionSbs);
-                                    if (insertSbs != 0)
-                                    {
+                                        }, listTraductionSbs);
                                     }
-                                    else
+                                    catch(Exception ex)
                                     {
                                         _logger.LogError("Error empresa ramo :" + empresa.EmCodigo);
+                                        continue;
                                     }
                                 }
-
-
-
                                 //opinion de credito
 
                                 if (empresa != null)
@@ -543,22 +543,21 @@ namespace DRRCore.Application.Main.MigrationApplication
                                             }
                                         }
                                     }
-                                    var insertOpinionCredito = await _companyCreditOpinionDomain.AddCreditOpinion(new CompanyCreditOpinion
+                                    try
                                     {
-                                        Id = 0,
-                                        IdCompany = inserted,
-                                        CreditRequest = true,
-                                        ConsultedCredit = empresa.EmMtopcr,
-                                        SuggestedCredit = empresa.EmCrerec,
-                                        CurrentCommentary = empresa.EmOcDescri,
-                                        PreviousCommentary = empresa.EmOpicre
+                                        var insertOpinionCredito = await _companyCreditOpinionDomain.AddCreditOpinion(new CompanyCreditOpinion
+                                        {
+                                            Id = 0,
+                                            IdCompany = inserted,
+                                            CreditRequest = true,
+                                            ConsultedCredit = empresa.EmMtopcr,
+                                            SuggestedCredit = empresa.EmCrerec,
+                                            CurrentCommentary = empresa.EmOcDescri,
+                                            PreviousCommentary = empresa.EmOpicre
 
-                                    }, listTraductionOpCred);
-                                    if (inserted != 0)
-                                    {
-
+                                        }, listTraductionOpCred);
                                     }
-                                    else
+                                    catch(Exception ex)
                                     {
                                         _logger.LogError("Error empresa opinion credito :" + empresa.EmCodigo);
                                         continue;
@@ -583,18 +582,17 @@ namespace DRRCore.Application.Main.MigrationApplication
                                             }
                                         }
                                     }
-                                    var insertInfGen = await _companyGeneralInformationDomain.AddGeneralInformation(new CompanyGeneralInformation
+                                    try
                                     {
-                                        Id = 0,
-                                        IdCompany = inserted,
-                                        GeneralInfo = empresa.EmInfgen
+                                        var insertInfGen = await _companyGeneralInformationDomain.AddGeneralInformation(new CompanyGeneralInformation
+                                        {
+                                            Id = 0,
+                                            IdCompany = inserted,
+                                            GeneralInfo = empresa.EmInfgen
 
-                                    }, listTraductionInfGen);
-                                    if (inserted != 0)
-                                    {
-
+                                        }, listTraductionInfGen);
                                     }
-                                    else
+                                    catch (Exception ex)
                                     {
                                         _logger.LogError("Error empresa info general:" + empresa.EmCodigo);
                                         continue;
@@ -609,16 +607,18 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 {
                                     if (balance.BaFecbal1 != null && balance.BaFecbal1 != "")
                                     {
-                                        var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            Date = StaticFunctions.VerifyDate(balance.BaFecbal1),
-                                            BalanceType = "GENERAL",
-                                            BalanceTypeEng = balance.BaTipBal1Ing,
-                                            Duration = balance.BaTimbal1,
-                                            DurationEng = balance.BaTimBal1Ing,
-                                            IdCurrency = balance.BaMoneda1 == "USD" ? 1 : balance.BaMoneda1 == "PEN" ? 31 :
+                                            var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                Date = StaticFunctions.VerifyDate(balance.BaFecbal1),
+                                                BalanceType = "GENERAL",
+                                                BalanceTypeEng = balance.BaTipBal1Ing,
+                                                Duration = balance.BaTimbal1,
+                                                DurationEng = balance.BaTimBal1Ing,
+                                                IdCurrency = balance.BaMoneda1 == "USD" ? 1 : balance.BaMoneda1 == "PEN" ? 31 :
                                             balance.BaMoneda1 == "UYU" ? 154 : balance.BaMoneda1 == "MXN" ? 15 :
                                             balance.BaMoneda1 == "PAB" ? 120 : balance.BaMoneda1 == "DOP" ? 126 :
                                             balance.BaMoneda1 == "GTQ" ? 80 : balance.BaMoneda1 == "COP" ? 63 :
@@ -640,50 +640,58 @@ namespace DRRCore.Application.Main.MigrationApplication
                                             balance.BaMoneda1 == "CHF" ? 7 : balance.BaMoneda1 == "TWD" ? 21 :
                                             balance.BaMoneda1 == "DKK" ? 22 : balance.BaMoneda1 == "ANG" ? 69 :
                                             balance.BaMoneda1 == "PLN" ? 23 : balance.BaMoneda1 == "MNX" ? 15 : null,
-                                            ExchangeRate = (decimal)balance.BaTipcam1,
-                                            Sales = (decimal)balance.BaVentas1,
-                                            Utilities = (decimal)balance.BaUtiper1,
-                                            TotalAssets = (decimal)balance.BaTotact1,
-                                            TotalCurrentAssets = (decimal)balance.BaTotcor1,
-                                            ACashBoxBank = (decimal)balance.BaCajban1,
-                                            AToCollect = (decimal)balance.BaPorcob1,
-                                            AInventory = (decimal)balance.BaInvent1,
-                                            AOtherCurrentAssets = (decimal)balance.BaActcorotr1,
-                                            TotalNonCurrentAssets = (decimal)balance.BaFijo1 + (decimal)balance.BaActotr1,
-                                            AFixed = (decimal)balance.BaFijo1,
-                                            AOtherNonCurrentAssets = (decimal)balance.BaActotr1,
-                                            TotalLliabilities = (decimal)balance.BaPastot1,
-                                            TotalCurrentLiabilities = (decimal)balance.BaTotcrr1,
-                                            LCashBoxBank = (decimal)balance.BaBanpro1,
-                                            LOtherCurrentLiabilities = (decimal)balance.BaPasotr1,
-                                            TotalNonCurrentLiabilities = (decimal)balance.BaLarpla1 + (decimal)balance.BaCorotr1,
-                                            LLongTerm = (decimal)balance.BaLarpla1,
-                                            LOtherNonCurrentLiabilities = (decimal)balance.BaCorotr1,
-                                            TotalPatrimony = (decimal)balance.BaTotpat1,
-                                            PCapital = (decimal)balance.BaCapita1,
-                                            PStockPile = (decimal)balance.BaReser1,
-                                            PUtilities = (decimal)balance.BaUtili1,
-                                            POther = (decimal)balance.BaPatotr1,
-                                            TotalLiabilitiesPatrimony = (decimal)balance.BaTotpas1,
-                                            LiquidityRatio = (decimal)balance.BaTotcor1 / (decimal)balance.BaTotcrr1,
-                                            DebtRatio = ((decimal)balance.BaTotpat1 / (decimal)balance.BaTotcrr1) * 100,
-                                            ProfitabilityRatio = ((decimal)balance.BaUtiper1 / (decimal)balance.BaVentas1) * 100,
-                                            WorkingCapital = (decimal)balance.BaTotcor1 - (decimal)balance.BaTotcrr1
-                                        });
+                                                ExchangeRate = (decimal)balance.BaTipcam1,
+                                                Sales = (decimal)balance.BaVentas1,
+                                                Utilities = (decimal)balance.BaUtiper1,
+                                                TotalAssets = (decimal)balance.BaTotact1,
+                                                TotalCurrentAssets = (decimal)balance.BaTotcor1,
+                                                ACashBoxBank = (decimal)balance.BaCajban1,
+                                                AToCollect = (decimal)balance.BaPorcob1,
+                                                AInventory = (decimal)balance.BaInvent1,
+                                                AOtherCurrentAssets = (decimal)balance.BaActcorotr1,
+                                                TotalNonCurrentAssets = (decimal)balance.BaFijo1 + (decimal)balance.BaActotr1,
+                                                AFixed = (decimal)balance.BaFijo1,
+                                                AOtherNonCurrentAssets = (decimal)balance.BaActotr1,
+                                                TotalLliabilities = (decimal)balance.BaPastot1,
+                                                TotalCurrentLiabilities = (decimal)balance.BaTotcrr1,
+                                                LCashBoxBank = (decimal)balance.BaBanpro1,
+                                                LOtherCurrentLiabilities = (decimal)balance.BaPasotr1,
+                                                TotalNonCurrentLiabilities = (decimal)balance.BaLarpla1 + (decimal)balance.BaCorotr1,
+                                                LLongTerm = (decimal)balance.BaLarpla1,
+                                                LOtherNonCurrentLiabilities = (decimal)balance.BaCorotr1,
+                                                TotalPatrimony = (decimal)balance.BaTotpat1,
+                                                PCapital = (decimal)balance.BaCapita1,
+                                                PStockPile = (decimal)balance.BaReser1,
+                                                PUtilities = (decimal)balance.BaUtili1,
+                                                POther = (decimal)balance.BaPatotr1,
+                                                TotalLiabilitiesPatrimony = (decimal)balance.BaTotpas1,
+                                                LiquidityRatio = (decimal)balance.BaTotcor1 / (decimal)balance.BaTotcrr1,
+                                                DebtRatio = ((decimal)balance.BaTotpat1 / (decimal)balance.BaTotcrr1) * 100,
+                                                ProfitabilityRatio = ((decimal)balance.BaUtiper1 / (decimal)balance.BaVentas1) * 100,
+                                                WorkingCapital = (decimal)balance.BaTotcor1 - (decimal)balance.BaTotcrr1
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
+                                        
                                     }
 
                                     if (balance.BaFecbal2 != null && balance.BaFecbal2 != "")
                                     {
-                                        var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            Date = StaticFunctions.VerifyDate(balance.BaFecbal2),
-                                            BalanceType = "GENERAL",
-                                            BalanceTypeEng = balance.BaTipBal2Ing,
-                                            Duration = balance.BaTimbal2,
-                                            DurationEng = balance.BaTimBal2Ing,
-                                            IdCurrency = balance.BaMoneda2 == "USD" ? 1 : balance.BaMoneda2 == "PEN" ? 31 :
+                                            var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                Date = StaticFunctions.VerifyDate(balance.BaFecbal2),
+                                                BalanceType = "GENERAL",
+                                                BalanceTypeEng = balance.BaTipBal2Ing,
+                                                Duration = balance.BaTimbal2,
+                                                DurationEng = balance.BaTimBal2Ing,
+                                                IdCurrency = balance.BaMoneda2 == "USD" ? 1 : balance.BaMoneda2 == "PEN" ? 31 :
                                             balance.BaMoneda2 == "UYU" ? 154 : balance.BaMoneda2 == "MXN" ? 15 :
                                             balance.BaMoneda2 == "PAB" ? 120 : balance.BaMoneda2 == "DOP" ? 126 :
                                             balance.BaMoneda2 == "GTQ" ? 80 : balance.BaMoneda2 == "COP" ? 63 :
@@ -705,49 +713,56 @@ namespace DRRCore.Application.Main.MigrationApplication
                                             balance.BaMoneda2 == "CHF" ? 7 : balance.BaMoneda2 == "TWD" ? 21 :
                                             balance.BaMoneda2 == "DKK" ? 22 : balance.BaMoneda2 == "ANG" ? 69 :
                                             balance.BaMoneda2 == "PLN" ? 23 : balance.BaMoneda2 == "MNX" ? 15 : null,
-                                            ExchangeRate = (decimal)balance.BaTipcam2,
-                                            Sales = (decimal)balance.BaVentas2,
-                                            Utilities = (decimal)balance.BaUtiper2,
-                                            TotalAssets = (decimal)balance.BaTotact2,
-                                            TotalCurrentAssets = (decimal)balance.BaTotcor2,
-                                            ACashBoxBank = (decimal)balance.BaCajban2,
-                                            AToCollect = (decimal)balance.BaPorcob2,
-                                            AInventory = (decimal)balance.BaInvent2,
-                                            AOtherCurrentAssets = (decimal)balance.BaActCorOtr2,
-                                            TotalNonCurrentAssets = (decimal)balance.BaFijo2 + (decimal)balance.BaActotr2,
-                                            AFixed = (decimal)balance.BaFijo2,
-                                            AOtherNonCurrentAssets = (decimal)balance.BaActotr2,
-                                            TotalLliabilities = (decimal)balance.BaPastot2,
-                                            TotalCurrentLiabilities = (decimal)balance.BaTotcrr2,
-                                            LCashBoxBank = (decimal)balance.BaBanpro2,
-                                            LOtherCurrentLiabilities = (decimal)balance.BaPasotr2,
-                                            TotalNonCurrentLiabilities = (decimal)balance.BaLarpla2 + (decimal)balance.BaCorotr2,
-                                            LLongTerm = (decimal)balance.BaLarpla2,
-                                            LOtherNonCurrentLiabilities = (decimal)balance.BaCorotr2,
-                                            TotalPatrimony = (decimal)balance.BaTotpat2,
-                                            PCapital = (decimal)balance.BaCapita2,
-                                            PStockPile = (decimal)balance.BaReser2,
-                                            PUtilities = (decimal)balance.BaUtili2,
-                                            POther = (decimal)balance.BaPatOtr2,
-                                            TotalLiabilitiesPatrimony = (decimal)balance.BaTotpas2,
-                                            LiquidityRatio = (decimal)balance.BaTotcor2 / (decimal)balance.BaTotcrr2,
-                                            DebtRatio = ((decimal)balance.BaTotpat2 / (decimal)balance.BaTotcrr2) * 100,
-                                            ProfitabilityRatio = ((decimal)balance.BaUtiper2 / (decimal)balance.BaVentas2) * 100,
-                                            WorkingCapital = (decimal)balance.BaTotcor2 - (decimal)balance.BaTotcrr2
-                                        });
+                                                ExchangeRate = (decimal)balance.BaTipcam2,
+                                                Sales = (decimal)balance.BaVentas2,
+                                                Utilities = (decimal)balance.BaUtiper2,
+                                                TotalAssets = (decimal)balance.BaTotact2,
+                                                TotalCurrentAssets = (decimal)balance.BaTotcor2,
+                                                ACashBoxBank = (decimal)balance.BaCajban2,
+                                                AToCollect = (decimal)balance.BaPorcob2,
+                                                AInventory = (decimal)balance.BaInvent2,
+                                                AOtherCurrentAssets = (decimal)balance.BaActCorOtr2,
+                                                TotalNonCurrentAssets = (decimal)balance.BaFijo2 + (decimal)balance.BaActotr2,
+                                                AFixed = (decimal)balance.BaFijo2,
+                                                AOtherNonCurrentAssets = (decimal)balance.BaActotr2,
+                                                TotalLliabilities = (decimal)balance.BaPastot2,
+                                                TotalCurrentLiabilities = (decimal)balance.BaTotcrr2,
+                                                LCashBoxBank = (decimal)balance.BaBanpro2,
+                                                LOtherCurrentLiabilities = (decimal)balance.BaPasotr2,
+                                                TotalNonCurrentLiabilities = (decimal)balance.BaLarpla2 + (decimal)balance.BaCorotr2,
+                                                LLongTerm = (decimal)balance.BaLarpla2,
+                                                LOtherNonCurrentLiabilities = (decimal)balance.BaCorotr2,
+                                                TotalPatrimony = (decimal)balance.BaTotpat2,
+                                                PCapital = (decimal)balance.BaCapita2,
+                                                PStockPile = (decimal)balance.BaReser2,
+                                                PUtilities = (decimal)balance.BaUtili2,
+                                                POther = (decimal)balance.BaPatOtr2,
+                                                TotalLiabilitiesPatrimony = (decimal)balance.BaTotpas2,
+                                                LiquidityRatio = (decimal)balance.BaTotcor2 / (decimal)balance.BaTotcrr2,
+                                                DebtRatio = ((decimal)balance.BaTotpat2 / (decimal)balance.BaTotcrr2) * 100,
+                                                ProfitabilityRatio = ((decimal)balance.BaUtiper2 / (decimal)balance.BaVentas2) * 100,
+                                                WorkingCapital = (decimal)balance.BaTotcor2 - (decimal)balance.BaTotcrr2
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
                                     }
                                     if (balance.BaFecbal3 != null && balance.BaFecbal3 != "")
                                     {
-                                        var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            Date = StaticFunctions.VerifyDate(balance.BaFecbal3),
-                                            BalanceType = "GENERAL",
-                                            BalanceTypeEng = balance.BaTipBal3Ing,
-                                            Duration = balance.BaTimbal3,
-                                            DurationEng = balance.BaTimBal3Ing,
-                                            IdCurrency = balance.BaMoneda3 == "USD" ? 1 : balance.BaMoneda3 == "PEN" ? 31 :
+                                            var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                Date = StaticFunctions.VerifyDate(balance.BaFecbal3),
+                                                BalanceType = "GENERAL",
+                                                BalanceTypeEng = balance.BaTipBal3Ing,
+                                                Duration = balance.BaTimbal3,
+                                                DurationEng = balance.BaTimBal3Ing,
+                                                IdCurrency = balance.BaMoneda3 == "USD" ? 1 : balance.BaMoneda3 == "PEN" ? 31 :
                                             balance.BaMoneda3 == "UYU" ? 154 : balance.BaMoneda3 == "MXN" ? 15 :
                                             balance.BaMoneda3 == "PAB" ? 120 : balance.BaMoneda3 == "DOP" ? 126 :
                                             balance.BaMoneda3 == "GTQ" ? 80 : balance.BaMoneda3 == "COP" ? 63 :
@@ -769,49 +784,56 @@ namespace DRRCore.Application.Main.MigrationApplication
                                             balance.BaMoneda3 == "CHF" ? 7 : balance.BaMoneda3 == "TWD" ? 21 :
                                             balance.BaMoneda3 == "DKK" ? 22 : balance.BaMoneda3 == "ANG" ? 69 :
                                             balance.BaMoneda3 == "PLN" ? 23 : balance.BaMoneda3 == "MNX" ? 15 : null,
-                                            ExchangeRate = (decimal)balance.BaTipcam3,
-                                            Sales = (decimal)balance.BaVentas3,
-                                            Utilities = (decimal)balance.BaUtiper3,
-                                            TotalAssets = (decimal)balance.BaTotact3,
-                                            TotalCurrentAssets = (decimal)balance.BaTotcor3,
-                                            ACashBoxBank = (decimal)balance.BaCajban3,
-                                            AToCollect = (decimal)balance.BaPorcob3,
-                                            AInventory = (decimal)balance.BaInvent3,
-                                            AOtherCurrentAssets = (decimal)balance.BaActCorOtr3,
-                                            TotalNonCurrentAssets = (decimal)balance.BaFijo3 + (decimal)balance.BaActotr3,
-                                            AFixed = (decimal)balance.BaFijo3,
-                                            AOtherNonCurrentAssets = (decimal)balance.BaActotr3,
-                                            TotalLliabilities = (decimal)balance.BaPastot3,
-                                            TotalCurrentLiabilities = (decimal)balance.BaTotcrr3,
-                                            LCashBoxBank = (decimal)balance.BaBanpro3,
-                                            LOtherCurrentLiabilities = (decimal)balance.BaPasotr3,
-                                            TotalNonCurrentLiabilities = (decimal)balance.BaLarpla3 + (decimal)balance.BaCorotr3,
-                                            LLongTerm = (decimal)balance.BaLarpla3,
-                                            LOtherNonCurrentLiabilities = (decimal)balance.BaCorotr3,
-                                            TotalPatrimony = (decimal)balance.BaTotpat3,
-                                            PCapital = (decimal)balance.BaCapita3,
-                                            PStockPile = (decimal)balance.BaReser3,
-                                            PUtilities = (decimal)balance.BaUtili3,
-                                            POther = (decimal)balance.BaPatOtr3,
-                                            TotalLiabilitiesPatrimony = (decimal)balance.BaTotpas3,
-                                            LiquidityRatio = (decimal)balance.BaTotcor3 / (decimal)balance.BaTotcrr3,
-                                            DebtRatio = ((decimal)balance.BaTotpat3 / (decimal)balance.BaTotcrr3) * 100,
-                                            ProfitabilityRatio = ((decimal)balance.BaUtiper3 / (decimal)balance.BaVentas3) * 100,
-                                            WorkingCapital = (decimal)balance.BaTotcor3 - (decimal)balance.BaTotcrr3
-                                        });
+                                                ExchangeRate = (decimal)balance.BaTipcam3,
+                                                Sales = (decimal)balance.BaVentas3,
+                                                Utilities = (decimal)balance.BaUtiper3,
+                                                TotalAssets = (decimal)balance.BaTotact3,
+                                                TotalCurrentAssets = (decimal)balance.BaTotcor3,
+                                                ACashBoxBank = (decimal)balance.BaCajban3,
+                                                AToCollect = (decimal)balance.BaPorcob3,
+                                                AInventory = (decimal)balance.BaInvent3,
+                                                AOtherCurrentAssets = (decimal)balance.BaActCorOtr3,
+                                                TotalNonCurrentAssets = (decimal)balance.BaFijo3 + (decimal)balance.BaActotr3,
+                                                AFixed = (decimal)balance.BaFijo3,
+                                                AOtherNonCurrentAssets = (decimal)balance.BaActotr3,
+                                                TotalLliabilities = (decimal)balance.BaPastot3,
+                                                TotalCurrentLiabilities = (decimal)balance.BaTotcrr3,
+                                                LCashBoxBank = (decimal)balance.BaBanpro3,
+                                                LOtherCurrentLiabilities = (decimal)balance.BaPasotr3,
+                                                TotalNonCurrentLiabilities = (decimal)balance.BaLarpla3 + (decimal)balance.BaCorotr3,
+                                                LLongTerm = (decimal)balance.BaLarpla3,
+                                                LOtherNonCurrentLiabilities = (decimal)balance.BaCorotr3,
+                                                TotalPatrimony = (decimal)balance.BaTotpat3,
+                                                PCapital = (decimal)balance.BaCapita3,
+                                                PStockPile = (decimal)balance.BaReser3,
+                                                PUtilities = (decimal)balance.BaUtili3,
+                                                POther = (decimal)balance.BaPatOtr3,
+                                                TotalLiabilitiesPatrimony = (decimal)balance.BaTotpas3,
+                                                LiquidityRatio = (decimal)balance.BaTotcor3 / (decimal)balance.BaTotcrr3,
+                                                DebtRatio = ((decimal)balance.BaTotpat3 / (decimal)balance.BaTotcrr3) * 100,
+                                                ProfitabilityRatio = ((decimal)balance.BaUtiper3 / (decimal)balance.BaVentas3) * 100,
+                                                WorkingCapital = (decimal)balance.BaTotcor3 - (decimal)balance.BaTotcrr3
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
                                     }
                                     if (balance.BaFecbal4 != null && balance.BaFecbal4 != "")
                                     {
-                                        var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            Date = StaticFunctions.VerifyDate(balance.BaFecbal4),
-                                            BalanceType = "GENERAL",
-                                            BalanceTypeEng = balance.BaTipBal4Ing,
-                                            Duration = balance.BaTimbal4,
-                                            DurationEng = balance.BaTimBal4Ing,
-                                            IdCurrency = balance.BaMoneda4 == "USD" ? 1 : balance.BaMoneda4 == "PEN" ? 31 :
+                                            var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                Date = StaticFunctions.VerifyDate(balance.BaFecbal4),
+                                                BalanceType = "GENERAL",
+                                                BalanceTypeEng = balance.BaTipBal4Ing,
+                                                Duration = balance.BaTimbal4,
+                                                DurationEng = balance.BaTimBal4Ing,
+                                                IdCurrency = balance.BaMoneda4 == "USD" ? 1 : balance.BaMoneda4 == "PEN" ? 31 :
                                             balance.BaMoneda4 == "UYU" ? 154 : balance.BaMoneda4 == "MXN" ? 15 :
                                             balance.BaMoneda4 == "PAB" ? 120 : balance.BaMoneda4 == "DOP" ? 126 :
                                             balance.BaMoneda4 == "GTQ" ? 80 : balance.BaMoneda4 == "COP" ? 63 :
@@ -833,36 +855,41 @@ namespace DRRCore.Application.Main.MigrationApplication
                                             balance.BaMoneda4 == "CHF" ? 7 : balance.BaMoneda4 == "TWD" ? 21 :
                                             balance.BaMoneda4 == "DKK" ? 22 : balance.BaMoneda4 == "ANG" ? 69 :
                                             balance.BaMoneda4 == "PLN" ? 23 : balance.BaMoneda4 == "MNX" ? 15 : null,
-                                            ExchangeRate = (decimal)balance.BaTipcam4,
-                                            Sales = (decimal)balance.BaVentas4,
-                                            Utilities = (decimal)balance.BaUtiper4,
-                                            TotalAssets = (decimal)balance.BaTotact4,
-                                            TotalCurrentAssets = (decimal)balance.BaTotcor4,
-                                            ACashBoxBank = (decimal)balance.BaCajban4,
-                                            AToCollect = (decimal)balance.BaPorcob4,
-                                            AInventory = (decimal)balance.BaInvent4,
-                                            AOtherCurrentAssets = (decimal)balance.BaActCorOtr4,
-                                            TotalNonCurrentAssets = (decimal)balance.BaFijo4 + (decimal)balance.BaActotr4,
-                                            AFixed = (decimal)balance.BaFijo4,
-                                            AOtherNonCurrentAssets = (decimal)balance.BaActotr4,
-                                            TotalLliabilities = (decimal)balance.BaPastot4,
-                                            TotalCurrentLiabilities = (decimal)balance.BaTotcrr4,
-                                            LCashBoxBank = (decimal)balance.BaBanpro4,
-                                            LOtherCurrentLiabilities = (decimal)balance.BaPasotr4,
-                                            TotalNonCurrentLiabilities = (decimal)balance.BaLarpla4 + (decimal)balance.BaCorotr4,
-                                            LLongTerm = (decimal)balance.BaLarpla4,
-                                            LOtherNonCurrentLiabilities = (decimal)balance.BaCorotr4,
-                                            TotalPatrimony = (decimal)balance.BaTotpat4,
-                                            PCapital = (decimal)balance.BaCapita4,
-                                            PStockPile = (decimal)balance.BaReser4,
-                                            PUtilities = (decimal)balance.BaUtili4,
-                                            POther = (decimal)balance.BaPatOtr4,
-                                            TotalLiabilitiesPatrimony = (decimal)balance.BaTotpas4,
-                                            LiquidityRatio = (decimal)balance.BaTotcor4 / (decimal)balance.BaTotcrr4,
-                                            DebtRatio = ((decimal)balance.BaTotpat4 / (decimal)balance.BaTotcrr4) * 100,
-                                            ProfitabilityRatio = ((decimal)balance.BaUtiper4 / (decimal)balance.BaVentas4) * 100,
-                                            WorkingCapital = (decimal)balance.BaTotcor4 - (decimal)balance.BaTotcrr4
-                                        });
+                                                ExchangeRate = (decimal)balance.BaTipcam4,
+                                                Sales = (decimal)balance.BaVentas4,
+                                                Utilities = (decimal)balance.BaUtiper4,
+                                                TotalAssets = (decimal)balance.BaTotact4,
+                                                TotalCurrentAssets = (decimal)balance.BaTotcor4,
+                                                ACashBoxBank = (decimal)balance.BaCajban4,
+                                                AToCollect = (decimal)balance.BaPorcob4,
+                                                AInventory = (decimal)balance.BaInvent4,
+                                                AOtherCurrentAssets = (decimal)balance.BaActCorOtr4,
+                                                TotalNonCurrentAssets = (decimal)balance.BaFijo4 + (decimal)balance.BaActotr4,
+                                                AFixed = (decimal)balance.BaFijo4,
+                                                AOtherNonCurrentAssets = (decimal)balance.BaActotr4,
+                                                TotalLliabilities = (decimal)balance.BaPastot4,
+                                                TotalCurrentLiabilities = (decimal)balance.BaTotcrr4,
+                                                LCashBoxBank = (decimal)balance.BaBanpro4,
+                                                LOtherCurrentLiabilities = (decimal)balance.BaPasotr4,
+                                                TotalNonCurrentLiabilities = (decimal)balance.BaLarpla4 + (decimal)balance.BaCorotr4,
+                                                LLongTerm = (decimal)balance.BaLarpla4,
+                                                LOtherNonCurrentLiabilities = (decimal)balance.BaCorotr4,
+                                                TotalPatrimony = (decimal)balance.BaTotpat4,
+                                                PCapital = (decimal)balance.BaCapita4,
+                                                PStockPile = (decimal)balance.BaReser4,
+                                                PUtilities = (decimal)balance.BaUtili4,
+                                                POther = (decimal)balance.BaPatOtr4,
+                                                TotalLiabilitiesPatrimony = (decimal)balance.BaTotpas4,
+                                                LiquidityRatio = (decimal)balance.BaTotcor4 / (decimal)balance.BaTotcrr4,
+                                                DebtRatio = ((decimal)balance.BaTotpat4 / (decimal)balance.BaTotcrr4) * 100,
+                                                ProfitabilityRatio = ((decimal)balance.BaUtiper4 / (decimal)balance.BaVentas4) * 100,
+                                                WorkingCapital = (decimal)balance.BaTotcor4 - (decimal)balance.BaTotcrr4
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
                                     }
                                 }
 
@@ -875,16 +902,18 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 {
                                     if (balanceS.BsFecbal1 != null && balanceS.BsFecbal1 != "")
                                     {
-                                        var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            Date = StaticFunctions.VerifyDate(balanceS.BsFecbal1),
-                                            BalanceType = "SITUACIONAL",
-                                            BalanceTypeEng = balanceS.BsTipBal1Ing,
-                                            Duration = balanceS.BsTimbal1,
-                                            DurationEng = balanceS.BsTimBal1Ing,
-                                            IdCurrency = balanceS.BsMoneda1 == "USD" ? 1 : balanceS.BsMoneda1 == "PEN" ? 31 :
+                                            var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                Date = StaticFunctions.VerifyDate(balanceS.BsFecbal1),
+                                                BalanceType = "SITUACIONAL",
+                                                BalanceTypeEng = balanceS.BsTipBal1Ing,
+                                                Duration = balanceS.BsTimbal1,
+                                                DurationEng = balanceS.BsTimBal1Ing,
+                                                IdCurrency = balanceS.BsMoneda1 == "USD" ? 1 : balanceS.BsMoneda1 == "PEN" ? 31 :
                                             balanceS.BsMoneda1 == "UYU" ? 154 : balanceS.BsMoneda1 == "MXN" ? 15 :
                                             balanceS.BsMoneda1 == "PAB" ? 120 : balanceS.BsMoneda1 == "DOP" ? 126 :
                                             balanceS.BsMoneda1 == "GTQ" ? 80 : balanceS.BsMoneda1 == "COP" ? 63 :
@@ -906,164 +935,183 @@ namespace DRRCore.Application.Main.MigrationApplication
                                             balanceS.BsMoneda1 == "CHF" ? 7 : balanceS.BsMoneda1 == "TWD" ? 21 :
                                             balanceS.BsMoneda1 == "DKK" ? 22 : balanceS.BsMoneda1 == "ANG" ? 69 :
                                             balanceS.BsMoneda1 == "PLN" ? 23 : balanceS.BsMoneda1 == "MNX" ? 15 : null,
-                                            ExchangeRate = (decimal)balanceS.BsTipcam1,
-                                            Sales = (decimal)balanceS.BsVentas1,
-                                            Utilities = (decimal)balanceS.BsUtiper1,
-                                            TotalAssets = (decimal)balanceS.BsTotact1,
-                                            TotalCurrentAssets = (decimal)balanceS.BsTotcor1,
-                                            ACashBoxBank = (decimal)balanceS.BsCajban1,
-                                            AToCollect = (decimal)balanceS.BsPorcob1,
-                                            AInventory = (decimal)balanceS.BsInvent1,
-                                            AOtherCurrentAssets = (decimal)balanceS.BsActcorotr1,
-                                            TotalNonCurrentAssets = (decimal)balanceS.BsFijo1 + (decimal)balanceS.BsActotr1,
-                                            AFixed = (decimal)balanceS.BsFijo1,
-                                            AOtherNonCurrentAssets = (decimal)balanceS.BsActotr1,
-                                            TotalLliabilities = (decimal)balanceS.BsTotcrr1 + (decimal)balanceS.BsLarpla1 + (decimal)balanceS.BsCorotr1,
-                                            TotalCurrentLiabilities = (decimal)balanceS.BsTotcrr1,
-                                            LCashBoxBank = (decimal)balanceS.BsBanpro1,
-                                            LOtherCurrentLiabilities = (decimal)balanceS.BsPasotr1,
-                                            TotalNonCurrentLiabilities = (decimal)balanceS.BsLarpla1 + (decimal)balanceS.BsCorotr1,
-                                            LLongTerm = (decimal)balanceS.BsLarpla1,
-                                            LOtherNonCurrentLiabilities = (decimal)balanceS.BsCorotr1,
-                                            TotalPatrimony = (decimal)balanceS.BsTotpat1,
-                                            PCapital = (decimal)balanceS.BsCapita1,
-                                            PStockPile = (decimal)balanceS.BsReser1,
-                                            PUtilities = (decimal)balanceS.BsUtili1,
-                                            POther = (decimal)balanceS.BsPatotr1,
-                                            TotalLiabilitiesPatrimony = (decimal)balanceS.BsTotpas1,
-                                            LiquidityRatio = (decimal)balanceS.BsTotcor1 / (decimal)balanceS.BsTotcrr1,
-                                            DebtRatio = ((decimal)balanceS.BsTotpat1 / (decimal)balanceS.BsTotcrr1) * 100,
-                                            ProfitabilityRatio = ((decimal)balanceS.BsUtiper1 / (decimal)balanceS.BsVentas1) * 100,
-                                            WorkingCapital = (decimal)balanceS.BsTotcor1 - (decimal)balanceS.BsTotcrr1
-                                        });
+                                                ExchangeRate = (decimal)balanceS.BsTipcam1,
+                                                Sales = (decimal)balanceS.BsVentas1,
+                                                Utilities = (decimal)balanceS.BsUtiper1,
+                                                TotalAssets = (decimal)balanceS.BsTotact1,
+                                                TotalCurrentAssets = (decimal)balanceS.BsTotcor1,
+                                                ACashBoxBank = (decimal)balanceS.BsCajban1,
+                                                AToCollect = (decimal)balanceS.BsPorcob1,
+                                                AInventory = (decimal)balanceS.BsInvent1,
+                                                AOtherCurrentAssets = (decimal)balanceS.BsActcorotr1,
+                                                TotalNonCurrentAssets = (decimal)balanceS.BsFijo1 + (decimal)balanceS.BsActotr1,
+                                                AFixed = (decimal)balanceS.BsFijo1,
+                                                AOtherNonCurrentAssets = (decimal)balanceS.BsActotr1,
+                                                TotalLliabilities = (decimal)balanceS.BsTotcrr1 + (decimal)balanceS.BsLarpla1 + (decimal)balanceS.BsCorotr1,
+                                                TotalCurrentLiabilities = (decimal)balanceS.BsTotcrr1,
+                                                LCashBoxBank = (decimal)balanceS.BsBanpro1,
+                                                LOtherCurrentLiabilities = (decimal)balanceS.BsPasotr1,
+                                                TotalNonCurrentLiabilities = (decimal)balanceS.BsLarpla1 + (decimal)balanceS.BsCorotr1,
+                                                LLongTerm = (decimal)balanceS.BsLarpla1,
+                                                LOtherNonCurrentLiabilities = (decimal)balanceS.BsCorotr1,
+                                                TotalPatrimony = (decimal)balanceS.BsTotpat1,
+                                                PCapital = (decimal)balanceS.BsCapita1,
+                                                PStockPile = (decimal)balanceS.BsReser1,
+                                                PUtilities = (decimal)balanceS.BsUtili1,
+                                                POther = (decimal)balanceS.BsPatotr1,
+                                                TotalLiabilitiesPatrimony = (decimal)balanceS.BsTotpas1,
+                                                LiquidityRatio = (decimal)balanceS.BsTotcor1 / (decimal)balanceS.BsTotcrr1,
+                                                DebtRatio = ((decimal)balanceS.BsTotpat1 / (decimal)balanceS.BsTotcrr1) * 100,
+                                                ProfitabilityRatio = ((decimal)balanceS.BsUtiper1 / (decimal)balanceS.BsVentas1) * 100,
+                                                WorkingCapital = (decimal)balanceS.BsTotcor1 - (decimal)balanceS.BsTotcrr1
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
                                     }
                                     if (balanceS.BsFecbal2 != null && balanceS.BsFecbal2 != "")
                                     {
-                                        var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            Date = StaticFunctions.VerifyDate(balanceS.BsFecbal2),
-                                            BalanceType = "SITUACIONAL",
-                                            BalanceTypeEng = balanceS.BsTipBal2Ing,
-                                            Duration = balanceS.BsTimbal2,
-                                            DurationEng = balanceS.BsTimBal2Ing,
-                                            IdCurrency = balanceS.BsMoneda2 == "USD" ? 1 : balanceS.BsMoneda2 == "PEN" ? 31 :
-                                            balanceS.BsMoneda2 == "UYU" ? 154 : balanceS.BsMoneda2 == "MXN" ? 15 :
-                                            balanceS.BsMoneda2 == "PAB" ? 120 : balanceS.BsMoneda2 == "DOP" ? 126 :
-                                            balanceS.BsMoneda2 == "GTQ" ? 80 : balanceS.BsMoneda2 == "COP" ? 63 :
-                                            balanceS.BsMoneda2 == "BOB" ? 51 : balanceS.BsMoneda2 == "ARS" ? 38 :
-                                            balanceS.BsMoneda2 == "CRC" ? 66 : balanceS.BsMoneda2 == "PYG" ? 122 :
-                                            balanceS.BsMoneda2 == "CLP" ? 29 : balanceS.BsMoneda2 == "BRL" ? 20 :
-                                            balanceS.BsMoneda2 == "HNL" ? 84 : balanceS.BsMoneda2 == "NIO" ? 115 :
-                                            balanceS.BsMoneda2 == "JMD" ? 93 : balanceS.BsMoneda2 == "MYR" ? 105 :
-                                            balanceS.BsMoneda2 == "EUR" ? 2 : balanceS.BsMoneda2 == "COL" ? 63 :
-                                            balanceS.BsMoneda2 == "VND" ? 156 : balanceS.BsMoneda2 == "GYD" ? 82 :
-                                            balanceS.BsMoneda2 == "UDS" ? 1 : balanceS.BsMoneda2 == "BBD" ? 44 :
-                                            balanceS.BsMoneda2 == "BZD" ? 46 : balanceS.BsMoneda2 == "GBP" ? 4 :
-                                            balanceS.BsMoneda2 == "TTD" ? 148 : balanceS.BsMoneda2 == "KYD" ? 88 :
-                                            balanceS.BsMoneda2 == "INR" ? 16 : balanceS.BsMoneda2 == "PKR" ? 119 :
-                                            balanceS.BsMoneda2 == "BSD" ? 42 : balanceS.BsMoneda2 == "SRD" ? 146 :
-                                            balanceS.BsMoneda2 == "TRY" ? 19 : balanceS.BsMoneda2 == "SAR" ? 37 :
-                                            balanceS.BsMoneda2 == "CNY" ? 8 : balanceS.BsMoneda2 == "XCD" ? 36 :
-                                            balanceS.BsMoneda2 == "HUF" ? 26 : balanceS.BsMoneda2 == "AWG" ? 40 :
-                                            balanceS.BsMoneda2 == "CHF" ? 7 : balanceS.BsMoneda2 == "TWD" ? 21 :
-                                            balanceS.BsMoneda2 == "DKK" ? 22 : balanceS.BsMoneda2 == "ANG" ? 69 :
-                                            balanceS.BsMoneda2 == "PLN" ? 23 : balanceS.BsMoneda2 == "MNX" ? 15 : null,
-                                            ExchangeRate = (decimal)balanceS.BsTipcam2,
-                                            Sales = (decimal)balanceS.BsVentas2,
-                                            Utilities = (decimal)balanceS.BsUtiper2,
-                                            TotalAssets = (decimal)balanceS.BsTotact2,
-                                            TotalCurrentAssets = (decimal)balanceS.BsTotcor2,
-                                            ACashBoxBank = (decimal)balanceS.BsCajban2,
-                                            AToCollect = (decimal)balanceS.BsPorcob2,
-                                            AInventory = (decimal)balanceS.BsInvent2,
-                                            AOtherCurrentAssets = (decimal)balanceS.BsActCorOtr2,
-                                            TotalNonCurrentAssets = (decimal)balanceS.BsFijo2 + (decimal)balanceS.BsActotr2,
-                                            AFixed = (decimal)balanceS.BsFijo2,
-                                            AOtherNonCurrentAssets = (decimal)balanceS.BsActotr2,
-                                            TotalLliabilities = (decimal)balanceS.BsTotcrr2 + (decimal)balanceS.BsLarpla2 + (decimal)balanceS.BsCorotr2,
-                                            TotalCurrentLiabilities = (decimal)balanceS.BsTotcrr2,
-                                            LCashBoxBank = (decimal)balanceS.BsBanpro2,
-                                            LOtherCurrentLiabilities = (decimal)balanceS.BsPasotr2,
-                                            TotalNonCurrentLiabilities = (decimal)balanceS.BsLarpla2 + (decimal)balanceS.BsCorotr2,
-                                            LLongTerm = (decimal)balanceS.BsLarpla2,
-                                            LOtherNonCurrentLiabilities = (decimal)balanceS.BsCorotr2,
-                                            TotalPatrimony = (decimal)balanceS.BsTotpat2,
-                                            PCapital = (decimal)balanceS.BsCapita2,
-                                            PStockPile = (decimal)balanceS.BsReser2,
-                                            PUtilities = (decimal)balanceS.BsUtili2,
-                                            POther = (decimal)balanceS.BsPatOtr2,
-                                            TotalLiabilitiesPatrimony = (decimal)balanceS.BsTotpas2,
-                                            LiquidityRatio = (decimal)balanceS.BsTotcor2 / (decimal)balanceS.BsTotcrr2,
-                                            DebtRatio = ((decimal)balanceS.BsTotpat2 / (decimal)balanceS.BsTotcrr2) * 100,
-                                            ProfitabilityRatio = ((decimal)balanceS.BsUtiper2 / (decimal)balanceS.BsVentas2) * 100,
-                                            WorkingCapital = (decimal)balanceS.BsTotcor2 - (decimal)balanceS.BsTotcrr2
-                                        });
+                                            var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                Date = StaticFunctions.VerifyDate(balanceS.BsFecbal2),
+                                                BalanceType = "SITUACIONAL",
+                                                BalanceTypeEng = balanceS.BsTipBal2Ing,
+                                                Duration = balanceS.BsTimbal2,
+                                                DurationEng = balanceS.BsTimBal2Ing,
+                                                IdCurrency = balanceS.BsMoneda2 == "USD" ? 1 : balanceS.BsMoneda2 == "PEN" ? 31 :
+                                           balanceS.BsMoneda2 == "UYU" ? 154 : balanceS.BsMoneda2 == "MXN" ? 15 :
+                                           balanceS.BsMoneda2 == "PAB" ? 120 : balanceS.BsMoneda2 == "DOP" ? 126 :
+                                           balanceS.BsMoneda2 == "GTQ" ? 80 : balanceS.BsMoneda2 == "COP" ? 63 :
+                                           balanceS.BsMoneda2 == "BOB" ? 51 : balanceS.BsMoneda2 == "ARS" ? 38 :
+                                           balanceS.BsMoneda2 == "CRC" ? 66 : balanceS.BsMoneda2 == "PYG" ? 122 :
+                                           balanceS.BsMoneda2 == "CLP" ? 29 : balanceS.BsMoneda2 == "BRL" ? 20 :
+                                           balanceS.BsMoneda2 == "HNL" ? 84 : balanceS.BsMoneda2 == "NIO" ? 115 :
+                                           balanceS.BsMoneda2 == "JMD" ? 93 : balanceS.BsMoneda2 == "MYR" ? 105 :
+                                           balanceS.BsMoneda2 == "EUR" ? 2 : balanceS.BsMoneda2 == "COL" ? 63 :
+                                           balanceS.BsMoneda2 == "VND" ? 156 : balanceS.BsMoneda2 == "GYD" ? 82 :
+                                           balanceS.BsMoneda2 == "UDS" ? 1 : balanceS.BsMoneda2 == "BBD" ? 44 :
+                                           balanceS.BsMoneda2 == "BZD" ? 46 : balanceS.BsMoneda2 == "GBP" ? 4 :
+                                           balanceS.BsMoneda2 == "TTD" ? 148 : balanceS.BsMoneda2 == "KYD" ? 88 :
+                                           balanceS.BsMoneda2 == "INR" ? 16 : balanceS.BsMoneda2 == "PKR" ? 119 :
+                                           balanceS.BsMoneda2 == "BSD" ? 42 : balanceS.BsMoneda2 == "SRD" ? 146 :
+                                           balanceS.BsMoneda2 == "TRY" ? 19 : balanceS.BsMoneda2 == "SAR" ? 37 :
+                                           balanceS.BsMoneda2 == "CNY" ? 8 : balanceS.BsMoneda2 == "XCD" ? 36 :
+                                           balanceS.BsMoneda2 == "HUF" ? 26 : balanceS.BsMoneda2 == "AWG" ? 40 :
+                                           balanceS.BsMoneda2 == "CHF" ? 7 : balanceS.BsMoneda2 == "TWD" ? 21 :
+                                           balanceS.BsMoneda2 == "DKK" ? 22 : balanceS.BsMoneda2 == "ANG" ? 69 :
+                                           balanceS.BsMoneda2 == "PLN" ? 23 : balanceS.BsMoneda2 == "MNX" ? 15 : null,
+                                                ExchangeRate = (decimal)balanceS.BsTipcam2,
+                                                Sales = (decimal)balanceS.BsVentas2,
+                                                Utilities = (decimal)balanceS.BsUtiper2,
+                                                TotalAssets = (decimal)balanceS.BsTotact2,
+                                                TotalCurrentAssets = (decimal)balanceS.BsTotcor2,
+                                                ACashBoxBank = (decimal)balanceS.BsCajban2,
+                                                AToCollect = (decimal)balanceS.BsPorcob2,
+                                                AInventory = (decimal)balanceS.BsInvent2,
+                                                AOtherCurrentAssets = (decimal)balanceS.BsActCorOtr2,
+                                                TotalNonCurrentAssets = (decimal)balanceS.BsFijo2 + (decimal)balanceS.BsActotr2,
+                                                AFixed = (decimal)balanceS.BsFijo2,
+                                                AOtherNonCurrentAssets = (decimal)balanceS.BsActotr2,
+                                                TotalLliabilities = (decimal)balanceS.BsTotcrr2 + (decimal)balanceS.BsLarpla2 + (decimal)balanceS.BsCorotr2,
+                                                TotalCurrentLiabilities = (decimal)balanceS.BsTotcrr2,
+                                                LCashBoxBank = (decimal)balanceS.BsBanpro2,
+                                                LOtherCurrentLiabilities = (decimal)balanceS.BsPasotr2,
+                                                TotalNonCurrentLiabilities = (decimal)balanceS.BsLarpla2 + (decimal)balanceS.BsCorotr2,
+                                                LLongTerm = (decimal)balanceS.BsLarpla2,
+                                                LOtherNonCurrentLiabilities = (decimal)balanceS.BsCorotr2,
+                                                TotalPatrimony = (decimal)balanceS.BsTotpat2,
+                                                PCapital = (decimal)balanceS.BsCapita2,
+                                                PStockPile = (decimal)balanceS.BsReser2,
+                                                PUtilities = (decimal)balanceS.BsUtili2,
+                                                POther = (decimal)balanceS.BsPatOtr2,
+                                                TotalLiabilitiesPatrimony = (decimal)balanceS.BsTotpas2,
+                                                LiquidityRatio = (decimal)balanceS.BsTotcor2 / (decimal)balanceS.BsTotcrr2,
+                                                DebtRatio = ((decimal)balanceS.BsTotpat2 / (decimal)balanceS.BsTotcrr2) * 100,
+                                                ProfitabilityRatio = ((decimal)balanceS.BsUtiper2 / (decimal)balanceS.BsVentas2) * 100,
+                                                WorkingCapital = (decimal)balanceS.BsTotcor2 - (decimal)balanceS.BsTotcrr2
+                                            });
+                                        }
+                                        catch(Exception EX)
+                                        {
+                                            continue;
+                                        }
                                     }
                                     if (balanceS.BsFecbal3 != null && balanceS.BsFecbal3 != "")
                                     {
-                                        var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            Date = StaticFunctions.VerifyDate(balanceS.BsFecbal3),
-                                            BalanceType = "SITUACIONAL",
-                                            BalanceTypeEng = balanceS.BsTipBal3Ing,
-                                            Duration = balanceS.BsTimbal3,
-                                            DurationEng = balanceS.BsTimBal3Ing,
-                                            IdCurrency = balanceS.BsMoneda3 == "USD" ? 1 : balanceS.BsMoneda3 == "PEN" ? 31 :
-                                            balanceS.BsMoneda3 == "UYU" ? 154 : balanceS.BsMoneda3 == "MXN" ? 15 :
-                                            balanceS.BsMoneda3 == "PAB" ? 120 : balanceS.BsMoneda3 == "DOP" ? 126 :
-                                            balanceS.BsMoneda3 == "GTQ" ? 80 : balanceS.BsMoneda3 == "COP" ? 63 :
-                                            balanceS.BsMoneda3 == "BOB" ? 51 : balanceS.BsMoneda3 == "ARS" ? 38 :
-                                            balanceS.BsMoneda3 == "CRC" ? 66 : balanceS.BsMoneda3 == "PYG" ? 122 :
-                                            balanceS.BsMoneda3 == "CLP" ? 29 : balanceS.BsMoneda3 == "BRL" ? 20 :
-                                            balanceS.BsMoneda3 == "HNL" ? 84 : balanceS.BsMoneda3 == "NIO" ? 115 :
-                                            balanceS.BsMoneda3 == "JMD" ? 93 : balanceS.BsMoneda3 == "MYR" ? 105 :
-                                            balanceS.BsMoneda3 == "EUR" ? 2 : balanceS.BsMoneda3 == "COL" ? 63 :
-                                            balanceS.BsMoneda3 == "VND" ? 156 : balanceS.BsMoneda3 == "GYD" ? 82 :
-                                            balanceS.BsMoneda3 == "UDS" ? 1 : balanceS.BsMoneda3 == "BBD" ? 44 :
-                                            balanceS.BsMoneda3 == "BZD" ? 46 : balanceS.BsMoneda3 == "GBP" ? 4 :
-                                            balanceS.BsMoneda3 == "TTD" ? 148 : balanceS.BsMoneda3 == "KYD" ? 88 :
-                                            balanceS.BsMoneda3 == "INR" ? 16 : balanceS.BsMoneda3 == "PKR" ? 119 :
-                                            balanceS.BsMoneda3 == "BSD" ? 42 : balanceS.BsMoneda3 == "SRD" ? 146 :
-                                            balanceS.BsMoneda3 == "TRY" ? 19 : balanceS.BsMoneda3 == "SAR" ? 37 :
-                                            balanceS.BsMoneda3 == "CNY" ? 8 : balanceS.BsMoneda3 == "XCD" ? 36 :
-                                            balanceS.BsMoneda3 == "HUF" ? 26 : balanceS.BsMoneda3 == "AWG" ? 40 :
-                                            balanceS.BsMoneda3 == "CHF" ? 7 : balanceS.BsMoneda3 == "TWD" ? 21 :
-                                            balanceS.BsMoneda3 == "DKK" ? 22 : balanceS.BsMoneda3 == "ANG" ? 69 :
-                                            balanceS.BsMoneda3 == "PLN" ? 23 : balanceS.BsMoneda3 == "MNX" ? 15 : null,
-                                            ExchangeRate = (decimal)balanceS.BsTipcam3,
-                                            Sales = (decimal)balanceS.BsVentas3,
-                                            Utilities = (decimal)balanceS.BsUtiper3,
-                                            TotalAssets = (decimal)balanceS.BsTotact3,
-                                            TotalCurrentAssets = (decimal)balanceS.BsTotcor3,
-                                            ACashBoxBank = (decimal)balanceS.BsCajban3,
-                                            AToCollect = (decimal)balanceS.BsPorcob3,
-                                            AInventory = (decimal)balanceS.BsInvent3,
-                                            AOtherCurrentAssets = (decimal)balanceS.BsActCorOtr3,
-                                            TotalNonCurrentAssets = (decimal)balanceS.BsFijo3 + (decimal)balanceS.BsActotr3,
-                                            AFixed = (decimal)balanceS.BsFijo3,
-                                            AOtherNonCurrentAssets = (decimal)balanceS.BsActotr3,
-                                            TotalLliabilities = (decimal)balanceS.BsTotcrr3 + (decimal)balanceS.BsLarpla3 + (decimal)balanceS.BsCorotr3,
-                                            TotalCurrentLiabilities = (decimal)balanceS.BsTotcrr3,
-                                            LCashBoxBank = (decimal)balanceS.BsBanpro3,
-                                            LOtherCurrentLiabilities = (decimal)balanceS.BsPasotr3,
-                                            TotalNonCurrentLiabilities = (decimal)balanceS.BsLarpla3 + (decimal)balanceS.BsCorotr3,
-                                            LLongTerm = (decimal)balanceS.BsLarpla3,
-                                            LOtherNonCurrentLiabilities = (decimal)balanceS.BsCorotr3,
-                                            TotalPatrimony = (decimal)balanceS.BsTotpat3,
-                                            PCapital = (decimal)balanceS.BsCapita3,
-                                            PStockPile = (decimal)balanceS.BsReser3,
-                                            PUtilities = (decimal)balanceS.BsUtili3,
-                                            POther = (decimal)balanceS.BsPatOtr3,
-                                            TotalLiabilitiesPatrimony = (decimal)balanceS.BsTotpas3,
-                                            LiquidityRatio = (decimal)balanceS.BsTotcor3 / (decimal)balanceS.BsTotcrr3,
-                                            DebtRatio = ((decimal)balanceS.BsTotpat3 / (decimal)balanceS.BsTotcrr3) * 100,
-                                            ProfitabilityRatio = ((decimal)balanceS.BsUtiper3 / (decimal)balanceS.BsVentas3) * 100,
-                                            WorkingCapital = (decimal)balanceS.BsTotcor3 - (decimal)balanceS.BsTotcrr3
-                                        });
+                                            var insertBalance = await _financialBalanceDomain.AddAsync(new FinancialBalance
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                Date = StaticFunctions.VerifyDate(balanceS.BsFecbal3),
+                                                BalanceType = "SITUACIONAL",
+                                                BalanceTypeEng = balanceS.BsTipBal3Ing,
+                                                Duration = balanceS.BsTimbal3,
+                                                DurationEng = balanceS.BsTimBal3Ing,
+                                                IdCurrency = balanceS.BsMoneda3 == "USD" ? 1 : balanceS.BsMoneda3 == "PEN" ? 31 :
+                                          balanceS.BsMoneda3 == "UYU" ? 154 : balanceS.BsMoneda3 == "MXN" ? 15 :
+                                          balanceS.BsMoneda3 == "PAB" ? 120 : balanceS.BsMoneda3 == "DOP" ? 126 :
+                                          balanceS.BsMoneda3 == "GTQ" ? 80 : balanceS.BsMoneda3 == "COP" ? 63 :
+                                          balanceS.BsMoneda3 == "BOB" ? 51 : balanceS.BsMoneda3 == "ARS" ? 38 :
+                                          balanceS.BsMoneda3 == "CRC" ? 66 : balanceS.BsMoneda3 == "PYG" ? 122 :
+                                          balanceS.BsMoneda3 == "CLP" ? 29 : balanceS.BsMoneda3 == "BRL" ? 20 :
+                                          balanceS.BsMoneda3 == "HNL" ? 84 : balanceS.BsMoneda3 == "NIO" ? 115 :
+                                          balanceS.BsMoneda3 == "JMD" ? 93 : balanceS.BsMoneda3 == "MYR" ? 105 :
+                                          balanceS.BsMoneda3 == "EUR" ? 2 : balanceS.BsMoneda3 == "COL" ? 63 :
+                                          balanceS.BsMoneda3 == "VND" ? 156 : balanceS.BsMoneda3 == "GYD" ? 82 :
+                                          balanceS.BsMoneda3 == "UDS" ? 1 : balanceS.BsMoneda3 == "BBD" ? 44 :
+                                          balanceS.BsMoneda3 == "BZD" ? 46 : balanceS.BsMoneda3 == "GBP" ? 4 :
+                                          balanceS.BsMoneda3 == "TTD" ? 148 : balanceS.BsMoneda3 == "KYD" ? 88 :
+                                          balanceS.BsMoneda3 == "INR" ? 16 : balanceS.BsMoneda3 == "PKR" ? 119 :
+                                          balanceS.BsMoneda3 == "BSD" ? 42 : balanceS.BsMoneda3 == "SRD" ? 146 :
+                                          balanceS.BsMoneda3 == "TRY" ? 19 : balanceS.BsMoneda3 == "SAR" ? 37 :
+                                          balanceS.BsMoneda3 == "CNY" ? 8 : balanceS.BsMoneda3 == "XCD" ? 36 :
+                                          balanceS.BsMoneda3 == "HUF" ? 26 : balanceS.BsMoneda3 == "AWG" ? 40 :
+                                          balanceS.BsMoneda3 == "CHF" ? 7 : balanceS.BsMoneda3 == "TWD" ? 21 :
+                                          balanceS.BsMoneda3 == "DKK" ? 22 : balanceS.BsMoneda3 == "ANG" ? 69 :
+                                          balanceS.BsMoneda3 == "PLN" ? 23 : balanceS.BsMoneda3 == "MNX" ? 15 : null,
+                                                ExchangeRate = (decimal)balanceS.BsTipcam3,
+                                                Sales = (decimal)balanceS.BsVentas3,
+                                                Utilities = (decimal)balanceS.BsUtiper3,
+                                                TotalAssets = (decimal)balanceS.BsTotact3,
+                                                TotalCurrentAssets = (decimal)balanceS.BsTotcor3,
+                                                ACashBoxBank = (decimal)balanceS.BsCajban3,
+                                                AToCollect = (decimal)balanceS.BsPorcob3,
+                                                AInventory = (decimal)balanceS.BsInvent3,
+                                                AOtherCurrentAssets = (decimal)balanceS.BsActCorOtr3,
+                                                TotalNonCurrentAssets = (decimal)balanceS.BsFijo3 + (decimal)balanceS.BsActotr3,
+                                                AFixed = (decimal)balanceS.BsFijo3,
+                                                AOtherNonCurrentAssets = (decimal)balanceS.BsActotr3,
+                                                TotalLliabilities = (decimal)balanceS.BsTotcrr3 + (decimal)balanceS.BsLarpla3 + (decimal)balanceS.BsCorotr3,
+                                                TotalCurrentLiabilities = (decimal)balanceS.BsTotcrr3,
+                                                LCashBoxBank = (decimal)balanceS.BsBanpro3,
+                                                LOtherCurrentLiabilities = (decimal)balanceS.BsPasotr3,
+                                                TotalNonCurrentLiabilities = (decimal)balanceS.BsLarpla3 + (decimal)balanceS.BsCorotr3,
+                                                LLongTerm = (decimal)balanceS.BsLarpla3,
+                                                LOtherNonCurrentLiabilities = (decimal)balanceS.BsCorotr3,
+                                                TotalPatrimony = (decimal)balanceS.BsTotpat3,
+                                                PCapital = (decimal)balanceS.BsCapita3,
+                                                PStockPile = (decimal)balanceS.BsReser3,
+                                                PUtilities = (decimal)balanceS.BsUtili3,
+                                                POther = (decimal)balanceS.BsPatOtr3,
+                                                TotalLiabilitiesPatrimony = (decimal)balanceS.BsTotpas3,
+                                                LiquidityRatio = (decimal)balanceS.BsTotcor3 / (decimal)balanceS.BsTotcrr3,
+                                                DebtRatio = ((decimal)balanceS.BsTotpat3 / (decimal)balanceS.BsTotcrr3) * 100,
+                                                ProfitabilityRatio = ((decimal)balanceS.BsUtiper3 / (decimal)balanceS.BsVentas3) * 100,
+                                                WorkingCapital = (decimal)balanceS.BsTotcor3 - (decimal)balanceS.BsTotcrr3
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
                                     }
 
                                 }
@@ -1076,12 +1124,14 @@ namespace DRRCore.Application.Main.MigrationApplication
                                     {
                                         if (item != null)
                                         {
-                                            var insertHistorico = await _financialSalesHistoryDomain.AddAsync(new SalesHistory
+                                            try
                                             {
-                                                Id = 0,
-                                                IdCompany = inserted,
-                                                Date = StaticFunctions.VerifyDate(item.VeFecha),
-                                                IdCurrency = item.PaiMone == "USD020" ? 1 : item.PaiMone == "PEN015" ? 31 : item.PaiMone == "USD007" ? 1 :
+                                                var insertHistorico = await _financialSalesHistoryDomain.AddAsync(new SalesHistory
+                                                {
+                                                    Id = 0,
+                                                    IdCompany = inserted,
+                                                    Date = StaticFunctions.VerifyDate(item.VeFecha),
+                                                    IdCurrency = item.PaiMone == "USD020" ? 1 : item.PaiMone == "PEN015" ? 31 : item.PaiMone == "USD007" ? 1 :
                                                 item.PaiMone == "USD008" ? 1 : item.PaiMone == "PEN015" ? 31 :
                                                 item.PaiMone == "USD207" ? 1 : item.PaiMone == "USD016" ? 1 :
                                                 item.PaiMone == "USD213" ? 1 : item.PaiMone == "USD207" ? 1 :
@@ -1111,11 +1161,16 @@ namespace DRRCore.Application.Main.MigrationApplication
                                                 item.PaiMone == "HUF" ? 26 : item.PaiMone == "AWG043" ? 40 :
                                                 item.PaiMone == "CHF083" ? 7 : item.PaiMone == "ANG027" ? 69 :
                                                 item.PaiMone == "ANG057" ? 69 : item.PaiMone == "ANG081" ? 69 : null,
-                                                Amount = (decimal)item.VeVentas,
-                                                ExchangeRate = (decimal)item.VeTipcam,
-                                                EquivalentToDollars = (decimal)item.VeVentas / (decimal)item.VeTipcam,
+                                                    Amount = (decimal)item.VeVentas,
+                                                    ExchangeRate = (decimal)item.VeTipcam,
+                                                    EquivalentToDollars = (decimal)item.VeVentas / (decimal)item.VeTipcam,
 
-                                            });
+                                                });
+                                            }
+                                            catch(Exception ex)
+                                            {
+                                                continue;
+                                            }
                                         }
                                     }
                                 }
@@ -1126,14 +1181,21 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 {
                                     foreach (var imp in imports)
                                     {
-                                        var insertImpo = await _importsAndExportsDomain.AddAsync(new ImportsAndExport
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            Type = "I",
-                                            Year = imp.EiAno,
-                                            Amount = imp.EiMonto
-                                        });
+                                            var insertImpo = await _importsAndExportsDomain.AddAsync(new ImportsAndExport
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                Type = "I",
+                                                Year = imp.EiAno,
+                                                Amount = imp.EiMonto
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
                                     }
                                 }
 
@@ -1144,14 +1206,21 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 {
                                     foreach (var exp in exports)
                                     {
-                                        var insertExpo = await _importsAndExportsDomain.AddAsync(new ImportsAndExport
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            Type = "E",
-                                            Year = exp.ExAno,
-                                            Amount = exp.ExMonto
-                                        });
+                                            var insertExpo = await _importsAndExportsDomain.AddAsync(new ImportsAndExport
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                Type = "E",
+                                                Year = exp.ExAno,
+                                                Amount = exp.ExMonto
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
                                     }
                                 }
 
@@ -1162,11 +1231,13 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 {
                                     foreach (var item in providers)
                                     {
-                                        var insertProv = await _providerDomain.AddAsync(new Provider
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            IdCountry = item.PaiCodigo == "001" ? 11 : item.PaiCodigo == "002" ? 29 : item.PaiCodigo == "003" ? 34 :
+                                            var insertProv = await _providerDomain.AddAsync(new Provider
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                IdCountry = item.PaiCodigo == "001" ? 11 : item.PaiCodigo == "002" ? 29 : item.PaiCodigo == "003" ? 34 :
                                                item.PaiCodigo == "004" ? 54 : item.PaiCodigo == "005" ? 57 : item.PaiCodigo == "006" ? 49 :
                                                item.PaiCodigo == "007" ? 70 : item.PaiCodigo == "008" ? 72 : item.PaiCodigo == "009" ? 100 :
                                                item.PaiCodigo == "010" ? 108 : item.PaiCodigo == "012" ? 168 : item.PaiCodigo == "013" ? 179 :
@@ -1241,31 +1312,36 @@ namespace DRRCore.Application.Main.MigrationApplication
                                                item.PaiCodigo == "233" ? 60 : item.PaiCodigo == "234" ? 30 : item.PaiCodigo == "235" ? 217 :
                                                item.PaiCodigo == "236" ? 231 : item.PaiCodigo == "237" ? 30 : item.PaiCodigo == "238" ? 30 :
                                                item.PaiCodigo == "239" ? 18 : item.PaiCodigo == "240" ? 207 : item.PaiCodigo == "241" ? 155 : null,
-                                            Name = item.ProvNombre,
-                                            Qualification = item.CumCodigo == "02" ? "Puntual" : item.CumCodigo == "03" ? "Lento Eventual" :
+                                                Name = item.ProvNombre,
+                                                Qualification = item.CumCodigo == "02" ? "Puntual" : item.CumCodigo == "03" ? "Lento Eventual" :
                                              item.CumCodigo == "04" ? "Lento Siempre" : item.CumCodigo == "05" ? "Moroso" :
                                               item.CumCodigo == "06" ? "Sin Experiencia" : item.CumCodigo == "01" ? "" : null,
-                                            QualificationEng = item.CumCodigo == "02" ? "Prompt" : item.CumCodigo == "03" ? "Sometimes delayed" :
+                                                QualificationEng = item.CumCodigo == "02" ? "Prompt" : item.CumCodigo == "03" ? "Sometimes delayed" :
                                              item.CumCodigo == "04" ? "Always delayed" : item.CumCodigo == "05" ? "Delinquent" :
                                               item.CumCodigo == "06" ? "No experience" : item.CumCodigo == "01" ? "" : null,
-                                            Date = item.ProvFecha,
-                                            Telephone = item.ProvTelefo,
-                                            AttendedBy = item.ProvAtendio,
-                                            IdCurrency = item.ProvMnLiCr == "US$" ? 1 : item.ProvMnLiCr == "MN" ? 31 : item.ProvMnLiCr == "EUR" ? 2 : null,
-                                            MaximumAmount = item.ProvLinCre,
-                                            MaximumAmountEng = item.ProvLinCreIng,
-                                            TimeLimit = item.ProvPlazos,
-                                            TimeLimitEng = item.ProvPlazosIng,
-                                            Compliance = item.ProvCumple,
-                                            ClientSince = item.ProvTiempo,
-                                            ClientSinceEng = item.ProvTiempoIng,
-                                            ProductsTheySell = item.ProvVenden,
-                                            ProductsTheySellEng = item.ProvVendenIng,
-                                            AdditionalCommentary = item.ProvComen,
-                                            AdditionalCommentaryEng = item.ProvComenIng,
-                                            ReferentCommentary = item.ProvTexto,
+                                                Date = item.ProvFecha,
+                                                Telephone = item.ProvTelefo,
+                                                AttendedBy = item.ProvAtendio,
+                                                IdCurrency = item.ProvMnLiCr == "US$" ? 1 : item.ProvMnLiCr == "MN" ? 31 : item.ProvMnLiCr == "EUR" ? 2 : null,
+                                                MaximumAmount = item.ProvLinCre,
+                                                MaximumAmountEng = item.ProvLinCreIng,
+                                                TimeLimit = item.ProvPlazos,
+                                                TimeLimitEng = item.ProvPlazosIng,
+                                                Compliance = item.ProvCumple,
+                                                ClientSince = item.ProvTiempo,
+                                                ClientSinceEng = item.ProvTiempoIng,
+                                                ProductsTheySell = item.ProvVenden,
+                                                ProductsTheySellEng = item.ProvVendenIng,
+                                                AdditionalCommentary = item.ProvComen,
+                                                AdditionalCommentaryEng = item.ProvComenIng,
+                                                ReferentCommentary = item.ProvTexto,
 
-                                        });
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
                                     }
                                 }
                                 //morosidad comercial
@@ -1274,19 +1350,26 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 {
                                     foreach (var item in morComercial)
                                     {
-                                        var insertMorCom = await _comercialLatePaymentDomain.AddAsync(new ComercialLatePayment
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            CreditorOrSupplier = item.PaGirador,
-                                            DocumentType = item.PaTitulo,
-                                            DocumentTypeEng = item.PaTituloIng,
-                                            Date = item.PaFecpro,
-                                            AmountNc = (decimal)item.PaMonmn,
-                                            AmountFc = (decimal)item.PaMonme,
-                                            PendingPaymentDate = item.PaFecreg,
-                                            DaysLate = item.PaDiaatr,
-                                        });
+                                            var insertMorCom = await _comercialLatePaymentDomain.AddAsync(new ComercialLatePayment
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                CreditorOrSupplier = item.PaGirador,
+                                                DocumentType = item.PaTitulo,
+                                                DocumentTypeEng = item.PaTituloIng,
+                                                Date = item.PaFecpro,
+                                                AmountNc = (decimal)item.PaMonmn,
+                                                AmountFc = (decimal)item.PaMonme,
+                                                PendingPaymentDate = item.PaFecreg,
+                                                DaysLate = item.PaDiaatr,
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
                                     }
                                 }
                                 //endeudamiento bancario
@@ -1295,18 +1378,25 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 {
                                     foreach (var item in endBancario)
                                     {
-                                        var insertMorCom = await _bankDebtDomain.AddAsync(new BankDebt
+                                        try
                                         {
-                                            Id = 0,
-                                            IdCompany = inserted,
-                                            BankName = item.SbdNombre,
-                                            Qualification = item.SbdCalifi,
-                                            QualificationEng = item.SbdCalifiIng,
-                                            DebtNc = (decimal)item.SbdMonto,
-                                            DebtFc = (decimal)item.SbdMonMe,
-                                            Memo = item.SbdMemo,
-                                            MemoEng = item.SbdMemoIng,
-                                        });
+                                            var insertMorCom = await _bankDebtDomain.AddAsync(new BankDebt
+                                            {
+                                                Id = 0,
+                                                IdCompany = inserted,
+                                                BankName = item.SbdNombre,
+                                                Qualification = item.SbdCalifi,
+                                                QualificationEng = item.SbdCalifiIng,
+                                                DebtNc = (decimal)item.SbdMonto,
+                                                DebtFc = (decimal)item.SbdMonMe,
+                                                Memo = item.SbdMemo,
+                                                MemoEng = item.SbdMemoIng,
+                                            });
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            continue;
+                                        }
                                     }
                                 }
 
@@ -1321,7 +1411,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError("Error empresa :" + empresa.EmCodigo);
+                        _logger.LogError("Error empresa :" + empresa.EmCodigo+ " : "+ex.Message);
                         continue;
                     }
                 }
