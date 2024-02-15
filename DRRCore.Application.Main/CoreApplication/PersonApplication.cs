@@ -25,12 +25,13 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IPersonHistoryDomain _personHistoryDomain;
         private readonly IPersonGeneralInfoDomain _personGeneralInfoDomain;
         private readonly ICompanyPartnersDomain _companyPartnersDomain;
+        private readonly IPersonImagesDomain _personImagesDomain;
 
         public PersonApplication(IMapper mapper, ILogger logger, IPersonDomain personDomain, IPersonHomeDomain personHomeDomain,
             IPersonJobDomain personJobDomain, IPersonSBSDomain personSBSDomain, IProviderDomain providerDomain, 
             IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain, ICompanyPartnersDomain companyPartnersDomain,
             IPersonActivitiesDomain personActivitiesDomain, IPersonPropertyDomain personPropertyDomain, 
-            IPersonHistoryDomain personHistoryDomain, IPersonGeneralInfoDomain personGeneralInfoDomain)
+            IPersonHistoryDomain personHistoryDomain, IPersonGeneralInfoDomain personGeneralInfoDomain, IPersonImagesDomain personImagesDomain)
         {
             _mapper = mapper;
             _logger = logger;
@@ -46,6 +47,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _bankDebtDomain = bankDebtDomain;
             _personSBSDomain = personSBSDomain;
             _companyPartnersDomain = companyPartnersDomain;
+            _personImagesDomain = personImagesDomain;
         }
 
         public async Task<Response<bool>> ActivateWebPerson(int id)
@@ -1283,6 +1285,47 @@ namespace DRRCore.Application.Main.CoreApplication
                 response.Data = _mapper.Map<GetProviderResponseDto>(provider);
             }
             catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetStatusPersonResponseDto>> GetStatusPerson(int idPerson)
+        {
+            var response = new Response<GetStatusPersonResponseDto>();
+            var status = new GetStatusPersonResponseDto();
+            try
+            {
+                var person = await _personDomain.GetByIdAsync(idPerson);
+                if(person != null)
+                {
+                    status.Person = true;
+                    var home = await _personHomeDomain.GetByIdPersonAsync(idPerson);
+                    status.Home = home != null ? true : false;
+                    var job = await _personJobDomain.GetByIdPersonAsync(idPerson);
+                    status.Job = job != null ? true : false;
+                    var activities = await _personActivitiesDomain.GetByIdPersonAsync(idPerson);
+                    status.Activities = activities != null ? true : false;
+                    var properties = await _personPropertyDomain.GetByIdPersonAsync(idPerson);
+                    status.Properties = properties != null ? true : false;
+                    var sbs = await _personSBSDomain.GetByIdPerson(idPerson);
+                    var provider = await _providerDomain.GetProviderByIdPerson(idPerson);
+                    var bankDebt = await _bankDebtDomain.GetBankDebtsByIdPerson(idPerson);
+                    var comercial = await _comercialLatePaymentDomain.GetComercialLatePaymetByIdPerson(idPerson);
+                    status.Sbs = sbs != null || provider.Count > 0 || bankDebt.Count > 0 || comercial.Count > 0 ? true : false;
+                    var history = await _personHistoryDomain.GetByIdPersonAsync(idPerson);
+                    status.History = history != null ? true : false;
+                    var infoGeneral = await _personGeneralInfoDomain.GetByIdPersonAsync(idPerson);
+                    status.InfoGeneral = infoGeneral != null ? true : false;
+                    var images = await _personImagesDomain.GetByIdPerson(idPerson);
+                    status.Images = images != null ? true : false;
+                }
+                response.Data = status;
+            }
+            catch(Exception ex)
             {
                 response.IsSuccess = false;
                 response.Message = Messages.BadQuery;

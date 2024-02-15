@@ -25,5 +25,7 @@ public partial class SubscriberCategory
 
     public bool? Enable { get; set; }
 
+    public int? OldCode { get; set; }
+
     public virtual ICollection<Subscriber> Subscribers { get; set; } = new List<Subscriber>();
 }

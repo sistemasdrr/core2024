@@ -35,6 +35,17 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                         modifierTraduction.LastUpdaterUser = item.LastUpdaterUser;
                         context.Traductions.Update(modifierTraduction);
                     }
+                    else
+                    {
+                        var newTraduction = new Traduction();
+                        newTraduction.Id = 0;
+                        newTraduction.IdCompany = obj.IdCompany;
+                        newTraduction.Identifier = item.Identifier;
+                        newTraduction.ShortValue = item.ShortValue;
+                        newTraduction.LargeValue = item.LargeValue;
+                        newTraduction.LastUpdaterUser = item.LastUpdaterUser;
+                        await context.Traductions.AddAsync(newTraduction);
+                    }
                 }
                 await context.SaveChangesAsync();
                 return obj.Id;
@@ -130,6 +141,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using var context = new SqlCoreContext();
                 context.CompanyFinancialInformations.Update(obj);
+                var existingTraduction = Constants.TRADUCTIONS_FORMS.Where(x => x.Contains("_F_"));
                 foreach (var item in traductions)
                 {
                     var modifierTraduction = await context.Traductions.Where(x => x.IdCompany == obj.IdCompany && x.Identifier == item.Identifier).FirstOrDefaultAsync();
@@ -139,9 +151,21 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                         modifierTraduction.LargeValue = item.LargeValue;
                         modifierTraduction.LastUpdaterUser = item.LastUpdaterUser;
                         context.Traductions.Update(modifierTraduction);
+                        await context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        var newTraduction = new Traduction();
+                        newTraduction.Id = 0;
+                        newTraduction.IdCompany = obj.IdCompany;
+                        newTraduction.Identifier = item.Identifier;
+                        newTraduction.ShortValue = item.ShortValue;
+                        newTraduction.LargeValue = item.LargeValue;
+                        newTraduction.LastUpdaterUser = item.LastUpdaterUser;
+                        await context.Traductions.AddAsync(newTraduction);
+                        await context.SaveChangesAsync();
                     }
                 }
-                await context.SaveChangesAsync();
                 return obj.Id;
             }
             catch (Exception ex)

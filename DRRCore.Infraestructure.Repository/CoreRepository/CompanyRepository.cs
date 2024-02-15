@@ -252,6 +252,17 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                             modifierTraduction.LastUpdaterUser=item.LastUpdaterUser;
                             context.Traductions.Update(modifierTraduction);
                         }
+                        else
+                        {
+                            var newTraduction = new Traduction();
+                            newTraduction.Id = 0;
+                            newTraduction.IdCompany = obj.Id;
+                            newTraduction.Identifier = item.Identifier;
+                            newTraduction.ShortValue = item.ShortValue;
+                            newTraduction.LargeValue = item.LargeValue;
+                            newTraduction.LastUpdaterUser = item.LastUpdaterUser;
+                            await context.Traductions.AddAsync(newTraduction);
+                        }
                     }                    
                     await context.SaveChangesAsync();
                     return true;

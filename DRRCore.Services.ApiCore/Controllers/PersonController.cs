@@ -273,5 +273,11 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _personApplication.GetListPersonPartnerByIdPerson(idPerson));
         }
+        [HttpGet()]
+        [Route("getStatus")]
+        public async Task<ActionResult> getStatus(int idPerson)
+        {
+            return Ok(await _personApplication.GetStatusPerson(idPerson));
+        }
     }
 }

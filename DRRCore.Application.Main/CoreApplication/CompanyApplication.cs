@@ -37,6 +37,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IWorkerHistoryDomain _workerHistoryDomain;
         private readonly ICompanyRelationDomain _companyRelationDomain;
         private readonly IReportingDownload _reportingDownload;
+        private readonly ICompanyImagesDomain _companyImagesDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
@@ -44,7 +45,7 @@ namespace DRRCore.Application.Main.CoreApplication
             ICompanyFinancialInformationDomain companyFinancialInformationDomain, IMapper mapper, ILogger logger, ICompanyShareHolderDomain companyShareHolderDomain,
             IFinancialSalesHistoryDomain financialSalesHistoryDomain, IFinancialBalanceDomain financialBalanceDomain, IWorkerHistoryDomain workerHistoryDomain,
             IProviderDomain providerDomain, IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain, ICompanyRelationDomain companyRelationDomain,
-            ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain,
+            ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain, ICompanyImagesDomain companyImagesDomain,
             ICompanyGeneralInformationDomain companyGeneralInformationDomain,
             IReportingDownload reportingDownload,
             IImportsAndExportsDomain importsAndExportsDomain, ICompanyPartnersDomain companyPartnersDomain, IHttpContextAccessor httpContextAccessor)
@@ -67,6 +68,8 @@ namespace DRRCore.Application.Main.CoreApplication
             _companyShareHolderDomain = companyShareHolderDomain;
             _workerHistoryDomain = workerHistoryDomain;
             _companyRelationDomain = companyRelationDomain;
+
+            _companyImagesDomain = companyImagesDomain;
             _mapper = mapper;
             _logger = logger;
             _reportingDownload=reportingDownload;
@@ -2137,7 +2140,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 string companyCode = company.OldCode ?? "N" + company.Id.ToString("D6");
                 string languageFileName = language == "I" ? "ENG" : "ESP";
                 string fileFormat = "{0}_{1}{2}";
-                string report = language == "I" ? "F8-EMPRESAS" : "F8-EMPRESAS-ES";
+                string report = language == "I" ? "F8-EMPRESAS-EN" : "F8-EMPRESAS-ES";
                 var reportRenderType = StaticFunctions.GetReportRenderType(format);
                 var extension = StaticFunctions.FileExtension(reportRenderType);
                 var contentType = StaticFunctions.GetContentType(reportRenderType);
@@ -2156,6 +2159,51 @@ namespace DRRCore.Application.Main.CoreApplication
 
             }
             catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetStatusCompanyResponseDto>> GetStatusCompany(int idCompany)
+        {
+            var response = new Response<GetStatusCompanyResponseDto>();
+            var status = new GetStatusCompanyResponseDto();
+            try
+            {
+                var company = await _companyDomain.GetByIdAsync(idCompany);
+                if(company != null)
+                {
+                    status.Company = true;
+                    var background = await _companyBackgroundDomain.GetByIdAsync(idCompany);
+                    status.Background = background != null ? true : false;
+                    var branch = await _companyBranchDomain.GetByIdAsync(idCompany);
+                    status.Branch = branch != null ? true : false;
+                    var financial = await _companyFinancialInformationDomain.GetByIdCompany(idCompany);
+                    status.Financial = financial != null ? true : false;
+                    var balance = await _financialBalanceDomain.GetFinancialBalanceByIdCompany(idCompany, "GENERAL");
+                    status.Balance = balance.Count > 0 ? true : false;
+                    var sbs = await _companySBSDomain.GetByIdCompany(idCompany);
+                    var provider = await _providerDomain.GetProvidersByIdCompany(idCompany);
+                    var bankDebt = await _bankDebtDomain.GetBankDebtsByIdCompany(idCompany);
+                    var comercial = await _comercialLatePaymentDomain.GetComercialLatePaymetByIdCompany(idCompany);
+                    status.Sbs = sbs != null || provider.Count > 0 || bankDebt.Count > 0 || comercial.Count > 0 ? true : false;
+                    var opinion = await _companyCreditOpinionDomain.GetByIdCompany(idCompany);
+                    status.Opinion = opinion != null ? true : false;
+                    var infoGeneral = await _companyGeneralInformationDomain.GetByIdCompany(idCompany);
+                    status.InfoGeneral = infoGeneral != null ? true : false;
+                    var images = await _companyImagesDomain.GetByIdCompany(idCompany);
+                    status.Images = images != null ? true : false;
+                }
+                else
+                {
+                    status.Company = false;
+                }
+                response.Data = status;
+            }
+            catch(Exception ex)
             {
                 response.IsSuccess = false;
                 response.Message = Messages.BadQuery;

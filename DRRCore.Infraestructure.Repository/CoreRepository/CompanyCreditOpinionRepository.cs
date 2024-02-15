@@ -36,6 +36,18 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                             modifierTraduction.LastUpdaterUser = item.LastUpdaterUser;
                             context.Traductions.Update(modifierTraduction);
                         }
+                        else
+                        {
+                            var newTraduction = new Traduction();
+                            newTraduction.Id = 0;
+                            newTraduction.IdCompany = obj.IdCompany;
+                            newTraduction.Identifier = item.Identifier;
+                            newTraduction.ShortValue = item.ShortValue;
+                            newTraduction.LargeValue = item.LargeValue;
+                            newTraduction.LastUpdaterUser = item.LastUpdaterUser;
+                            await context.Traductions.AddAsync(newTraduction);
+                            await context.SaveChangesAsync();
+                        }
                     }
                     await context.SaveChangesAsync();
                     return obj.Id;
@@ -132,6 +144,17 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                             modifierTraduction.LargeValue = item.LargeValue;
                             modifierTraduction.LastUpdaterUser = item.LastUpdaterUser;
                             context.Traductions.Update(modifierTraduction);
+                        }
+                        else
+                        {
+                            var newTraduction = new Traduction();
+                            newTraduction.Id = 0;
+                            newTraduction.IdCompany = obj.IdCompany;
+                            newTraduction.Identifier = item.Identifier;
+                            newTraduction.ShortValue = item.ShortValue;
+                            newTraduction.LargeValue = item.LargeValue;
+                            newTraduction.LastUpdaterUser = item.LastUpdaterUser;
+                            await context.Traductions.AddAsync(newTraduction);
                         }
                     }
                     await context.SaveChangesAsync();

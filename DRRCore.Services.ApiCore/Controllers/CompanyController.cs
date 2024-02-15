@@ -443,6 +443,12 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _companyApplication.GetListCompanyRelationByIdCompany(idCompany));
         }
         [HttpGet()]
+        [Route("getStatus")]
+        public async Task<ActionResult> getStatus(int idCompany)
+        {
+            return Ok(await _companyApplication.GetStatusCompany(idCompany));
+        }
+        [HttpGet()]
         [Route("getf1")]
         public async Task<IActionResult> GetF1(int idCompany,string language, string format)
         {

@@ -720,12 +720,12 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("place");
             entity.Property(e => e.PostalCode)
-                .HasMaxLength(10)
+                .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("postalCode");
             entity.Property(e => e.Print).HasColumnName("print");
             entity.Property(e => e.Quality)
-                .HasMaxLength(2)
+                .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("quality");
@@ -748,7 +748,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("taxTypeName");
             entity.Property(e => e.Telephone)
-                .HasMaxLength(50)
+                .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("telephone");
             entity.Property(e => e.TypeRegister)
@@ -764,7 +764,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("webPage");
             entity.Property(e => e.WhatsappPhone)
-                .HasMaxLength(40)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("whatsappPhone");
             entity.Property(e => e.YearFundation)
@@ -1141,6 +1141,9 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.ReportCommentWithoutBalance)
                 .IsUnicode(false)
                 .HasColumnName("reportCommentWithoutBalance");
+            entity.Property(e => e.TabCommentary)
+                .IsUnicode(false)
+                .HasColumnName("tabCommentary");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
@@ -3674,6 +3677,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.Observations)
                 .IsUnicode(false)
                 .HasColumnName("observations");
+            entity.Property(e => e.OldCode).HasColumnName("oldCode");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
@@ -3842,7 +3846,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("taxType");
             entity.Property(e => e.Telephone)
-                .HasMaxLength(30)
+                .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("telephone");
             entity.Property(e => e.TimeLimit)

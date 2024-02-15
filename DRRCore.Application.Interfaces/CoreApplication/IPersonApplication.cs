@@ -47,5 +47,6 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetCompanyPartnersResponseDto>> GetPersonPartnerById(int id);
         Task<Response<bool>> DeletePersonPartner(int id);
         Task<Response<List<GetListPersonPartnerResponseDto>>> GetListPersonPartnerByIdPerson(int idPerson);
+        Task<Response<GetStatusPersonResponseDto>> GetStatusPerson(int idPerson);
     }
 }

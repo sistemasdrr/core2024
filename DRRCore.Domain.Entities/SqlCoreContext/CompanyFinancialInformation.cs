@@ -41,6 +41,8 @@ public partial class CompanyFinancialInformation
 
     public bool? Enable { get; set; }
 
+    public string? TabCommentary { get; set; }
+
     public virtual CollaborationDegree? IdCollaborationDegreeNavigation { get; set; }
 
     public virtual Company? IdCompanyNavigation { get; set; }

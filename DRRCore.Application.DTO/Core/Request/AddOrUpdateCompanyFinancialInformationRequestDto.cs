@@ -28,6 +28,8 @@
 
         public string? AnalystCommentary { get; set; }
 
+        public string? TabCommentary { get; set; }
+
         public List<TraductionDto> Traductions { get; set; } = new List<TraductionDto>();
 
     }
