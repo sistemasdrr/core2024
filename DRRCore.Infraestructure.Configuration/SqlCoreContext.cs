@@ -14,7 +14,7 @@ public partial class SqlCoreContext : DbContext
         : base(options)
     {
     }
-
+    public virtual DbSet<CompanyXmlData> CompanyXmls{ get; set; }
     public virtual DbSet<Agent> Agents { get; set; }
 
     public virtual DbSet<AgentPrice> AgentPrices { get; set; }
@@ -177,6 +177,8 @@ public partial class SqlCoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<CompanyXmlData>().HasNoKey();
+
         modelBuilder.Entity<Agent>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Agent__3213E83FAB71BE05");

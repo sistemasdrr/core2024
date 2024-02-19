@@ -12,10 +12,12 @@ namespace DRRCore.Services.ApiCore.Controllers
     {
         private readonly ICompanyApplication _companyApplication;
         private readonly ICompanyImagesApplication _companyImagesApplication;
-        public CompanyController(ICompanyApplication companyApplication, ICompanyImagesApplication companyImagesApplication)
+        private readonly IXmlApplication _xmlApplication;
+        public CompanyController(IXmlApplication xmlApplication, ICompanyApplication companyApplication, ICompanyImagesApplication companyImagesApplication)
         {
             _companyApplication = companyApplication;
             _companyImagesApplication = companyImagesApplication;
+            _xmlApplication = xmlApplication;
         }
         [HttpPost()]
         [Route("add")]
@@ -463,6 +465,12 @@ namespace DRRCore.Services.ApiCore.Controllers
             var result = await _companyApplication.DownloadF8(idCompany, language, format);
 
             return File(result.Data.File, result.Data.ContentType, result.Data.Name);
+        }
+        [HttpGet()]
+        [Route("getXmlCompany")]
+        public async Task<ActionResult> getXmlCompany(int idTicket)
+        {
+            return Ok(await _xmlApplication.GetXmlCompanyAsync(idTicket));
         }
     }
 }

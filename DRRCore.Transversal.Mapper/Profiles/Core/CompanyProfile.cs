@@ -293,6 +293,9 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
             .ForMember(dest => dest.IdCompanyRelation, opt => opt?.MapFrom(src => src.IdCompanyRelation == 0 ? null : src.IdCompanyRelation))
           .ReverseMap();
+            CreateMap<WorkersHistory, GetListWorkersHistoryResponseDto>()
+            .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+      .ReverseMap();
         }
 
         private int GetTraductionPercentage(ICollection<Traduction> traductions)
