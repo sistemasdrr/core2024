@@ -215,7 +215,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             CreateMap<CompanyPartner, GetCompanyPartnersResponseDto>()
             .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
             .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
-           // .ForMember(dest => dest.IdProfession, opt => opt?.MapFrom(src => src.IdProfession == 0 ? null : src.IdProfession))
+            .ForMember(dest => dest.Profession, opt => opt?.MapFrom(src => src.Profession))
             .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.StartDate)))
       .ReverseMap();
             CreateMap<CompanyPartner, GetListCompanyPartnersResponseDto>()
@@ -225,7 +225,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             .ForMember(dest => dest.Nationality, opt => opt?.MapFrom(src => src.IdPersonNavigation.Nationality))
             .ForMember(dest => dest.BirthDate, opt => opt?.MapFrom(src => src.IdPersonNavigation.BirthDate))
             .ForMember(dest => dest.IdentificationDocument, opt => opt?.MapFrom(src => src.IdPersonNavigation.IdDocumentTypeNavigation.Abreviation + " - " + src.IdPersonNavigation.CodeDocumentType))
-           // .ForMember(dest => dest.Profession, opt => opt?.MapFrom(src => src.IdProfessionNavigation.Name))
+            .ForMember(dest => dest.Profession, opt => opt?.MapFrom(src => src.Profession))
             .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.StartDate)))
       .ReverseMap();
             CreateMap<CompanyPartner, GetListPersonPartnerResponseDto>()
@@ -237,12 +237,12 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             .ForMember(dest => dest.TaxTypeName, opt => opt?.MapFrom(src => src.IdCompanyNavigation.TaxTypeName))
             .ForMember(dest => dest.TaxTypeCode, opt => opt?.MapFrom(src => src.IdCompanyNavigation.TaxTypeCode))
             .ForMember(dest => dest.Situation, opt => opt?.MapFrom(src => src.IdCompanyNavigation.IdLegalRegisterSituationNavigation.Abreviation))
-           // .ForMember(dest => dest.Profession, opt => opt?.MapFrom(src => src.IdProfessionNavigation.Name))
+            .ForMember(dest => dest.Profession, opt => opt?.MapFrom(src => src.Profession))
       .ReverseMap();
             CreateMap<AddOrUpdateCompanyPartnersRequestDto, CompanyPartner>()
              .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
             .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
-           // .ForMember(dest => dest.IdProfession, opt => opt?.MapFrom(src => src.IdProfession == 0 ? null : src.IdProfession))
+            .ForMember(dest => dest.Profession, opt => opt?.MapFrom(src => src.Profession))
                  .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.StartDate)))
           .ReverseMap();
 

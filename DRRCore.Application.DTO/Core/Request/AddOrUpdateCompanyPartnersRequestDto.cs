@@ -10,7 +10,7 @@
 
         public bool? MainExecutive { get; set; }
 
-        public int? IdProfession { get; set; }
+        public string? Profession { get; set; }
 
         public int? Participation { get; set; }
 

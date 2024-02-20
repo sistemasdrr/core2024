@@ -25,10 +25,18 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICompanyBranchDomain _companyBranchDomain;
         private readonly ICompanyFinancialInformationDomain _companyFinancialInformationDomain;
         private readonly ICompanyGeneralInformationDomain _companyGeneralInformationDomain;
+        private readonly ICompanyCreditOpinionDomain _companyCreditOpinionDomain;
         private readonly ICompanySBSDomain _companySBSDomain;
+        private readonly IFinancialBalanceDomain _financialBalanceDomain;
+        private readonly ICompanyPartnersDomain _companyPartnersDomain;
+        private readonly ICompanyShareHolderDomain _companyShareHolderDomain;
         public XmlApplication(ILogger logger,IMapper mapper, ICompanyDomain companyDomain,
-            ICompanyBackgroundDomain companyBackgroundDomain, ICompanyBranchDomain companyBranchDomain, ICompanyFinancialInformationDomain companyFinancialInformationDomain,
-            ITicketDomain ticketDomain, ICompanyGeneralInformationDomain companyGeneralInformationDomain
+            ICompanyBackgroundDomain companyBackgroundDomain, ICompanyBranchDomain companyBranchDomain, 
+            ICompanyFinancialInformationDomain companyFinancialInformationDomain, ITicketDomain ticketDomain, 
+            ICompanyGeneralInformationDomain companyGeneralInformationDomain, IFinancialBalanceDomain financialBalanceDomain, 
+            ICompanyPartnersDomain companyPartnersDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain,
+            ICompanySBSDomain companySBSDomain, ICompanyShareHolderDomain companyShareHolderDomain
+
             )
         {
             _ticketDomain = ticketDomain;
@@ -37,6 +45,11 @@ namespace DRRCore.Application.Main.CoreApplication
             _companyBranchDomain = companyBranchDomain;
             _companyFinancialInformationDomain = companyFinancialInformationDomain;
             _companyGeneralInformationDomain = companyGeneralInformationDomain;
+            _financialBalanceDomain = financialBalanceDomain;
+            _companyPartnersDomain = companyPartnersDomain;
+            _companyCreditOpinionDomain = companyCreditOpinionDomain;
+            _companySBSDomain = companySBSDomain;
+            _companyShareHolderDomain = companyShareHolderDomain;
             _logger = logger;
             _mapper = mapper;
         }
@@ -524,18 +537,34 @@ namespace DRRCore.Application.Main.CoreApplication
                 using var context = new SqlCoreContext();
                 var idParameter = new SqlParameter("@idTicket", idTicket);
                 var ticket = await _ticketDomain.GetByIdAsync(idTicket);
-                if(ticket != null)
+                if (ticket != null)
                 {
                     var company = await _companyDomain.GetByIdAsync((int)ticket.IdCompany);
                     var companyBackground = await _companyBackgroundDomain.GetByIdAsync(((int)ticket.IdCompany));
                     var companyBranch = await _companyBranchDomain.GetCompanyBranchByIdCompany((int)ticket.IdCompany);
+                    var companyFinancial = await _companyFinancialInformationDomain.GetByIdCompany((int)ticket.IdCompany);
                     var companyInfoGeneral = await _companyGeneralInformationDomain.GetByIdCompany((int)ticket.IdCompany);
-                    //1
+                    var balanceG = await _financialBalanceDomain.GetFinancialBalanceByIdCompany((int)ticket.IdCompany, "GENERAL");
+                    var balanceS = await _financialBalanceDomain.GetFinancialBalanceByIdCompany((int)ticket.IdCompany, "SITUACIONAL");
+                    var companyCreditOpinion = await _companyCreditOpinionDomain.GetByIdCompany((int)ticket.IdCompany);
+                    var companyPartner = await _companyPartnersDomain.GetPartnersByIdCompany((int)ticket.IdCompany);
+                    var companyShareholder = await _companyShareHolderDomain.GetShareHoldersByIdCompany((int)ticket.IdCompany);
+                    
+                    var resultCompanyShareholder = context.Set<CompanyShareholderSP>()
+                                         .FromSqlRaw("EXECUTE ShareholderCompany @idTicket", idParameter)
+                                         .AsEnumerable()
+                                         .ToList();
+                    // Crear el documento XML
                     XmlDocument xmlDoc = new XmlDocument();
+                    XmlDeclaration xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", "iso-8859-1", "no");
+                    xmlDoc.AppendChild(xmlDeclaration);
+                    // Crear el nodo raíz
+                    XmlElement rootElement = xmlDoc.CreateElement("CompanyReport");
+                    xmlDoc.AppendChild(rootElement);
 
                     //Client_Data
                     XmlElement clientDataElement = xmlDoc.CreateElement("Client_Data");
-                    xmlDoc.AppendChild(clientDataElement);
+                    rootElement.AppendChild(clientDataElement);
                     AddCDataElement(xmlDoc, clientDataElement, "Client", ticket.IdSubscriberNavigation.Code);
                     AddCDataElement(xmlDoc, clientDataElement, "FecInf", ticket.OrderDate.ToString("dddd, MMMM dd, yyyy"));
                     AddCDataElement(xmlDoc, clientDataElement, "Status", ticket.IdSubscriberNavigation.Enable == true ? "Active" : "Inactive");
@@ -554,69 +583,244 @@ namespace DRRCore.Application.Main.CoreApplication
 
                     //Identification
                     XmlElement identificationElement = xmlDoc.CreateElement("Identification");
-                    xmlDoc.AppendChild(identificationElement);
+                    rootElement.AppendChild(identificationElement);
                     AddCDataElement(xmlDoc, identificationElement, "Correct_Company_Name", ticket.IdCompanyNavigation.Name);
                     if (!company.SocialName.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Trade_Name", company.SocialName);
+                        AddCDataElement(xmlDoc, identificationElement, "Trade_Name", company.SocialName);
                     }
                     if (!company.TaxTypeCode.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Taxpayer_Registration", company.TaxTypeCode);
+                        AddCDataElement(xmlDoc, identificationElement, "Taxpayer_Registration", company.TaxTypeCode);
                     }
                     if (!company.Address.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Main_Address", company.Address);
+                        AddCDataElement(xmlDoc, identificationElement, "Main_Address", company.Address);
                     }
                     if (!company.Place.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "City_Province", company.Place);
+                        AddCDataElement(xmlDoc, identificationElement, "City_Province", company.Place);
                     }
                     if (!company.PostalCode.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Postal_Code", company.PostalCode);
+                        AddCDataElement(xmlDoc, identificationElement, "Postal_Code", company.PostalCode);
                     }
                     if (company.IdCountry != 0 && company.IdCountry != null)
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Country ", company.IdCountryNavigation.Name);
+                        AddCDataElement(xmlDoc, identificationElement, "Country", company.IdCountryNavigation.EnglishName);
                     }
                     if (!company.Telephone.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Telephone ", company.Telephone);
+                        AddCDataElement(xmlDoc, identificationElement, "Telephone", company.Telephone);
                     }
                     if (!company.Cellphone.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Phone_Mobile ", company.Cellphone);
+                        AddCDataElement(xmlDoc, identificationElement, "Phone_Mobile", company.Cellphone);
                     }
                     if (!company.WhatsappPhone.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "WhatsApp ", company.WhatsappPhone);
+                        AddCDataElement(xmlDoc, identificationElement, "WhatsApp", company.WhatsappPhone);
                     }
                     if (!company.Email.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Email ", company.Email);
+                        AddCDataElement(xmlDoc, identificationElement, "Email", company.Email);
                     }
                     if (!company.WebPage.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Web ", company.WebPage);
+                        AddCDataElement(xmlDoc, identificationElement, "Web", company.WebPage);
                     }
                     if (!company.Traductions.Where(x => x.Identifier == "L_E_COMIDE").FirstOrDefault().LargeValue.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Comment ", company.Traductions.Where(x => x.Identifier == "L_E_COMIDE").FirstOrDefault().LargeValue);
+                        AddCDataElement(xmlDoc, identificationElement, "Comment", company.Traductions.Where(x => x.Identifier == "L_E_COMIDE").FirstOrDefault().LargeValue);
                     }
 
                     //Summary
                     XmlElement summaryElement = xmlDoc.CreateElement("Summary");
-                    xmlDoc.AppendChild(summaryElement);
+                    rootElement.AppendChild(summaryElement);
                     if (!companyInfoGeneral.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_I_GENERAL").FirstOrDefault().LargeValue.IsNullOrEmpty())
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Ver_Resumen ", companyInfoGeneral.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_I_GENERAL").FirstOrDefault().LargeValue);
+                        AddCDataElement(xmlDoc, summaryElement, "Ver_Resumen", companyInfoGeneral.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_I_GENERAL").FirstOrDefault().LargeValue);
                     }
                     if (companyBackground.ConstitutionDate != null)
                     {
                         DateTime date = (DateTime)companyBackground.ConstitutionDate;
-                        AddCDataElement(xmlDoc, clientDataElement, "Incorporation ", date.ToString("yyyy"));
+                        AddCDataElement(xmlDoc, summaryElement, "Incorporation", date.ToString("yyyy"));
                     }
+                    if (companyBackground.CurrentPaidCapital > 0)
+                    {
+                        AddCDataElement(xmlDoc, summaryElement, "Capital_Stock", companyBackground.CurrentPaidCapitalCurrencyNavigation.Abreviation + companyBackground.CurrentPaidCapital.ToString() +
+                            companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_B_PAIDCAPITAL").FirstOrDefault().LargeValue == null ? "" : companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_B_PAIDCAPITAL").FirstOrDefault().LargeValue);
+                    }
+                    if (balanceG.Count > 0)
+                    {
+                        DateTime date = (DateTime)balanceG[0].Date;
+                        AddCDataElement(xmlDoc, summaryElement, "Shareholders_Equity", balanceG[0].TotalPatrimony.ToString() + " " + balanceG[0].IdCurrencyNavigation.Abreviation + " (" + date.ToString("ddMMMyyyy") + ")");
+                        AddCDataElement(xmlDoc, summaryElement, "Annual_Revenues", balanceG[0].Sales.ToString() + " " + balanceG[0].IdCurrencyNavigation.Abreviation + " (" + date.ToString("ddMMMyyyy") + ")");
+                        AddCDataElement(xmlDoc, summaryElement, "Profits", balanceG[0].Utilities.ToString() + " " + balanceG[0].IdCurrencyNavigation.Abreviation + " (" + date.ToString("ddMMMyyyy") + ")");
+                    }
+                    if (companyBranch.WorkerNumber != null)
+                    {
+                        AddCDataElement(xmlDoc, summaryElement, "Employees", companyBranch.WorkerNumber.ToString());
+                    }
+                    if (companyPartner.Count > 0)
+                    {
+                        string principalExec = "";
+                        foreach (var item in companyPartner)
+                        {
+                            principalExec = item.MainExecutive == true ? item.IdPersonNavigation.Fullname : "";
+                        }
+                        if (!principalExec.IsNullOrEmpty())
+                        {
+                            AddCDataElement(xmlDoc, summaryElement, "Chief_Executive", principalExec);
+                        }
+                    }
+                    if(companyFinancial != null)
+                    {
+                        if(companyFinancial.IdFinancialSituacion != null)
+                        {
+
+                            AddCDataElement(xmlDoc, summaryElement, "SitFin", companyFinancial.IdFinancialSituacionNavigation.EnglishName);
+                        }
+                        if(companyFinancial.IdCollaborationDegree != null)
+                        {
+                            AddCDataElement(xmlDoc, summaryElement, "Disposition", companyFinancial.IdCollaborationDegreeNavigation.EnglishName);
+                        }
+                    }
+                    if (company.IdPaymentPolicy != null)
+                    {
+                        AddCDataElement(xmlDoc, summaryElement, "Payments_Policy", company.IdPaymentPolicyNavigation.EnglishName);
+                    }
+                    if (company.IdCreditRisk != null)
+                    {
+                        AddCDataElement(xmlDoc, summaryElement, "Credit", company.IdCreditRiskNavigation.EnglishName);
+                    }
+
+                    //Credit_Opinion
+                    XmlElement creditOpinionElement = xmlDoc.CreateElement("Credit_Opinion");
+                    summaryElement.AppendChild(creditOpinionElement);
+
+                    if(companyCreditOpinion != null)
+                    {
+                        if(!companyCreditOpinion.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_O_QUERYCREDIT").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                        {
+                            AddCDataElement(xmlDoc, creditOpinionElement, "Requested_Credit", companyCreditOpinion.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_O_QUERYCREDIT").FirstOrDefault().ShortValue);
+                        }
+                        if (!companyCreditOpinion.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_O_SUGCREDIT").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                        {
+                            AddCDataElement(xmlDoc, creditOpinionElement, "Suggested_Credit", companyCreditOpinion.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_O_SUGCREDIT").FirstOrDefault().ShortValue);
+                        }
+                    }
+
+                    //Legal_Backgrounds
+                    XmlElement legalBackgElement = xmlDoc.CreateElement("Legal_Backgrounds");
+                    rootElement.AppendChild(legalBackgElement);
+                    if(company.IdLegalPersonType != null)
+                    {
+                        AddCDataElement(xmlDoc, legalBackgElement, "Legal_Status", company.IdLegalPersonTypeNavigation.EnglishName);
+                    }
+                    if (companyBackground.ConstitutionDate != null)
+                    {
+                        DateTime date = (DateTime)companyBackground.ConstitutionDate;
+                        AddCDataElement(xmlDoc, legalBackgElement, "Date_Of_Incorporation", date.ToString("ddMMMyyyy"));
+                    }
+                    if (!companyBackground.StartFunctionYear.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, legalBackgElement, "Starting_Date", companyBackground.StartFunctionYear);
+                    }
+                    if (!companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_B_REGISTERIN").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, legalBackgElement, "Place_Of_Registry", companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_B_REGISTERIN").FirstOrDefault().ShortValue);
+                    }
+                    if (!companyBackground.NotaryRegister.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, legalBackgElement, "Notary_Office", companyBackground.NotaryRegister);
+                    }
+                    if (!companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_B_DURATION").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, legalBackgElement, "Duration", companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_B_DURATION").FirstOrDefault().ShortValue);
+                    }
+                    if (!companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_B_PUBLICREGIS").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, legalBackgElement, "Registration", companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_B_PUBLICREGIS").FirstOrDefault().ShortValue);
+                    }
+                    if (companyBackground.CurrentPaidCapital > 0)
+                    {
+                        AddCDataElement(xmlDoc, summaryElement, "Capital_Stock", companyBackground.CurrentPaidCapitalCurrencyNavigation.Abreviation + companyBackground.CurrentPaidCapital.ToString() +
+                            companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_B_PAIDCAPITAL").FirstOrDefault().LargeValue == null ? "" : companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_B_PAIDCAPITAL").FirstOrDefault().LargeValue);
+                    }
+                    if (companyBackground.IncreaceDateCapital != null)
+                    {
+                        AddCDataElement(xmlDoc, legalBackgElement, "Last_Capital_Increase", companyBackground.IncreaceDateCapital);
+                    }
+                    if (balanceG.Count > 0)
+                    {
+                        DateTime date = (DateTime)balanceG[0].Date;
+                        AddCDataElement(xmlDoc, legalBackgElement, "Shareholders_Equity", balanceG[0].TotalPatrimony.ToString() + " " + balanceG[0].IdCurrencyNavigation.Abreviation + " (" + date.ToString("ddMMMyyyy") + ")");
+                    }
+                    if (!companyBackground.Traded.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, legalBackgElement, "Listed_At_Stock_Exchange", companyBackground.Traded == "Si" ? "Yes" : "No");
+                    }
+                    if (!companyBackground.CurrentExchangeRate.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, legalBackgElement, "Current_Exchange_Rate", companyBackground.CurrentExchangeRate);
+                    }
+                    if (!companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_B_LEGALBACK").FirstOrDefault().LargeValue.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, legalBackgElement, "Comments", companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_B_LEGALBACK").FirstOrDefault().LargeValue);
+                    }
+
+                    //Directors_Executives_Shareholders
+                    XmlElement shareholdersElement = xmlDoc.CreateElement("Directors_Executives_Shareholders");
+                    rootElement.AppendChild(shareholdersElement);
+                    if(resultCompanyShareholder.Count > 0)
+                    {
+                        int i = 0;
+                        foreach (var item in resultCompanyShareholder)
+                        {
+                            i++;
+                            XmlElement itemElement = xmlDoc.CreateElement("Name");
+                            itemElement.SetAttributeNode("Item",i.ToString());
+                            shareholdersElement.AppendChild(itemElement);
+                            if (!item.Name.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "ApeNom", item.Name);
+                            }
+                            if (!item.Title.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Title", item.Title);
+                            }
+                            if (item.Participation != null && item.Participation > 0)
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Part", item.Participation.ToString());
+                            }
+                            if (item.StartDate != null && item.Participation > 0)
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Since", item.StartDate);
+                            }
+                            if (item.ExecPrinc == 1)
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "CheckPrin", "YES");
+                            }
+                        }
+                    }
+
+
+
+
+
+
+
+                    string xmlString = xmlDoc.OuterXml;
+
+                    // Convertir la cadena XML en un MemoryStream
+                    byte[] byteArray = Encoding.UTF8.GetBytes(xmlString);
+                    response.Data = new GetFileResponseDto
+                    {
+                        File = byteArray,
+                        ContentType = "application/xml",
+                        Name = "N" + ticket.Number.ToString("D6") + "_" + company.Name.Replace(" ", "_") + ".xml"
+                    };
                 }
             }
             catch (Exception ex)

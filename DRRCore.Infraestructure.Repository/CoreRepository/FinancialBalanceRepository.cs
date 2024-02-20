@@ -84,7 +84,9 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                var list = await context.FinancialBalances.Where(x => x.IdCompany == idCompany && x.BalanceType == balanceType && x.Enable == true).ToListAsync();  
+                var list = await context.FinancialBalances.Where(x => x.IdCompany == idCompany && x.BalanceType == balanceType && x.Enable == true)
+                    .Include(x => x.IdCurrencyNavigation)
+                    .ToListAsync();  
                 return list;
             }
             catch (Exception ex)

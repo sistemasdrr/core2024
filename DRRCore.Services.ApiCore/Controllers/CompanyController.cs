@@ -475,5 +475,13 @@ namespace DRRCore.Services.ApiCore.Controllers
 
             return File(result.Data.File, result.Data.ContentType, result.Data.Name);
         }
+        [HttpGet()]
+        [Route("getXmlGeneral")]
+        public async Task<IActionResult> getXmlGeneral(int idTicket)
+        {
+            var result = await _xmlApplication.GetXmlAtradiusAsync(idTicket);
+
+            return File(result.Data.File, result.Data.ContentType, result.Data.Name);
+        }
     }
 }

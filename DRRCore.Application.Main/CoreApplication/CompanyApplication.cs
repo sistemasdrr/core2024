@@ -138,7 +138,6 @@ namespace DRRCore.Application.Main.CoreApplication
                     existingCompany.Traductions= traductions;
                     existingCompany.UpdateDate = DateTime.Now;
                     await _companyDomain.UpdateAsync(existingCompany);
-                    Console.WriteLine("zzzzzzzzzzzzzzz"+idUser);
                     response.Data = existingCompany.Id;
                 }
             }
