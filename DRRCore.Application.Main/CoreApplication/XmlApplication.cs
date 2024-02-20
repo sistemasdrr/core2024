@@ -1,11 +1,17 @@
 ﻿using AutoMapper;
+using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.EntityFrameworkCore;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
+using System.Text;
+using System.Xml.Linq;
+using System.Xml;
+using Microsoft.IdentityModel.Tokens;
+using DRRCore.Infraestructure.Interfaces.CoreRepository;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -18,10 +24,11 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICompanyBackgroundDomain _companyBackgroundDomain;
         private readonly ICompanyBranchDomain _companyBranchDomain;
         private readonly ICompanyFinancialInformationDomain _companyFinancialInformationDomain;
+        private readonly ICompanyGeneralInformationDomain _companyGeneralInformationDomain;
         private readonly ICompanySBSDomain _companySBSDomain;
         public XmlApplication(ILogger logger,IMapper mapper, ICompanyDomain companyDomain,
             ICompanyBackgroundDomain companyBackgroundDomain, ICompanyBranchDomain companyBranchDomain, ICompanyFinancialInformationDomain companyFinancialInformationDomain,
-            ITicketDomain ticketDomain
+            ITicketDomain ticketDomain, ICompanyGeneralInformationDomain companyGeneralInformationDomain
             )
         {
             _ticketDomain = ticketDomain;
@@ -29,8 +36,24 @@ namespace DRRCore.Application.Main.CoreApplication
             _companyBackgroundDomain = companyBackgroundDomain;
             _companyBranchDomain = companyBranchDomain;
             _companyFinancialInformationDomain = companyFinancialInformationDomain;
+            _companyGeneralInformationDomain = companyGeneralInformationDomain;
             _logger = logger;
             _mapper = mapper;
+        }
+        public string? GetCreditRiskCode(int? idCreditRisk)
+        {
+            return idCreditRisk == 1 ? "0005" : idCreditRisk == 2 ? "0000" : idCreditRisk == 3 ? "0001" :
+                           idCreditRisk == 4 ? "0002" : idCreditRisk == 5 ? "0003" : idCreditRisk == 6 ? "0011" : idCreditRisk == 7 ? "0004" : "";
+        }
+        public string? GetBusinessBranchCode(int? idBusinessBranch)
+        {
+            return idBusinessBranch == 1 ? "0" : idBusinessBranch == 3 ? "1" : idBusinessBranch == 4 ? "2" : idBusinessBranch == 5 ? "3" :
+            idBusinessBranch == 6 ? "4" : idBusinessBranch == 7 ? "5" : idBusinessBranch == 8 ? "6" : idBusinessBranch == 9 ? "7" : idBusinessBranch == 10 ? "8" :
+            idBusinessBranch == 11 ? "9" : idBusinessBranch == 12 ? "10" : idBusinessBranch == 13 ? "11" : idBusinessBranch == 14 ? "12" : idBusinessBranch == 15 ? "13" :
+            idBusinessBranch == 16 ? "14" : idBusinessBranch == 17 ? "15" : idBusinessBranch == 18 ? "16" : idBusinessBranch == 19 ? "17" : idBusinessBranch == 20 ? "18" :
+            idBusinessBranch == 21 ? "19" : idBusinessBranch == 22 ? "20" : idBusinessBranch == 23 ? "21" : idBusinessBranch == 24 ? "22" : idBusinessBranch == 25 ? "23" :
+            idBusinessBranch == 26 ? "24" : idBusinessBranch == 27 ? "25" : idBusinessBranch == 28 ? "26" : idBusinessBranch == 29 ? "27" : idBusinessBranch == 30 ? "28" :
+            idBusinessBranch == 31 ? "29" : idBusinessBranch == 32 ? "30" : "";
         }
         public string? GetCountryCode(int? idCountry)
         {
@@ -110,305 +133,380 @@ namespace DRRCore.Application.Main.CoreApplication
             idCountry == 231 ? "236" : idCountry == 30 ? "237" :idCountry == 30 ? "238" :
            idCountry == 18 ? "239" : idCountry == 207 ? "240" : idCountry == 155 ? "241" : "";
         }
-
-        public async Task<Response<CompanyXmlData>> GetXmlCompanyAsync(int idTicket)
+        public Boolean isNumeric(String numero)
         {
-            var response = new Response<CompanyXmlData>();
+            try
+            {
+                double.Parse(numero);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        public async Task<Response<GetFileResponseDto>> GetXmlCredendoAsync(int idTicket)
+        {
+            var response = new Response<GetFileResponseDto>();
             try
             {
                 using var context = new SqlCoreContext();
                 var idParameter = new SqlParameter("@idTicket", idTicket);
-                var company = context.CompanyXmls.FromSqlRaw("EXECUTE DataCompanyCredendo @idTicket", idParameter).FirstOrDefaultAsync();
-                if(company != null)
+                var resultCompany = context.Set<CompanyXmlData>()
+                                     .FromSqlRaw("EXECUTE DataCompanyCredendo @idTicket", idParameter)
+                                     .AsEnumerable()
+                                     .FirstOrDefault();
+                var resultBalance = context.Set<CompanyBalanceData>()
+                                    .FromSqlRaw("EXECUTE BalanceCompanyCredendo @idTicket", idParameter)
+                                    .AsEnumerable()
+                                    .ToList();
+                var resultFunction =  context.Set<CompanyFunctionData>()
+                                    .FromSqlRaw("EXECUTE FunctionCompanyCredendo @idTicket", idParameter)
+                                    .AsEnumerable()
+                                    .ToList();
+                var resultLegalEvents =  context.Set<CompanyLegalEventsData>()
+                                    .FromSqlRaw("EXECUTE LegalEventsCompanyCredendo @idTicket", idParameter)
+                                    .AsEnumerable()
+                                    .ToList();
+                var resultRelated=  context.Set<CompanyRelatedData>()
+                                    .FromSqlRaw("EXECUTE RelatedCompanyCredendo @idTicket", idParameter)
+                                    .AsEnumerable()
+                                    .ToList();
+                if (resultCompany != null)
                 {
-                    response.Data = _mapper.Map<CompanyXmlData>(company);
-                }
-                /*
-                var ticket = await _ticketDomain.GetByIdAsync(idTicket);
-                if(ticket != null)
-                {
-                    var company = await _companyDomain.GetByIdAsync((int)ticket.IdCompany);
-                    if(company != null)
+                    string[] telefono = null;
+                    string cadena = "";
+                    List<XElement> TelefonoArray = new List<XElement>();
+                    if (resultCompany.ContactPhoneNumber != "" && resultCompany.ContactPhoneNumber != null)
                     {
-                        XNamespace xsiNs = "http://www.w3.org/2001/XMLSchema-instance";
-                        XDocument xDoc = new XDocument(
-                            new XDeclaration("1.0", "UTF-8", ""),
-                            new XElement("credendoCanonicalReport",
-                                new XAttribute(XNamespace.Xmlns + "xsi", xsiNs),
-                                //new XAttribute("noNamespaceSchemaLocation", filePahthXsd ),
-                                new XElement("version",
-                                    new XElement("major" ),
-                                    new XElement("minor" ),
-                                    new XElement("mappingVersion", (company == null ? "" : company.Name))
+                        telefono = resultCompany.ContactPhoneNumber.Split(new char[] { ',', ';', '-' });
+                        telefono = (from e in telefono
+                                    select e.Trim()).ToArray();
+
+                        for (int n = 0; n <= telefono.Length - 1; n++)
+                        {
+                            cadena = "<contact><contactPhoneNumber>" + resultCompany.ContactPrefixPhoneNumber + " " + telefono[n] + "</contactPhoneNumber></contact>";
+                            TelefonoArray.Add(new XElement(XElement.Parse(cadena)));
+                        }
+                    }
+
+                    string[] correo = null;
+                    cadena = "";
+                    List<XElement> CorreoArray = new List<XElement>();
+                    if (resultCompany.ContactEmailAddress != "" && resultCompany.ContactPhoneNumber != null)
+                    {
+                        correo = resultCompany.ContactEmailAddress.Split(new char[] { ',', ';' });
+                        correo = (from e in correo
+                                  select e.Trim()).ToArray();
+
+                        for (int n = 0; n <= correo.Length - 1; n++)
+                        {
+                            cadena = "<contact><contactEmailAddress>" + correo[n] + "</contactEmailAddress></contact>";
+                            CorreoArray.Add(new XElement(XElement.Parse(cadena)));
+                        }
+                    }
+                    Boolean bMaximumSingleCreditAdviceAmount = true;
+                    if (String.IsNullOrEmpty(resultCompany.SourceEvaluationMaximumSingleCreditAdviceAmount) == true)
+                    {
+                        bMaximumSingleCreditAdviceAmount = false;
+                    }
+                    else
+                    {
+                        if (isNumeric(resultCompany.SourceEvaluationMaximumSingleCreditAdviceAmount) == true)
+                        {
+                            double valor = Convert.ToDouble(resultCompany.SourceEvaluationMaximumSingleCreditAdviceAmount);
+                            if (valor == 0)
+                            {
+                                bMaximumSingleCreditAdviceAmount = false;
+                            }
+                        }
+                    }
+
+                    XNamespace xsiNs = "http://www.w3.org/2001/XMLSchema-instance";
+                    XDocument xDoc = new XDocument(
+                        new XDeclaration("1.0", "UTF-8", ""),
+                        new XElement("credendoCanonicalReport",
+                            new XAttribute(XNamespace.Xmlns + "xsi", xsiNs),
+                            //new XAttribute("noNamespaceSchemaLocation", filePahthXsd ),
+                            new XElement("version",
+                                new XElement("major"),
+                                new XElement("minor"),
+                                new XElement("mappingVersion", (resultCompany == null ? "" : resultCompany.DebtorName))
+                            ),
+                            new XElement("inquiry",
+                                new XElement("debtorName", (resultCompany == null ? "" : resultCompany.DebtorName)),
+                                new XElement("debtorCountry", (resultCompany == null ? "" : GetCountryCode(resultCompany.Country))),
+                                //new XElement("providerName"),
+                                new XElement("providerReportReference", (resultCompany == null ? "" : resultCompany.ProviderReportReference)),
+                                //new XElement("financialFiguresDate"),
+                                new XElement("reportDefaultCurrency", (resultCompany == null ? "" : resultCompany.ReportDefaultCurrency)),
+                                new XElement("reportDefaultMonetaryFactorCode", (resultCompany == null ? "" : resultCompany.ReportDefaultMonetaryFactorCode)),
+                                new XElement("language", (resultCompany == null ? "" : resultCompany.Language))
+                            ),
+                            new XElement("key",
+                                new XElement("taxIdentificationKey",
+                                    new XElement("key", (resultCompany == null ? "" : resultCompany.TaxIdentificationKey))
+                                //new XElement("category", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().taxIdentificationCategory))
                                 ),
-                                new XElement("inquiry",
-                                    new XElement("debtorName", (company == null ? "" : company.Name)),
-                                    new XElement("debtorCountry", (company == null ? "" : GetCountryCode(company.IdCountry)),
-                                    //new XElement("providerName"),
-                                    new XElement("providerReportReference", (ticket == null ? "" : "N" + ticket.Number.ToString("D6"))),
-                                    //new XElement("financialFiguresDate"),
-                                    new XElement("reportDefaultCurrency", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().reportDefaultCurrency)),
-                                    new XElement("reportDefaultMonetaryFactorCode", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().reportDefaultMonetaryFactorCode)),
-                                    new XElement("language", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().language))
+
+                                new XElement("sourceIdentificationKey",
+                                    new XElement("key", (resultCompany == null ? "" : resultCompany.SourceIdentificationKey))
+                                //new XElement("category", (bussines.FirstOrDefault() ?? "").sourceIdentificationCategory)
+                                )
+                            ),
+                            new XElement("operatingStatus",
+                                new XElement("operatingStatus", (resultCompany == null ? "" : resultCompany.OperatingStatus)),
+                                new XElement("operatingStatusObservationDate", (resultCompany == null ? "" : resultCompany.OperatingStatusObservationDate))
+                            ),
+                            new XElement("masterDataBusinessPartner",
+                                //new XElement("branchIndicator", "No branch"),
+                                new XElement("name",
+                                    new XElement("companyName", (resultCompany == null ? "" : resultCompany.CompanyName)),
+                                    new XElement("companyNameType", (resultCompany == null ? "" : resultCompany.CompanyNameType)),
+                                    new XElement("languageAndAlphabetType", (resultCompany == null ? "" : resultCompany.LanguageAndAlphabetType))
                                 ),
-                                new XElement("key",
-                                    new XElement("taxIdentificationKey",
-                                        new XElement("key", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().taxIdentificationKey))
-                                    //new XElement("category", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().taxIdentificationCategory))
-                                    ),
-                                   
-                                    new XElement("sourceIdentificationKey",
-                                        new XElement("key", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceIdentificationKey))
-                                    //new XElement("category", (bussines.FirstOrDefault() ?? "").sourceIdentificationCategory)
-                                    )
+                                resultCompany.CompanyTradName == "" ? null :
+                                new XElement("name",
+                                    new XElement("companyName", (resultCompany == null ? "" : resultCompany.CompanyTradName)),
+                                    new XElement("companyNameType", (resultCompany == null ? "" : resultCompany.CompanyTradeNameType)),
+                                    new XElement("languageAndAlphabetType", (resultCompany == null ? "" : resultCompany.LanguageAndAlphabetTradeType))
                                 ),
-                                new XElement("operatingStatus",
-                                    new XElement("operatingStatus", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().operatingStatus)),
-                                    new XElement("operatingStatusObservationDate", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().operatingStatusObservationDate))
+                                new XElement("address",
+                                    new XElement("addressType", (resultCompany == null ? "" : resultCompany.AddressType)),
+                                    new XElement("languageAndAlphabetType", (resultCompany == null ? "" : resultCompany.LanguageAndAlphabetType)),
+                                    new XElement("street", (resultCompany == null ? "" : resultCompany.Street)),
+                                    //bussines.FirstOrDefault().postCode == "" ? null : new XElement("postCode", (bussines.FirstOrDefault().postCode)),
+                                    new XElement("postCode", (resultCompany == null ? "" : resultCompany.PostCode)),
+                                    new XElement("city", (resultCompany == null ? "" : resultCompany.City)),
+                                    new XElement("stateRegion", (resultCompany == null ? "" : resultCompany.StateRegion)),
+                                    new XElement("country", (resultCompany == null ? "" : GetCountryCode(resultCompany.Country)))
                                 ),
-                                new XElement("masterDataBusinessPartner",
-                                    //new XElement("branchIndicator", "No branch"),
-                                    new XElement("name",
-                                        new XElement("companyName", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().companyName)),
-                                        new XElement("companyNameType", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().companyNameType)),
-                                        new XElement("languageAndAlphabetType", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().languageAndAlphabetType))
-                                    ),
-                                    bussines.FirstOrDefault().companyTradName == "" ? null :
-                                    new XElement("name",
-                                        new XElement("companyName", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().companyTradName)),
-                                        new XElement("companyNameType", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().companyTradeNameType)),
-                                        new XElement("languageAndAlphabetType", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().languageAndAlphabetTradeType))
-                                    ),
-                                    new XElement("address",
-                                        new XElement("addressType", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().addressType)),
-                                        new XElement("languageAndAlphabetType", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().languageAndAlphabetType)),
-                                        new XElement("street", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().street)),
-                                        //bussines.FirstOrDefault().postCode == "" ? null : new XElement("postCode", (bussines.FirstOrDefault().postCode)),
-                                        new XElement("postCode", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().postCode)),
-                                        new XElement("city", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().city)),
-                                        new XElement("stateRegion", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().stateRegion)),
-                                        new XElement("country", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().country))
-                                    ),
-                                    bussines.FirstOrDefault().formerAddressStreet == "" ? null :
-                                     new XElement("address",
-                                        new XElement("addressType", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().formerAddressType)),
-                                        new XElement("languageAndAlphabetType", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().formerAddresslanguageAndAlphabetType)),
-                                        new XElement("street", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().formerAddressStreet)),
-                                        new XElement("country", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().formerAddressCountry))
-                                    ),
-                                    //bussines.Where(p => p.cR_MDBP_ADDRESS_street2 != "")
-                                    //.Select(p => 
-                                    //    new XElement("address",
-                                    //        new XElement("addressType", p.CR_MDBP_ADDRESS_street2NombreIng),
-                                    //        new XElement("languageAndAlphabetType", (bussines.FirstOrDefault() ?? "").CR_MDBP_ADDRESS_languageAndAlphabetType),
-                                    //        new XElement("street",p.CR_MDBP_ADDRESS_street2),
-                                    //        new XElement("postCode", (bussines.FirstOrDefault() ?? "").CR_MDBP_ADDRESS_postCode),
-                                    //        new XElement("city", (bussines.FirstOrDefault() ?? "").CR_MDBP_ADDRESS_city), 
-                                    //        new XElement("stateRegion", (bussines.FirstOrDefault() ?? "").CR_MDBP_ADDRESS_stateRegion), 
-                                    //        new XElement("country", (bussines.FirstOrDefault() ?? "").CR_MDBP_ADDRESS_country) 
-                                    //    )
-                                    //),
-
-
-                                    bussines.FirstOrDefault().numberOfEmployeesWithinTheCompanyRangeFrom == "" ? null :
-                                    new XElement("numberOfEmployees",
-                                        new XElement("numberOfEmployeesType", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().numberOfEmployeesType)),
-                                        new XElement("numberOfEmployeesWithinTheCompanyRangeFrom", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().numberOfEmployeesWithinTheCompanyRangeFrom))
-                                    ),
-                                    new XElement("companyLegalForm", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().companyLegalForm)),
-
-                                    new XElement("companyListedStockExchange", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().companyListedStockExchange)),
-
-                                    CorreoArray.Count == 0 ? null : CorreoArray,
-
-                                    TelefonoArray.Count == 0 ? null : TelefonoArray,
-
-                                    new XElement("contact",
-                                         new XElement("contactWebsiteAddress", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().contactWebsiteAddress))
-                                    ),
-                                    new XElement("incorporationDate", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().incorporationDate)),
-                                    new XElement("registrationDate", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().registrationDate)),
-                                    new XElement("companyMainSector",
-                                        new XElement("companyMainSectorCode", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().companyMainSectorCode)),
-                                        new XElement("companyMainSectorCodeType", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().companyMainSectorCodeType)),
-                                        new XElement("companyMainSectorDescription", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().companyMainSectorDescription))
-                                    ),
-                                    new XElement("companyNature", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().companyNature))
-                                //new XElement("companyNatureFromProvider", (bussines.FirstOrDefault() ?? "").companyNatureFromProvider)
+                                resultCompany.FormerAddressStreet == "" ? null :
+                                 new XElement("address",
+                                    new XElement("addressType", (resultCompany == null ? "" : resultCompany.FormerAddressType)),
+                                    new XElement("languageAndAlphabetType", (resultCompany == null ? "" : resultCompany.FormerAddresslanguageAndAlphabetType)),
+                                    new XElement("street", (resultCompany == null ? "" : resultCompany.FormerAddressStreet)),
+                                    new XElement("country", (resultCompany == null ? "" : GetCountryCode(resultCompany.FormerAddressCountry)))
                                 ),
-                                balances.Select(balance =>
-                                    new XElement("financialData",
-                                        new XElement("keyFigures",
-                                            new XElement("accountingPeriod", balance.CR_FD_keyFigures_accountingPeriod),
-                                            new XElement("endDateOfAccountingPeriod", balance.CR_FD_keyFigures_endDateOfAccountingPeriod),
-                                            new XElement("typeOfFigures", balance.CR_FD_keyFigures_typeOfFigures),
-                                            new XElement("balancesheetDefaultCurrency", balance.CR_FD_keyFigures_balancesheetDefaultCurrency),
-                                            new XElement("balancesheetDefaultMonetaryFactorCode", balance.CR_FD_keyFigures_balancesheetDefaultMonetaryFactorCode),
-                                            //new XElement("keyFigure",
-                                            //new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeTotalAssets), 
-                                            //new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueTotalAssets), 
-                                            //new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeTotalAssets)
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueTotalAssets == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeTotalAssets),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueTotalAssets),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeTotalAssets)
-                                            ),
-                                            //new XElement("keyFigure",
-                                            //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeFixedAssets), 
-                                            //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueFixedAssets), 
-                                            //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeFixedAssets)
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueFixedAssets == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeFixedAssets),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueFixedAssets),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeFixedAssets)
-                                            ),
-                                            //new XElement("keyFigure",
-                                            //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeCurrentAssets),
-                                            //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCurrentAssets), 
-                                            //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeCurrentAssets)
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCurrentAssets == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeCurrentAssets),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCurrentAssets),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeCurrentAssets)
-                                            ),
+                                //bussines.Where(p => p.cR_MDBP_ADDRESS_street2 != "")
+                                //.Select(p => 
+                                //    new XElement("address",
+                                //        new XElement("addressType", p.CR_MDBP_ADDRESS_street2NombreIng),
+                                //        new XElement("languageAndAlphabetType", (bussines.FirstOrDefault() ?? "").CR_MDBP_ADDRESS_languageAndAlphabetType),
+                                //        new XElement("street",p.CR_MDBP_ADDRESS_street2),
+                                //        new XElement("postCode", (bussines.FirstOrDefault() ?? "").CR_MDBP_ADDRESS_postCode),
+                                //        new XElement("city", (bussines.FirstOrDefault() ?? "").CR_MDBP_ADDRESS_city), 
+                                //        new XElement("stateRegion", (bussines.FirstOrDefault() ?? "").CR_MDBP_ADDRESS_stateRegion), 
+                                //        new XElement("country", (bussines.FirstOrDefault() ?? "").CR_MDBP_ADDRESS_country) 
+                                //    )
+                                //),
 
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueNonCurrentAssets == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeNonCurrentAssets),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueNonCurrentAssets),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeNonCurrentAssets)
-                                            ),
 
-                                            //new XElement("keyFigure",
-                                            //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeTotalEquityLiabilities), 
-                                            //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCodeTotalEquityLiabilities), 
-                                            //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeCodeTotalEquityLiabilities)
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCodeTotalEquityLiabilities == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeTotalEquityLiabilities),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCodeTotalEquityLiabilities),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeCodeTotalEquityLiabilities)
-                                            ),
-                                            //new XElement("keyFigure",
-                                            //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquity),
-                                            //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquity),
-                                            //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquity)
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquity == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquity),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquity),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquity)
-                                            ),
+                                resultCompany.NumberOfEmployeesWithinTheCompanyRangeFrom == 0 ? null :
+                                new XElement("numberOfEmployees",
+                                    new XElement("numberOfEmployeesType", (resultCompany == null ? "" : resultCompany.NumberOfEmployeesType)),
+                                    new XElement("numberOfEmployeesWithinTheCompanyRangeFrom", (resultCompany == null ? "" : resultCompany.NumberOfEmployeesWithinTheCompanyRangeFrom))
+                                ),
+                                new XElement("companyLegalForm", (resultCompany == null ? "" : resultCompany.CompanyLegalForm)),
 
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueLTLiabilities == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeLTLiabilities),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueLTLiabilities),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeLTLiabilities)
-                                            ),
+                                new XElement("companyListedStockExchange", (resultCompany == null ? "" : resultCompany.CompanyListedStockExchange)),
 
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueSTLiabilities == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeSTLiabilities),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueSTLiabilities),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeSTLiabilities)
-                                            ),
+                                CorreoArray.Count == 0 ? null : CorreoArray,
 
-                                            //new XElement("keyFigure",
-                                            //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityPaiduPCapital), 
-                                            //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityPaiduPCapital), 
-                                            //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityPaiduPCapital)
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityPaiduPCapital == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityPaiduPCapital),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityPaiduPCapital),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityPaiduPCapital)
-                                            ),
-                                            //new XElement("keyFigure",
-                                            //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityRevenueSales), 
-                                            //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityRevenueSales), 
-                                            //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityRevenueSales)
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityRevenueSales == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityRevenueSales),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityRevenueSales),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityRevenueSales)
-                                            ),
-                                            //new XElement("keyFigure",
-                                            //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityNetResult), 
-                                            //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityNetResult), 
-                                            //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityNetResult)
-                                            balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityNetResult == 0 ? null :
-                                                new XElement("keyFigure",
-                                                    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityNetResult),
-                                                    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityNetResult),
-                                                    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityNetResult)
-                                            )
+                                TelefonoArray.Count == 0 ? null : TelefonoArray,
 
+                                new XElement("contact",
+                                     new XElement("contactWebsiteAddress", (resultCompany == null ? "" : resultCompany.ContactWebsiteAddress))
+                                ),
+                                new XElement("incorporationDate", (resultCompany == null ? "" : resultCompany.IncorporationDate)),
+                                new XElement("registrationDate", (resultCompany == null ? "" : resultCompany.RegistrationDate)),
+                                new XElement("companyMainSector",
+                                    new XElement("companyMainSectorCode", (resultCompany == null ? "" : GetBusinessBranchCode(resultCompany.CompanyMainSectorCode))),
+                                    new XElement("companyMainSectorCodeType", (resultCompany == null ? "" : resultCompany.CompanyMainSectorCodeType)),
+                                    new XElement("companyMainSectorDescription", (resultCompany == null ? "" : resultCompany.CompanyMainSectorDescription))
+                                ),
+                                new XElement("companyNature", (resultCompany == null ? "" : resultCompany.CompanyNature))
+                            //new XElement("companyNatureFromProvider", (bussines.FirstOrDefault() ?? "").companyNatureFromProvider)
+                            ),
+                            resultBalance.Select(balance =>
+                                new XElement("financialData",
+                                    new XElement("keyFigures",
+                                        new XElement("accountingPeriod", balance.CR_FD_keyFigures_accountingPeriod),
+                                        new XElement("endDateOfAccountingPeriod", balance.CR_FD_keyFigures_endDateOfAccountingPeriod),
+                                        new XElement("typeOfFigures", balance.CR_FD_keyFigures_typeOfFigures),
+                                        new XElement("balancesheetDefaultCurrency", balance.CR_FD_keyFigures_balancesheetDefaultCurrency),
+                                        new XElement("balancesheetDefaultMonetaryFactorCode", balance.CR_FD_keyFigures_balancesheetDefaultMonetaryFactorCode),
+                                        //new XElement("keyFigure",
+                                        //new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeTotalAssets), 
+                                        //new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueTotalAssets), 
+                                        //new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeTotalAssets)
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueTotalAssets == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeTotalAssets),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueTotalAssets)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeTotalAssets)
+                                        ),
+                                        //new XElement("keyFigure",
+                                        //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeFixedAssets), 
+                                        //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueFixedAssets), 
+                                        //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeFixedAssets)
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueFixedAssets == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeFixedAssets),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueFixedAssets)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeFixedAssets)
+                                        ),
+                                        //new XElement("keyFigure",
+                                        //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeCurrentAssets),
+                                        //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCurrentAssets), 
+                                        //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeCurrentAssets)
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCurrentAssets == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeCurrentAssets),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCurrentAssets)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeCurrentAssets)
+                                        ),
+
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueNonCurrentAssets == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeNonCurrentAssets),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueNonCurrentAssets)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeNonCurrentAssets)
+                                        ),
+
+                                        //new XElement("keyFigure",
+                                        //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeTotalEquityLiabilities), 
+                                        //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCodeTotalEquityLiabilities), 
+                                        //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeCodeTotalEquityLiabilities)
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCodeTotalEquityLiabilities == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeTotalEquityLiabilities),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueCodeTotalEquityLiabilities)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeCodeTotalEquityLiabilities)
+                                        ),
+                                        //new XElement("keyFigure",
+                                        //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquity),
+                                        //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquity),
+                                        //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquity)
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquity == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquity),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquity)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquity)
+                                        ),
+
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueLTLiabilities == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeLTLiabilities),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueLTLiabilities)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeLTLiabilities)
+                                        ),
+
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueSTLiabilities == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeSTLiabilities),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueSTLiabilities)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeSTLiabilities)
+                                        ),
+
+                                        //new XElement("keyFigure",
+                                        //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityPaiduPCapital), 
+                                        //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityPaiduPCapital), 
+                                        //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityPaiduPCapital)
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityPaiduPCapital == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityPaiduPCapital),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityPaiduPCapital)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityPaiduPCapital)
+                                        ),
+                                        //new XElement("keyFigure",
+                                        //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityRevenueSales), 
+                                        //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityRevenueSales), 
+                                        //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityRevenueSales)
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityRevenueSales == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityRevenueSales),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityRevenueSales)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityRevenueSales)
+                                        ),
+                                        //new XElement("keyFigure",
+                                        //    new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityNetResult), 
+                                        //    new XElement("keyFigureItemValue", balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityNetResult), 
+                                        //    new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityNetResult)
+                                        balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityNetResult == 0 ? null :
+                                            new XElement("keyFigure",
+                                                new XElement("keyFigureItemCode", balance.CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityNetResult),
+                                                new XElement("keyFigureItemValue", Math.Truncate((decimal)balance.CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityNetResult)),
+                                                new XElement("keyFigureUnitPrefixCode", balance.CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityNetResult)
                                         )
-
-                               
                                     )
-                                ),
-                        // SERA UNA LISTA
-                                 functions.Select(function =>
-                                     new XElement("function",
-                                        new XElement("functionType", function.functionType),
-                                        new XElement("nameOfPerson", function.nameOfPerson)
-                                    )
-                                 ),
+                                )
+                            ),
+                             // SERA UNA LISTA
+                             resultFunction.Select(function =>
+                                 new XElement("function",
+                                    new XElement("functionType", function.FunctionType == null ? "" : function.FunctionType),
+                                    new XElement("nameOfPerson", function.NameOfPerson == null ? "" : function.NameOfPerson)
+                                )
+                             ),
 
-                                 //legalEvents.Select(legalEvent =>
-                                 //    new XElement("legalEvent",
-                                 //         new XElement("event", legalEvent.legalEvent),
-                                 //         new XElement("sourceEvent", legalEvent.sourceEvent),
-                                 //         new XElement("endDate", legalEvent.endDate),
-                                 //         new XElement("startDate", legalEvent.startDate)
-                                 //     )
-                                 //),
+                             //legalEvents.Select(legalEvent =>
+                             //    new XElement("legalEvent",
+                             //         new XElement("event", legalEvent.legalEvent),
+                             //         new XElement("sourceEvent", legalEvent.sourceEvent),
+                             //         new XElement("endDate", legalEvent.endDate),
+                             //         new XElement("startDate", legalEvent.startDate)
+                             //     )
+                             //),
 
-                                 legalEvents.Select(legalEvent =>
-                                   legalEvent.legalEvent == null ? null : new XElement("legalEvent",
-                                                                new XElement("event", legalEvent.legalEvent),
-                                                                new XElement("sourceEvent", legalEvent.sourceEvent),
-                                                                new XElement("endDate", legalEvent.endDate),
-                                                                new XElement("startDate", legalEvent.startDate))
-                                 ),
+                             resultLegalEvents.Select(legalEvent =>
+                               legalEvent.LegalEvent == null ? null : new XElement("legalEvent",
+                                                            new XElement("event", legalEvent.LegalEvent == null ? "" : legalEvent.LegalEvent),
+                                                            new XElement("sourceEvent", legalEvent.SourceEvent == null ? "" : legalEvent.SourceEvent),
+                                                            new XElement("endDate", legalEvent.EndDate == null ? "" : legalEvent.EndDate),
+                                                            new XElement("startDate", legalEvent.StartDate == null ? "" : legalEvent.StartDate))
+                             ),
 
-                                new XElement("sourceEvaluation",
-                                    new XElement("sourceEvaluationOriginalPaymentExperience", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationOriginalPaymentExperience)),
-                                    new XElement("sourceEvaluationSimplePaymentExperience", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationSimplePaymentExperience)),
-                                    new XElement("sourceEvaluationExtendedPaymentExperience", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationExtendedPaymentExperience)),
-                                    new XElement("sourceEvaluationCreditAdviceAmount", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationCreditAdviceAmount)),
-                                    new XElement("sourceEvaluationCreditAdviceExplanation", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationCreditAdviceExplanation)),
-                                    new XElement("sourceEvaluationMaximumCreditAdviceAmount", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationMaximumCreditAdviceAmount)),
-                                    //new XElement("sourceEvaluationMaximumSingleCreditAdviceAmount", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationMaximumSingleCreditAdviceAmount)),
-                                    //new XElement("sourceEvaluationCurrency", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationCurrency)),
-                                    bMaximumSingleCreditAdviceAmount == false ? null : new XElement("sourceEvaluationMaximumSingleCreditAdviceAmount", bussines.FirstOrDefault().sourceEvaluationMaximumSingleCreditAdviceAmount),
-                                    bMaximumSingleCreditAdviceAmount == false ? null : new XElement("sourceEvaluationCurrency", bussines.FirstOrDefault().sourceEvaluationCurrency),
-                                    new XElement("sourceRating", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceRating)),
-                                    new XElement("sourceRatingRange", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceRatingRange)),
-                                    new XElement("sourceRatingComments", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceRatingComments)),
-                                    new XElement("sourceEvaluationComments", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationComments))
-                              
-                               relateds.Select(related =>
+                            new XElement("sourceEvaluation",
+                                new XElement("sourceEvaluationOriginalPaymentExperience", (resultCompany == null ? "" : resultCompany.SourceEvaluationOriginalPaymentExperience)),
+                                new XElement("sourceEvaluationSimplePaymentExperience", (resultCompany == null ? "" : GetCreditRiskCode(resultCompany.SourceEvaluationSimplePaymentExperience))),
+                                new XElement("sourceEvaluationExtendedPaymentExperience", (resultCompany == null ? "" : resultCompany.SourceEvaluationExtendedPaymentExperience)),
+                                new XElement("sourceEvaluationCreditAdviceAmount", (resultCompany == null ? "" : resultCompany.SourceEvaluationCreditAdviceAmount)),
+                                new XElement("sourceEvaluationCreditAdviceExplanation", (resultCompany == null ? "" : resultCompany.SourceEvaluationCreditAdviceExplanation)),
+                                new XElement("sourceEvaluationMaximumCreditAdviceAmount", (resultCompany == null ? "" : resultCompany.SourceEvaluationMaximumCreditAdviceAmount)),
+                                //new XElement("sourceEvaluationMaximumSingleCreditAdviceAmount", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationMaximumSingleCreditAdviceAmount)),
+                                //new XElement("sourceEvaluationCurrency", (bussines.FirstOrDefault() == null ? "" : bussines.FirstOrDefault().sourceEvaluationCurrency)),
+                                bMaximumSingleCreditAdviceAmount == false ? null : new XElement("sourceEvaluationMaximumSingleCreditAdviceAmount", resultCompany.SourceEvaluationMaximumSingleCreditAdviceAmount == null ? "" : resultCompany.SourceEvaluationMaximumSingleCreditAdviceAmount),
+                                bMaximumSingleCreditAdviceAmount == false ? null : new XElement("sourceEvaluationCurrency", resultCompany.SourceEvaluationCurrency == null ? "" : resultCompany.SourceEvaluationCurrency),
+                                new XElement("sourceRating", (resultCompany == null ? "" : resultCompany.SourceRating)),
+                                new XElement("sourceRatingRange", (resultCompany == null ? "" : resultCompany.SourceRatingRange)),
+                                new XElement("sourceRatingComments", (resultCompany == null ? "" : resultCompany.SourceRatingComments)),
+                                new XElement("sourceEvaluationComments", (resultCompany == null ? "" : resultCompany.SourceEvaluationComments)),
+
+                               resultRelated.Select(related =>
                                   new XElement("relatedCompany",
-                                       new XElement("relatedName", related.relatedName == null ? "" : related.relatedName),
-                                       new XElement("relatedTaxReg", related.relatedTaxReg == null ? "" : related.relatedTaxReg),
-                                       new XElement("relatedCountry", related.relatedCountry == null ? "" : related.relatedCountry),
-                                       new XElement("dateInc", related.dateInc == null ? "" : related.dateInc),
-                                       new XElement("relationType", related.relationType == null ? "" : related.relationType)
+                                       new XElement("relatedName", related.RelatedName == null ? "" : related.RelatedName),
+                                       new XElement("relatedTaxReg", related.RelatedTaxReg == null ? "" : related.RelatedTaxReg),
+                                       new XElement("relatedCountry", related.RelatedCountry == null ? "" : GetCountryCode(related.RelatedCountry)),
+                                       new XElement("dateInc", related.DateInc == null ? "" : related.DateInc),
+                                       new XElement("relationType", related.RelationType == null ? "" : related.RelationType)
                                    )
                                )
                             )
-                        );
-                    }
+                        )
+                    );
+                    string xmlString = xDoc.ToString();
+
+                    // Convertir la cadena XML en un MemoryStream
+                    byte[] byteArray = Encoding.UTF8.GetBytes(xmlString);
+                    response.Data = new GetFileResponseDto
+                    {
+                        File = byteArray,
+                        ContentType = "application/xml",
+                        Name = "N" + resultCompany.TicketNumber.ToString("D6") + "_" + resultCompany.DebtorName.Replace(" ","_") + ".xml"
+                    };
                 }
                 
-                */
             }
             catch (Exception ex)
             {
@@ -418,5 +516,121 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<GetFileResponseDto>> GetXmlAtradiusAsync(int idTicket)
+        {
+            var response = new Response<GetFileResponseDto>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var idParameter = new SqlParameter("@idTicket", idTicket);
+                var ticket = await _ticketDomain.GetByIdAsync(idTicket);
+                if(ticket != null)
+                {
+                    var company = await _companyDomain.GetByIdAsync((int)ticket.IdCompany);
+                    var companyBackground = await _companyBackgroundDomain.GetByIdAsync(((int)ticket.IdCompany));
+                    var companyBranch = await _companyBranchDomain.GetCompanyBranchByIdCompany((int)ticket.IdCompany);
+                    var companyInfoGeneral = await _companyGeneralInformationDomain.GetByIdCompany((int)ticket.IdCompany);
+                    //1
+                    XmlDocument xmlDoc = new XmlDocument();
+
+                    //Client_Data
+                    XmlElement clientDataElement = xmlDoc.CreateElement("Client_Data");
+                    xmlDoc.AppendChild(clientDataElement);
+                    AddCDataElement(xmlDoc, clientDataElement, "Client", ticket.IdSubscriberNavigation.Code);
+                    AddCDataElement(xmlDoc, clientDataElement, "FecInf", ticket.OrderDate.ToString("dddd, MMMM dd, yyyy"));
+                    AddCDataElement(xmlDoc, clientDataElement, "Status", ticket.IdSubscriberNavigation.Enable == true ? "Active" : "Inactive");
+                    AddCDataElement(xmlDoc, clientDataElement, "Status_Desde", ticket.IdSubscriberNavigation.Code);
+                    AddCDataElement(xmlDoc, clientDataElement, "Ordered_On", ticket.OrderDate.ToString("dddd, MMMM dd, yyyy"));
+                    if (!ticket.ReferenceNumber.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "ClientReference", ticket.ReferenceNumber);
+                    }
+                    if (!ticket.ReferenceNumber.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Order_Num", ticket.ReferenceNumber);
+                    }
+                    AddCDataElement(xmlDoc, clientDataElement, "Priority", ticket.ProcedureType);
+                    AddCDataElement(xmlDoc, clientDataElement, "Your_Request", ticket.RequestedName);
+
+                    //Identification
+                    XmlElement identificationElement = xmlDoc.CreateElement("Identification");
+                    xmlDoc.AppendChild(identificationElement);
+                    AddCDataElement(xmlDoc, identificationElement, "Correct_Company_Name", ticket.IdCompanyNavigation.Name);
+                    if (!company.SocialName.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Trade_Name", company.SocialName);
+                    }
+                    if (!company.TaxTypeCode.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Taxpayer_Registration", company.TaxTypeCode);
+                    }
+                    if (!company.Address.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Main_Address", company.Address);
+                    }
+                    if (!company.Place.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "City_Province", company.Place);
+                    }
+                    if (!company.PostalCode.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Postal_Code", company.PostalCode);
+                    }
+                    if (company.IdCountry != 0 && company.IdCountry != null)
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Country ", company.IdCountryNavigation.Name);
+                    }
+                    if (!company.Telephone.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Telephone ", company.Telephone);
+                    }
+                    if (!company.Cellphone.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Phone_Mobile ", company.Cellphone);
+                    }
+                    if (!company.WhatsappPhone.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "WhatsApp ", company.WhatsappPhone);
+                    }
+                    if (!company.Email.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Email ", company.Email);
+                    }
+                    if (!company.WebPage.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Web ", company.WebPage);
+                    }
+                    if (!company.Traductions.Where(x => x.Identifier == "L_E_COMIDE").FirstOrDefault().LargeValue.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Comment ", company.Traductions.Where(x => x.Identifier == "L_E_COMIDE").FirstOrDefault().LargeValue);
+                    }
+
+                    //Summary
+                    XmlElement summaryElement = xmlDoc.CreateElement("Summary");
+                    xmlDoc.AppendChild(summaryElement);
+                    if (!companyInfoGeneral.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_I_GENERAL").FirstOrDefault().LargeValue.IsNullOrEmpty())
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Ver_Resumen ", companyInfoGeneral.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_I_GENERAL").FirstOrDefault().LargeValue);
+                    }
+                    if (companyBackground.ConstitutionDate != null)
+                    {
+                        AddCDataElement(xmlDoc, clientDataElement, "Incorporation ", companyBackground.ConstitutionDate.ToString("dd/MM/yyyy"));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw new Exception(ex.Message);
+            }
+            return response;
+        }
+        static void AddCDataElement(XmlDocument xmlDoc, XmlElement parentElement, string elementName, string value)
+        {
+            XmlElement element = xmlDoc.CreateElement(elementName);
+            XmlCDataSection cdata = xmlDoc.CreateCDataSection(value);
+            element.AppendChild(cdata);
+            parentElement.AppendChild(element);
+        }
     }
 }

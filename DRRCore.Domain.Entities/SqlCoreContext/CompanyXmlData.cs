@@ -4,8 +4,7 @@ namespace DRRCore.Domain.Entities.SqlCoreContext
 {
     public class CompanyXmlData
     {
-        [Key]
-        public int CompanyXmlDataId { get; set; }
+        public int TicketNumber { get; set; }
         public string? DebtorName { get; set; }
         public string? DebtorCountry { get; set; }
         public string? ProviderReportReference { get; set; }
@@ -29,46 +28,122 @@ namespace DRRCore.Domain.Entities.SqlCoreContext
         public string? CompanyTradeNameType { get; set; }
         public string? LanguageAndAlphabetTradeType { get; set; }
         public string? AddressType { get; set; }
-        public string? LanguageAndAlphabetType1 { get; set; }
         public string? Street { get; set; }
         public string? PostCode { get; set; }
-        public string? City { get;}
+        public string? City { get; set; }
         public string? StateRegion { get; set; }
-        public string? Country { get; set;}
+        public int? Country { get; set;}
         public string? FormerAddressType { get; set; }
-        public string? FormerAddresslanguageAndAlphabetType { get; }
-        public string? FormerAddressCountry { get; }
-        public string? NumberOfEmployeesType { get; }
-        public string? NumberOfEmployeesWithinTheCompanyRangeFrom { get; }
-        public string? NumberOfEmployeesWithinTheCompanyRangeTo { get; }
-        public string? CompanyLegalForm { get; }
-        public string? ContactEmailAddress { get; }
-        public string? ContactPrefixPhoneNumber { get; }
-        public string? ContactPhoneNumber { get; }
-        public string? ContactWebsiteAddress { get; }
-        public string? IncorporationDate { get; }
-        public string? RegistrationDate { get; }
-        public string? ActivityStartDate { get; }
-        public string? FoundationDate { get; }
-        public string? CompanyMainSectorCode { get; }
-        public string? CompanyMainSectorCodeType { get; }
-        public string? CompanyMainSectorDescription { get; }
-        public string? CompanyNature { get; }
-        public string? CompanyNatureFromProvider { get; }
-        public string? SourceEvaluationOriginalPaymentExperience { get; }
-        public string? SourceEvaluationSimplePaymentExperience { get; }
-        public string? SourceEvaluationExtendedPaymentExperience { get; }
-        public string? SourceEvaluationCreditAdviceAmount { get; }
-        public string? SourceEvaluationCreditAdviceExplanation { get; }
-        public string? SourceEvaluationMaximumCreditAdviceAmount { get; }
+        public string? FormerAddresslanguageAndAlphabetType { get; set; }
+        public string? FormerAddressStreet { get; set; }
+        public int? FormerAddressCountry { get; set; }
+        public string? NumberOfEmployeesType { get; set; }
+        public int? NumberOfEmployeesWithinTheCompanyRangeFrom { get; set; }
+        public int? NumberOfEmployeesWithinTheCompanyRangeTo { get; set; }
+        public string? CompanyLegalForm { get; set; }
+        public string? ContactEmailAddress { get; set; }
+        public string? ContactPrefixPhoneNumber { get; set; }
+        public string? ContactPhoneNumber { get; set; }
+        public string? ContactWebsiteAddress { get; set; }
+        public string? IncorporationDate { get; set; }
+        public string? RegistrationDate { get; set; }
+        public string? ActivityStartDate { get; set; }
+        public string? FoundationDate { get; set; }
+        public int? CompanyMainSectorCode { get; set; }
+        public string? CompanyMainSectorCodeType { get; set; }
+        public string? CompanyMainSectorDescription { get; set; }
+        public string? CompanyNature { get; set; }
+        public string? CompanyNatureFromProvider { get; set; }
+        public string? SourceEvaluationOriginalPaymentExperience { get; set; }
+        public int? SourceEvaluationSimplePaymentExperience { get; set; }
+        public string? SourceEvaluationExtendedPaymentExperience { get; set; }
+        public string? SourceEvaluationCreditAdviceAmount { get; set; }
+        public string? SourceEvaluationCreditAdviceExplanation { get; set; }
+        public string? SourceEvaluationMaximumCreditAdviceAmount { get; set; }
         public string? SourceEvaluationMaximumSingleCreditAdviceAmount { get; }
-        public string? SourceEvaluationCurrency { get; }
-        public string? SourceRating { get; }
-        public string? SourceRatingRange { get; }
-        public string? SourceRatingComments { get; }
-        public string? SourceEvaluationComments { get; }
-        public string? NormalisedSourceRatingValue { get; }
-        public string? NormalisedSourceRatingType { get; }
-        public string? CompanyListedStockExchange { get; }
+        public string? SourceEvaluationCurrency { get; set; }
+        public string? SourceRating { get; set; }
+        public string? SourceRatingRange { get; set; }
+        public string? SourceRatingComments { get; set; }
+        public string? SourceEvaluationComments { get; set; }
+        public string? NormalisedSourceRatingValue { get; set; }
+        public string? NormalisedSourceRatingType { get; set; }
+        public string? CompanyListedStockExchange { get; set; }
+    }
+    public class CompanyBalanceData
+    {
+        public int? CR_FD_keyFigures_accountingPeriod { get; set; }
+        public string? CR_FD_keyFigures_startDateOfAccountingPeriod { get; set; }
+        public string? CR_FD_keyFigures_endDateOfAccountingPeriod { get; set; }
+        public string? CR_FD_keyFigures_typeOfFigures { get; set; }
+        public string? CR_FD_keyFigures_balancesheetDefaultCurrency { get; set; }
+        public string? CR_FD_keyFigures_auditedBalance { get; set; }
+        public string? CR_FD_keyFigures_auditComment { get; set; }
+        public string? CR_FD_keyFigures_consolidatedBalanceSheet { get; set; }
+        public string? CR_FD_keyFigures_consolidationType { get; set; }
+        public string? CR_FD_keyFigures_balancesheetDefaultMonetaryFactorCode { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeTotalAssets { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueTotalAssets { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeTotalAssets { get; set; }
+
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeFixedAssets { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueFixedAssets { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeFixedAssets { get; set; }
+
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeCurrentAssets { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueCurrentAssets { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeCurrentAssets { get; set; }
+
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeNonCurrentAssets { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueNonCurrentAssets { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeNonCurrentAssets { get; set; }
+
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeTotalEquityLiabilities { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueCodeTotalEquityLiabilities { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeCodeTotalEquityLiabilities { get; set; }
+
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquity { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueEquity { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquity { get; set; }
+
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityPaiduPCapital { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityPaiduPCapital { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityPaiduPCapital { get; set; }
+
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeLTLiabilities { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueLTLiabilities { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeLTLiabilities { get; set; }
+
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeSTLiabilities { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueSTLiabilities { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeSTLiabilities { get; set; }
+
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityRevenueSales { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityRevenueSales { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityRevenueSales { get; set; }
+
+        public string? CR_FD_keyFigures_keyFigure_keyFigureItemCodeEquityNetResult { get; set; }
+        public decimal? CR_FD_keyFigures_keyFigure_keyFigureItemValueEquityNetResult { get; set; }
+        public string? CR_FD_keyFigures_keyFigure_keyFigureUnitPrefixCodeEquityNetResult { get; set; }
+    }
+    public class CompanyFunctionData
+    {
+        public string? FunctionType { get; set; }
+        public string? NameOfPerson { get; set; }
+    }
+    public class CompanyLegalEventsData
+    {
+        public string? LegalEvent { get; set; }
+        public string? SourceEvent { get; set; }
+        public string? EndDate { get; set; }
+        public string? StartDate { get; set; }
+    }
+    public class CompanyRelatedData
+    {
+        public string? RelatedName { get; set; }
+        public string? RelatedTaxReg { get; set; }
+        public string? RelationType { get; set; }
+        public int? RelatedCountry { get; set; }
+        public string? DateInc { get; set; }
     }
 }

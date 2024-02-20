@@ -1,8 +1,9 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.Interfaces.CoreApplication;
-using DRRCore.Application.Main.CoreApplication;
+using DRRCore.Domain.Entities.SqlCoreContext;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 namespace DRRCore.Services.ApiCore.Controllers
 {
@@ -467,10 +468,12 @@ namespace DRRCore.Services.ApiCore.Controllers
             return File(result.Data.File, result.Data.ContentType, result.Data.Name);
         }
         [HttpGet()]
-        [Route("getXmlCompany")]
-        public async Task<ActionResult> getXmlCompany(int idTicket)
+        [Route("getXmlCredendo")]
+        public async Task<IActionResult> getXmlCompany(int idTicket)
         {
-            return Ok(await _xmlApplication.GetXmlCompanyAsync(idTicket));
+            var result = await _xmlApplication.GetXmlCredendoAsync(idTicket);
+
+            return File(result.Data.File, result.Data.ContentType, result.Data.Name);
         }
     }
 }
