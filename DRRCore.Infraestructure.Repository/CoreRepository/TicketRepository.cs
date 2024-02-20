@@ -179,6 +179,9 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using var context = new SqlCoreContext();
                 return await context.Tickets.Include(x => x.IdCountryNavigation)
+                    .Include(x => x.IdCompanyNavigation)
+                    .Include(x => x.IdSubscriberNavigation)
+                    .Include(x => x.IdCompanyNavigation.IdCountryNavigation)
                     .Include(x => x.IdSubscriberNavigation).Where(x=>x.Id==id).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
