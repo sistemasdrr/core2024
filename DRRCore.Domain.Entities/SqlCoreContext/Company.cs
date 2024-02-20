@@ -79,6 +79,8 @@ public partial class Company
 
     public bool? Print { get; set; }
 
+    public bool? HaveReport { get; set; }
+
     public virtual ICollection<BankDebt> BankDebts { get; set; } = new List<BankDebt>();
 
     public virtual ICollection<ComercialLatePayment> ComercialLatePayments { get; set; } = new List<ComercialLatePayment>();

@@ -166,7 +166,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public async Task<List<Company>> GetByNameAsync(string name, string form, int idCountry,bool haveReport)
+        public async Task<List<Company>> GetByNameAsync(string name, string form, int idCountry,bool haveReport, bool similar)
         {
             //Fata el Have Report
             List<Company> companys = new List<Company>();
@@ -178,12 +178,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     if (idCountry == 0)
                     {
                         companys = await context.Companies.Include(x=>x.Traductions).Include(x=>x.IdCreditRiskNavigation).
-                            Include(x => x.IdCountryNavigation).Where(x => x.Name.Contains(name) || x.SocialName.Contains(name)).Take(100).ToListAsync();
+                            Include(x => x.IdCountryNavigation).Where(x => x.Name.Contains(name) || x.SocialName.Contains(name) && x.HaveReport==haveReport).Take(100).ToListAsync();
                     }
                     else
                     {
                         companys = await context.Companies.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                            Include(x => x.IdCountryNavigation).Where(x =>x.IdCountry==idCountry && (x.Name.Contains(name) || x.SocialName.Contains(name))).Take(100).ToListAsync();
+                            Include(x => x.IdCountryNavigation).Where(x =>x.IdCountry==idCountry && (x.Name.Contains(name) || x.SocialName.Contains(name)) && x.HaveReport == haveReport).Take(100).ToListAsync();
                     }
                     
                 }
@@ -192,12 +192,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     if (idCountry == 0)
                     {
                         companys = await context.Companies.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                            Include(x => x.IdCountryNavigation).Where(x => x.Name.StartsWith(name) || x.SocialName.StartsWith(name)).Take(100).ToListAsync();
+                            Include(x => x.IdCountryNavigation).Where(x => x.Name.StartsWith(name) || x.SocialName.StartsWith(name) && x.HaveReport == haveReport).Take(100).ToListAsync();
                     }
                     else
                     {
                         companys = await context.Companies.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                            Include(x => x.IdCountryNavigation).Where(x => x.IdCountry == idCountry && ( x.Name.StartsWith(name) || x.SocialName.StartsWith(name))).Take(100).ToListAsync();
+                            Include(x => x.IdCountryNavigation).Where(x => x.IdCountry == idCountry && ( x.Name.StartsWith(name) || x.SocialName.StartsWith(name)) && x.HaveReport == haveReport).Take(100).ToListAsync();
                     }
                   
                 }

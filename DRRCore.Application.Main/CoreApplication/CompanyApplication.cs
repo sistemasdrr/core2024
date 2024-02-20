@@ -3,12 +3,15 @@ using AutoMapper;
 using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.Interfaces.CoreApplication;
+using DRRCore.Domain.Entities.MYSQLContext;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
+using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -17,7 +20,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly int idUser;
         private readonly ClaimsIdentity claims;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
+        private readonly ITCuponDomain _tCuponDomain;
         private readonly ICompanyDomain _companyDomain;
         private readonly ICompanyBackgroundDomain _companyBackgroundDomain;
         private readonly ICompanyBranchDomain _companyBranchDomain;
@@ -38,6 +41,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICompanyRelationDomain _companyRelationDomain;
         private readonly IReportingDownload _reportingDownload;
         private readonly ICompanyImagesDomain _companyImagesDomain;
+        private readonly ITicketDomain _ticketDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
@@ -48,6 +52,8 @@ namespace DRRCore.Application.Main.CoreApplication
             ICompanySBSDomain companySBSDomain, IEndorsementsDomain endorsementsDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain, ICompanyImagesDomain companyImagesDomain,
             ICompanyGeneralInformationDomain companyGeneralInformationDomain,
             IReportingDownload reportingDownload,
+            ITicketDomain ticketDomain,
+            ITCuponDomain tCuponDomain,
             IImportsAndExportsDomain importsAndExportsDomain, ICompanyPartnersDomain companyPartnersDomain, IHttpContextAccessor httpContextAccessor)
         {
             _companyDomain = companyDomain;
@@ -68,7 +74,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _companyShareHolderDomain = companyShareHolderDomain;
             _workerHistoryDomain = workerHistoryDomain;
             _companyRelationDomain = companyRelationDomain;
-
+            _ticketDomain= ticketDomain;           
             _companyImagesDomain = companyImagesDomain;
             _mapper = mapper;
             _logger = logger;
@@ -232,19 +238,32 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name, string form, int idCountry, bool haveReport)
+        public async Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name, string form, int idCountry, bool haveReport, bool similar)
         {
             var response = new Response<List<GetListCompanyResponseDto>>();
             try
             {
-                var company = await _companyDomain.GetByNameAsync(name,form,idCountry,haveReport);
-                if (company == null)
+                if (!similar)
                 {
-                    response.IsSuccess = false;
-                    response.Message = Messages.MessageNoDataFound;
-                    _logger.LogError(response.Message);
+                    var company = await _companyDomain.GetByNameAsync(name, form, idCountry, haveReport, similar);
+                    if (company == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = Messages.MessageNoDataFound;
+                        _logger.LogError(response.Message);
+                    }
+                    response.Data = _mapper.Map<List<GetListCompanyResponseDto>>(company);
                 }
-                response.Data = _mapper.Map<List<GetListCompanyResponseDto>>(company);
+                else
+                {
+                    var ticket = await _ticketDomain.GetByNameAsync(name);
+                    var mapper= _mapper.Map<List<GetListCompanyResponseDto>>(ticket);
+
+                    var oldTicket= await _tCuponDomain.GetAllTCuponByRequestedNameAsync(name);
+                    mapper.AddRange(_mapper.Map<List<GetListCompanyResponseDto>>(oldTicket));
+
+                    mapper=mapper.DistinctBy(x=>x.Name).ToList();
+                }
             }
             catch (Exception ex)
             {

@@ -57,5 +57,9 @@ public partial class CompanyBackground
 
     public string? TradedByEng { get; set; }
 
+    public virtual Currency? CurrencyNavigation { get; set; }
+
+    public virtual Currency? CurrentPaidCapitalCurrencyNavigation { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 }

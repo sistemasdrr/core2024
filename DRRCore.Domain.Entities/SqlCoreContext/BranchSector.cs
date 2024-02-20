@@ -19,5 +19,7 @@ public partial class BranchSector
 
     public bool? Enable { get; set; }
 
+    public string? OldCode { get; set; }
+
     public virtual ICollection<CompanyBranch> CompanyBranches { get; set; } = new List<CompanyBranch>();
 }

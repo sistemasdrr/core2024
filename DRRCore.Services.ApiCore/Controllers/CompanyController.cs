@@ -39,11 +39,11 @@ namespace DRRCore.Services.ApiCore.Controllers
         }
         [HttpPost()]
         [Route("getbyname")]
-        public async Task<ActionResult> GetCompanyByName(string? name,string? form,int idCountry,bool haveReport)
+        public async Task<ActionResult> GetCompanyByName(string? name,string? form,int idCountry,bool haveReport,bool similar)
         {
             name ??= string.Empty;
             form ??= string.Empty;
-            return Ok(await _companyApplication.GetAllCompanys(name,form,idCountry,haveReport));
+            return Ok(await _companyApplication.GetAllCompanys(name,form,idCountry,haveReport,similar));
         }
         [HttpGet()]
         [Route("getBack")]

@@ -46,9 +46,9 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _companyRepository.GetByIdAsync(id);
         }
 
-        public async Task<List<Company>> GetByNameAsync(string name, string form, int idCountry,bool haveReport)
+        public async Task<List<Company>> GetByNameAsync(string name, string form, int idCountry,bool haveReport, bool similar)
         {
-            return await _companyRepository.GetByNameAsync(name,form,idCountry, haveReport);
+            return await _companyRepository.GetByNameAsync(name,form,idCountry, haveReport,similar);
         }
 
         public Task<List<Company>> GetByNameAsync(string name)

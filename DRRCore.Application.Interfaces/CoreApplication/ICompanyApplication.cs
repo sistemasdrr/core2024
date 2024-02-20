@@ -8,7 +8,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
     {
         Task<Response<int>> AddOrUpdateAsync(AddOrUpdateCompanyRequestDto obj);
         Task<Response<GetCompanyResponseDto>> GetCompanyById(int id);
-        Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name,string form,int idCountry,bool haveReport);
+        Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name,string form,int idCountry,bool haveReport,bool similar);
         Task<Response<bool>> DeleteAsync(int id);
         Task<Response<int?>> AddOrUpdateCompanyBackGroundAsync(AddOrUpdateCompanyBackgroundRequestDto obj);
         Task<Response<int>> AddOrUpdateCompanyFinancialInformationAsync(AddOrUpdateCompanyFinancialInformationRequestDto obj);

@@ -188,9 +188,18 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public Task<List<Ticket>> GetByNameAsync(string name)
+        public async Task<List<Ticket>> GetByNameAsync(string name)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.Tickets.Where(x => x.RequestedName.Contains(name)).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<List<Ticket>> GetTicketByCompany(int id)

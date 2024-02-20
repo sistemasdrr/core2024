@@ -18,6 +18,4 @@ public partial class Profession
     public DateTime? DeleteDate { get; set; }
 
     public bool? Enable { get; set; }
-
-    public virtual ICollection<CompanyPartner> CompanyPartners { get; set; } = new List<CompanyPartner>();
 }

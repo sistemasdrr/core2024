@@ -2286,5 +2286,82 @@ namespace DRRCore.Application.Main.MigrationApplication
         {
             throw new NotImplementedException();
         }
+
+        public async Task<bool> MigrateOldTicket()
+        {
+            int[] year = { 2024,2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011,2010,2009,2007,2006 };
+           
+                using (var mysqlContext = new MySqlContext())
+                using (var context = new SqlCoreContext())
+                {
+                for (int i = 0; i < year.Length; i++)
+                {
+                    var cupon = await mysqlContext.TCupons.Where(x => x.CupEstado == "J" &&
+                    x.EpCodigo != "" && x.Migra == 0 && x.CupFecped.Value.Year == year[i]).ToListAsync();
+
+                    foreach (var item in cupon)
+                    {
+                        try
+                        {
+                            context.OldTickets.Add(new OldTicket
+                            {
+                                Cupcodigo = item.CupCodigo.ToString(),
+                                FechaPedido = item.CupFecped,
+                                FechaDespacho = item.CupFecdes,
+                                Abonado = item.AboCodigo,
+                                Idioma = item.IdiCodigo == "001" ? "I" : item.IdiCodigo == "002" ? "E" : "A",
+                                EmpresaPersona = item.EmpPer != null ? item.EmpPer : item.EpCodigo == null ? null : item.EpCodigo.StartsWith('P') ? "P" : "E",
+                                FechaVencimiento = item.CupFecvcto,
+                                TipoInforme = item.CupTipinf,
+                                Tramite = GetProcedureType(item.TramCodigo),
+                                NombreDespachado = item.CupNomdes,
+                                NombreSolicitado = item.CupNomsol,
+                                Empresa = item.EpCodigo
+
+                            });
+
+                            await context.SaveChangesAsync();
+                            item.Migra = 1;
+                            mysqlContext.TCupons.Update(item);
+                            await mysqlContext.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex.Message);
+                            continue;
+
+                        }
+
+                    }
+                }
+
+                
+            }
+            return true;
+        }
+        private static string GetProcedureType(string? tram)
+        {
+            if (!string.IsNullOrEmpty(tram))
+            {
+                var value = int.Parse(tram);
+                if (value <= 8)
+                {
+                    return "T" + value;
+                }
+                else
+                {
+                    switch (value)
+                    {
+                        case 9:
+                            return "O1";
+                        case 10:
+                            return "O2";
+                        case 11:
+                            return "O3";
+                    }
+                }
+            }
+            return string.Empty;
+        }
     }
 }

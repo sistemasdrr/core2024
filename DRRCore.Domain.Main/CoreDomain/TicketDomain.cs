@@ -49,7 +49,7 @@ namespace DRRCore.Domain.Main.CoreDomain
 
         public async Task<List<Ticket>> GetByNameAsync(string name)
         {
-            throw new NotImplementedException();
+            return await _ticketRepository.GetByNameAsync(name);
         }
 
         public async Task<List<Ticket>> GetTicketByCompany(int id)

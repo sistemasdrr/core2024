@@ -118,7 +118,7 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 using var context = new SqlCoreContext();
                 var idParameter = new SqlParameter("@idTicket", idTicket);
-                var company = context.CompanyXmls.FromSqlRaw("EXECUTE DataCompanyCredendo @idTicket", idParameter).FirstOrDefaultAsync();
+                var company = context.Companies.FromSqlRaw("EXECUTE DataCompanyCredendo @idTicket", idParameter).FirstOrDefaultAsync();
                 if(company != null)
                 {
                     response.Data = _mapper.Map<CompanyXmlData>(company);

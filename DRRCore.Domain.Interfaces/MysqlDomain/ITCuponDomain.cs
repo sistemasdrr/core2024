@@ -8,5 +8,6 @@ namespace DRRCore.Domain.Interfaces.MysqlDomain
         Task<List<TCupon>> GetAllTCuponAsync();
         Task<List<TCupon>> GetTCuponByPersonaOrEmpresaAsync(string codigo);
         Task<List<TCupon>> GetTCuponExistAsync(string codigo);
+        Task<List<TCupon>> GetAllTCuponByRequestedNameAsync(string name);
     }
 }

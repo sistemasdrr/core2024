@@ -25,6 +25,10 @@ public partial class Currency
 
     public virtual ICollection<AgentPrice> AgentPrices { get; set; } = new List<AgentPrice>();
 
+    public virtual ICollection<CompanyBackground> CompanyBackgroundCurrencyNavigations { get; set; } = new List<CompanyBackground>();
+
+    public virtual ICollection<CompanyBackground> CompanyBackgroundCurrentPaidCapitalCurrencyNavigations { get; set; } = new List<CompanyBackground>();
+
     public virtual ICollection<FinancialBalance> FinancialBalances { get; set; } = new List<FinancialBalance>();
 
     public virtual ICollection<Provider> Providers { get; set; } = new List<Provider>();

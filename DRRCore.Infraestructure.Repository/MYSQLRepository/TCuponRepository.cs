@@ -19,6 +19,20 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<List<TCupon>> GetAllTCuponByRequestedNameAsync(string name)
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    return await context.TCupons.Where(x=>x.CupNomsol.Contains(name)).ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         public async Task<TCupon> GetTCuponByCodigoAsync(int codigo)
         {

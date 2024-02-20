@@ -13,7 +13,7 @@ public partial class CompanyPartner
 
     public bool? MainExecutive { get; set; }
 
-    public int? IdProfession { get; set; }
+    public string? Profession { get; set; }
 
     public int? Participation { get; set; }
 
@@ -29,9 +29,9 @@ public partial class CompanyPartner
 
     public bool? Enable { get; set; }
 
+    public string? ProfessionEng { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Person? IdPersonNavigation { get; set; }
-
-    public virtual Profession? IdProfessionNavigation { get; set; }
 }

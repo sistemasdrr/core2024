@@ -16,6 +16,11 @@ namespace DRRCore.Domain.Main.MysqlDomain
             return await _repository.GetAllTCuponAsync();
         }
 
+        public async Task<List<TCupon>> GetAllTCuponByRequestedNameAsync(string name)
+        {
+            return await _repository.GetAllTCuponByRequestedNameAsync(name);
+        }
+
         public async Task<TCupon> GetTCuponByCodigoAsync(int codigo)
         {
             return await _repository.GetTCuponByCodigoAsync(codigo);
