@@ -614,7 +614,8 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
                     if (companyBackground.ConstitutionDate != null)
                     {
-                        AddCDataElement(xmlDoc, clientDataElement, "Incorporation ", companyBackground.ConstitutionDate.ToString("dd/MM/yyyy"));
+                        DateTime date = (DateTime)companyBackground.ConstitutionDate;
+                        AddCDataElement(xmlDoc, clientDataElement, "Incorporation ", date.ToString("yyyy"));
                     }
                 }
             }
