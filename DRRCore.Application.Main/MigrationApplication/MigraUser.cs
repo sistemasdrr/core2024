@@ -2312,7 +2312,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 Idioma = item.IdiCodigo == "001" ? "I" : item.IdiCodigo == "002" ? "E" : "A",
                                 EmpresaPersona = item.EmpPer != null ? item.EmpPer : item.EpCodigo == null ? null : item.EpCodigo.StartsWith('P') ? "P" : "E",
                                 FechaVencimiento = item.CupFecvcto,
-                                TipoInforme = item.CupTipinf,
+                                TipoInforme = item.CupTipinf.Substring(0,2),
                                 Tramite = GetProcedureType(item.TramCodigo),
                                 NombreDespachado = item.CupNomdes,
                                 NombreSolicitado = item.CupNomsol,
