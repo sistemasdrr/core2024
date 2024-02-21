@@ -411,6 +411,13 @@ namespace DRRCore.Application.Main.MigrationApplication
                                                 item.LargeValue = finanzas.EmAnalistaIng;
                                             }
                                         }
+                                        else if (item.Identifier == "L_F_TABCOMM")
+                                        {
+                                            if (finanzas.EmSitfinTabIng != null)
+                                            {
+                                                item.LargeValue = finanzas.EmSitfinTabIng;
+                                            }
+                                        }
                                     }
                                     try
                                     {
@@ -430,7 +437,8 @@ namespace DRRCore.Application.Main.MigrationApplication
                                           finanzas.SfCodigo == "07" ? 15 : null,
                                             FinancialCommentarySelected = finanzas.EmSitfin,
                                             MainFixedAssets = finanzas.EmPropie,
-                                            AnalystCommentary = finanzas.EmAnalista
+                                            AnalystCommentary = finanzas.EmAnalista,
+                                            TabCommentary = finanzas.EmSitfinTab
                                         }, listTraductionFinantial);
                                     }
                                     catch (Exception ex)

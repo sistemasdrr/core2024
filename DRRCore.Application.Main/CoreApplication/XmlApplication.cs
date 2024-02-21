@@ -11,7 +11,6 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml;
 using Microsoft.IdentityModel.Tokens;
-using DRRCore.Infraestructure.Interfaces.CoreRepository;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -30,13 +29,17 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IFinancialBalanceDomain _financialBalanceDomain;
         private readonly ICompanyPartnersDomain _companyPartnersDomain;
         private readonly ICompanyShareHolderDomain _companyShareHolderDomain;
+        private readonly ICompanyRelationDomain _companyRelationDomain;
+        private readonly IImportsAndExportsDomain _importsAndExportsDomain;
+        private readonly IFinancialSalesHistoryDomain _financialSalesHistoryDomain;
         public XmlApplication(ILogger logger,IMapper mapper, ICompanyDomain companyDomain,
             ICompanyBackgroundDomain companyBackgroundDomain, ICompanyBranchDomain companyBranchDomain, 
             ICompanyFinancialInformationDomain companyFinancialInformationDomain, ITicketDomain ticketDomain, 
             ICompanyGeneralInformationDomain companyGeneralInformationDomain, IFinancialBalanceDomain financialBalanceDomain, 
             ICompanyPartnersDomain companyPartnersDomain, ICompanyCreditOpinionDomain companyCreditOpinionDomain,
-            ICompanySBSDomain companySBSDomain, ICompanyShareHolderDomain companyShareHolderDomain
-
+            ICompanySBSDomain companySBSDomain, ICompanyShareHolderDomain companyShareHolderDomain,
+            ICompanyRelationDomain companyRelationDomain, IImportsAndExportsDomain importsAndExportsDomain,
+            IFinancialSalesHistoryDomain financialSalesHistoryDomain
             )
         {
             _ticketDomain = ticketDomain;
@@ -50,6 +53,9 @@ namespace DRRCore.Application.Main.CoreApplication
             _companyCreditOpinionDomain = companyCreditOpinionDomain;
             _companySBSDomain = companySBSDomain;
             _companyShareHolderDomain = companyShareHolderDomain;
+            _companyRelationDomain = companyRelationDomain;
+            _importsAndExportsDomain = importsAndExportsDomain;
+            _financialSalesHistoryDomain = financialSalesHistoryDomain;
             _logger = logger;
             _mapper = mapper;
         }
@@ -549,15 +555,22 @@ namespace DRRCore.Application.Main.CoreApplication
                     var companyCreditOpinion = await _companyCreditOpinionDomain.GetByIdCompany((int)ticket.IdCompany);
                     var companyPartner = await _companyPartnersDomain.GetPartnersByIdCompany((int)ticket.IdCompany);
                     var companyShareholder = await _companyShareHolderDomain.GetShareHoldersByIdCompany((int)ticket.IdCompany);
-                    
+                    var companyRelation = await _companyRelationDomain.GetCompanyRelationByIdCompany((int)ticket.IdCompany);
+                    var salesHistory = await _financialSalesHistoryDomain.GetByIdCompany((int)ticket.IdCompany);
+
                     var resultCompanyShareholder = context.Set<CompanyShareholderSP>()
                                          .FromSqlRaw("EXECUTE ShareholderCompany @idTicket", idParameter)
                                          .AsEnumerable()
                                          .ToList();
+                    var resultWhoIsWho = context.Set<WhoIsWhoSP>()
+                                         .FromSqlRaw("EXECUTE WhoIsWho @idTicket", idParameter)
+                                         .AsEnumerable()
+                                         .ToList();
                     // Crear el documento XML
                     XmlDocument xmlDoc = new XmlDocument();
-                    XmlDeclaration xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", "iso-8859-1", "no");
-                    xmlDoc.AppendChild(xmlDeclaration);
+                    // Agregar la instrucción de procesamiento XML y la declaración de la hoja de estilo
+                    XmlProcessingInstruction styleSheetInstruction = xmlDoc.CreateProcessingInstruction("xml-stylesheet", "href='templateA_ingles.xsl' type='text/xsl'");
+                    xmlDoc.AppendChild(styleSheetInstruction);
                     // Crear el nodo raíz
                     XmlElement rootElement = xmlDoc.CreateElement("CompanyReport");
                     xmlDoc.AppendChild(rootElement);
@@ -696,12 +709,11 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
 
                     //Credit_Opinion
-                    XmlElement creditOpinionElement = xmlDoc.CreateElement("Credit_Opinion");
-                    summaryElement.AppendChild(creditOpinionElement);
-
                     if(companyCreditOpinion != null)
                     {
-                        if(!companyCreditOpinion.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_O_QUERYCREDIT").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                        XmlElement creditOpinionElement = xmlDoc.CreateElement("Credit_Opinion");
+                        summaryElement.AppendChild(creditOpinionElement);
+                        if (!companyCreditOpinion.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_O_QUERYCREDIT").FirstOrDefault().ShortValue.IsNullOrEmpty())
                         {
                             AddCDataElement(xmlDoc, creditOpinionElement, "Requested_Credit", companyCreditOpinion.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_O_QUERYCREDIT").FirstOrDefault().ShortValue);
                         }
@@ -771,16 +783,16 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
 
                     //Directors_Executives_Shareholders
-                    XmlElement shareholdersElement = xmlDoc.CreateElement("Directors_Executives_Shareholders");
-                    rootElement.AppendChild(shareholdersElement);
                     if(resultCompanyShareholder.Count > 0)
                     {
+                        XmlElement shareholdersElement = xmlDoc.CreateElement("Directors_Executives_Shareholders");
+                        rootElement.AppendChild(shareholdersElement);
                         int i = 0;
                         foreach (var item in resultCompanyShareholder)
                         {
                             i++;
                             XmlElement itemElement = xmlDoc.CreateElement("Name");
-                            itemElement.SetAttributeNode("Item",i.ToString());
+                            itemElement.SetAttribute("Item",i.ToString());
                             shareholdersElement.AppendChild(itemElement);
                             if (!item.Name.IsNullOrEmpty())
                             {
@@ -805,13 +817,785 @@ namespace DRRCore.Application.Main.CoreApplication
                         }
                     }
 
+                    //Who_Is_Who
+                    if(resultWhoIsWho.Count > 0)
+                    {
+                        XmlElement whoiswhoElement = xmlDoc.CreateElement("Who_Is_Who");
+                        rootElement.AppendChild(whoiswhoElement);
+                        foreach (var item in resultWhoIsWho)
+                        {
+                            int j = 0;
+                            for(int k = 1; k < resultCompanyShareholder.Count(); k++)
+                            {
+                                if (item.Fullname == resultCompanyShareholder[k].Name)
+                                {
+                                    j = k; break;
+                                }
+                            }
+                            XmlElement itemElement = xmlDoc.CreateElement("Name");
+                            itemElement.SetAttribute("Item", j.ToString());
+                            whoiswhoElement.AppendChild(itemElement);
+                           
+                            AddCDataElement(xmlDoc, itemElement, "ApeNom", item.Fullname);
+                            if (!item.Profession.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Title", item.Profession);
+                            }
+                            if (!item.Nacionality.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Nationality", item.Nacionality);
+                            }
+                            if (!item.Nacionality.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Nationality", item.Nacionality);
+                            }
+                            if (!item.birthDate.IsNullOrEmpty())
+                            {
+                                if (!item.BirthPlace.IsNullOrEmpty())
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "D_O_B", item.birthDate + " ("+item.BirthPlace+")");
+                                }
+                                else
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "D_O_B", item.birthDate);
+                                }
+                            }
+                            if (!item.IdentificationDoc.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "ID", item.IdentificationDoc);
+                            }
+                            if (!item.NumberPhone.IsNullOrEmpty())
+                            {
+                                if (!item.CodePhone.IsNullOrEmpty())
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Telephone", item.CodePhone + " " + item.NumberPhone + "");
+                                }
+                                else
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Telephone", item.NumberPhone);
+                                }
+                            }
+                            if (!item.Profession.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Profession", item.Profession);
+                            }
+                            if (!item.TaxCode.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Tax_Id", item.TaxName + " " + item.TaxCode);
+                            }
+                            if (!item.FatherName.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Father_Name", item.FatherName);
+                            }
+                            if (!item.MotherName.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Mother_Name", item.MotherName);
+                            }
+                            if (!item.History.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Background_Information", item.FatherName);
+                            }
+                            if (!item.References.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "References", item.References);
+                            }
+                            if (!item.Properties.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Properties", item.Properties);
+                            }
+                            var personPartner = await _companyPartnersDomain.GetPartnersByIdPerson(item.Id);
+                            if(personPartner.Count > 0)
+                            {
+                                XmlElement subitemElement = xmlDoc.CreateElement("Associated");
+                                itemElement.AppendChild(subitemElement);
+                                int l = 0;
+                                foreach (var item1 in personPartner)
+                                {
+                                    if(item1.IdCompany != ticket.IdCompany)
+                                    {
+                                        l++;
+                                        XmlElement subitem1Element = xmlDoc.CreateElement("Company");
+                                        subitem1Element.SetAttribute("Item", l.ToString());
+                                        subitemElement.AppendChild(subitem1Element);
+                                        AddCDataElement(xmlDoc, subitem1Element, "ApeNom", item1.IdCompanyNavigation.Name);
+                                        if (!item1.Profession.IsNullOrEmpty())
+                                        {
+                                            AddCDataElement(xmlDoc, subitem1Element, "Title", item1.Profession);
+                                        }
+                                        if (!item1.IdCompanyNavigation.TaxTypeCode.IsNullOrEmpty())
+                                        {
+                                            AddCDataElement(xmlDoc, subitem1Element, "Tax_Id", item1.IdCompanyNavigation.TaxTypeCode);
+                                        }
+                                        if (item1.IdCompanyNavigation.IdLegalRegisterSituation != null)
+                                        {
+                                            AddCDataElement(xmlDoc, subitem1Element, "SIT", item1.IdCompanyNavigation.IdLegalRegisterSituationNavigation.Abreviation);
+                                        }
+                                        if (item1.IdCompanyNavigation.IdCountry != null)
+                                        {
+                                            AddCDataElement(xmlDoc, subitem1Element, "Country", item1.IdCompanyNavigation.IdCountryNavigation.Name);
+                                        }
+                                    }
+                                }
+                            }
+
+
+                        }
+                    }
+
+                    //Business_History
+                    if(companyBackground != null)
+                    {
+                        if (!companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_B_HISTORY").FirstOrDefault().LargeValue.IsNullOrEmpty())
+                        {
+                            XmlElement businessHistoryElement = xmlDoc.CreateElement("Business_History");
+                            XmlCDataSection cdata = xmlDoc.CreateCDataSection(companyBackground.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_B_HISTORY").FirstOrDefault().LargeValue);
+                            rootElement.AppendChild(businessHistoryElement);
+                        }
+                    }
+
+                    //Related_Companies
+                    if(companyRelation.Count > 0)
+                    {
+                        XmlElement relationElement = xmlDoc.CreateElement("Related_Companies");
+                        rootElement.AppendChild(relationElement);
+                        int m = 0;
+                        foreach (var item in companyRelation)
+                        {
+                            m++; 
+                            XmlElement itemElement = xmlDoc.CreateElement("Name");
+                            itemElement.SetAttribute("Item", m.ToString());
+                            relationElement.AppendChild(itemElement);
+                            if (item.IdCompanyRelationNavigation.Name != null)
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "ApeNom", item.IdCompanyRelationNavigation.Name);
+                            }
+                            if (item.IdCompanyRelationNavigation.IdCountry != null)
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Country", item.IdCompanyRelationNavigation.IdCountryNavigation.Name);
+                            }
+                            if (item.IdCompanyRelationNavigation.IdLegalRegisterSituation != null)
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Sta", item.IdCompanyRelationNavigation.IdLegalRegisterSituationNavigation.Abreviation);
+                            }
+                            if (!item.IdCompanyRelationNavigation.TaxTypeCode.IsNullOrEmpty())
+                            {
+                                if(item.IdCompanyRelationNavigation.IdLegalRegisterSituation != null)
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Tax_Id", "(" + item.IdCompanyRelationNavigation.IdLegalRegisterSituationNavigation.Abreviation + ") " + item.IdCompanyRelationNavigation.TaxTypeCode);
+                                }
+                                else
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Tax_Id", item.IdCompanyRelationNavigation.TaxTypeCode);
+                                }
+                            }
+                            if (!item.RelationEng.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, itemElement, "Relation", item.RelationEng);
+                            }
+                            var companyBranchAux = await _companyBranchDomain.GetCompanyBranchByIdCompany((int)item.IdCompanyRelation);
+                            if (companyBranchAux != null)
+                            {
+                                if (!companyBranchAux.SpecificActivitiesEng.IsNullOrEmpty())
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Business_Activity", companyBranchAux.SpecificActivitiesEng);
+                                }
+                            }
+                        }
+                    }
+
+                    //Business
+                    if(companyBranch != null)
+                    {
+                        XmlElement branchElement = xmlDoc.CreateElement("Business");
+                        rootElement.AppendChild(branchElement);
+
+                        //Import
+                        XmlElement importElement = xmlDoc.CreateElement("Import");
+                        branchElement.AppendChild(importElement);
+
+                        if (companyBranch.Import != null)
+                        {
+                            if (companyBranch.Import == true)
+                            {
+                                AddCDataElement(xmlDoc, importElement, "Conditional", "Yes");
+                                if (!companyBranch.CountriesImportEng.IsNullOrEmpty())
+                                {
+                                    AddCDataElement(xmlDoc, importElement, "Country", companyBranch.CountriesImportEng);
+                                }
+                                var imports = await _importsAndExportsDomain.GetImports((int)ticket.IdCompany);
+                                if (imports.Count() > 0)
+                                {
+                                    int n = 0;
+                                    foreach (var item in imports)
+                                    {
+                                        n++;
+                                        XmlElement itemElement = xmlDoc.CreateElement("Name");
+                                        itemElement.SetAttribute("Item", n.ToString());
+                                        importElement.AppendChild(itemElement);
+                                        if (item.Year != null)
+                                        {
+                                            AddCDataElement(xmlDoc, itemElement, "Year", item.Year.ToString());
+                                        }
+                                        if (item.Year != null)
+                                        {
+                                            AddCDataElement(xmlDoc, itemElement, "Mount", item.Amount.ToString());
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                AddCDataElement(xmlDoc, importElement, "Conditional", "No");
+                            }
+                        }
+                        else
+                        {
+                            AddCDataElement(xmlDoc, importElement, "Conditional", "");
+                        }
+
+                        //Export
+                        XmlElement exportElement = xmlDoc.CreateElement("Export");
+                        branchElement.AppendChild(exportElement);
+
+                        if (companyBranch.Export != null)
+                        {
+                            if (companyBranch.Export == true)
+                            {
+                                AddCDataElement(xmlDoc, exportElement, "Conditional", "Yes");
+                                if (!companyBranch.CountriesExportEng.IsNullOrEmpty())
+                                {
+                                    AddCDataElement(xmlDoc, exportElement, "Country", companyBranch.CountriesExportEng);
+                                }
+                                var exports = await _importsAndExportsDomain.GetExports((int)ticket.IdCompany);
+                                if (exports.Count() > 0)
+                                {
+                                    int o = 0;
+                                    foreach (var item in exports)
+                                    {
+                                        o++;
+                                        XmlElement itemElement = xmlDoc.CreateElement("Name");
+                                        itemElement.SetAttribute("Item", o.ToString());
+                                        exportElement.AppendChild(itemElement);
+                                        if (item.Year != null)
+                                        {
+                                            AddCDataElement(xmlDoc, itemElement, "Year", item.Year.ToString());
+                                        }
+                                        if (item.Year != null)
+                                        {
+                                            AddCDataElement(xmlDoc, itemElement, "Mount", item.Amount.ToString());
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                AddCDataElement(xmlDoc, exportElement, "Conditional", "No");
+                            }
+                        }
+                        else
+                        {
+                            AddCDataElement(xmlDoc, exportElement, "Conditional", "");
+                        }
+
+                        //Cash_Sales
+                        if(companyBranch.CashSalePercentage != null)
+                        {
+                            XmlElement cashSaleElement = xmlDoc.CreateElement("Cash_Sales");
+                            branchElement.AppendChild(cashSaleElement);
+                            if(companyBranch.CashSalePercentage != null)
+                            {
+                                AddCDataElement(xmlDoc, cashSaleElement, "Value", companyBranch.CashSalePercentage.ToString());
+                            }
+                            if (!companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_SALEPER").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, cashSaleElement, "Comment", companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_SALEPER").FirstOrDefault().ShortValue);
+                            }
+                        }
+                        //Credit_Sales
+                        if (companyBranch.CreditSalePercentage != null)
+                        {
+                            XmlElement creditSaleElement = xmlDoc.CreateElement("Credit_Sales");
+                            branchElement.AppendChild(creditSaleElement);
+                            if (companyBranch.CreditSalePercentage != null)
+                            {
+                                AddCDataElement(xmlDoc, creditSaleElement, "Value", companyBranch.CreditSalePercentage.ToString());
+                            }
+                            if (!companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_CREDITPER").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, creditSaleElement, "Comment", companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_CREDITPER").FirstOrDefault().ShortValue);
+                            }
+                        }
+                        //Foreign_Sales
+                        if (companyBranch.AbroadSalePercentage != null)
+                        {
+                            XmlElement foreignSaleElement = xmlDoc.CreateElement("Foreign_Sales");
+                            branchElement.AppendChild(foreignSaleElement);
+                            if (companyBranch.AbroadSalePercentage != null)
+                            {
+                                AddCDataElement(xmlDoc, foreignSaleElement, "Value", companyBranch.AbroadSalePercentage.ToString());
+                            }
+                            if (!companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_EXTSALES").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, foreignSaleElement, "Comment", companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_EXTSALES").FirstOrDefault().ShortValue);
+                            }
+                        }
+                        //Domestic_Purchases
+                        if (companyBranch.TerritorySalePercentage != null)
+                        {
+                            XmlElement territorySaleElement = xmlDoc.CreateElement("Selling_Territory");
+                            branchElement.AppendChild(territorySaleElement);
+                            if (companyBranch.TerritorySalePercentage != null)
+                            {
+                                AddCDataElement(xmlDoc, territorySaleElement, "Value", companyBranch.TerritorySalePercentage.ToString());
+                            }
+                            if (!companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_TERRITORY").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, territorySaleElement, "Comment", companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_TERRITORY").FirstOrDefault().ShortValue);
+                            }
+                        }
+                        //National
+                        if (companyBranch.NationalPurchasesPercentage != null)
+                        {
+                            XmlElement nationalElement = xmlDoc.CreateElement("Domestic_Purchases");
+                            branchElement.AppendChild(nationalElement);
+                            if (companyBranch.NationalPurchasesPercentage != null)
+                            {
+                                AddCDataElement(xmlDoc, nationalElement, "Value", companyBranch.NationalPurchasesPercentage.ToString());
+                            }
+                            if (!companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_NATIBUY").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, nationalElement, "Comment", companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_NATIBUY").FirstOrDefault().ShortValue);
+                            }
+                        }
+                        //International
+                        if (companyBranch.InternationalPurchasesPercentage != null)
+                        {
+                            XmlElement internationalElement = xmlDoc.CreateElement("Foreign_Purchases");
+                            branchElement.AppendChild(internationalElement);
+                            if (companyBranch.InternationalPurchasesPercentage != null)
+                            {
+                                AddCDataElement(xmlDoc, internationalElement, "Value", companyBranch.InternationalPurchasesPercentage.ToString());
+                            }
+                            if (!companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_INTERBUY").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, internationalElement, "Comment", companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_INTERBUY").FirstOrDefault().ShortValue);
+                            }
+                        }
+                        if(companyBranch.WorkerNumber != null)
+                        {
+                            AddCDataElement(xmlDoc, branchElement, "Employees", companyBranch.WorkerNumber.ToString());
+                        }
+
+                        //Location
+                        if (companyBranch.IdLandOwnership != null || 
+                            !companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_TOTALAREA").FirstOrDefault().ShortValue.IsNullOrEmpty() 
+                            || !companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_R_OTRHERLOCALS").FirstOrDefault().LargeValue.IsNullOrEmpty() 
+                            || !companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_R_ADIBUS").FirstOrDefault().LargeValue.IsNullOrEmpty() 
+                            || !companyBranch.TabCommentary.IsNullOrEmpty() 
+                            || !companyBranch.PreviousAddress.IsNullOrEmpty())
+                        {
+                            XmlElement locationElement = xmlDoc.CreateElement("Location");
+                            branchElement.AppendChild(locationElement);
+                            if(companyBranch.IdLandOwnership != null)
+                            {
+                                AddCDataElement(xmlDoc, locationElement, "Premises", companyBranch.IdLandOwnershipNavigation.EnglishName.ToString());
+                            }
+                            if(!companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_TOTALAREA").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, locationElement, "Area", companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_R_TOTALAREA").FirstOrDefault().ShortValue);
+                            }
+                            if (!companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_R_OTRHERLOCALS").FirstOrDefault().LargeValue.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, locationElement, "Other_Premises", companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_R_OTRHERLOCALS").FirstOrDefault().LargeValue);
+                            }
+                            if (!companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_R_ADIBUS").FirstOrDefault().LargeValue.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, locationElement, "Comments", companyBranch.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_R_ADIBUS").FirstOrDefault().LargeValue);
+                            }
+                            if (!companyBranch.TabCommentary.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, locationElement, "CommentsTab", companyBranch.TabCommentary);
+                            }
+                            if (!companyBranch.PreviousAddress.IsNullOrEmpty())
+                            {
+                                AddCDataElement(xmlDoc, locationElement, "Previous_Address", companyBranch.PreviousAddress);
+                            }
+                        }
+                    }
+                    if(companyFinancial != null)
+                    {
+                        XmlElement financialElement = xmlDoc.CreateElement("Financial_Information");
+                        rootElement.AppendChild(financialElement);
+                        if (!companyFinancial.Interviewed.IsNullOrEmpty())
+                        {
+                            AddCDataElement(xmlDoc, financialElement, "Interviewee", companyFinancial.Interviewed);
+                        }
+                        if (!companyFinancial.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_F_JOB").FirstOrDefault().ShortValue.IsNullOrEmpty())
+                        {
+                            AddCDataElement(xmlDoc, financialElement, "Position", companyFinancial.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "S_F_JOB").FirstOrDefault().ShortValue);
+                        }
+                        if (companyFinancial.IdCollaborationDegree != null)
+                        {
+                            AddCDataElement(xmlDoc, financialElement, "Disposition", companyFinancial.IdCollaborationDegreeNavigation.EnglishName);
+                        }
+                        if (!companyFinancial.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_F_COMENT").FirstOrDefault().LargeValue.IsNullOrEmpty())
+                        {
+                            AddCDataElement(xmlDoc, financialElement, "Information_Provided", companyFinancial.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_F_COMENT").FirstOrDefault().LargeValue);
+                        }
+                        if (!companyFinancial.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_F_TABCOMM").FirstOrDefault().LargeValue.IsNullOrEmpty())
+                        {
+                            AddCDataElement(xmlDoc, financialElement, "Comment_Tab", companyFinancial.IdCompanyNavigation.Traductions.Where(x => x.Identifier == "L_F_TABCOMM").FirstOrDefault().LargeValue);
+                        }
+                        if(balanceS.Count > 0)
+                        {
+                            XmlElement balanceSitElement = xmlDoc.CreateElement("Interim_Balance_Sheet");
+                            financialElement.AppendChild(balanceSitElement);
+                            int q = 0;
+                            foreach (var item in balanceS)
+                            {
+                                q++;
+                                XmlElement itemElement = xmlDoc.CreateElement("Balance");
+                                itemElement.SetAttribute("Item", q.ToString());
+                                balanceSitElement.AppendChild(itemElement);
+                                DateTime date = (DateTime)item.Date;
+                                AddCDataElement(xmlDoc, itemElement, "Date", date.ToString("ddMMMyyyy"));
+                                if(!item.BalanceTypeEng.IsNullOrEmpty())
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Type_Of_Balance_Sheet", item.BalanceTypeEng);
+                                }
+                                if (!item.DurationEng.IsNullOrEmpty())
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Period", item.DurationEng);
+                                }
+                                if (item.IdCurrency != null)
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Currency", item.IdCurrencyNavigation.Abreviation);
+                                }
+                                if (item.ExchangeRate != null)
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Exchange_Rate", item.ExchangeRate.ToString());
+                                }
+                                if (item.Sales != null)
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Sales", item.Sales.ToString());
+                                }
+                                if (item.Utilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Net_Profits", item.Utilities.ToString());
+                                }
+                                //Assets
+                                XmlElement assetsElement = xmlDoc.CreateElement("Assets");
+                                itemElement.AppendChild(assetsElement); 
+                                if (item.ACashBoxBank != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Cash_Banks", item.ACashBoxBank.ToString());
+                                }
+                                if (item.AToCollect != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Receivables", item.AToCollect.ToString());
+                                }
+                                if (item.AInventory != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Inventory", item.AInventory.ToString());
+                                }
+                                if (item.AOtherCurrentAssets != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Other_Current_Assets", item.AOtherCurrentAssets.ToString());
+                                }
+                                if (item.TotalCurrentAssets != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Total_Current_Assets", item.TotalCurrentAssets.ToString());
+                                }
+                                if (item.AFixed != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Fixed", item.AFixed.ToString());
+                                }
+                                if (item.AOtherNonCurrentAssets != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Other_Non_Current_Assets", item.AOtherNonCurrentAssets.ToString());
+                                }
+                                if (item.TotalNonCurrentAssets != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Total_Non_Current_Assets", item.TotalNonCurrentAssets.ToString());
+                                }
+                                if (item.TotalAssets != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Total_Assets", item.TotalAssets.ToString());
+                                }
+
+                                //Liabilities
+                                XmlElement LiabilitiesElement = xmlDoc.CreateElement("Liabilities");
+                                itemElement.AppendChild(LiabilitiesElement);
+                                if (item.LCashBoxBank != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Bank_Suppliers", item.LCashBoxBank.ToString());
+                                }
+                                if (item.LOtherCurrentLiabilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Others_Current_Liabilities", item.LOtherCurrentLiabilities.ToString());
+                                }
+                                if (item.TotalCurrentLiabilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Total_Current_Liabilities", item.TotalCurrentLiabilities.ToString());
+                                }
+                                if (item.LLongTerm != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Long_Term", item.LLongTerm.ToString());
+                                }
+                                if (item.LOtherNonCurrentLiabilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Others_Non_Current_Liabilities", item.LOtherNonCurrentLiabilities.ToString());
+                                }
+                                if (item.TotalNonCurrentLiabilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Total_Current_Liabilities", item.TotalNonCurrentLiabilities.ToString());
+                                }
+                                if (item.TotalLliabilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Total_Liabilities", item.TotalLliabilities.ToString());
+                                }
+                                //Shareholders_Equity
+                                XmlElement patrimonyElement = xmlDoc.CreateElement("Shareholders_Equity");
+                                itemElement.AppendChild(patrimonyElement);
+                                if (item.PCapital != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Capital", item.PCapital.ToString());
+                                }
+                                if (item.PStockPile != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Reserves", item.PStockPile.ToString());
+                                }
+                                if (item.PUtilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Utilities", item.PUtilities.ToString());
+                                }
+                                if (item.POther != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Others", item.POther.ToString());
+                                }
+                                if (item.TotalPatrimony != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Total_Shareholders_Equity", item.TotalPatrimony.ToString());
+                                }
+                                if (item.TotalLiabilitiesPatrimony != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Total_Liabilities_Shareholders_Equity", item.TotalLiabilitiesPatrimony.ToString());
+                                }
+                                //Shareholders_Equity
+                                XmlElement ratiosElement = xmlDoc.CreateElement("Ratios");
+                                itemElement.AppendChild(ratiosElement);
+                                if (item.LiquidityRatio != null)
+                                {
+                                    AddCDataElement(xmlDoc, ratiosElement, "Liquidity_Ratio", item.LiquidityRatio.ToString());
+                                }
+                                if (item.DebtRatio != null)
+                                {
+                                    AddCDataElement(xmlDoc, ratiosElement, "Debt_Ratio", item.DebtRatio.ToString() + "%");
+                                }
+                                if (item.ProfitabilityRatio != null)
+                                {
+                                    AddCDataElement(xmlDoc, ratiosElement, "Profitability_Ratio", item.ProfitabilityRatio.ToString() + "%");
+                                }
+                                if (item.WorkingCapital != null)
+                                {
+                                    AddCDataElement(xmlDoc, ratiosElement, "Working_Capital", item.WorkingCapital.ToString());
+                                }
+                            }
+                        }
+                        if (balanceG.Count > 0)
+                        {
+                            XmlElement balanceGenElement = xmlDoc.CreateElement("Balance_Sheet");
+                            financialElement.AppendChild(balanceGenElement);
+                            int r = 0;
+                            foreach (var item in balanceG)
+                            {
+                                r++;
+                                XmlElement itemElement = xmlDoc.CreateElement("Balance");
+                                itemElement.SetAttribute("Item", r.ToString());
+                                if (!companyFinancial.Auditors.IsNullOrEmpty())
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Auditors", companyFinancial.Auditors);
+                                }
+                                balanceGenElement.AppendChild(itemElement);
+                                DateTime date = (DateTime)item.Date;
+                                AddCDataElement(xmlDoc, itemElement, "Date", date.ToString("ddMMMyyyy"));
+                                if (!item.BalanceTypeEng.IsNullOrEmpty())
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Type_Of_Balance_Sheet", item.BalanceTypeEng);
+                                }
+                                if (!item.DurationEng.IsNullOrEmpty())
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Period", item.DurationEng);
+                                }
+                                if (item.IdCurrency != null)
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Currency", item.IdCurrencyNavigation.Abreviation);
+                                }
+                                if (item.ExchangeRate != null)
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Exchange_Rate", item.ExchangeRate.ToString());
+                                }
+                                if (item.Sales != null)
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Sales", item.Sales.ToString());
+                                }
+                                if (item.Utilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, itemElement, "Net_Profits", item.Utilities.ToString());
+                                }
+                                //Assets
+                                XmlElement assetsElement = xmlDoc.CreateElement("Assets");
+                                itemElement.AppendChild(assetsElement);
+                                if (item.ACashBoxBank != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Cash_Banks", item.ACashBoxBank.ToString());
+                                }
+                                if (item.AToCollect != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Receivables", item.AToCollect.ToString());
+                                }
+                                if (item.AInventory != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Inventory", item.AInventory.ToString());
+                                }
+                                if (item.AOtherCurrentAssets != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Other_Current_Assets", item.AOtherCurrentAssets.ToString());
+                                }
+                                if (item.TotalCurrentAssets != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Total_Current_Assets", item.TotalCurrentAssets.ToString());
+                                }
+                                if (item.AFixed != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Fixed", item.AFixed.ToString());
+                                }
+                                if (item.AOtherNonCurrentAssets != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Other_Non_Current_Assets", item.AOtherNonCurrentAssets.ToString());
+                                }
+                                if (item.TotalNonCurrentAssets != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Total_Non_Current_Assets", item.TotalNonCurrentAssets.ToString());
+                                }
+                                if (item.TotalAssets != null)
+                                {
+                                    AddCDataElement(xmlDoc, assetsElement, "Total_Assets", item.TotalAssets.ToString());
+                                }
+
+                                //Liabilities
+                                XmlElement LiabilitiesElement = xmlDoc.CreateElement("Liabilities");
+                                itemElement.AppendChild(LiabilitiesElement);
+                                if (item.LCashBoxBank != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Bank_Suppliers", item.LCashBoxBank.ToString());
+                                }
+                                if (item.LOtherCurrentLiabilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Others_Current_Liabilities", item.LOtherCurrentLiabilities.ToString());
+                                }
+                                if (item.TotalCurrentLiabilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Total_Current_Liabilities", item.TotalCurrentLiabilities.ToString());
+                                }
+                                if (item.LLongTerm != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Long_Term", item.LLongTerm.ToString());
+                                }
+                                if (item.LOtherNonCurrentLiabilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Others_Non_Current_Liabilities", item.LOtherNonCurrentLiabilities.ToString());
+                                }
+                                if (item.TotalNonCurrentLiabilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Total_Current_Liabilities", item.TotalNonCurrentLiabilities.ToString());
+                                }
+                                if (item.TotalLliabilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, LiabilitiesElement, "Total_Liabilities", item.TotalLliabilities.ToString());
+                                }
+                                //Shareholders_Equity
+                                XmlElement patrimonyElement = xmlDoc.CreateElement("Shareholders_Equity");
+                                itemElement.AppendChild(patrimonyElement);
+                                if (item.PCapital != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Capital", item.PCapital.ToString());
+                                }
+                                if (item.PStockPile != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Reserves", item.PStockPile.ToString());
+                                }
+                                if (item.PUtilities != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Utilities", item.PUtilities.ToString());
+                                }
+                                if (item.POther != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Others", item.POther.ToString());
+                                }
+                                if (item.TotalPatrimony != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Total_Shareholders_Equity", item.TotalPatrimony.ToString());
+                                }
+                                if (item.TotalLiabilitiesPatrimony != null)
+                                {
+                                    AddCDataElement(xmlDoc, patrimonyElement, "Total_Liabilities_Shareholders_Equity", item.TotalLiabilitiesPatrimony.ToString());
+                                }
+                                //Shareholders_Equity
+                                XmlElement ratiosElement = xmlDoc.CreateElement("Ratios");
+                                itemElement.AppendChild(ratiosElement);
+                                if (item.LiquidityRatio != null)
+                                {
+                                    AddCDataElement(xmlDoc, ratiosElement, "Liquidity_Ratio", item.LiquidityRatio.ToString());
+                                }
+                                if (item.DebtRatio != null)
+                                {
+                                    AddCDataElement(xmlDoc, ratiosElement, "Debt_Ratio", item.DebtRatio.ToString() + "%");
+                                }
+                                if (item.ProfitabilityRatio != null)
+                                {
+                                    AddCDataElement(xmlDoc, ratiosElement, "Profitability_Ratio", item.ProfitabilityRatio.ToString() + "%");
+                                }
+                                if (item.WorkingCapital != null)
+                                {
+                                    AddCDataElement(xmlDoc, ratiosElement, "Working_Capital", item.WorkingCapital.ToString());
+                                }
+                            }
+                        }
+                        if (companyFinancial != null)
+                        {
+                            if(companyFinancial.IdFinancialSituacion != null)
+                            {
+                                AddCDataElement(xmlDoc, financialElement, "Situational_Financial", companyFinancial.IdFinancialSituacionNavigation.EnglishName);
+                            }
+                            if(salesHistory.Count > 0)
+                            {
+
+                            }
+                        }
+
+
+
+
+
+                    }
 
 
 
 
 
 
-                    string xmlString = xmlDoc.OuterXml;
+                    // Guardar el XML con formato
+                    string xmlString = null;
+                    using (StringWriter stringWriter = new StringWriter())
+                    {
+                        using (XmlTextWriter xmlTextWriter = new XmlTextWriter(stringWriter))
+                        {
+                            xmlTextWriter.Formatting = Formatting.Indented;
+                            xmlDoc.WriteTo(xmlTextWriter);
+                            xmlString = stringWriter.ToString();
+                        }
+                    }
 
                     // Convertir la cadena XML en un MemoryStream
                     byte[] byteArray = Encoding.UTF8.GetBytes(xmlString);
