@@ -154,4 +154,31 @@ namespace DRRCore.Domain.Entities.SqlCoreContext
         public int? ExecPrinc { get; set; }
         public string? StartDate { get; set; }
     }
+    public class WhoIsWhoSP
+    {
+        public int Id { get; set; }
+        public string? Fullname { get; set; }
+        public string? Nacionality { get; set; }
+        public string? birthDate { get; set; }
+        public string? IdentificationDoc { get; set; }
+        public string? civilStatus { get; set; }
+        public string? Address { get; set; }
+        public string? CodePhone { get; set; }
+        public string? NumberPhone { get; set; }
+        public string? cellPhone { get; set; }
+        public string? TaxName { get; set; }
+        public string? TaxCode { get; set; }
+        public string? LegalRegisterSituation { get; set; }
+        public string? Country { get; set; }
+        public string? TradeName { get; set; }
+        public string? Profession { get; set; }
+        public string? FatherName { get; set; }
+        public string? MotherName { get; set; }
+        public string? Email { get; set; }
+        public string? OtherDirecctions { get; set; }
+        public string? History { get; set; }
+        public string? References { get; set; }
+        public string? Properties { get; set; }
+        public string? BirthPlace { get; set; }
+    }
 }
