@@ -258,10 +258,29 @@ namespace DRRCore.Application.Main.CoreApplication
                     var ticket = await _ticketDomain.GetByNameAsync(name);
                     var mapper= _mapper.Map<List<GetListCompanyResponseDto>>(ticket);
 
-                    var oldTicket= await _tCuponDomain.GetAllTCuponByRequestedNameAsync(name);
-                    mapper.AddRange(_mapper.Map<List<GetListCompanyResponseDto>>(oldTicket));
-
-                    mapper=mapper.DistinctBy(x=>x.Name).ToList();
+                    var oldTicket = await _ticketDomain.GetSimilarByNameAsync(name);
+                    if (oldTicket.Any())
+                    {
+                        foreach (var item in oldTicket)
+                        {
+                            var company = await _companyDomain.GetByOldCode(item.Empresa);
+                            if (company != null)
+                            {
+                                mapper.Add(new GetListCompanyResponseDto
+                                {
+                                    Name = item.NombreSolicitado,
+                                    DispatchedName = item.NombreDespachado,
+                                    Language = item.Idioma,
+                                    Id = company.Id,
+                                    Country =company.IdCountryNavigation.Name,
+                                    IsoCountry= company.IdCountryNavigation.Iso,
+                                    FlagCountry=company.IdCountryNavigation.FlagIso
+                                });
+                            }
+                        }
+                    }    
+                    mapper =mapper.DistinctBy(x=>x.Name).ToList();
+                    response.Data = mapper;
                 }
             }
             catch (Exception ex)

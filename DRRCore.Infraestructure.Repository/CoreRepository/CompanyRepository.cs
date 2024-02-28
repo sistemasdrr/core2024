@@ -222,7 +222,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                var company = await context.Companies.FirstOrDefaultAsync(x => x.OldCode == oldCode);
+                var company = await context.Companies.Include(x => x.IdCountryNavigation).FirstOrDefaultAsync(x => x.OldCode == oldCode);
                 return company;
             }
             catch(Exception ex)

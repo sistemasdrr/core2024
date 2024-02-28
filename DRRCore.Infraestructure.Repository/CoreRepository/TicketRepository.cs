@@ -196,7 +196,22 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Where(x => x.RequestedName.Contains(name)).ToListAsync();
+                return await context.Tickets.Include(x => x.IdCountryNavigation).Where(x => x.RequestedName.Contains(name) && x.IdStatusTicket==9).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<OldTicket>> GetSimilarByNameAsync(string name)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();               
+                                
+                return await context.OldTickets.Where(x => x.NombreSolicitado.Contains(name)).OrderByDescending(x=>x.FechaDespacho).Take(20).ToListAsync();
             }
             catch (Exception ex)
             {

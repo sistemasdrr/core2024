@@ -52,6 +52,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _ticketRepository.GetByNameAsync(name);
         }
 
+        public async Task<List<OldTicket>> GetSimilarByNameAsync(string name)
+        {
+            return await _ticketRepository.GetSimilarByNameAsync(name);
+        }
+
         public async Task<List<Ticket>> GetTicketByCompany(int id)
         {
             return await _ticketRepository.GetTicketByCompany(id);

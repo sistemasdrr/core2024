@@ -27,6 +27,10 @@ public partial class Country
 
     public bool? Enable { get; set; }
 
+    public string? TaxTypeName { get; set; }
+
+    public string? CodePhone { get; set; }
+
     public virtual ICollection<AgentPrice> AgentPrices { get; set; } = new List<AgentPrice>();
 
     public virtual ICollection<Agent> Agents { get; set; } = new List<Agent>();

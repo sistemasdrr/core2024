@@ -179,14 +179,6 @@ public partial class SqlCoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<CompanyXmlData>().ToSqlQuery("EXEC DataCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyBalanceData>().ToSqlQuery("EXEC BalanceCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyFunctionData>().ToSqlQuery("EXEC FunctionCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyLegalEventsData>().ToSqlQuery("EXEC LegalEventsCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyRelatedData>().ToSqlQuery("EXEC RelatedCompanyCredendo").HasNoKey();
-
-
-        modelBuilder.Entity<CompanyShareholderSP>().ToSqlQuery("EXEC ShareholderCompany").HasNoKey();
         modelBuilder.Entity<Agent>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Agent__3213E83FAB71BE05");
@@ -1513,6 +1505,10 @@ public partial class SqlCoreContext : DbContext
             entity.ToTable("Country");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CodePhone)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("codePhone");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -1543,6 +1539,10 @@ public partial class SqlCoreContext : DbContext
                 .HasMaxLength(70)
                 .IsUnicode(false)
                 .HasColumnName("name");
+            entity.Property(e => e.TaxTypeName)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("taxTypeName");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
@@ -2493,7 +2493,7 @@ public partial class SqlCoreContext : DbContext
 
         modelBuilder.Entity<OldTicket>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OldTicke__3213E83F3EC8ED9D");
+            entity.HasKey(e => e.Id).HasName("PK__OldTicke__3213E83FD8E203AA");
 
             entity.ToTable("OldTicket");
 
@@ -3855,6 +3855,9 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.DeleteDate)
                 .HasColumnType("datetime")
                 .HasColumnName("deleteDate");
+            entity.Property(e => e.DispatchedName)
+                .IsUnicode(false)
+                .HasColumnName("dispatchedName");
             entity.Property(e => e.DispatchtDate)
                 .HasColumnType("datetime")
                 .HasColumnName("dispatchtDate");

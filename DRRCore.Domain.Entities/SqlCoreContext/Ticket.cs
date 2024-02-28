@@ -79,6 +79,8 @@ public partial class Ticket
 
     public int? IdStatusTicket { get; set; }
 
+    public string? DispatchedName { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Continent? IdContinentNavigation { get; set; }
