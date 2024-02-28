@@ -219,5 +219,27 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
+        public async Task<Response<string>> GetBase64eByPath(string path)
+        {
+            var response = new Response<string>();
+            try
+            {
+                MemoryStream ms = await DescargarArchivo(path);
+
+                byte[] byteArray = ms.ToArray();
+
+                string base64String = Convert.ToBase64String(byteArray);
+
+                response.Data = base64String;
+            }
+            catch (Exception ex)
+            {
+                response.Data = null;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+
+
     }
 }

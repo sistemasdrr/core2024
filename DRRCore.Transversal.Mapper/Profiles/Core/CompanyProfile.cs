@@ -39,7 +39,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ReverseMap();
             CreateMap<TraductionDto, Traduction>()
                  .ReverseMap();
-            CreateMap<Company, GetCompanyResponseDto>()               
+            CreateMap<Company, GetCompanyResponseDto>()
                 .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
                 .ForMember(dest => dest.LastSearched, opt => opt?.MapFrom(src =>StaticFunctions.DateTimeToString(src.LastSearched)))
                 .ForMember(dest => dest.OldCode, opt => opt?.MapFrom(src => string.IsNullOrEmpty(src.OldCode)?"N"+src.Id.ToString("D10"):src.OldCode))

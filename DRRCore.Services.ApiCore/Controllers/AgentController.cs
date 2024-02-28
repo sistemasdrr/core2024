@@ -61,5 +61,29 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _agentPriceApplication.DeleteAgentPrice(id));
         }
+        [HttpPost]
+        [Route("blobToBase64")]
+        public async Task<ActionResult<string>> ConvertBlobToBase64([FromBody] byte[] blob)
+        {
+            try
+            {
+                // Verifica si el blob es nulo o está vacío
+                if (blob == null || blob.Length == 0)
+                {
+                    return BadRequest("El blob proporcionado es nulo o está vacío.");
+                }
+
+                // Convierte el blob a base64
+                string base64String = Convert.ToBase64String(blob);
+
+                // Devuelve la cadena base64 como respuesta
+                return Ok(base64String);
+            }
+            catch (Exception ex)
+            {
+                // Maneja cualquier error y devuelve un mensaje de error
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
+        }
     }
 }

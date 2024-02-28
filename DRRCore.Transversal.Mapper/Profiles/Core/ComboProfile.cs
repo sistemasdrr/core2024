@@ -85,6 +85,8 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
              .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
              .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
              .ForMember(dest => dest.Bandera, opt => opt?.MapFrom(src => src.FlagIso))
+             .ForMember(dest => dest.Regtrib, opt => opt?.MapFrom(src => src.TaxTypeName))
+             .ForMember(dest => dest.CodCel, opt => opt?.MapFrom(src => src.CodePhone))
              .ReverseMap();
             CreateMap<SubscriberCategory, GetComboValueResponseDto>()
             .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))

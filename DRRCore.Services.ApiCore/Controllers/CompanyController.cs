@@ -4,6 +4,9 @@ using DRRCore.Domain.Entities.SqlCoreContext;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
+using System.Xml.Serialization;
+using DRRCore.Application.DTO.Core.Response;
+using DRRCore.Transversal.Common;
 
 namespace DRRCore.Services.ApiCore.Controllers
 {
@@ -325,6 +328,51 @@ namespace DRRCore.Services.ApiCore.Controllers
                 return NotFound();
             }
         }
+        [HttpGet()]
+        [Route("getBase64ByPath")]
+        public async Task<IActionResult> GetBase64ByPath(string path)
+        {
+            try
+            {
+                var result = await _companyImagesApplication.GetBase64eByPath(path);
+
+                if (result.Data == null)
+                {
+                    var errorResponse = new Response<string>
+                    {
+                        Message = result.Message
+                    };
+
+                    var serializer = new XmlSerializer(typeof(Response<string>));
+                    var stringWriter = new System.IO.StringWriter();
+                    serializer.Serialize(stringWriter, errorResponse);
+
+                    Response.ContentType = "application/xml";
+                    return Content(stringWriter.ToString(), "application/xml");
+                }
+                else
+                {
+                    var response = new Response<string>
+                    {
+                        Data = result.Data
+                    };
+
+                    var serializer = new XmlSerializer(typeof(Response<string>));
+                    var stringWriter = new System.IO.StringWriter();
+                    serializer.Serialize(stringWriter, response);
+
+                    Response.ContentType = "application/xml";
+                    return Content(stringWriter.ToString(), "application/xml");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Capturar y manejar la excepción
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
+        }
+
+
         [HttpPost()]
         [Route("deleteImportAndExport")]
         public async Task<ActionResult> deleteImportAndExport(int id)
