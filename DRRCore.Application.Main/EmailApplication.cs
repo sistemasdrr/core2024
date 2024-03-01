@@ -2,9 +2,12 @@
 using DRRCore.Application.DTO.Email;
 using DRRCore.Application.Interfaces.EmailApplication;
 using DRRCore.Domain.Entities.SqlContext;
+using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.EmailDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace DRRCore.Application.Main
 {
@@ -38,9 +41,26 @@ namespace DRRCore.Application.Main
         {           
             var response = new Response<bool>();
             try
-            {             
+            {
+                emailDataDto.BeAuthenticated = true;
+                emailDataDto.UserName = emailDataDto.From;
+              
+                using (var context=new SqlCoreContext())
+                {
+                    var user = await context.Employees.Include(x=>x.UserLogins).Where(x => x.Email == emailDataDto.From).FirstOrDefaultAsync();
+                    if (user != null)
+                    {
+                        emailDataDto.Password = user.UserLogins.FirstOrDefault().EmailPassword;
+                    }
+                    else
+                    {
+                        throw new Exception("No existe el usuario");
+                    }
+                    
+                }
+
                 emailDataDto.BodyHTML = emailDataDto.IsBodyHTML? await GetBodyHtml(emailDataDto): emailDataDto.BodyHTML;
-               
+                _logger.LogInformation(JsonConvert.SerializeObject(emailDataDto));
                 var result = await _mailSender.SendMailAsync(_mapper.Map<EmailValues>(emailDataDto));
 
                 if (!result)

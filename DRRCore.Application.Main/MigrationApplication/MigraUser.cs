@@ -158,7 +158,8 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 Providers = await GetProviders(empresa.EmCodigo),
                                 ComercialLatePayments = await GetComercialLatePayments(empresa.EmCodigo),
                                 BankDebts = await GetBankDebts(empresa.EmCodigo),
-                                WorkersHistories = await GetWorkersHistories(empresa),
+                                WorkersHistories = await GetWorkersHistories(empresa)
+                                
                             };
 
                             idCompany = await _companyDomain.AddCompanyAsync(company);
@@ -187,14 +188,23 @@ namespace DRRCore.Application.Main.MigrationApplication
         private async Task<List<WorkersHistory>> GetWorkersHistories(MEmpresa empresa)
         {
             var lista = new List<WorkersHistory>();
+            int number;
             try
             {
-                lista.Add(new WorkersHistory
+                if (ramo != null && !string.IsNullOrEmpty(ramo.EmTraba1))
                 {
-                    LastUpdateUser = 1,
-                    NumberWorker = string.IsNullOrEmpty(ramo.EmTraba1) ? null : int.Parse(ramo.EmTraba1),
-                    NumberYear = empresa.EmFecinf.Value.Year
-                });
+                    var validNumber = int.TryParse(ramo.EmTraba1, out number);
+                    if (validNumber)
+                    {
+                        lista.Add(new WorkersHistory
+                        {
+                            LastUpdateUser = 1,
+                            NumberWorker = number,
+                            NumberYear = empresa.EmFecinf.Value.Year
+                        });
+                    }
+                    
+                }
                 return lista;
             }
             catch (Exception ex)
