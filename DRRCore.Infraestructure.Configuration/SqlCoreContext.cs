@@ -2817,7 +2817,7 @@ public partial class SqlCoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("privateCommentary");
             entity.Property(e => e.Profession)
-                .HasMaxLength(50)
+                .HasMaxLength(300)
                 .IsUnicode(false)
                 .HasColumnName("profession");
             entity.Property(e => e.Quality)

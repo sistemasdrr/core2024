@@ -273,6 +273,30 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _personApplication.GetListPersonPartnerByIdPerson(idPerson));
         }
+        [HttpPost()]
+        [Route("addPhoto")]
+        public async Task<ActionResult> addPhoto(AddOrUpdatePersonPhotoRequestDto obj)
+        {
+            return Ok(await _personApplication.AddOrUpdatePhotoAsync(obj));
+        }
+        [HttpGet()]
+        [Route("getPhoto")]
+        public async Task<ActionResult> getPhoto(int id)
+        {
+            return Ok(await _personApplication.GetPhotoById(id));
+        }
+        [HttpPost()]
+        [Route("deletePhoto")]
+        public async Task<ActionResult> deletePhoto(int id)
+        {
+            return Ok(await _personApplication.DeletePhoto(id));
+        }
+        [HttpGet()]
+        [Route("getListPhoto")]
+        public async Task<ActionResult> getListPhoto(int idPerson)
+        {
+            return Ok(await _personApplication.GetListPhotoAsync(idPerson));
+        }
         [HttpGet()]
         [Route("getStatus")]
         public async Task<ActionResult> getStatus(int idPerson)

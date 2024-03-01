@@ -26,12 +26,14 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IPersonGeneralInfoDomain _personGeneralInfoDomain;
         private readonly ICompanyPartnersDomain _companyPartnersDomain;
         private readonly IPersonImagesDomain _personImagesDomain;
+        private readonly IPersonPhotoDomain _personPhotoDomain;
 
         public PersonApplication(IMapper mapper, ILogger logger, IPersonDomain personDomain, IPersonHomeDomain personHomeDomain,
             IPersonJobDomain personJobDomain, IPersonSBSDomain personSBSDomain, IProviderDomain providerDomain, 
             IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain, ICompanyPartnersDomain companyPartnersDomain,
             IPersonActivitiesDomain personActivitiesDomain, IPersonPropertyDomain personPropertyDomain, 
-            IPersonHistoryDomain personHistoryDomain, IPersonGeneralInfoDomain personGeneralInfoDomain, IPersonImagesDomain personImagesDomain)
+            IPersonHistoryDomain personHistoryDomain, IPersonGeneralInfoDomain personGeneralInfoDomain, IPersonImagesDomain personImagesDomain,
+            IPersonPhotoDomain personPhotoDomain)
         {
             _mapper = mapper;
             _logger = logger;
@@ -48,6 +50,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _personSBSDomain = personSBSDomain;
             _companyPartnersDomain = companyPartnersDomain;
             _personImagesDomain = personImagesDomain;
+            _personPhotoDomain = personPhotoDomain;
         }
 
         public async Task<Response<bool>> ActivateWebPerson(int id)
@@ -702,6 +705,39 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<bool>> AddOrUpdatePhotoAsync(AddOrUpdatePersonPhotoRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                if (obj == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                if (obj.Id == 0)
+                {
+                    var newPhoto = _mapper.Map<PhotoPerson>(obj);
+                    response.Data = await _personPhotoDomain.AddAsync(newPhoto);
+                }
+                else
+                {
+                    var existingPhoto= await _personPhotoDomain.GetByIdAsync(obj.Id);
+                    existingPhoto = _mapper.Map(obj, existingPhoto);
+                    response.Data = await _personPhotoDomain.UpdateAsync(existingPhoto);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         public async Task<Response<bool>> AddOrUpdateProviderAsync(AddOrUpdateProviderRequestDto obj)
         {
             var response = new Response<bool>();
@@ -827,6 +863,33 @@ namespace DRRCore.Application.Main.CoreApplication
                 else
                 {
                     response.Data = await _companyPartnersDomain.DeleteAsync(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeletePhoto(int id)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var photo = await _personPhotoDomain.GetByIdAsync(id);
+                if (photo == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                else
+                {
+                    response.Data = await _personPhotoDomain.DeleteAsync(id);
                 }
             }
             catch (Exception ex)
@@ -1019,6 +1082,30 @@ namespace DRRCore.Application.Main.CoreApplication
                     _logger.LogError(response.Message);
                 }
                 response.Data = _mapper.Map<List<GetListPersonPartnerResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetPersonPhotoResponseDto>>> GetListPhotoAsync(int idPerson)
+        {
+            var response = new Response<List<GetPersonPhotoResponseDto>>();
+            try
+            {
+                var list = await _personPhotoDomain.GetPhotosByIdPersonAsync(idPerson);
+                if (list == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<List<GetPersonPhotoResponseDto>>(list);
             }
             catch (Exception ex)
             {
@@ -1259,6 +1346,30 @@ namespace DRRCore.Application.Main.CoreApplication
                     return response;
                 }
                 response.Data = _mapper.Map<GetPersonSbsResponseDto>(obj);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<GetPersonPhotoResponseDto>> GetPhotoById(int id)
+        {
+            var response = new Response<GetPersonPhotoResponseDto>();
+            try
+            {
+                var photo = await _personPhotoDomain.GetByIdAsync(id);
+                if (photo == null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = Messages.MessageNoDataFound;
+                    _logger.LogError(response.Message);
+                    return response;
+                }
+                response.Data = _mapper.Map<GetPersonPhotoResponseDto>(photo);
             }
             catch (Exception ex)
             {

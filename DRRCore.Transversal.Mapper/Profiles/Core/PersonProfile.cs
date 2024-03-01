@@ -114,6 +114,12 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
                  .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdPersonNavigation.Traductions))
              .ReverseMap();
+            CreateMap<PhotoPerson, GetPersonPhotoResponseDto>()
+                 .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
+             .ReverseMap();
+            CreateMap<AddOrUpdatePersonPhotoRequestDto, PhotoPerson>()
+               .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
+         .ReverseMap();
 
 
             CreateMap<Traduction, TraductionDto>()

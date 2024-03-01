@@ -48,5 +48,11 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> DeletePersonPartner(int id);
         Task<Response<List<GetListPersonPartnerResponseDto>>> GetListPersonPartnerByIdPerson(int idPerson);
         Task<Response<GetStatusPersonResponseDto>> GetStatusPerson(int idPerson);
+
+
+        Task<Response<bool>> AddOrUpdatePhotoAsync(AddOrUpdatePersonPhotoRequestDto obj);
+        Task<Response<List<GetPersonPhotoResponseDto>>> GetListPhotoAsync(int idPerson);
+        Task<Response<GetPersonPhotoResponseDto>> GetPhotoById(int id);
+        Task<Response<bool>> DeletePhoto(int id);
     }
 }

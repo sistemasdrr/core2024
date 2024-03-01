@@ -104,6 +104,6 @@
                                                                      "L_SBS_ANTEC", "L_SBS_RISKCNT", "L_SBS_COMMENTSBS","L_SBS_COMMENTBANK","L_SBS_LITIG",
                                                                      "L_H_DETAILS",
                                                                      "L_IG_DETAILS",
-                                                                     "S_IP_IMG1", "S_IP_IMG2", "S_IP_IMG3" };
+                                                                    };
     }
 }
