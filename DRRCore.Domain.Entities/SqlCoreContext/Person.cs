@@ -141,6 +141,8 @@ public partial class Person
 
     public virtual ICollection<PersonSb> PersonSbs { get; set; } = new List<PersonSb>();
 
+    public virtual ICollection<PhotoPerson> PhotoPeople { get; set; } = new List<PhotoPerson>();
+
     public virtual ICollection<Provider> Providers { get; set; } = new List<Provider>();
 
     public virtual DocumentType? RelationshipDocumentTypeNavigation { get; set; }

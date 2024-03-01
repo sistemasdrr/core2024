@@ -124,7 +124,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                var companySbs = await context.CompanySbs.Include(x => x.IdCompanyNavigation).Where(x => x.IdCompany == idCompany).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
+                var companySbs = await context.CompanySbs.Include(x => x.IdCompanyNavigation).Include(x => x.IdOpcionalCommentarySbsNavigation).Where(x => x.IdCompany == idCompany).FirstOrDefaultAsync() ?? throw new Exception("No existe la empresa solicitada");
                 traductions.AddRange(await context.Traductions.Where(x => x.IdCompany == idCompany  && x.Identifier.Contains("_S_")).ToListAsync());
 
                 if (companySbs.IdCompanyNavigation == null)

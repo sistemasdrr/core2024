@@ -36,5 +36,11 @@ namespace DRRCore.Services.Migration.Controllers
         {
             return Ok(await _migraUser.MigrateOldTicket());
         }
+        [HttpPost()]
+        [Route("country")]
+        public async Task<ActionResult> MigrateCountry()
+        {
+            return Ok(await _migraUser.MigrateCountry());
+        }
     }
 }

@@ -7,5 +7,7 @@
         Task<bool> MigratePerson();
         Task<bool> MigrateSubscriber();
         Task<bool> MigrateOldTicket();
+        Task<bool> MigrateCountry();
+
     }
 }

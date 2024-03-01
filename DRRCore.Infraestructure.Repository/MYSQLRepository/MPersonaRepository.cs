@@ -57,7 +57,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             {
                 using (var context = new MySqlContext())
                 {
-                    return await context.RPerVsSbds.Where(x => x.PeCodigo == codigo).ToListAsync();
+                    return await context.RPerVsSbds.Where(x => x.PeCodigo == codigo && x.Migra == 0).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             {
                 using (var context = new MySqlContext())
                 {
-                    return await context.RPerVsProAceps.Where(x => x.PeCodigo == codigo).ToListAsync();
+                    return await context.RPerVsProAceps.Where(x => x.PeCodigo == codigo && x.Migra == 0).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -87,7 +87,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             {
                 using (var context = new MySqlContext())
                 {
-                    return await context.RPerVsProvs.Where(x => x.PeCodigo == codigo).ToListAsync();
+                    return await context.RPerVsProvs.Where(x => x.PeCodigo == codigo && x.Migra == 0).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -102,7 +102,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             {
                 using (var context = new MySqlContext())
                 {
-                    return await context.RPerVsReps.FirstOrDefaultAsync(x => x.PeCodigo == codigo);
+                    return await context.RPerVsReps.FirstOrDefaultAsync(x => x.PeCodigo == codigo && x.Migra == 0);
                 }
             }
             catch (Exception ex)
@@ -117,7 +117,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             {
                 using (var context = new MySqlContext())
                 {
-                    return await context.RPerVsTrabs.FirstOrDefaultAsync(x => x.PeCodigo == codigo);
+                    return await context.RPerVsTrabs.FirstOrDefaultAsync(x => x.PeCodigo == codigo && x.Migra == 0);
                 }
             }
             catch (Exception ex)

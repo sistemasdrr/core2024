@@ -22,9 +22,9 @@ namespace DRRCore.Transversal.Common
                 case "pdf":
                     return ReportRenderType.Pdf;
                 case "excel":
-                    return ReportRenderType.Excel;
+                    return ReportRenderType.ExcelOpenXml;
                 case "word":
-                    return ReportRenderType.Word;
+                    return ReportRenderType.WordOpenXml;
                 default:
                     return ReportRenderType.Null;
             }
@@ -35,9 +35,9 @@ namespace DRRCore.Transversal.Common
             {
                 case ReportRenderType.Pdf:
                     return "application/pdf";
-                case ReportRenderType.Excel:
+                case ReportRenderType.ExcelOpenXml:
                     return "application/vnd.ms-excel";
-                case ReportRenderType.Word:
+                case ReportRenderType.WordOpenXml:
                     return "application/msword";
                 default:
                     return string.Empty;
