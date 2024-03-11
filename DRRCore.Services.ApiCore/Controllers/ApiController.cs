@@ -82,12 +82,12 @@ namespace DRRCore.Services.ApiCore.Controllers
             }
             return Ok(await _apiApplication.GetDummyReportAsync(requestDto));
         }
-        //[HttpGet()]
+        [HttpGet()]
        
-        //[Route("dummy")]
-        //public async Task<ActionResult> DummyReport()
-        //{
-        //    return Ok(await _apiApplication.GetDummyReportAsync());
-        //}
+        [Route("dummy")]
+        public async Task<ActionResult> DummyReport()
+        {
+            return Ok(await _apiApplication.GetReportByCodeAndEnvironmentAsync("",""));
+        }
     }
 }

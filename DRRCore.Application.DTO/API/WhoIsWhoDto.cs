@@ -27,7 +27,7 @@ namespace DRRCore.Application.DTO.API
         [JsonPropertyName("DRR_WISWHO_BACINF")]
         public string BackgroundInformation { get; set;} = string.Empty;
         [JsonPropertyName("DRR_WISWHO_CHIEFX")]
-        public bool ChiefExecutive { get; set; } = false;
+        public bool? ChiefExecutive { get; set; } = false;
         [JsonPropertyName("DRR_WISWHO_ASOCOM")]
         public List<Associated> AssociatedCompanies { get; set; }=new List<Associated>();
         [JsonPropertyName("DRR_WISWHO_PARCOM")]

@@ -27,5 +27,7 @@ public partial class SubscriberCategory
 
     public int? OldCode { get; set; }
 
+    public string? RubCodigo { get; set; }
+
     public virtual ICollection<Subscriber> Subscribers { get; set; } = new List<Subscriber>();
 }

@@ -19,6 +19,8 @@ public partial class BusinessBranch
 
     public bool? Enable { get; set; }
 
+    public string? ApiCode { get; set; }
+
     public virtual ICollection<BusineesActivity> BusineesActivities { get; set; } = new List<BusineesActivity>();
 
     public virtual ICollection<CompanyBranch> CompanyBranches { get; set; } = new List<CompanyBranch>();

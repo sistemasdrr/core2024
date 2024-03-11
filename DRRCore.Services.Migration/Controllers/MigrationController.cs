@@ -42,5 +42,11 @@ namespace DRRCore.Services.Migration.Controllers
         {
             return Ok(await _migraUser.MigrateCountry());
         }
+        [HttpPost()]
+        [Route("subscriberCategory")]
+        public async Task<ActionResult> MigrateSubscriberCategory()
+        {
+            return Ok(await _migraUser.MigrateSubscriberCategory());
+        }
     }
 }

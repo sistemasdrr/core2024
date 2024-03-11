@@ -23,5 +23,7 @@ public partial class CollaborationDegree
 
     public bool? Enable { get; set; }
 
+    public string? ApiCode { get; set; }
+
     public virtual ICollection<CompanyFinancialInformation> CompanyFinancialInformations { get; set; } = new List<CompanyFinancialInformation>();
 }

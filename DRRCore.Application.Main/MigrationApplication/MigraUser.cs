@@ -8,6 +8,7 @@ using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.EntityFrameworkCore;
 using DRRCore.Domain.Entities.MySqlContextFotos;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DRRCore.Application.Main.MigrationApplication
 {
@@ -162,8 +163,6 @@ namespace DRRCore.Application.Main.MigrationApplication
                             };
 
                             idCompany = await _companyDomain.AddCompanyAsync(company);
-
-
                             var emp = await _companyDomain.GetByIdAsync(idCompany);
                             emp.Traductions = await GetAllTraductions(idCompany, empresa);
                             await _companyDomain.UpdateAsync(emp);
@@ -1361,8 +1360,8 @@ namespace DRRCore.Application.Main.MigrationApplication
             PaiCodigo == "036" ? 92 : PaiCodigo == "037" ? 15 : PaiCodigo == "038" ? 21 :
             PaiCodigo == "039" ? 151 : PaiCodigo == "040" ? 59 : PaiCodigo == "041" ? 220 :
             PaiCodigo == "042" ? 186 : PaiCodigo == "043" ? 13 : PaiCodigo == "044" ? 16 :
-            PaiCodigo == "045" ? 24 : PaiCodigo == "046" ? 27 : PaiCodigo == "047" ? 68 :
-            PaiCodigo == "048" ? 84 : PaiCodigo == "049" ? 97 : PaiCodigo == "064" ? 123 :
+            PaiCodigo == "045" ? 24 : PaiCodigo == "046" ? 27 : PaiCodigo == "047" ? 68 : PaiCodigo == "075" ? null :
+            PaiCodigo == "048" ? 84 : PaiCodigo == "049" ? 97 : PaiCodigo == "050" ? 265 : PaiCodigo == "064" ? 123 :
             PaiCodigo == "051" ? 109 : PaiCodigo == "052" ? 119 : PaiCodigo == "053" ? 121 :
             PaiCodigo == "054" ? 218 : PaiCodigo == "055" ? 196 : PaiCodigo == "056" ? 197 :
             PaiCodigo == "057" ? 198 : PaiCodigo == "058" ? 224 : PaiCodigo == "059" ? 8 :
@@ -1376,7 +1375,7 @@ namespace DRRCore.Application.Main.MigrationApplication
             PaiCodigo == "085" ? 131 : PaiCodigo == "086" ? 112 : PaiCodigo == "087" ? 118 :
             PaiCodigo == "088" ? 185 : PaiCodigo == "089" ? 137 : PaiCodigo == "090" ? 165 :
             PaiCodigo == "091" ? 94 : PaiCodigo == "092" ? 142 : PaiCodigo == "093" ? 243 :
-            PaiCodigo == "095" ? 246 : PaiCodigo == "096" ? 124 : PaiCodigo == "097" ? 4 :
+            PaiCodigo == "095" ? 246 : PaiCodigo == "096" ? 124 : PaiCodigo == "097" ? 4 : PaiCodigo == "098" ? 216 :
             PaiCodigo == "099" ? 91 : PaiCodigo == "100" ? 95 : PaiCodigo == "101" ? 266 :
             PaiCodigo == "102" ? 210 : PaiCodigo == "103" ? 136 : PaiCodigo == "104" ? 177 :
             PaiCodigo == "105" ? 7 : PaiCodigo == "106" ? 26 : PaiCodigo == "107" ? 32 :
@@ -1523,7 +1522,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                 using var contextSql = new SqlCoreContext();
                 using var contextMysql = new MySqlContext();
                 using var contextPhoto = new FotoContext();
-                var personas = await contextMysql.MPersonas.Where(x => x.Migra == 0 && x.PeActivo == 1).ToListAsync();
+                var personas = await contextMysql.MPersonas.Where(x => x.Migra == 0 && x.PeActivo == 1).Take(1000).ToListAsync();
                 foreach(var persona in personas)
                 {
                     int idPerson = 0;
@@ -1687,13 +1686,13 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 ComercialLatePayments = await GetPersonCommercialLate(persona),
                                 Providers = await GetPersonProviders(persona),
                             };
-                           
+
                             try
                             {
                                 idPerson = await _personDomain.AddPersonAsync(newPerson);
 
                                 var pers = await _personDomain.GetByIdAsync(idPerson);
-                                if(pers != null)
+                                if (pers != null)
                                 {
 
                                     pers.Traductions = await GetPersonTraductions(idPerson, persona);
@@ -1708,21 +1707,18 @@ namespace DRRCore.Application.Main.MigrationApplication
                             }
 
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError("Error Persona :" + persona.PeCodigo+ " : " + ex.Message);
-                        success = false;
-                        continue;
-                    }
-                    finally
-                    {
                         if (success == true)
                         {
                             persona.Migra = 1;
                             contextMysql.MPersonas.Update(persona);
                             await contextMysql.SaveChangesAsync();
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Error Persona :" + persona.PeCodigo + " : " + ex.Message);
+                        success = false;
+                        continue;
                     }
                 }
             }
@@ -2178,7 +2174,119 @@ namespace DRRCore.Application.Main.MigrationApplication
         }
         public async Task<bool> MigrateSubscriber()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var mysqlContext = new MySqlContext();
+                var sqlContext = new SqlCoreContext();
+                var subscriberCategory = await sqlContext.SubscriberCategories.ToListAsync();
+                var abonados = await mysqlContext.MAbonados.Where(x => x.Migra == 0).ToListAsync();
+                foreach(var item in abonados)
+                {
+                    var success = false;
+                    var newSubscriber = new Subscriber
+                    {
+                        Code = item.AboCodigo,
+                        Name = item.AboNombre == null ? "" : item.AboNombre,
+                        Acronym = item.AboSiglas == null ? "" : item.AboSiglas,
+                        StartDate = ConvertStringToDateTime(item.AboFeccre.Substring(0, Math.Min(item.AboFeccre.Length, 10))),
+                        Address = item.AboDirecc == null ? "" : item.AboDirecc,
+                        City = item.AboCiudad == null ? "" : item.AboCiudad,
+                        Telephone = item.AboTelefo == null ? "" : item.AboTelefo,
+                        Fax = item.AboFax == null ? "" : item.AboFax,
+                        WebPage = item.AboWww == null ? "" : item.AboWww,
+                        TaxRegistration = item.AboRegtrib == null ? "" : item.AboRegtrib,
+                        FacturationType = item.AboTipfac,
+                        Email = item.AboEmail == null ? "" : item.AboEmail,
+                        PrincipalContact = item.AboContac == null ? "" : item.AboContac,
+                        SubscriberType = item.AboTipo,
+                        Observations = item.AboObserv == null ? "" : item.AboObserv,
+                        IdSubscriberCategory = subscriberCategory.Where(x => x.RubCodigo == item.RubCodigo).FirstOrDefault().Id,
+                        IdCountry = ObtenerCodigoPais(item.PaiCodigo),
+                        IdContinent = sqlContext.Countries.Where(x => x.Id == ObtenerCodigoPais(item.PaiCodigo)).FirstOrDefault().IdContinent,
+                        IdCurrency = item.MonCodigo == "002" ? 1 : item.MonCodigo == "001" ? 31 : item.MonCodigo == "003" ? 2 : null,
+                        Language = item.IdiCodigo == "002" ? "E" : item.IdiCodigo == "001" ? "I" : "",
+                        SendReportToName = item.AboInfpara == null ? "" : item.AboInfpara,
+                        SendReportToEmail = item.AboEmailci == null ? "" : item.AboEmailci,
+                        SendReportToTelephone = item.AboTelefoci == null ? "" : item.AboTelefoci,
+
+                        SendInvoiceToName = item.AboFacpara == null ? "" : item.AboFacpara,
+                        SendInvoiceToEmail = item.AboEmailfact,
+                        SendInvoiceToTelephone = item.AboTelefofact,
+
+                        AdditionalContactName = item.AboContac2,
+                        AdditionalContactEmail = item.AboEmailc2,
+                        AdditionalContactTelephone = item.AboTelefoc2,
+
+                        PrefTelef = item.AboPrftel,
+                        PrefFax = item.AboPrffax,
+                        Usr = item.AboLogin,
+                        Psw = item.AboPwd,
+                        Indications = item.AboIndica == null ? "" : item.AboIndica,
+                        Enable = item.AboActivo == "1" ? true : false,
+
+                        MaximumCredit = item.AboCremax == "1" ? true : false,
+                        RevealName = item.AboRevnom == "1" ? true : false,
+                        NormalPrice = item.AboPnonli == "Si" ? true : false
+                    };
+                    await sqlContext.Subscribers.AddAsync(newSubscriber);
+                    await sqlContext.SaveChangesAsync();
+                    success = true;
+                    if(success == true)
+                    {
+                        var precios = await mysqlContext.TPrecioAbonados.Where(x => x.AboCodigo == item.AboCodigo && x.Migra == 0).ToListAsync();
+                        if(precios.Count > 0)
+                        {
+                            foreach(var precio in precios)
+                            {
+                                var t1 = precio.PaPrenor.Split("/");
+                                var t2 = precio.PaPreurg.Split("/");
+                                var t3 = precio.PaPresup.Split("/");
+                                var newSubscriberPrice = new SubscriberPrice();
+                                newSubscriberPrice.IdSubscriber = newSubscriber.Id;
+                                newSubscriberPrice.Date = precio.PaFecha;
+                                newSubscriberPrice.IdContinent = sqlContext.Countries.Where(x => x.Id == ObtenerCodigoPais(precio.PaiCodigo)).FirstOrDefault() != null ? sqlContext.Countries.Where(x => x.Id == ObtenerCodigoPais(precio.PaiCodigo)).FirstOrDefault().IdContinent : null;
+                                newSubscriberPrice.IdCountry = ObtenerCodigoPais(precio.PaiCodigo);
+                                newSubscriberPrice.IdCurrency = precio.MonCodigo == "002" ? 1 : precio.MonCodigo == "001" ? 31 : precio.MonCodigo == "003" ? 2 : null;
+                                newSubscriberPrice.PriceT1 = decimal.Parse(t1[0].Trim().IsNullOrEmpty() ? "0" : t1[0].Trim());
+                                newSubscriberPrice.DayT1 = int.Parse(t1[1].Trim().IsNullOrEmpty() ? "0" : t1[1].Trim());
+                                newSubscriberPrice.PriceT2 = decimal.Parse(t2[0].Trim().IsNullOrEmpty() ? "0" : t2[0].Trim());
+                                newSubscriberPrice.DayT2 = int.Parse(t2[1].Trim().IsNullOrEmpty() ? "0" : t2[1].Trim());
+                                newSubscriberPrice.PriceT3 = decimal.Parse(t3[0].Trim().IsNullOrEmpty() ? "0" : t3[0].Trim());
+                                newSubscriberPrice.DayT3 = int.Parse(t3[1].Trim().IsNullOrEmpty() ? "0" : t3[1].Trim());
+                                newSubscriberPrice.PriceB = decimal.Parse(precio.PaPreef2.Trim().IsNullOrEmpty() ? "0" : precio.PaPreef2.Trim());
+
+                                await sqlContext.SubscriberPrices.AddAsync(newSubscriberPrice);
+                                await sqlContext.SaveChangesAsync();
+                                precio.Migra = 1;
+                                mysqlContext.TPrecioAbonados.Update(precio);
+                                await mysqlContext.SaveChangesAsync();
+                            }
+                        }
+                    }
+                    item.Migra = 1;
+                    mysqlContext.MAbonados.Update(item);
+                    await mysqlContext.SaveChangesAsync();
+                }
+                return true;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
+        static DateTime ConvertStringToDateTime(string dateString)
+        {
+            string format = "yyyy-MM-dd";
+
+            try
+            {
+                return DateTime.ParseExact(dateString, format, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch (FormatException)
+            {
+                throw new FormatException("El string no está en el formato correcto.");
+            }
         }
         public async Task<bool> MigrateSubscriberType()
         {
@@ -2270,6 +2378,36 @@ namespace DRRCore.Application.Main.MigrationApplication
         public Task<bool> MigrateCountry()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> MigrateSubscriberCategory()
+        {
+            try
+            {
+                var mysqlContext = new MySqlContext();
+                var sqlContext = new SqlCoreContext();
+                var categorias = await mysqlContext.TRubros.Where(x => x.Migra == false).ToListAsync();
+                foreach (var item in categorias)
+                {
+                    await sqlContext.SubscriberCategories.AddAsync(new SubscriberCategory
+                    {
+                        Name = item.RubNombre,
+                        Enable = item.RubActivo,
+                        RubCodigo = item.RubCodigo
+                    });
+                    await sqlContext.SaveChangesAsync();
+
+                    item.Migra = true;
+                    mysqlContext.TRubros.Update(item);
+                    await mysqlContext.SaveChangesAsync();
+                }
+                return true;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
         }
     }
 }

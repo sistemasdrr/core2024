@@ -83,6 +83,14 @@ public partial class Subscriber
 
     public bool? Enable { get; set; }
 
+    public string? PrefTelef { get; set; }
+
+    public string? PrefFax { get; set; }
+
+    public string? Usr { get; set; }
+
+    public string? Psw { get; set; }
+
     public virtual ICollection<CouponBillingSubscriber> CouponBillingSubscribers { get; set; } = new List<CouponBillingSubscriber>();
 
     public virtual Continent? IdContinentNavigation { get; set; }

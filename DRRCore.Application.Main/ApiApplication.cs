@@ -40,15 +40,24 @@ namespace DRRCore.Application.Main
                 return response;
             }
             
-            var data = ApiDummy.Report(); 
+            var data = await ApiDummy.Report(1); 
             
             response.Data= data;
            
             return response;
         }
-        public async Task<ReportDto> GetReportByCodeAndEnvironmentAsync(string code, string environment)
+        public async Task<Response<ReportDto>> GetReportByCodeAndEnvironmentAsync(string code, string environment)
         {
-            return ApiDummy.Report();
+            var response = new Response<ReportDto>();
+            try
+            {
+                response.Data = await ApiDummy.Report(1);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+            }
+            return response;
         }
        
         public async Task<Response<SearchResponseDto>> Search(SearchRequestDto request,string environment)

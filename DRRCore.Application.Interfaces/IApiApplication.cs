@@ -7,7 +7,7 @@ namespace DRRCore.Application.Interfaces
     {
         Task<Response<SearchResponseDto>> Search(SearchRequestDto request, string environment);
         Task<Response<ReportDto>> GetDummyReportAsync(GetRequestDto request);
-        Task<ReportDto> GetReportByCodeAndEnvironmentAsync(string code, string environment);
+        Task<Response<ReportDto>> GetReportByCodeAndEnvironmentAsync(string code, string environment);
 
     }
 }

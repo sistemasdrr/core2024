@@ -21,5 +21,7 @@ public partial class LegalPersonType
 
     public string? Sigla { get; set; }
 
+    public string? ApiCode { get; set; }
+
     public virtual ICollection<Company> Companies { get; set; } = new List<Company>();
 }
