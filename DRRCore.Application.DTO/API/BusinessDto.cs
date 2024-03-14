@@ -27,21 +27,21 @@ namespace DRRCore.Application.DTO.API
         [JsonPropertyName("DRR_BUSINE_SELTPG")]
         public PercentageValue SellingTerritoryPercentage { get; set; } = new PercentageValue();
         [JsonPropertyName("DRR_BUSINE_EMPLOY")]
-        public int Employess { get; set; }
+        public int? Employess { get; set; }
 
 
     }
     public class PercentageValue
     {
         [JsonPropertyName("DRR_PERCGE_VALUEE")]
-        public int Value { get; set; }
+        public decimal? Value { get; set; }
         [JsonPropertyName("DRR_PERCGE_DESCRI")]
         public string Description { get; set; } = string.Empty;
     }
     public class BussinessImportExportDto
     {
         [JsonPropertyName("DRR_BUSIMP_HASIMP")]
-        public bool HasImportedOrExported { get; set; }=false;
+        public bool? HasImportedOrExported { get; set; }=false;
         [JsonPropertyName("DRR_BUSIMP_COUNTS")]
         public List<string> Countries { get; set;}=new List<string>();
         [JsonPropertyName("DRR_BUSIMP_DETAIL")]

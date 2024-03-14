@@ -2,6 +2,7 @@
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
@@ -66,6 +67,20 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<List<TicketHistory>> GetAllByIdTicket(int? idTicket)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.TicketHistories.Where(x => x.IdTicket == idTicket).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
         public async Task<TicketHistory> GetByIdAsync(int id)
         {
             try
@@ -83,6 +98,41 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
         public Task<List<TicketHistory>> GetByNameAsync(string name)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<TicketHistory>> GetTicketsPreAssignedToUser(string userTo)
+        {
+
+            try
+            {
+                using (var context = new SqlCoreContext())
+                {
+
+                    var list = await context.TicketHistories.Include(x => x.IdTicketNavigation)
+                        .Include(x => x.IdTicketNavigation.IdSubscriberNavigation)
+                    .Include(x => x.IdTicketNavigation.IdSubscriberNavigation.IdCountryNavigation)
+                    .Include(x => x.IdTicketNavigation.IdContinentNavigation)
+                    .Include(x => x.IdTicketNavigation.IdCompanyNavigation)
+                    .Include(x => x.IdTicketNavigation.IdCompanyNavigation.IdCountryNavigation)
+                    .Include(x => x.IdTicketNavigation.IdCompanyNavigation.IdCountryNavigation.IdContinentNavigation)
+                    .Include(x => x.IdTicketNavigation.IdPersonNavigation)
+                    .Include(x => x.IdTicketNavigation.IdPersonNavigation.IdCountryNavigation)
+                    .Include(x => x.IdTicketNavigation.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
+                    .Include(x => x.IdTicketNavigation.IdCountryNavigation)
+                    .Include(x => x.IdTicketNavigation.IdStatusTicketNavigation)
+                    .Include(x => x.IdTicketNavigation.TicketQuery)
+                    .Include(x => x.IdTicketNavigation.TicketHistories.OrderByDescending(x => x.Id)).Where(x => x.Enable == true)
+                    .OrderByDescending(x => x.IdTicketNavigation.OrderDate)
+                    .Where(x => x.UserTo == userTo && x.Flag == true && x.IdTicketNavigation.IdStatusTicket != 9 && x.IdTicketNavigation.IdStatusTicket != 10 && x.IdTicketNavigation.IdStatusTicket != 11)
+                        .ToListAsync();
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<bool> UpdateAsync(TicketHistory obj)

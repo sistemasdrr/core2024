@@ -12,6 +12,7 @@
        Asig_Multiple=8,
        Despachado=9,
        Observado=10,
-       Rechazado=11
+       Rechazado=11,
+       Pre_Asignacion = 12
     }
 }

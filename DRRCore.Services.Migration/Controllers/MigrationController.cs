@@ -25,6 +25,18 @@ namespace DRRCore.Services.Migration.Controllers
             return Ok(await _migraUser.MigratePerson());
         }
         [HttpPost()]
+        [Route("personaPorCodigo")]
+        public async Task<ActionResult> MigrarPersona(string oldCode)
+        {
+            return Ok(await _migraUser.MigratePersonByOldCode(oldCode));
+        }
+        [HttpPost()]
+        [Route("personaCorreccion")]
+        public async Task<ActionResult> personaCorreccion()
+        {
+            return Ok(await _migraUser.MigratePersonCorreccion());
+        }
+        [HttpPost()]
         [Route("abonados")]
         public async Task<ActionResult> MigrarAbonados()
         {
@@ -53,6 +65,12 @@ namespace DRRCore.Services.Migration.Controllers
         public async Task<ActionResult> ModificarEmpresa(int migra,int nivel)
         {
             return Ok(await _migraUser.ModificarCompanyOthers(migra,nivel));
+        }
+        [HttpPost()]
+        [Route("subscriberCategory")]
+        public async Task<ActionResult> MigrateSubscriberCategory()
+        {
+            return Ok(await _migraUser.MigrateSubscriberCategory());
         }
     }
 }

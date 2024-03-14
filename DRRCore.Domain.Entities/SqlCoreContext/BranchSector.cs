@@ -21,5 +21,7 @@ public partial class BranchSector
 
     public string? OldCode { get; set; }
 
+    public string? ApiCode { get; set; }
+
     public virtual ICollection<CompanyBranch> CompanyBranches { get; set; } = new List<CompanyBranch>();
 }

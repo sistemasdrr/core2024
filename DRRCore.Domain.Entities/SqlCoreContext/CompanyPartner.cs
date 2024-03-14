@@ -15,7 +15,7 @@ public partial class CompanyPartner
 
     public string? Profession { get; set; }
 
-    public int? Participation { get; set; }
+    public decimal? Participation { get; set; }
 
     public DateTime? StartDate { get; set; }
 

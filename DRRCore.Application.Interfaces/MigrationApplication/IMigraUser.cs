@@ -5,10 +5,13 @@
         Task MigrateUser();
         Task<bool> MigrateCompany();
         Task<bool> MigratePerson();
+        Task<bool> MigratePersonCorreccion();
+        Task<bool> MigratePersonByOldCode(string oldCode);
         Task<bool> MigrateSubscriber();
         Task<bool> MigrateOldTicket();
-        Task<object> MigrateCountry();
-        Task<bool> MigrateCompanyOthers(int migra);
-        Task<bool> ModificarCompanyOthers(int migra, int nivel);
+        Task<bool> MigrateCountry();
+        Task<bool> MigrateSubscriberCategory();
+        
+
     }
 }

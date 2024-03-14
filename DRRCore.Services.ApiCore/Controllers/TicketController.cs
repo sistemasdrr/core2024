@@ -90,5 +90,24 @@ namespace DRRCore.Services.ApiCore.Controllers
             var result = await _ticketApplication.DownloadReport();
             return File(result.Data, "application/vnd.ms-excel", "ReporteTickets"+DateTime.Now.ToString("ddMMyyyy")+".xls");
         }
+
+        [HttpPost()]
+        [Route("saveTicketPreassignations")]
+        public async Task<ActionResult> saveTicketAssignations(List<SavePreAsignTicketDto> list)
+        {
+            return Ok(await _ticketApplication.SavePreAsignTicket(list));
+        }
+        [HttpPost()]
+        [Route("sendTicketPreassignations")]
+        public async Task<ActionResult> sendTicketPreassignations(List<SavePreAsignTicketDto> list)
+        {
+            return Ok(await _ticketApplication.SendPreAsignTicket(list));
+        }
+        [HttpGet()]
+        [Route("getTicketPreassignToUser")]
+        public async Task<ActionResult> getTicketPreassignToUser(string userTo)
+        {
+            return Ok(await _ticketApplication.GetTicketsToUser(userTo));
+        }
     }
 }
