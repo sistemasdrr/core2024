@@ -205,7 +205,7 @@ namespace DRRCore.Application.Main.CoreApplication
 
                     if (company.OldCode!=null && company.OldCode.StartsWith("E"))
                     {
-                        var oldBd = await _tCuponDomain.GetTCuponExistAsync(company.OldCode);
+                        var oldBd = await _ticketDomain.GetOldTicketByCompany(company.OldCode);
                         if (oldBd != null && oldBd.Any())
                         {
                             list.AddRange(_mapper.Map<List<GetListSameSearchedReportResponseDto>>(oldBd));
@@ -225,13 +225,48 @@ namespace DRRCore.Application.Main.CoreApplication
                         }
                         getExist.LastSearchedDate = firstTicket.DispatchtDate.ToShortDateString();
                     }
-                    getExist.ListSameSearched=list.Take(10).ToList();
+                    getExist.ListSameSearched=list.ToList();
                     response.Data = getExist;
 
                 }
                 else if (type == "P")
                 {
+                    var person = await _personDomain.GetByIdAsync(id);
+                    if (person == null)
+                    {
+                        throw new Exception(Messages.MessageNoDataFound);
+                    }
+                    var newBd = await _ticketDomain.GetTicketByPerson(person.Id);
 
+                    if (newBd != null && newBd.Any())
+                    {
+                        list.AddRange(_mapper.Map<List<GetListSameSearchedReportResponseDto>>(newBd));
+                    }
+
+                    if (person.OldCode != null && person.OldCode.StartsWith("P"))
+                    {
+                        var oldBd = await _ticketDomain.GetOldTicketByPerson(person.OldCode);
+                        if (oldBd != null && oldBd.Any())
+                        {
+                            list.AddRange(_mapper.Map<List<GetListSameSearchedReportResponseDto>>(oldBd));
+                        }
+                    }
+
+                    if (list.Any())
+                    {
+                        getExist.TypeReport = "RV";
+                        list = list.OrderByDescending(x => x.DispatchtDate).ToList();
+
+                        var firstTicket = list.FirstOrDefault();
+
+                        if ((DateTime.Now - firstTicket.DispatchtDate).TotalDays <= 90)
+                        {
+                            getExist.TypeReport = firstTicket.IsPending ? "DF" : "EF";
+                        }
+                        getExist.LastSearchedDate = firstTicket.DispatchtDate.ToShortDateString();
+                    }
+                    getExist.ListSameSearched = list.ToList();
+                    response.Data = getExist;
                 }
             }
             catch(Exception ex)

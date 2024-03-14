@@ -116,7 +116,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using var context = new SqlCoreContext();
 
-                return await context.Subscribers.FirstOrDefaultAsync(x => x.Code == code);
+                return await context.Subscribers.Include(x=>x.CouponBillingSubscribers).FirstOrDefaultAsync(x => x.Code == code);
             }
             catch (Exception ex)
             {
@@ -131,7 +131,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 using var context = new SqlCoreContext();
                
-                return await context.Subscribers.FirstOrDefaultAsync(x => x.Id == id);
+                return await context.Subscribers.Include(x=>x.CouponBillingSubscribers).FirstOrDefaultAsync(x => x.Id == id);
             }
             catch (Exception ex)
             {

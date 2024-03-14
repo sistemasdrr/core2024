@@ -42,5 +42,17 @@ namespace DRRCore.Services.Migration.Controllers
         {
             return Ok(await _migraUser.MigrateCountry());
         }
+        [HttpPost()]
+        [Route("empresasOther")]
+        public async Task<ActionResult> MigrarEmpresasOther(int migra)
+        {
+            return Ok(await _migraUser.MigrateCompanyOthers(migra));
+        }
+        [HttpPost()]
+        [Route("modificarEmpresa")]
+        public async Task<ActionResult> ModificarEmpresa(int migra,int nivel)
+        {
+            return Ok(await _migraUser.ModificarCompanyOthers(migra,nivel));
+        }
     }
 }

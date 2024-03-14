@@ -41,6 +41,7 @@ namespace DRRCore.Application.DTO.Core.Response
         public string SubscriberType { get; set; } = string.Empty;
         public int IdCurrency { get; set; } = new int();
         public string FacturationType { get; set; } = string.Empty;
+        public int RemainingCoupons { get; set; } = 0;
         public Boolean NormalPrice { get; set; } = new Boolean();
         public Boolean Enable { get; set; } = new Boolean();
     }

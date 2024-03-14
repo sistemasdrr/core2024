@@ -24,5 +24,6 @@ namespace DRRCore.Domain.Interfaces.MysqlDomain
         Task<bool> MigrateEmpresaAspLeg(string code);
         Task<bool> MigrateEmpresaRamo(string code);
         Task<bool> MigrateEmpresaFinanzas(string code);
+        Task<List<MEmpresa>> GetNotMigratedEmpresa(int migra);
     }
 }

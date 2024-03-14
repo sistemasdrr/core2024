@@ -1,6 +1,7 @@
 ﻿using DRRCore.Domain.Entities.MYSQLContext;
 using DRRCore.Infraestructure.Interfaces.MySqlRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DRRCore.Infraestructure.Repository.MYSQLRepository
 {
@@ -260,6 +261,26 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
                 {
                     var empresas = await context.MEmpresas
                         .Where(x => x.Migra == 0 && x.EmActivo == 1 && x.EmNombre != null).Take(1000)
+                        .ToListAsync();
+
+                    empresas = empresas.Where(x => !x.EmCodigo.StartsWith('Z')).ToList();
+
+                    return empresas;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public async Task<List<MEmpresa>> GetNotMigratedEmpresa(int migra)
+        {
+            try
+            {
+                using (var context = new MySqlContext())
+                {
+                    var empresas = await context.MEmpresas
+                        .Where(x => x.Migra == migra && x.EmActivo == 1 && x.EmNombre != null).Take(1000)
                         .ToListAsync();
 
                     empresas = empresas.Where(x => !x.EmCodigo.StartsWith('Z')).ToList();

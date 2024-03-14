@@ -17,19 +17,19 @@ public partial class SubscriberPrice
 
     public int? IdCurrency { get; set; }
 
-    public int? PriceT1 { get; set; }
+    public decimal? PriceT1 { get; set; }
 
     public int? DayT1 { get; set; }
 
-    public int? PriceT2 { get; set; }
+    public decimal? PriceT2 { get; set; }
 
     public int? DayT2 { get; set; }
 
-    public int? PriceT3 { get; set; }
+    public decimal? PriceT3 { get; set; }
 
     public int? DayT3 { get; set; }
 
-    public int? PriceB { get; set; }
+    public decimal? PriceB { get; set; }
 
     public DateTime? CreationDate { get; set; }
 

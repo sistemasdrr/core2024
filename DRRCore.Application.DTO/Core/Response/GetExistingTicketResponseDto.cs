@@ -10,7 +10,8 @@
     public class GetListSameSearchedReportResponseDto
     {
         public bool IsPending { get; set; }
-        public DateTime DispatchtDate { get; set; } 
+        public DateTime DispatchtDate { get; set; }
+        public string? DispatchtDateString { get; set; }
         public string TypeReport { get; set; } = string.Empty;
         public string TicketNumber { get; set; } = string.Empty;
         public string RequestedName { get; set; } = string.Empty;

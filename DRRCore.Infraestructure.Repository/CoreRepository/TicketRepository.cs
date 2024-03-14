@@ -205,6 +205,36 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<List<OldTicket>> GetOldTicketByCompany(string oldCode)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+
+                return await context.OldTickets.Where(x => x.Empresa==oldCode && x.EmpresaPersona=="E").OrderByDescending(x => x.FechaDespacho).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<OldTicket>> GetOldTicketByPerson(string oldCode)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+
+                return await context.OldTickets.Where(x => x.Empresa == oldCode && x.EmpresaPersona == "P").OrderByDescending(x => x.FechaDespacho).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<List<OldTicket>> GetSimilarByNameAsync(string name)
         {
             try
@@ -225,7 +255,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Include(x=>x.IdSubscriberNavigation).Where(x => x.IdCompany == id).ToListAsync();
+                return await context.Tickets.Include(x=>x.IdSubscriberNavigation).Where(x => x.IdCompany == id && x.IdStatusTicket==(int)TicketStatusEnum.Despachado).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -239,7 +269,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Where(x => x.IdPerson == id).ToListAsync();
+                return await context.Tickets.Include(x => x.IdSubscriberNavigation).Where(x => x.IdPerson == id && x.IdStatusTicket == (int)TicketStatusEnum.Despachado).ToListAsync();
             }
             catch (Exception ex)
             {

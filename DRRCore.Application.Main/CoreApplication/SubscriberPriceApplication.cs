@@ -187,7 +187,7 @@ namespace DRRCore.Application.Main.CoreApplication
                         list.Add((GetPricesResponseDto)T3);
                     
                         var TB = new GetPricesResponseDto();
-                        TB.Name = "B";
+                        TB.Name = "BC";
                         TB.Price = (int)subscriberPrice.PriceB;
                         TB.Days = (int)subscriberPrice.PriceB;
                         list.Add((GetPricesResponseDto)TB);

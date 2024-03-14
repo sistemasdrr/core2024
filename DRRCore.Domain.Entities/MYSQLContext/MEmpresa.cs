@@ -614,5 +614,5 @@ public partial class MEmpresa
 
     public string? EmComenSup { get; set; }
 
-    public sbyte? Migra { get; set; }
+    public int? Migra { get; set; }
 }

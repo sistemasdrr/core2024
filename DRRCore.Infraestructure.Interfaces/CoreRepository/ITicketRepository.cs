@@ -13,5 +13,7 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
         Task<TicketQuery> GetTicketQuery(int idTicket);
         Task<bool> TicketQueryAnswered(int idTicket);
         Task<List<OldTicket>> GetSimilarByNameAsync(string name);
+        Task<List<OldTicket>> GetOldTicketByCompany(string oldCode);
+        Task<List<OldTicket>> GetOldTicketByPerson(string oldCode);
     }
 }

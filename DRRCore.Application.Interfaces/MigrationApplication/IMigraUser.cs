@@ -7,7 +7,8 @@
         Task<bool> MigratePerson();
         Task<bool> MigrateSubscriber();
         Task<bool> MigrateOldTicket();
-        Task<bool> MigrateCountry();
-
+        Task<object> MigrateCountry();
+        Task<bool> MigrateCompanyOthers(int migra);
+        Task<bool> ModificarCompanyOthers(int migra, int nivel);
     }
 }
