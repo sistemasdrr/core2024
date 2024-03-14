@@ -26,6 +26,11 @@ namespace DRRCore.Domain.Main.CoreDomain
            return await _ticketHistoryRepository.GetAllAsync();
         }
 
+        public async Task<List<TicketHistory>> GetAllByIdTicket(int? idTicket)
+        {
+            return await _ticketHistoryRepository.GetAllByIdTicket(idTicket);
+        }
+
         public async Task<TicketHistory> GetByIdAsync(int id)
         {
            return await _ticketHistoryRepository.GetByIdAsync(id);
@@ -34,6 +39,11 @@ namespace DRRCore.Domain.Main.CoreDomain
         public Task<List<TicketHistory>> GetByNameAsync(string name)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<TicketHistory>> GetTicketsPreAssignedToUser(string userTo)
+        {
+            return await _ticketHistoryRepository.GetTicketsPreAssignedToUser(userTo);
         }
 
         public async Task<bool> UpdateAsync(TicketHistory obj)

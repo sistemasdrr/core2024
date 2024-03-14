@@ -148,6 +148,8 @@ builder.Services.AddScoped<ICompanyShareHolderRepository, CompanyShareHolderRepo
 builder.Services.AddScoped<IWorkerHistoryRepository, WorkerHistoryRepository>();
 builder.Services.AddScoped<ICompanyRelationRepository, CompanyRelationRepository>();
 builder.Services.AddScoped<IPersonPhotoRepository, PersonPhotoRepository>();
+builder.Services.AddScoped<ITicketAssignationRepository, TicketAssignationRepository>();
+
 
 builder.Services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
 builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
@@ -225,6 +227,8 @@ builder.Services.AddScoped<ICompanyShareHolderDomain, CompanyShareHolderDomain>(
 builder.Services.AddScoped<IWorkerHistoryDomain, WorkerHistoryDomain>();
 builder.Services.AddScoped<ICompanyRelationDomain, CompanyRelationDomain>();
 builder.Services.AddScoped<IPersonPhotoDomain, PersonPhotoDomain>();
+builder.Services.AddScoped<ITicketAssignationDomain, TicketAssignationDomain>();
+
 
 builder.Services.AddScoped<IEmailHistoryDomain, EmailHistoryDomain>();
 builder.Services.AddScoped<IAttachmentsNotSendDomain, AttachmentsNotSendDomain>();

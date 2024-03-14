@@ -177,13 +177,10 @@ public partial class SqlCoreContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=sql5103.site4now.net;Initial Catalog=db_a9ccf0_eecore;User ID=db_a9ccf0_eecore_admin;Password=drrti2023;TrustServerCertificate=True",
-            options => options.CommandTimeout(120)
-            );
+        => optionsBuilder.UseSqlServer("Data Source=sql5103.site4now.net;Initial Catalog=db_a9ccf0_eecore;User ID=db_a9ccf0_eecore_admin;Password=drrti2023;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
         modelBuilder.Entity<CompanyXmlData>().ToSqlQuery("EXEC DataCompanyCredendo").HasNoKey();
         modelBuilder.Entity<CompanyBalanceData>().ToSqlQuery("EXEC BalanceCompanyCredendo").HasNoKey();
         modelBuilder.Entity<CompanyFunctionData>().ToSqlQuery("EXEC FunctionCompanyCredendo").HasNoKey();
@@ -694,11 +691,11 @@ public partial class SqlCoreContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Address)
-                .HasMaxLength(150)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("address");
             entity.Property(e => e.Cellphone)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("cellphone");
             entity.Property(e => e.CreationDate)
@@ -885,7 +882,7 @@ public partial class SqlCoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("lastQueryRrppBy");
             entity.Property(e => e.NotaryRegister)
-                .HasMaxLength(50)
+                .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("notaryRegister");
             entity.Property(e => e.OperationDuration)
@@ -914,11 +911,11 @@ public partial class SqlCoreContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("traded");
             entity.Property(e => e.TradedBy)
-                .HasMaxLength(20)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("tradedBy");
             entity.Property(e => e.TradedByEng)
-                .HasMaxLength(20)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("tradedByEng");
             entity.Property(e => e.UpdateDate)
@@ -1018,7 +1015,7 @@ public partial class SqlCoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("otherLocations");
             entity.Property(e => e.PreviousAddress)
-                .HasMaxLength(100)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("previousAddress");
             entity.Property(e => e.SpecificActivities)
@@ -1031,7 +1028,7 @@ public partial class SqlCoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("tabCommentary");
             entity.Property(e => e.TerritorySaleComentary)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("territorySaleComentary");
             entity.Property(e => e.TerritorySalePercentage)
@@ -4185,6 +4182,9 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
+            entity.Property(e => e.Flag)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("flag");
             entity.Property(e => e.IdStatusTicket).HasColumnName("idStatusTicket");
             entity.Property(e => e.IdTicket).HasColumnName("idTicket");
             entity.Property(e => e.UpdateDate)

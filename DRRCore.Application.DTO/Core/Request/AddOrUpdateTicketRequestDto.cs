@@ -66,4 +66,11 @@
 
         public decimal? Price { get; set; }
     }
+    public class SavePreAsignTicketDto
+    {
+        public int Id { get; set; }
+        public int? IdEmisor { get; set; }
+        public int? IdReceptor { get; set; }
+        public string? Commentary { get; set; }
+    }
 }

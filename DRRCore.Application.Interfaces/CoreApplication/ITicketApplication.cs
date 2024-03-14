@@ -18,5 +18,8 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> AnswerTicket(int idTicket);
         Task<Response<bool>> SendTicketQuery(SendTicketQueryRequestDto request);
         Task<Response<byte[]>> DownloadReport();
+        Task<Response<bool>> SavePreAsignTicket(List<SavePreAsignTicketDto> lista);
+        Task<Response<bool>> SendPreAsignTicket(List<SavePreAsignTicketDto> lista);
+        Task<Response<List<GetListTicketResponseDto>>> GetTicketsToUser(string userTo);
     }
 }

@@ -181,6 +181,13 @@ public partial class DbA9ccf0EecoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<CompanyXmlData>().ToSqlQuery("EXEC DataCompanyCredendo").HasNoKey();
+        modelBuilder.Entity<CompanyBalanceData>().ToSqlQuery("EXEC BalanceCompanyCredendo").HasNoKey();
+        modelBuilder.Entity<CompanyFunctionData>().ToSqlQuery("EXEC FunctionCompanyCredendo").HasNoKey();
+        modelBuilder.Entity<CompanyLegalEventsData>().ToSqlQuery("EXEC LegalEventsCompanyCredendo").HasNoKey();
+        modelBuilder.Entity<CompanyRelatedData>().ToSqlQuery("EXEC RelatedCompanyCredendo").HasNoKey();
+        modelBuilder.Entity<WhoIsWhoSP>().ToSqlQuery("EXEC WhoIsWho");
+
         modelBuilder.Entity<Agent>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Agent__3213E83FAB71BE05");
@@ -684,11 +691,11 @@ public partial class DbA9ccf0EecoreContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Address)
-                .HasMaxLength(150)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("address");
             entity.Property(e => e.Cellphone)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("cellphone");
             entity.Property(e => e.CreationDate)
@@ -875,7 +882,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("lastQueryRrppBy");
             entity.Property(e => e.NotaryRegister)
-                .HasMaxLength(50)
+                .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("notaryRegister");
             entity.Property(e => e.OperationDuration)
@@ -904,11 +911,11 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("traded");
             entity.Property(e => e.TradedBy)
-                .HasMaxLength(20)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("tradedBy");
             entity.Property(e => e.TradedByEng)
-                .HasMaxLength(20)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("tradedByEng");
             entity.Property(e => e.UpdateDate)
@@ -1008,7 +1015,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("otherLocations");
             entity.Property(e => e.PreviousAddress)
-                .HasMaxLength(100)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("previousAddress");
             entity.Property(e => e.SpecificActivities)
@@ -1021,7 +1028,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("tabCommentary");
             entity.Property(e => e.TerritorySaleComentary)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("territorySaleComentary");
             entity.Property(e => e.TerritorySalePercentage)
@@ -4175,6 +4182,9 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
+            entity.Property(e => e.Flag)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("flag");
             entity.Property(e => e.IdStatusTicket).HasColumnName("idStatusTicket");
             entity.Property(e => e.IdTicket).HasColumnName("idTicket");
             entity.Property(e => e.UpdateDate)

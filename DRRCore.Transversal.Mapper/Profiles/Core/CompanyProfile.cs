@@ -144,8 +144,8 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             CreateMap<AddOrUpdateComercialLatePaymentRequestDto, ComercialLatePayment>()
                .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
                  .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
-               .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
-               .ForMember(dest => dest.PendingPaymentDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.PendingPaymentDate)))
+               .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => src.Date))
+               .ForMember(dest => dest.PendingPaymentDate, opt => opt?.MapFrom(src => src.PendingPaymentDate))
            .ReverseMap();
             CreateMap<ComercialLatePayment, GetComercialLatePaymentResponseDto>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))

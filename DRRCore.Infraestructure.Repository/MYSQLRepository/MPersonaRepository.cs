@@ -102,7 +102,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
             {
                 using (var context = new MySqlContext())
                 {
-                    return await context.RPerVsReps.FirstOrDefaultAsync(x => x.PeCodigo == codigo && x.Migra == 0);
+                    return await context.RPerVsReps.FirstOrDefaultAsync(x => x.PeCodigo == codigo && x.Migra == 0 && x.RcCodigo != "");
                 }
             }
             catch (Exception ex)

@@ -23,6 +23,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ITicketHistoryDomain _ticketHistoryDomain;   
         private readonly ICompanyDomain _companyDomain;
         private readonly ITCuponDomain _tCuponDomain;
+        private readonly ITicketAssignationDomain _ticketAssignationDomain;
         private readonly ITicketReceptorDomain _ticketReceptorDomain;
         private readonly IUserLoginDomain _userLoginDomain;
         private readonly IEmailApplication _emailApplication;
@@ -32,7 +33,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private IMapper _mapper;
         private ILogger _logger;
        
-        public TicketApplication(INumerationDomain numerationDomain,
+        public TicketApplication(INumerationDomain numerationDomain, ITicketAssignationDomain ticketAssignationDomain,
             ITCuponDomain tCuponDomain,ITicketDomain ticketDomain,
             ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain,
             ICompanyDomain companyDomain,IMapper mapper, ILogger logger,IReportingDownload reportingDownload,
@@ -51,6 +52,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _reportingDownload = reportingDownload;
             _subscriberDomain = subscriberDomain;
             _personDomain= personDomain;
+            _ticketAssignationDomain = ticketAssignationDomain;
         }
 
         public async Task<Response<bool>> AddTicketAsync(AddOrUpdateTicketRequestDto request)
@@ -562,6 +564,106 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 response.Data= await _reportingDownload.GenerateReportAsync("reporteTicket", ReportRenderType.Excel, null);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> SavePreAsignTicket(List<SavePreAsignTicketDto> lista)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                foreach (var item in lista)
+                {
+                    var ticketAssignation = await _ticketAssignationDomain.GetByIdAsync(item.Id);
+                    if (ticketAssignation != null)
+                    {
+                        ticketAssignation.Commentary = item.Commentary;
+                        ticketAssignation.IdEmployee = item.IdReceptor;
+                        await _ticketAssignationDomain.UpdateAsync(ticketAssignation);
+                    }
+                }
+                response.Data = true;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                response.Data = false;
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> SendPreAsignTicket(List<SavePreAsignTicketDto> lista)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                foreach (var item in lista)
+                {
+                    var ticket = await _ticketDomain.GetByIdAsync(item.Id);
+                    var ticketAssignation = await _ticketAssignationDomain.GetByIdAsync(item.Id);
+                    if (ticket != null)
+                    {
+                        ticket.IdStatusTicket = 12;
+                        await _ticketDomain.UpdateAsync(ticket);
+                        var listTicketHistory = await _ticketHistoryDomain.GetAllByIdTicket(item.Id);
+                        foreach (var item1 in listTicketHistory)
+                        {
+                            item1.Flag = false;
+                            await _ticketHistoryDomain.UpdateAsync(item1);
+                        }
+                        var newTicketHistory = new TicketHistory
+                        {
+                            Id = 0,
+                            IdTicket = item.Id,
+                            UserFrom = item.IdEmisor.ToString(),
+                            UserTo = item.IdReceptor.ToString(),
+                            IdStatusTicket = ticket.IdStatusTicket
+                        };
+                        await _ticketHistoryDomain.AddAsync(newTicketHistory);
+                        if (ticketAssignation != null)
+                        {
+                            ticketAssignation.Commentary = item.Commentary;
+                            ticketAssignation.IdEmployee = item.IdReceptor;
+                            await _ticketAssignationDomain.UpdateAsync(ticketAssignation);
+
+                        }
+                    }
+
+                }
+                response.Data = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                response.Data = false;
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetListTicketResponseDto>>> GetTicketsToUser(string userTo)
+        {
+            var response = new Response<List<GetListTicketResponseDto>>();
+            try
+            {
+                var list = await _ticketHistoryDomain.GetTicketsPreAssignedToUser(userTo);
+                if (list != null)
+                {
+                    response.Data = _mapper.Map<List<GetListTicketResponseDto>>(list);
+                }
+                else
+                {
+                    response.Data = null;
+                }
+
             }
             catch (Exception ex)
             {
