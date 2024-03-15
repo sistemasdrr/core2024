@@ -133,6 +133,10 @@ public partial class SqlCoreContext : DbContext
 
     public virtual DbSet<PersonSituation> PersonSituations { get; set; }
 
+    public virtual DbSet<Personal> Personals { get; set; }
+
+    public virtual DbSet<PersonalPrice> PersonalPrices { get; set; }
+
     public virtual DbSet<PhotoPerson> PhotoPeople { get; set; }
 
     public virtual DbSet<Process> Processes { get; set; }
@@ -181,12 +185,6 @@ public partial class SqlCoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<CompanyXmlData>().ToSqlQuery("EXEC DataCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyBalanceData>().ToSqlQuery("EXEC BalanceCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyFunctionData>().ToSqlQuery("EXEC FunctionCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyLegalEventsData>().ToSqlQuery("EXEC LegalEventsCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyRelatedData>().ToSqlQuery("EXEC RelatedCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<WhoIsWhoSP>().ToSqlQuery("EXEC WhoIsWho");
         modelBuilder.Entity<Agent>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Agent__3213E83FAB71BE05");
@@ -3282,6 +3280,91 @@ public partial class SqlCoreContext : DbContext
                 .HasColumnName("updateDate");
         });
 
+        modelBuilder.Entity<Personal>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Personal__3213E83F2DC8E8B8");
+
+            entity.ToTable("Personal");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Code)
+                .HasMaxLength(4)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("code");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdEmployee).HasColumnName("idEmployee");
+            entity.Property(e => e.Internal)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("internal");
+            entity.Property(e => e.Type)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("type");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.Personals)
+                .HasForeignKey(d => d.IdEmployee)
+                .HasConstraintName("FK__Personal__enable__322C6448");
+        });
+
+        modelBuilder.Entity<PersonalPrice>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Personal__3213E83F3A360349");
+
+            entity.ToTable("PersonalPrice");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreationDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("creationDate");
+            entity.Property(e => e.DeleteDate)
+                .HasColumnType("datetime")
+                .HasColumnName("deleteDate");
+            entity.Property(e => e.Enable)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("enable");
+            entity.Property(e => e.IdPersonal).HasColumnName("idPersonal");
+            entity.Property(e => e.Language)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("language");
+            entity.Property(e => e.Price)
+                .HasColumnType("decimal(8, 2)")
+                .HasColumnName("price");
+            entity.Property(e => e.Quality)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("quality");
+            entity.Property(e => e.ReportType)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("reportType");
+            entity.Property(e => e.UpdateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updateDate");
+
+            entity.HasOne(d => d.IdPersonalNavigation).WithMany(p => p.PersonalPrices)
+                .HasForeignKey(d => d.IdPersonal)
+                .HasConstraintName("FK__PersonalP__enabl__3BB5CE82");
+        });
+
         modelBuilder.Entity<PhotoPerson>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__PhotoPer__3213E83F81E0900D");
@@ -4186,6 +4269,7 @@ public partial class SqlCoreContext : DbContext
                 .HasColumnName("flag");
             entity.Property(e => e.IdStatusTicket).HasColumnName("idStatusTicket");
             entity.Property(e => e.IdTicket).HasColumnName("idTicket");
+            entity.Property(e => e.NumberAssign).HasColumnName("numberAssign");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");

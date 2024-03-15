@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DRRCore.Domain.Entities.SqlCoreContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Domain.Entities.SqlContext;
@@ -33,6 +34,12 @@ public partial class SqlContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<CompanyXmlData>().ToSqlQuery("EXEC DataCompanyCredendo").HasNoKey();
+        modelBuilder.Entity<CompanyBalanceData>().ToSqlQuery("EXEC BalanceCompanyCredendo").HasNoKey();
+        modelBuilder.Entity<CompanyFunctionData>().ToSqlQuery("EXEC FunctionCompanyCredendo").HasNoKey();
+        modelBuilder.Entity<CompanyLegalEventsData>().ToSqlQuery("EXEC LegalEventsCompanyCredendo").HasNoKey();
+        modelBuilder.Entity<CompanyRelatedData>().ToSqlQuery("EXEC RelatedCompanyCredendo").HasNoKey();
+        modelBuilder.Entity<WhoIsWhoSP>().ToSqlQuery("EXEC WhoIsWho");
         modelBuilder.Entity<ApiHistory>(entity =>
         {
             entity.HasKey(e => e.IdApiHistory).HasName("PK__ApiHisto__390D0AC989B0E817");

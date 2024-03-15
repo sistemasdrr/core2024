@@ -60,12 +60,12 @@ namespace DRRCore.Services.Migration.Controllers
         {
             return Ok(await _migraUser.MigrateCompanyOthers(migra));
         }
-        [HttpPost()]
-        [Route("modificarEmpresa")]
-        public async Task<ActionResult> ModificarEmpresa(int migra,int nivel)
-        {
-            return Ok(await _migraUser.ModificarCompanyOthers(migra,nivel));
-        }
+        //[HttpPost()]
+        //[Route("modificarEmpresa")]
+        //public async Task<ActionResult> ModificarEmpresa(int migra,int nivel)
+        //{
+        //    return Ok(await _migraUser.ModificarCompanyOthers(migra,nivel));
+        //}
         [HttpPost()]
         [Route("subscriberCategory")]
         public async Task<ActionResult> MigrateSubscriberCategory()

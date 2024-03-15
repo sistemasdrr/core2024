@@ -83,6 +83,8 @@ public partial class Employee
 
     public virtual Job? IdJobNavigation { get; set; }
 
+    public virtual ICollection<Personal> Personals { get; set; } = new List<Personal>();
+
     public virtual ICollection<TicketAssignation> TicketAssignations { get; set; } = new List<TicketAssignation>();
 
     public virtual ICollection<TicketQuery> TicketQueries { get; set; } = new List<TicketQuery>();

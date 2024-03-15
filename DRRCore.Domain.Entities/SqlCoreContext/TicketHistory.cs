@@ -27,6 +27,8 @@ public partial class TicketHistory
 
     public bool? Flag { get; set; }
 
+    public int? NumberAssign { get; set; }
+
     public virtual StatusTicket? IdStatusTicketNavigation { get; set; }
 
     public virtual Ticket? IdTicketNavigation { get; set; }
