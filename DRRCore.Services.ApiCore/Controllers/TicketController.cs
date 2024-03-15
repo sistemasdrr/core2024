@@ -49,7 +49,7 @@ namespace DRRCore.Services.ApiCore.Controllers
         [Route("getListby")]
         public async Task<ActionResult> getListBy(string? ticket, string? name, string? subscriber, string? type, string? procedure)
         {
-            return Ok(await _ticketApplication.GetTicketListByAsync(ticket??string.Empty,name ?? string.Empty, subscriber ?? string.Empty, type ?? string.Empty, procedure ?? string.Empty));
+            return Ok(await _ticketApplication.GetTicketListByAsync(ticket ?? string.Empty, name ?? string.Empty, subscriber ?? string.Empty, type ?? string.Empty, procedure ?? string.Empty));
         }
         [HttpPost()]
         [Route("deleteTicket")]
@@ -88,7 +88,7 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<IActionResult> Report()
         {
             var result = await _ticketApplication.DownloadReport();
-            return File(result.Data, "application/vnd.ms-excel", "ReporteTickets"+DateTime.Now.ToString("ddMMyyyy")+".xls");
+            return File(result.Data, "application/vnd.ms-excel", "ReporteTickets" + DateTime.Now.ToString("ddMMyyyy") + ".xls");
         }
 
         [HttpPost()]
@@ -108,6 +108,18 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> getTicketPreassignToUser(string userTo)
         {
             return Ok(await _ticketApplication.GetTicketsToUser(userTo));
+        }
+        [HttpGet()]
+        [Route("getPersonalAssignation")]
+        public async Task<ActionResult> GetPersonalAssignation()
+        {
+            return Ok(await _ticketApplication.GetPersonalAssignation());
+        }
+        [HttpGet()]
+        [Route("getAgentAssignation")]
+        public async Task<ActionResult> getAgentAssignation()
+        {
+            return Ok(await _ticketApplication.GetAgentAssignation());
         }
     }
 }

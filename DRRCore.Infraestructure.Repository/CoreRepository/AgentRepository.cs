@@ -69,9 +69,9 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                if(state.Equals('A'))
+                if(state == "A")
                 {
-                    list = await context.Agents.Include(x => x.IdCountryNavigation).Where(x => x.Code.Contains(code) && x.Name.Contains(name) && x.Enable == true).ToListAsync();
+                    list = await context.Agents.Include(x => x.IdCountryNavigation).Where(x => x.Code.Contains(code) && x.Name.Contains(name) && x.State == true).ToListAsync();
                 }
                 else
                 {

@@ -21,5 +21,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> SavePreAsignTicket(List<SavePreAsignTicketDto> lista);
         Task<Response<bool>> SendPreAsignTicket(List<SavePreAsignTicketDto> lista);
         Task<Response<List<GetListTicketResponseDto>>> GetTicketsToUser(string userTo);
+        Task<Response<List<GetPersonalAssignationResponseDto>>> GetPersonalAssignation();
+        Task<Response<List<GetPersonalAssignationResponseDto>>> GetAgentAssignation();
     }
 }

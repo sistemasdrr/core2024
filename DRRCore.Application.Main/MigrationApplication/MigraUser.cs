@@ -1820,6 +1820,219 @@ namespace DRRCore.Application.Main.MigrationApplication
 
             return true;
         }
+        public async Task<bool> MigratePersonByMigra(int migra)
+        {
+            for (int i = 0; i < 460; i++)
+            {
+                using var contextSql = new SqlCoreContext();
+                using var contextMysql = new MySqlContext();
+                using var contextPhoto = new FotoContext();
+                var personas = await contextMysql.MPersonas.Where(x => x.Migra == migra && x.PeActivo == 1).Take(1000).ToListAsync();
+                foreach (var persona in personas)
+                {
+                    int idPerson = 0;
+                    bool success = false;
+                    var reputacion = await _impersonaDomain.GetmPersonaReputacionByCodigoAsync(persona.PeCodigo);
+                    int idReputacion = 0;
+                    if (reputacion != null)
+                    {
+                        idReputacion = ObtenerReputacion(reputacion.RcCodigo);
+                    }
+                    var existingPerson = await contextSql.People.Where(x => x.OldCode == persona.PeCodigo).FirstOrDefaultAsync();
+                    try
+                    {
+                        var existinggPerson = new Person
+                        {
+                            OldCode = persona.PeCodigo,
+                            Fullname = persona.PeNombre == null ? "" : persona.PeNombre,
+                            LastSearched = persona.PeFecinf,
+                            Language = Dictionary.LanguageMigra[persona.IdiCodigo.Value],
+                            Quality = ObtenerCalidad(persona.CalCodigoPer),
+                            Nationality = persona.PeNacion == null ? "" : persona.PeNacion,
+                            BirthDate = persona.PeFecnac == null ? "" : persona.PeFecnac,
+                            BirthPlace = persona.PeLugnac == null ? "" : persona.PeLugnac,
+                            IdDocumentType = persona.TiCodigo == "CExt" ? 2 : persona.TiCodigo == "C.I." ? 6 :
+                                 persona.TiCodigo == "C.C." ? 7 : persona.TiCodigo == "CPF/MF" ? 9 :
+                                 persona.TiCodigo == "CURP" ? 10 : persona.TiCodigo == "D.I." ? 11 :
+                                 persona.TiCodigo == "DNI" ? 1 : persona.TiCodigo == "DPI" ? 12 :
+                                 persona.TiCodigo == "DUI" ? 13 : persona.TiCodigo == "IDEH" ? 14 :
+                                 persona.TiCodigo == "LE" ? 15 : persona.TiCodigo == "LC" ? 16 :
+                                 persona.TiCodigo == "Pas." ? 4 : persona.TiCodigo == "RUT" ? 20 :
+                                 persona.TiCodigo == "S.S." ? 17 : persona.TiCodigo == "RUN" ? 18 :
+                                 persona.TiCodigo == "T.I." ? 19 : persona.TiCodigo == "DIM" ? 21 : null,
+                            CodeDocumentType = persona.PeDocide == null ? "" : persona.PeDocide,
+                            TaxTypeCode = persona.PeRegtri == null ? "" : persona.PeRegtri,
+                            IdPersonSituation = persona.EsCodigo == "01" ? null : persona.EsCodigo == "02" ? 1 :
+                                 persona.EsCodigo == "05" ? 2 : persona.EsCodigo == "03" ? 3 :
+                                 persona.EsCodigo == "04" ? 4 : persona.EsCodigo == "06" ? 5 :
+                                 persona.EsCodigo == "07" ? 6 : null,
+                            IdLegalRegisterSituation = persona.ErCodigo == "" ? null : persona.ErCodigo == "AC" ? 1 :
+                                 persona.ErCodigo == "BP" ? 4 : persona.ErCodigo == "BD" ? 3 :
+                                 persona.ErCodigo == "ST" ? 16 : persona.ErCodigo == "NL" ? 13 :
+                                 persona.ErCodigo == "BO" ? 2 : persona.ErCodigo == "IN" ? 10 : null,
+                            Address = persona.PeDirecc == null ? "" : persona.PeDirecc,
+                            Cp = persona.PeCodpos == null ? "" : persona.PeCodpos,
+                            City = persona.PeCiudad == null ? "" : persona.PeCiudad,
+                            OtherDirecctions = persona.PeDireccCome == null ? "" : persona.PeDireccCome,
+                            TradeName = persona.PeNombreCome == null ? "" : persona.PeNombreCome,
+                            IdCountry = ObtenerCodigoPais(persona.PaiCodigo),
+                            CodePhone = persona.PePrftlf == null ? "" : persona.PePrftlf,
+                            NumberPhone = persona.PeTelefo == null ? "" : persona.PeTelefo,
+                            IdCivilStatus = persona.EcCodigo == "01" ? 5 : persona.EcCodigo == "02" ? 2 :
+                                 persona.EcCodigo == "03" ? 1 : persona.EcCodigo == "04" ? 4 :
+                                 persona.EcCodigo == "05" ? 6 : persona.EcCodigo == "06" ? 3 : null,
+                            RelationshipWith = persona.PeRelciv == null ? "" : persona.PeRelciv,
+                            RelationshipDocumentType = string.IsNullOrEmpty(persona.PeRelcivDni) ? 1 : null,
+                            RelationshipCodeDocument = persona.PeRelcivDni == null ? "" : persona.PeRelcivDni,
+                            FatherName = persona.PePadre == null ? "" : persona.PePadre,
+                            MotherName = persona.PeMadre == null ? "" : persona.PeMadre,
+                            Email = persona.PeEmail == null ? "" : persona.PeEmail,
+                            Cellphone = persona.PeCelula == null ? "" : persona.PeCelula,
+                            ClubMember = persona.PeClub == null ? "" : persona.PeClub,
+                            Insurance = persona.PeAsegur == null ? "" : persona.PeAsegur,
+                            NewsCommentary = persona.PePrensasel == null ? "" : persona.PePrensasel,
+                            PrintNewsCommentary = persona.PeLogpre == 1 ? true : false,
+                            PrivateCommentary = persona.PeCompri == null ? "" : persona.PeCompri,
+                            ReputationCommentary = persona.PeComRep == null ? "" : persona.PeComRep,
+                            IdCreditRisk = GetCreditRisk(persona.CrCodigo),
+                            IdPaymentPolicy = GetPaymentPolicy(persona.PaCodigo),
+                            IdReputation = idReputacion != 0 ? idReputacion : null,
+                            Profession = persona.PfNombre == null ? "" : persona.PfNombre,
+                            PersonActivities = await GetPersonActivities(persona),
+                            PersonGeneralInformations = await GetPersonGeneralInformation(persona),
+                            PersonHistories = await GetPersonHistory(persona),
+                            PersonHomes = await GetPersonHome(persona),
+                            PersonProperties = await GetPersonProperty(persona),
+                            PersonSbs = await GetPersonSBS(persona),
+                            PersonJobs = await GetPersonJob(persona),
+                            PhotoPeople = await GetPersonPhoto(persona),
+                            BankDebts = await GetPersonBankDebt(persona),
+                            ComercialLatePayments = await GetPersonCommercialLate(persona),
+                            Providers = await GetPersonProviders(persona),
+                        };
+                        if (existingPerson != null)
+                        {
+                            try
+                            {
+                                await _personDomain.UpdateAsync(existinggPerson);
+                                success = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                success = false;
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            var newPerson = new Person
+                            {
+                                OldCode = persona.PeCodigo,
+                                Fullname = persona.PeNombre == null ? "" : persona.PeNombre,
+                                LastSearched = persona.PeFecinf,
+                                Language = Dictionary.LanguageMigra[persona.IdiCodigo.Value],
+                                Quality = ObtenerCalidad(persona.CalCodigoPer),
+                                Nationality = persona.PeNacion == null ? "" : persona.PeNacion,
+                                BirthDate = persona.PeFecnac == null ? "" : persona.PeFecnac,
+                                BirthPlace = persona.PeLugnac == null ? "" : persona.PeLugnac,
+                                IdDocumentType = persona.TiCodigo == "CExt" ? 2 : persona.TiCodigo == "C.I." ? 6 :
+                                 persona.TiCodigo == "C.C." ? 7 : persona.TiCodigo == "CPF/MF" ? 9 :
+                                 persona.TiCodigo == "CURP" ? 10 : persona.TiCodigo == "D.I." ? 11 :
+                                 persona.TiCodigo == "DNI" ? 1 : persona.TiCodigo == "DPI" ? 12 :
+                                 persona.TiCodigo == "DUI" ? 13 : persona.TiCodigo == "IDEH" ? 14 :
+                                 persona.TiCodigo == "LE" ? 15 : persona.TiCodigo == "LC" ? 16 :
+                                 persona.TiCodigo == "Pas." ? 4 : persona.TiCodigo == "RUT" ? 20 :
+                                 persona.TiCodigo == "S.S." ? 17 : persona.TiCodigo == "RUN" ? 18 :
+                                 persona.TiCodigo == "T.I." ? 19 : persona.TiCodigo == "DIM" ? 21 : null,
+                                CodeDocumentType = persona.PeDocide == null ? "" : persona.PeDocide,
+                                TaxTypeCode = persona.PeRegtri == null ? "" : persona.PeRegtri,
+                                IdPersonSituation = persona.EsCodigo == "01" ? null : persona.EsCodigo == "02" ? 1 :
+                                 persona.EsCodigo == "05" ? 2 : persona.EsCodigo == "03" ? 3 :
+                                 persona.EsCodigo == "04" ? 4 : persona.EsCodigo == "06" ? 5 :
+                                 persona.EsCodigo == "07" ? 6 : null,
+                                IdLegalRegisterSituation = persona.ErCodigo == "" ? null : persona.ErCodigo == "AC" ? 1 :
+                                 persona.ErCodigo == "BP" ? 4 : persona.ErCodigo == "BD" ? 3 :
+                                 persona.ErCodigo == "ST" ? 16 : persona.ErCodigo == "NL" ? 13 :
+                                 persona.ErCodigo == "BO" ? 2 : persona.ErCodigo == "IN" ? 10 : null,
+                                Address = persona.PeDirecc == null ? "" : persona.PeDirecc,
+                                Cp = persona.PeCodpos == null ? "" : persona.PeCodpos,
+                                City = persona.PeCiudad == null ? "" : persona.PeCiudad,
+                                OtherDirecctions = persona.PeDireccCome == null ? "" : persona.PeDireccCome,
+                                TradeName = persona.PeNombreCome == null ? "" : persona.PeNombreCome,
+                                IdCountry = ObtenerCodigoPais(persona.PaiCodigo),
+                                CodePhone = persona.PePrftlf == null ? "" : persona.PePrftlf,
+                                NumberPhone = persona.PeTelefo == null ? "" : persona.PeTelefo,
+                                IdCivilStatus = persona.EcCodigo == "01" ? 5 : persona.EcCodigo == "02" ? 2 :
+                                 persona.EcCodigo == "03" ? 1 : persona.EcCodigo == "04" ? 4 :
+                                 persona.EcCodigo == "05" ? 6 : persona.EcCodigo == "06" ? 3 : null,
+                                RelationshipWith = persona.PeRelciv == null ? "" : persona.PeRelciv,
+                                RelationshipDocumentType = string.IsNullOrEmpty(persona.PeRelcivDni) ? 1 : null,
+                                RelationshipCodeDocument = persona.PeRelcivDni == null ? "" : persona.PeRelcivDni,
+                                FatherName = persona.PePadre == null ? "" : persona.PePadre,
+                                MotherName = persona.PeMadre == null ? "" : persona.PeMadre,
+                                Email = persona.PeEmail == null ? "" : persona.PeEmail,
+                                Cellphone = persona.PeCelula == null ? "" : persona.PeCelula,
+                                ClubMember = persona.PeClub == null ? "" : persona.PeClub,
+                                Insurance = persona.PeAsegur == null ? "" : persona.PeAsegur,
+                                NewsCommentary = persona.PePrensasel == null ? "" : persona.PePrensasel,
+                                PrintNewsCommentary = persona.PeLogpre == 1 ? true : false,
+                                PrivateCommentary = persona.PeCompri == null ? "" : persona.PeCompri,
+                                ReputationCommentary = persona.PeComRep == null ? "" : persona.PeComRep,
+                                IdCreditRisk = GetCreditRisk(persona.CrCodigo),
+                                IdPaymentPolicy = GetPaymentPolicy(persona.PaCodigo),
+                                IdReputation = idReputacion != 0 ? idReputacion : null,
+                                Profession = persona.PfNombre == null ? "" : persona.PfNombre,
+                                PersonActivities = await GetPersonActivities(persona),
+                                PersonGeneralInformations = await GetPersonGeneralInformation(persona),
+                                PersonHistories = await GetPersonHistory(persona),
+                                PersonHomes = await GetPersonHome(persona),
+                                PersonProperties = await GetPersonProperty(persona),
+                                PersonSbs = await GetPersonSBS(persona),
+                                PersonJobs = await GetPersonJob(persona),
+                                PhotoPeople = await GetPersonPhoto(persona),
+                                BankDebts = await GetPersonBankDebt(persona),
+                                ComercialLatePayments = await GetPersonCommercialLate(persona),
+                                Providers = await GetPersonProviders(persona),
+                            };
+
+                            try
+                            {
+                                idPerson = await _personDomain.AddPersonAsync(newPerson);
+
+                                var pers = await _personDomain.GetByIdAsync(idPerson);
+                                if (pers != null)
+                                {
+
+                                    pers.Traductions = await GetPersonTraductions(idPerson, persona);
+                                    await _personDomain.UpdateAsync(pers);
+                                    success = true;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                success = false;
+                                continue;
+                            }
+
+                        }
+                        if (success == true)
+                        {
+                            persona.Migra = 1;
+                            contextMysql.MPersonas.Update(persona);
+                            await contextMysql.SaveChangesAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Error Persona :" + persona.PeCodigo + " : " + ex.Message);
+                        success = false;
+                        continue;
+                    }
+                }
+            }
+
+            return true;
+        }
         private async Task<List<PersonActivity>> GetPersonActivities(MPersona persona)
         {
             var lista = new List<PersonActivity>();

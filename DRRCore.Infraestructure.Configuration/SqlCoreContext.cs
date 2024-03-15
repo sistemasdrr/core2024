@@ -220,6 +220,9 @@ public partial class SqlCoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("fax");
             entity.Property(e => e.IdCountry).HasColumnName("idCountry");
+            entity.Property(e => e.Internal)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("internal");
             entity.Property(e => e.Language)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -289,13 +292,27 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.IdCountry).HasColumnName("idCountry");
             entity.Property(e => e.IdCurrency).HasColumnName("idCurrency");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
-            entity.Property(e => e.PriceBd).HasColumnName("priceBD");
-            entity.Property(e => e.PriceCr).HasColumnName("priceCR");
-            entity.Property(e => e.PricePn).HasColumnName("pricePN");
-            entity.Property(e => e.PriceRp).HasColumnName("priceRP");
-            entity.Property(e => e.PriceT1).HasColumnName("priceT1");
-            entity.Property(e => e.PriceT2).HasColumnName("priceT2");
-            entity.Property(e => e.PriceT3).HasColumnName("priceT3");
+            entity.Property(e => e.PriceBd)
+                .HasColumnType("decimal(7, 2)")
+                .HasColumnName("priceBD");
+            entity.Property(e => e.PriceCr)
+                .HasColumnType("decimal(7, 2)")
+                .HasColumnName("priceCR");
+            entity.Property(e => e.PricePn)
+                .HasColumnType("decimal(7, 2)")
+                .HasColumnName("pricePN");
+            entity.Property(e => e.PriceRp)
+                .HasColumnType("decimal(7, 2)")
+                .HasColumnName("priceRP");
+            entity.Property(e => e.PriceT1)
+                .HasColumnType("decimal(7, 2)")
+                .HasColumnName("priceT1");
+            entity.Property(e => e.PriceT2)
+                .HasColumnType("decimal(7, 2)")
+                .HasColumnName("priceT2");
+            entity.Property(e => e.PriceT3)
+                .HasColumnType("decimal(7, 2)")
+                .HasColumnName("priceT3");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");

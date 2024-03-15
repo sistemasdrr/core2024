@@ -30,11 +30,13 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IReportingDownload _reportingDownload;
         private readonly IPersonDomain _personDomain;
         private readonly ISubscriberDomain _subscriberDomain;
+        private readonly IPersonalDomain _personalDomain;
+        private readonly IAgentDomain _agentDomain;
         private IMapper _mapper;
         private ILogger _logger;
        
         public TicketApplication(INumerationDomain numerationDomain, ITicketAssignationDomain ticketAssignationDomain,
-            ITCuponDomain tCuponDomain,ITicketDomain ticketDomain,
+            ITCuponDomain tCuponDomain,ITicketDomain ticketDomain, IPersonalDomain personalDomain, IAgentDomain agentDomain,
             ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain,
             ICompanyDomain companyDomain,IMapper mapper, ILogger logger,IReportingDownload reportingDownload,
             IEmailApplication emailApplication,IUserLoginDomain userLoginDomain,IPersonDomain personDomain,ISubscriberDomain subscriberDomain)
@@ -53,6 +55,8 @@ namespace DRRCore.Application.Main.CoreApplication
             _subscriberDomain = subscriberDomain;
             _personDomain= personDomain;
             _ticketAssignationDomain = ticketAssignationDomain;
+            _personalDomain = personalDomain;
+            _agentDomain = agentDomain;
         }
 
         public async Task<Response<bool>> AddTicketAsync(AddOrUpdateTicketRequestDto request)
@@ -704,6 +708,37 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 response.IsSuccess = false;
                 response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetPersonalAssignationResponseDto>>> GetPersonalAssignation()
+        {
+            var response = new Response<List<GetPersonalAssignationResponseDto>>();
+            try
+            {
+                var list = await _personalDomain.GetAllAsync();
+                response.Data = _mapper.Map<List<GetPersonalAssignationResponseDto>>(list);
+            }catch(Exception ex)
+            {
+                response.IsSuccess = false;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetPersonalAssignationResponseDto>>> GetAgentAssignation()
+        {
+            var response = new Response<List<GetPersonalAssignationResponseDto>>();
+            try
+            {
+                var list = await _agentDomain.GetAllAgentsAsync("","","A");
+                response.Data = _mapper.Map<List<GetPersonalAssignationResponseDto>>(list);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
                 _logger.LogError(response.Message, ex);
             }
             return response;

@@ -163,6 +163,20 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.ExpireDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.ExpireDate)))
 
                 .ReverseMap();
+            CreateMap<Personal, GetPersonalAssignationResponseDto>()
+                .ForMember(dest => dest.IdEmployee, opt => opt?.MapFrom(src => src.IdEmployee == null ? 0 : src.IdEmployee))
+                .ForMember(dest => dest.Fullname, opt => opt?.MapFrom(src => src.IdEmployeeNavigation == null ? "" : src.IdEmployeeNavigation.FirstName.ToUpper() + " " + src.IdEmployeeNavigation.LastName.ToUpper()))
+                .ForMember(dest => dest.Type, opt => opt?.MapFrom(src => src.Type))
+                .ForMember(dest => dest.Code, opt => opt?.MapFrom(src => src.Code == null ? "" : src.Code))
+                .ForMember(dest => dest.Internal, opt => opt?.MapFrom(src => src.Internal))
+                .ReverseMap();
+            CreateMap<Agent, GetPersonalAssignationResponseDto>()
+                .ForMember(dest => dest.IdEmployee, opt => opt?.MapFrom(src => src.Id == null ? 0 : src.Id))
+                .ForMember(dest => dest.Fullname, opt => opt?.MapFrom(src => src.Name == null ? "" : src.Name.ToUpper()))
+                .ForMember(dest => dest.Type, opt => opt?.MapFrom(src => "AG"))
+                .ForMember(dest => dest.Code, opt => opt?.MapFrom(src => src.Code == null ? "" : src.Code))
+                .ForMember(dest => dest.Internal, opt => opt?.MapFrom(src => src.Internal))
+                .ReverseMap();
 
             CreateMap<TicketFileResponseDto, TicketFile>().ReverseMap();
             CreateMap<TicketQuery, GetTicketQueryResponseDto>()

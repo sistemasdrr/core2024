@@ -45,6 +45,8 @@ public partial class Agent
 
     public bool? Enable { get; set; }
 
+    public bool? Internal { get; set; }
+
     public virtual ICollection<AgentPrice> AgentPrices { get; set; } = new List<AgentPrice>();
 
     public virtual Country? IdCountryNavigation { get; set; }
