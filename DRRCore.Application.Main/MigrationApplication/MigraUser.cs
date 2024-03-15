@@ -2971,7 +2971,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                         {
                             _logger.LogError("Error empresa :" + empresa.EmCodigo + " : " + ex.Message);
                             continue;
-                       
+                        }
                     }
                 }
             }
