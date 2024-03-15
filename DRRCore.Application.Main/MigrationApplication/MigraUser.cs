@@ -2965,16 +2965,13 @@ namespace DRRCore.Application.Main.MigrationApplication
                             var emp = await _companyDomain.GetByIdAsync(idCompany);
                             emp.Traductions = await GetAllTraductions(idCompany, empresa);
                             await _companyDomain.UpdateAsync(emp);
+                            await _mempresaDomain.MigrateEmpresa(empresa.EmCodigo);
                         }
                         catch (Exception ex)
                         {
                             _logger.LogError("Error empresa :" + empresa.EmCodigo + " : " + ex.Message);
                             continue;
-                        }
-                        finally
-                        {
-                            await _mempresaDomain.MigrateEmpresa(empresa.EmCodigo);
-                        }
+                       
                     }
                 }
             }
