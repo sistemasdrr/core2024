@@ -31,6 +31,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.IdReputation, opt => opt?.MapFrom(src => src.IdReputation == 0 ? null : src.IdReputation))
                  .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountry))
                  .ForMember(dest => dest.IdContinent, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountryNavigation.IdContinent))
+                 .ForMember(dest => dest.TaxTypeName, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountryNavigation.TaxTypeName))
                  .ForMember(dest => dest.TaxTypeByCountry, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountryNavigation.TaxTypeName))
                  .ForMember(dest => dest.IdDocumentType, opt => opt?.MapFrom(src => src.IdDocumentType == 0 ? null : src.IdDocumentType))
                  .ForMember(dest => dest.RelationshipDocumentType, opt => opt?.MapFrom(src => src.RelationshipDocumentType == 0 ? null : src.RelationshipDocumentType))

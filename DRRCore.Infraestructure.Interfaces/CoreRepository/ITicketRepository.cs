@@ -16,5 +16,11 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
         Task<List<OldTicket>> GetOldTicketByCompany(string oldCode);
         Task<List<OldTicket>> GetOldTicketByPerson(string oldCode);
         Task<List<Ticket>> GetByNameAsync(string name, string empresaPersona);
+
+        Task<List<TicketFile>> GetFilesByIdTicket(int idTicket);
+        Task<TicketFile> GetTicketFileById(int id);
+        Task<bool?> AddTicketFile(TicketFile obj);
+        Task<bool?> UpdateTicketFile(TicketFile obj);
+        Task<bool?> DeleteTicketFile(int id);
     }
 }

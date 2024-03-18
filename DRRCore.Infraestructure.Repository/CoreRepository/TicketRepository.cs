@@ -31,6 +31,22 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<bool?> AddTicketFile(TicketFile obj)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                await context.TicketFiles.AddAsync(obj);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
+            }
+        }
+
         public async Task<bool> AddTicketQuery(TicketQuery query)
         {
             try
@@ -67,6 +83,25 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool?> DeleteTicketFile(int id)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var existingFile = await context.TicketFiles.Where(x => x.Id == id).FirstOrDefaultAsync();
+                existingFile.DeleteDate = DateTime.Now;
+                existingFile.Enable = false;
+                context.TicketFiles.Update(existingFile);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
             }
         }
 
@@ -217,6 +252,22 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<List<TicketFile>> GetFilesByIdTicket(int idTicket)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var ticketFiles = await context.TicketFiles.Where(x => x.IdTicket == idTicket && x.Enable == true).ToListAsync();
+                return ticketFiles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
         public async Task<List<OldTicket>> GetOldTicketByCompany(string oldCode)
         {
             try
@@ -290,6 +341,21 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<TicketFile> GetTicketFileById(int id)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var ticketFile = await context.TicketFiles.FirstOrDefaultAsync(x => x.Id == id);
+                return ticketFile;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
         public async Task<TicketQuery> GetTicketQuery(int idTicket)
         {
             try
@@ -345,6 +411,23 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<bool?> UpdateTicketFile(TicketFile obj)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                obj.UpdateDate = DateTime.Now;
+                context.TicketFiles.Update(obj);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
             }
         }
     }
