@@ -204,7 +204,19 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 throw new Exception(ex.Message);
             }
         }
-
+        public async Task<List<Ticket>> GetByNameAsync(string name, string empresaPersona)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                return await context.Tickets.Include(x => x.IdCountryNavigation).Where(x => x.RequestedName.Contains(name) && x.IdStatusTicket == 9 && x.About==empresaPersona).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
         public async Task<List<OldTicket>> GetOldTicketByCompany(string oldCode)
         {
             try
@@ -235,13 +247,13 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public async Task<List<OldTicket>> GetSimilarByNameAsync(string name)
+        public async Task<List<OldTicket>> GetSimilarByNameAsync(string name,string empresaPersona)
         {
             try
             {
                 using var context = new SqlCoreContext();               
                                 
-                return await context.OldTickets.Where(x => x.NombreSolicitado.Contains(name)).OrderByDescending(x=>x.FechaDespacho).Take(20).ToListAsync();
+                return await context.OldTickets.Where(x => x.NombreSolicitado.Contains(name) && x.EmpresaPersona==empresaPersona).OrderByDescending(x=>x.FechaDespacho).Take(20).ToListAsync();
             }
             catch (Exception ex)
             {

@@ -152,4 +152,5 @@ public partial class Person
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual ICollection<Traduction> Traductions { get; set; } = new List<Traduction>();
+    public bool HaveReport { get; set; }
 }

@@ -13,6 +13,7 @@ namespace DRRCore.Domain.Interfaces.CoreDomain
         Task<bool> AddTicketQuery(TicketQuery query);
         Task<TicketQuery> GetTicketQuery(int idTicket);
         Task<bool> TicketQueryAnswered(int idTicket);
-        Task<List<OldTicket>> GetSimilarByNameAsync(string name);
+        Task<List<OldTicket>> GetSimilarByNameAsync(string name, string empresaPersona);
+        Task<List<Ticket>> GetByNameAsync(string name, string empresaPersona);
     }
 }

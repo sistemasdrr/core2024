@@ -44,11 +44,11 @@ namespace DRRCore.Services.ApiCore.Controllers
         }
         [HttpGet()]
         [Route("getListPerson")]
-        public async Task<ActionResult> getListPerson(string? fullname, string? form, int idCountry, bool haveReport)
+        public async Task<ActionResult> getListPerson(string? fullname, string? form, int idCountry, bool haveReport,bool similar)
         {
             fullname ??= string.Empty;
             form ??= string.Empty;
-            return Ok(await _personApplication.GetListPerson(fullname, form, idCountry, haveReport));
+            return Ok(await _personApplication.GetListPerson(fullname, form, idCountry, haveReport,similar));
         }
         [HttpGet()]
         [Route("getPerson")]
@@ -56,7 +56,7 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _personApplication.GetPersonById(id));
         }
-
+       
         [HttpPost()]
         [Route("addPersonHome")]
         public async Task<ActionResult> addPersonHome(AddOrUpdatePersonHomeRequestDto request)

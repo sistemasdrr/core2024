@@ -255,10 +255,10 @@ namespace DRRCore.Application.Main.CoreApplication
                 }
                 else
                 {
-                    var ticket = await _ticketDomain.GetByNameAsync(name);
+                    var ticket = await _ticketDomain.GetByNameAsync(name,"E");
                     var mapper= _mapper.Map<List<GetListCompanyResponseDto>>(ticket);
 
-                    var oldTicket = await _ticketDomain.GetSimilarByNameAsync(name);
+                    var oldTicket = await _ticketDomain.GetSimilarByNameAsync(name,"E");
                     if (oldTicket.Any())
                     {
                         foreach (var item in oldTicket)
@@ -274,12 +274,13 @@ namespace DRRCore.Application.Main.CoreApplication
                                     Id = company.Id,
                                     Country =company.IdCountryNavigation.Name,
                                     IsoCountry= company.IdCountryNavigation.Iso,
-                                    FlagCountry=company.IdCountryNavigation.FlagIso
+                                    FlagCountry=company.IdCountryNavigation.FlagIso,
+                                    Code=company.OldCode
                                 });
                             }
                         }
                     }    
-                    mapper =mapper.DistinctBy(x=>x.Name).ToList();
+                    mapper =mapper.DistinctBy(x=>x.Name).DistinctBy(x => x.Code).ToList();
                     response.Data = mapper;
                 }
             }

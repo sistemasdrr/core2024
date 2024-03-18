@@ -128,6 +128,17 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.Key, opt => opt?.MapFrom(src => src.Identifier))
                 .ForMember(dest => dest.Value, opt => opt?.MapFrom(src => src.Identifier.StartsWith("S") ? src.ShortValue : src.LargeValue))
                  .ReverseMap();
+
+            CreateMap<Ticket, GetListPersonResponseDto>()
+              .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.IdCompany))
+              .ForMember(dest => dest.Fullname, opt => opt?.MapFrom(src => src.RequestedName))
+              .ForMember(dest => dest.DispatchName, opt => opt?.MapFrom(src => src.DispatchedName))
+              .ForMember(dest => dest.Language, opt => opt?.MapFrom(src => src.Language))
+              .ForMember(dest => dest.Country, opt => opt?.MapFrom(src => src.IdCountryNavigation != null ? src.IdCountryNavigation.Name : string.Empty))
+              .ForMember(dest => dest.IsoCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation != null ? src.IdCountryNavigation.Iso : string.Empty))
+              .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation != null ? src.IdCountryNavigation.FlagIso : string.Empty))
+              .ReverseMap();
+
         }
         private int GetTraductionPercentage(ICollection<Traduction> traductions)
         {

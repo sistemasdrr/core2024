@@ -6,6 +6,7 @@ using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -27,13 +28,14 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ICompanyPartnersDomain _companyPartnersDomain;
         private readonly IPersonImagesDomain _personImagesDomain;
         private readonly IPersonPhotoDomain _personPhotoDomain;
+        private readonly ITicketDomain _ticketDomain;
 
         public PersonApplication(IMapper mapper, ILogger logger, IPersonDomain personDomain, IPersonHomeDomain personHomeDomain,
             IPersonJobDomain personJobDomain, IPersonSBSDomain personSBSDomain, IProviderDomain providerDomain, 
             IComercialLatePaymentDomain comercialLatePaymentDomain, IBankDebtDomain bankDebtDomain, ICompanyPartnersDomain companyPartnersDomain,
             IPersonActivitiesDomain personActivitiesDomain, IPersonPropertyDomain personPropertyDomain, 
             IPersonHistoryDomain personHistoryDomain, IPersonGeneralInfoDomain personGeneralInfoDomain, IPersonImagesDomain personImagesDomain,
-            IPersonPhotoDomain personPhotoDomain)
+            IPersonPhotoDomain personPhotoDomain, ITicketDomain ticketDomain)
         {
             _mapper = mapper;
             _logger = logger;
@@ -51,6 +53,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _companyPartnersDomain = companyPartnersDomain;
             _personImagesDomain = personImagesDomain;
             _personPhotoDomain = personPhotoDomain;
+            _ticketDomain= ticketDomain;
         }
 
         public async Task<Response<bool>> ActivateWebPerson(int id)
@@ -1046,12 +1049,14 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<List<GetListPersonResponseDto>>> GetListPerson(string fullname, string form, int idCountry, bool haveReport)
+        public async Task<Response<List<GetListPersonResponseDto>>> GetListPerson(string fullname, string form, int idCountry, bool haveReport,bool similar)
         {
             var response = new Response<List<GetListPersonResponseDto>>();
             try
             {
-                var list = await _personDomain.GetAllByAsync(fullname, form, idCountry, haveReport);
+                if (!similar)
+                {
+                    var list = await _personDomain.GetAllByAsync(fullname, form, idCountry, haveReport,similar);
                 if (list == null)
                 {
                     response.IsSuccess = false;
@@ -1059,6 +1064,37 @@ namespace DRRCore.Application.Main.CoreApplication
                     _logger.LogError(response.Message);
                 }
                 response.Data = _mapper.Map<List<GetListPersonResponseDto>>(list);
+                }
+                else
+                {
+                    var ticket = await _ticketDomain.GetByNameAsync(fullname, "P");
+                    var mapper = _mapper.Map<List<GetListPersonResponseDto>>(ticket);
+
+                    var oldTicket = await _ticketDomain.GetSimilarByNameAsync(fullname, "P");
+                    if (oldTicket.Any())
+                    {
+                        foreach (var item in oldTicket)
+                        {
+                            var person = await _personDomain.GetByOldCode(item.Empresa);
+                            if (person != null)
+                            {
+                                mapper.Add(new GetListPersonResponseDto
+                                {
+                                    Fullname = item.NombreSolicitado,
+                                    DispatchName = item.NombreDespachado,
+                                    Language = item.Idioma,
+                                    Id = person.Id,
+                                    Country = person.IdCountryNavigation.Name,
+                                    IsoCountry = person.IdCountryNavigation.Iso,
+                                    FlagCountry = person.IdCountryNavigation.FlagIso,
+                                    Code = person.OldCode
+                                });
+                            }
+                        }
+                    }
+                    mapper = mapper.DistinctBy(x => x.Fullname).DistinctBy(x => x.Code).ToList();
+                    response.Data = mapper;
+                }
             }
             catch (Exception ex)
             {
@@ -1068,7 +1104,7 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
-
+       
         public async Task<Response<List<GetListPersonPartnerResponseDto>>> GetListPersonPartnerByIdPerson(int idPerson)
         {
             var response = new Response<List<GetListPersonPartnerResponseDto>>();

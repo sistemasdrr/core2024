@@ -7,6 +7,7 @@
         public string? OldCode { get; set; }
 
         public string Fullname { get; set; } = null!;
+        public string DispatchName { get; set; } = null!;
 
         public string? LastSearched { get; set; }
 
@@ -21,6 +22,8 @@
         public string? Address { get; set; }
 
         public string? Country { get; set; }
+        public string? IsoCountry { get; set; }
+        public string? Code { get; set; }
 
         public string? FlagCountry { get; set; }
 
