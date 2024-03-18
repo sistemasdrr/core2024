@@ -41,6 +41,8 @@ namespace DRRCore.Application.DTO.Core.Response
         public string? TradeName { get; set; }
 
         public int? IdCountry { get; set; }
+        public int? IdContinent { get; set; }
+        public string? TaxTypeByCountry { get; set; }
 
         public string? CodePhone { get; set; }
 

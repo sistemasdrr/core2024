@@ -209,7 +209,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                var person = await context.People.Where(x => x.Id == id).FirstOrDefaultAsync() ?? throw new Exception("No existe la persona solicitada");
+                var person = await context.People.Where(x => x.Id == id).Include(x=>x.IdCountryNavigation).FirstOrDefaultAsync() ?? throw new Exception("No existe la persona solicitada");
                 traductions.AddRange(await context.Traductions.Where(x => x.IdPerson == id && x.Identifier.Contains("_P_")).ToListAsync());
                 person.Traductions = traductions;
                 return person;

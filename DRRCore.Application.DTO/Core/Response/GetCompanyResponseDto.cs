@@ -37,6 +37,8 @@ namespace DRRCore.Application.DTO.Core.Response
         public string? Place { get; set; }
 
         public int? IdCountry { get; set; }
+        public int? IdContinent { get; set; }
+        public string? TaxTypeByCountry { get; set; }
 
         public string? SubTelephone { get; set; }
 

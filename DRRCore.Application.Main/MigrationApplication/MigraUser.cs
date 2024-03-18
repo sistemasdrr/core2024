@@ -3191,5 +3191,10 @@ namespace DRRCore.Application.Main.MigrationApplication
 
             return true;
         }
+
+        public Task<bool> MigrateAgent()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
