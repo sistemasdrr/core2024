@@ -44,6 +44,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.LastSearched, opt => opt?.MapFrom(src =>StaticFunctions.DateTimeToString(src.LastSearched)))
                 .ForMember(dest => dest.OldCode, opt => opt?.MapFrom(src => string.IsNullOrEmpty(src.OldCode)?"N"+src.Id.ToString("D10"):src.OldCode))
                 .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
+                .ForMember(dest => dest.TaxTypeName, opt => opt?.MapFrom(src => src.IdCountryNavigation.TaxTypeName))
                 .ForMember(dest => dest.IdContinent, opt => opt?.MapFrom(src => src.IdCountryNavigation.IdContinent))
                 .ForMember(dest => dest.TaxTypeByCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation.TaxTypeName))
                 .ReverseMap();
