@@ -12,6 +12,8 @@ using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using System.Collections;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DRRCore.Application.Main.CoreApplication
@@ -32,6 +34,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ISubscriberDomain _subscriberDomain;
         private readonly IPersonalDomain _personalDomain;
         private readonly IAgentDomain _agentDomain;
+        private readonly ICompanyApplication _companyApplication;
         private IMapper _mapper;
         private ILogger _logger;
        
@@ -39,9 +42,10 @@ namespace DRRCore.Application.Main.CoreApplication
             ITCuponDomain tCuponDomain,ITicketDomain ticketDomain, IPersonalDomain personalDomain, IAgentDomain agentDomain,
             ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain,
             ICompanyDomain companyDomain,IMapper mapper, ILogger logger,IReportingDownload reportingDownload,
-            IEmailApplication emailApplication,IUserLoginDomain userLoginDomain,IPersonDomain personDomain,ISubscriberDomain subscriberDomain)
+            IEmailApplication emailApplication,IUserLoginDomain userLoginDomain,IPersonDomain personDomain,ISubscriberDomain subscriberDomain,ICompanyApplication companyApplication)
         {
             _numerationDomain = numerationDomain;
+            _companyApplication= companyApplication;
             _ticketDomain = ticketDomain;
             _ticketHistoryDomain = ticketHistoryDomain;
             _mapper = mapper;
@@ -87,7 +91,7 @@ namespace DRRCore.Application.Main.CoreApplication
                   
                     if ( await _ticketDomain.AddAsync(newTicket))
                     {
-                       // await CopyReportForm(request.Number);
+                        await CopyReportForm(request.Number);
                        // await CopyReportPerson(request.Number);
                         await _numerationDomain.UpdateTicketNumberAsync();
                         if(request.About == "E" && newTicket.IdCompany==null  )
@@ -101,6 +105,7 @@ namespace DRRCore.Application.Main.CoreApplication
                             var ticket=await _ticketDomain.GetByIdAsync(newTicket.Id);
                             ticket.IdCompany = company;
                             await _ticketDomain.UpdateAsync(ticket);
+                           
 
                         }
                         if (request.About == "P" && newTicket.IdPerson == null )
@@ -114,7 +119,31 @@ namespace DRRCore.Application.Main.CoreApplication
                             ticket.IdPerson = person;
                             await _ticketDomain.UpdateAsync(ticket);
                         }
-                        
+                        if (request.About == "E" && request.ReportType != "OR")
+                        {
+                            var ticket = await _ticketDomain.GetByIdAsync(newTicket.Id);
+                            var doc= await _companyApplication.DownloadF8(ticket.IdCompany??0, "ESP", "pdf");
+                            if(doc!=null && doc.Data != null)
+                            {
+                                var data = doc.Data;
+                                var path = await UploadF1(ticket.Id,"RV_"+ticket.RequestedName,data.File);
+                                using(var context= new SqlCoreContext())
+                                {
+                                    await context.TicketFiles.AddAsync(new TicketFile
+                                    {
+                                        IdTicket = ticket.Id,
+                                        Path = path,
+                                        Name= "RV_"+DateTime.Now.ToString("ddMMyy")+"_"+ticket.RequestedName,
+                                        Extension=".pdf"  
+                                    }) ;
+                                    await context.SaveChangesAsync();
+                                }
+                               
+                            }
+                            
+                        }
+
+
                         response.Data = true;
                     }
                 }
@@ -379,7 +408,32 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
+        private async Task<string> UploadF1(int ticket,string fileName, byte[] byteArray)
+        {
+            try
+            {
+                var path = "/cupones/" + ticket.ToString("D6") + "/" + fileName+".pdf";
+                using (var ftpClient = new FtpClient(GetFtpClientConfiguration()))
+                {
+                    await ftpClient.LoginAsync();
 
+                    MemoryStream memoryStream = new MemoryStream(byteArray);
+
+                         
+                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(path))
+                            {
+                                await memoryStream.CopyToAsync(writeStream);
+                            }
+                        
+                    
+                }
+                return path;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format(Messages.ExceptionMessage, ex.Message));
+            }
+        }
         private async Task<string> CopyReportForm(int ticket)
         {
             try
