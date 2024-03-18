@@ -15,5 +15,11 @@ namespace DRRCore.Domain.Interfaces.CoreDomain
         Task<bool> TicketQueryAnswered(int idTicket);
         Task<List<OldTicket>> GetSimilarByNameAsync(string name, string empresaPersona);
         Task<List<Ticket>> GetByNameAsync(string name, string empresaPersona);
+
+        Task<List<TicketFile>> GetFilesByIdTicket(int idTicket);
+        Task<TicketFile> GetTicketFileById(int id);
+        Task<bool?> AddTicketFile(TicketFile obj);
+        Task<bool?> UpdateTicketFile(TicketFile obj);
+        Task<bool?> DeleteTicketFile(int id);
     }
 }
