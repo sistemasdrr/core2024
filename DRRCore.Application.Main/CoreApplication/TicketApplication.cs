@@ -15,6 +15,8 @@ using DRRCore.Transversal.Common.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using System.Collections;
+using System.IO.Compression;
+using System.Net;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DRRCore.Application.Main.CoreApplication
@@ -63,6 +65,96 @@ namespace DRRCore.Application.Main.CoreApplication
             _personalDomain = personalDomain;
             _agentDomain = agentDomain;
         }
+        public async Task<Response<List<GetTicketFileResponseDto>>> GetTicketFilesByIdTicket(int idTicket)
+        {
+            var response = new Response<List<GetTicketFileResponseDto>>();
+            try
+            {
+                var ticketFiles = await _ticketDomain.GetFilesByIdTicket(idTicket);
+                response.Data = _mapper.Map<List<GetTicketFileResponseDto>>(ticketFiles);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Data = null;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+        public async Task<Response<GetFileDto>> DownloadFileByPath(string path)
+        {
+            var response = new Response<GetFileDto>();
+            MemoryStream ms = new MemoryStream();
+            try
+            {
+                var file = await _ticketDomain.GetFileByPath(path);
+                if(file != null)
+                {
+                    ms.Position = 0;
+                    ms = await DescargarArchivo(path);
+                    var documentDto = new GetFileDto();
+                    documentDto.File = ms;
+                    documentDto.ContentType = GetContentType(file.Extension);
+                    documentDto.FileName = file.Name;
+                    response.Data = documentDto;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Data = null;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
+        
+        private string GetContentType(string extension)
+        {
+            switch (extension.ToLower())
+            {
+                case ".pdf":
+                    return "application/pdf";
+                case ".doc":
+                case ".docx":
+                    return "application/msword";
+                case ".xls":
+                case ".xlsx":
+                    return "application/vnd.ms-excel";
+                case ".txt":
+                    return "text/plain";
+                case ".zip":
+                    return "application/zip";
+                case ".rar":
+                    return "application/x-rar-compressed";
+                case ".xml":
+                    return "application/xml";
+                case ".json":
+                    return "application/json";
+                case ".jpg":
+                case ".jpeg":
+                    return "image/jpeg";
+                case ".png":
+                    return "image/png";
+                default:
+                    return "application/octet-stream"; 
+            }
+        }
+        private async Task<MemoryStream> DescargarArchivo(string? path)
+        {
+            using (var ftpClient = new FtpClient(GetFtpClientConfiguration()))
+            {
+                await ftpClient.LoginAsync();
+
+                using (var ftpReadStream = await ftpClient.OpenFileReadStreamAsync(path))
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        await ftpReadStream.CopyToAsync(stream);
+                        return stream;
+                    }
+                }
+            }
+        }
+     
 
         public async Task<Response<bool>> AddTicketAsync(AddOrUpdateTicketRequestDto request)
         {
@@ -722,12 +814,19 @@ namespace DRRCore.Application.Main.CoreApplication
                             IdStatusTicket = ticket.IdStatusTicket
                         };
                         await _ticketHistoryDomain.AddAsync(newTicketHistory);
+                        await _numerationDomain.AddAsync(new Numeration
+                        {
+                            Id = 0,
+                            Name = "PRE_ASSIGN",
+                            Description = "Pre-Asinación del Cupón",
+                            Number = 1,
+                        });
                         if (ticketAssignation != null)
                         {
                             ticketAssignation.Commentary = item.Commentary;
                             ticketAssignation.IdEmployee = item.IdReceptor;
                             await _ticketAssignationDomain.UpdateAsync(ticketAssignation);
-
+                            
                         }
                     }
 
@@ -836,6 +935,38 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<bool?>> DeleteFile(int id)
+        {
+            var response = new Response<bool?>();
+            try
+            {
+                var ticketFile = await _ticketDomain.GetTicketFileById(id);
+                response.Data = await _ticketDomain.DeleteTicketFile(id);
+            }
+            catch(Exception ex)
+            {
+                response.IsSuccess = false;
+                throw new Exception(ex.Message);
+            }
+            return response;
+        }
+        private async Task<bool> EliminarArchivo(string path)
+        {
+            using (var ftpClient = new FtpClient(GetFtpClientConfiguration()))
+            {
+                await ftpClient.LoginAsync();
+
+                try
+                {
+                    await ftpClient.DeleteFileAsync(path);
+                    return true; 
+                }
+                catch (Exception ex)
+                {
+                    return false; 
+                }
+            }
+        }
 
     }
 }

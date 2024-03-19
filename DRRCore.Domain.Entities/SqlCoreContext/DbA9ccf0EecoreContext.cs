@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Domain.Entities.SqlCoreContext;
 
-public partial class SqlCoreContext : DbContext
+public partial class DbA9ccf0EecoreContext : DbContext
 {
-    public SqlCoreContext()
+    public DbA9ccf0EecoreContext()
     {
     }
 
-    public SqlCoreContext(DbContextOptions<SqlCoreContext> options)
+    public DbA9ccf0EecoreContext(DbContextOptions<DbA9ccf0EecoreContext> options)
         : base(options)
     {
     }
@@ -185,13 +185,6 @@ public partial class SqlCoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<CompanyXmlData>().ToSqlQuery("EXEC DataCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyBalanceData>().ToSqlQuery("EXEC BalanceCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyFunctionData>().ToSqlQuery("EXEC FunctionCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyLegalEventsData>().ToSqlQuery("EXEC LegalEventsCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<CompanyRelatedData>().ToSqlQuery("EXEC RelatedCompanyCredendo").HasNoKey();
-        modelBuilder.Entity<WhoIsWhoSP>().ToSqlQuery("EXEC WhoIsWho");
-
         modelBuilder.Entity<Agent>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Agent__3213E83FAB71BE05");

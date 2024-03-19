@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Http;
 namespace DRRCore.Application.Interfaces.CoreApplication
 {
     public interface ITicketApplication
-    {      
+    {
+        Task<Response<List<GetTicketFileResponseDto>>> GetTicketFilesByIdTicket(int idTicket);
         Task<Response<bool>> AddTicketAsync(AddOrUpdateTicketRequestDto request);
         Task<Response<GetExistingTicketResponseDto>> GetReportType(int id, string type);
         Task<Response<GetNumerationResponseDto>> GetTicketNumberAsync();
@@ -25,6 +26,10 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetPersonalAssignationResponseDto>>> GetPersonalAssignation();
         Task<Response<List<GetPersonalAssignationResponseDto>>> GetAgentAssignation();
 
+
         Task<Response<bool>> UploadFile(int idTicket, string numCupon, IFormFile file);
+        Task<Response<GetFileDto>> DownloadFileByPath(string path);
+        Task<Response<bool?>> DeleteFile(int id);
+
     }
 }

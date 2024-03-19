@@ -18,6 +18,7 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
         Task<List<Ticket>> GetByNameAsync(string name, string empresaPersona);
 
         Task<List<TicketFile>> GetFilesByIdTicket(int idTicket);
+        Task<TicketFile> GetFileByPath(string path);
         Task<TicketFile> GetTicketFileById(int id);
         Task<bool?> AddTicketFile(TicketFile obj);
         Task<bool?> UpdateTicketFile(TicketFile obj);

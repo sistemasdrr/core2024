@@ -1,5 +1,6 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.Interfaces.CoreApplication;
+using DRRCore.Application.Main.CoreApplication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DRRCore.Services.ApiCore.Controllers
@@ -126,6 +127,33 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> uploadFile(int idTicket, string numCupon, IFormFile file)
         {
             return Ok(await _ticketApplication.UploadFile(idTicket, numCupon, file));
+        }
+        [HttpGet()]
+        [Route("getFilesByIdTicket")]
+        public async Task<ActionResult> getFilesByIdTicket(int idTicket)
+        {
+            return Ok(await _ticketApplication.GetTicketFilesByIdTicket(idTicket));
+        }
+        [HttpGet()]
+        [Route("getFileByPath")]
+        public async Task<ActionResult> getFileByPath(string path)
+        {
+            var result = await _ticketApplication.DownloadFileByPath(path);
+
+            if (result != null && result.Data != null)
+            {
+                return File(result.Data.File?.ToArray(), result.Data.ContentType, result.Data.FileName);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+        [HttpPost()]
+        [Route("deleteFile")]
+        public async Task<ActionResult> deleteFile(int id)
+        {
+            return Ok(await _ticketApplication.DeleteFile(id));
         }
     }
 }

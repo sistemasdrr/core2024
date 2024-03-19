@@ -1,8 +1,8 @@
 ﻿using DRRCore.Domain.Entities.SqlCoreContext;
 
-namespace DRRCore.Domain.Interfaces
+namespace DRRCore.Domain.Interfaces.CoreDomain
 {
-    public interface INumerationDomain
+    public interface INumerationDomain : IBaseDomain<Numeration>
     {
         Task<Numeration> GetTicketNumberAsync();
         Task<bool> UpdateTicketNumberAsync();

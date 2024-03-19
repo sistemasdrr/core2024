@@ -101,6 +101,8 @@ public partial class Person
 
     public bool? Print { get; set; }
 
+    public bool? HaveReport { get; set; }
+
     public virtual ICollection<BankDebt> BankDebts { get; set; } = new List<BankDebt>();
 
     public virtual ICollection<ComercialLatePayment> ComercialLatePayments { get; set; } = new List<ComercialLatePayment>();
@@ -152,5 +154,4 @@ public partial class Person
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual ICollection<Traduction> Traductions { get; set; } = new List<Traduction>();
-    public bool HaveReport { get; set; }
 }

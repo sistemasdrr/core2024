@@ -1,11 +1,6 @@
 ﻿using DRRCore.Domain.Entities.SqlCoreContext;
-using DRRCore.Domain.Interfaces;
+using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DRRCore.Domain.Main.CoreDomain
 {
@@ -15,6 +10,32 @@ namespace DRRCore.Domain.Main.CoreDomain
         public NumerationDomain(INumerationRepository numerationRepository) { 
          _numerationRepository = numerationRepository;
         }
+
+        public async Task<bool> AddAsync(Numeration obj)
+        {
+            return await _numerationRepository.AddAsync(obj);
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            return await _numerationRepository.DeleteAsync(id);
+        }
+
+        public Task<List<Numeration>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Numeration> GetByIdAsync(int id)
+        {
+            return await _numerationRepository.GetByIdAsync(id);
+        }
+
+        public Task<List<Numeration>> GetByNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Numeration> GetOrderNumberAsync()
         {
             return await _numerationRepository.GetOrderNumberAsync();
@@ -23,6 +44,11 @@ namespace DRRCore.Domain.Main.CoreDomain
         public async Task<Numeration> GetTicketNumberAsync()
         {
             return await _numerationRepository.GetTicketNumberAsync();
+        }
+
+        public async Task<bool> UpdateAsync(Numeration obj)
+        {
+            return await _numerationRepository.UpdateAsync(obj);
         }
 
         public async Task<bool> UpdateTicketNumberAsync()

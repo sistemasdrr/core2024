@@ -441,7 +441,7 @@ public partial class MySqlContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySQL("server=170.0.82.60;TLS Version=TLS 1.2;user id=dbrisre;password=K31@78va,.;database=DBSystemDelRisco;persist security info=True;SSL Mode=None;Convert Zero Datetime=True");
+        => optionsBuilder.UseMySQL("server=192.168.250.4;TLS Version=TLS 1.2;user id=dbrisre;password=K31@78va,.;database=DBSystemDelRisco;persist security info=True;SSL Mode=None;Convert Zero Datetime=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

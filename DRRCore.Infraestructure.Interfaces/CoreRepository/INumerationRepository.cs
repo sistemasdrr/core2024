@@ -2,7 +2,7 @@
 
 namespace DRRCore.Infraestructure.Interfaces.CoreRepository
 {
-    public interface INumerationRepository
+    public interface INumerationRepository : IBaseRepository<Numeration>
     {
         Task<Numeration> GetTicketNumberAsync();
         Task<bool> UpdateTicketNumberAsync();
