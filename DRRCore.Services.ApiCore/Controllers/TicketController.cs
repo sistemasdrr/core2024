@@ -121,5 +121,11 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _ticketApplication.GetAgentAssignation());
         }
+        [HttpPost()]
+        [Route("uploadFile")]
+        public async Task<ActionResult> uploadFile(int idTicket, string numCupon, IFormFile file)
+        {
+            return Ok(await _ticketApplication.UploadFile(idTicket, numCupon, file));
+        }
     }
 }

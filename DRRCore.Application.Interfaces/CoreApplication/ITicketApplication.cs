@@ -1,6 +1,7 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Transversal.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace DRRCore.Application.Interfaces.CoreApplication
 {
@@ -23,5 +24,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetListTicketResponseDto>>> GetTicketsToUser(string userTo);
         Task<Response<List<GetPersonalAssignationResponseDto>>> GetPersonalAssignation();
         Task<Response<List<GetPersonalAssignationResponseDto>>> GetAgentAssignation();
+
+        Task<Response<bool>> UploadFile(int idTicket, string numCupon, IFormFile file);
     }
 }

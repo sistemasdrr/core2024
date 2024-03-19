@@ -13,5 +13,7 @@ namespace DRRCore.Application.DTO.Core.Request
         public string Path { get; set; } = null!;
 
         public string Extension { get; set; } = null!;
+
+
     }
 }
