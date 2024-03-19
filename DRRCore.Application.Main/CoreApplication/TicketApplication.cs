@@ -12,6 +12,7 @@ using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using System.Collections;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -797,5 +798,44 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
+
+        public async Task<Response<bool>> UploadFile(int idTicket, string numCupon, IFormFile file)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                using (var ftpClient = new FtpClient(GetFtpClientConfiguration()))
+                {
+                    await ftpClient.LoginAsync();
+                    string filePath = "/cupones/" + numCupon + "/" + file.FileName;
+                    using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(filePath))
+                    {
+                        file.CopyTo(writeStream);
+                    }
+                    response.Data = true;
+                    string fileExtension = Path.GetExtension(file.FileName);
+                    if (response.Data == true)
+                    {
+                        await _ticketDomain.AddTicketFile(new TicketFile
+                        {
+                            Id = 0,
+                            IdTicket = idTicket,
+                            Name = file.FileName,
+                            Path = filePath,
+                            Extension = fileExtension
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.IsWarning = true;
+                throw new Exception(ex.Message);
+            }
+            return response;
+        }
+
+
     }
 }
