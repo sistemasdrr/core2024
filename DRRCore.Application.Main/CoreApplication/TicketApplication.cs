@@ -91,7 +91,7 @@ namespace DRRCore.Application.Main.CoreApplication
                   
                     if ( await _ticketDomain.AddAsync(newTicket))
                     {
-                        await CopyReportForm(request.Number);
+                      //  await CopyReportForm(request.Number);
                        // await CopyReportPerson(request.Number);
                         await _numerationDomain.UpdateTicketNumberAsync();
                         if(request.About == "E" && newTicket.IdCompany==null  )
@@ -133,7 +133,7 @@ namespace DRRCore.Application.Main.CoreApplication
                                     {
                                         IdTicket = ticket.Id,
                                         Path = path,
-                                        Name= "RV_"+DateTime.Now.ToString("ddMMyy")+"_"+ticket.RequestedName,
+                                        Name= "RV_"+DateTime.Now.ToString("ddMMyy")+"_"+request.Number.ToString("D6"),
                                         Extension=".pdf"  
                                     }) ;
                                     await context.SaveChangesAsync();
@@ -418,7 +418,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     await ftpClient.LoginAsync();
 
                     MemoryStream memoryStream = new MemoryStream(byteArray);
-
+                    memoryStream.Position = 0;
                          
                             using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(path))
                             {
