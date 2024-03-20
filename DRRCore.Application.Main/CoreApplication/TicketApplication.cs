@@ -12,6 +12,7 @@ using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using System.Collections;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -796,6 +797,11 @@ namespace DRRCore.Application.Main.CoreApplication
                 _logger.LogError(response.Message, ex);
             }
             return response;
+        }
+
+        public Task<Response<bool>> UploadFile(int idTicket, string numCupon, IFormFile file)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -88,9 +88,7 @@ namespace DRRCore.Application.Main.MigrationApplication
         }
 
         public async Task<bool> MigrateCompany()
-        {
-            for (int i = 0; i < 360; i++)
-            {
+        {           
                 var empresas = await _mempresaDomain.GetNotMigratedEmpresa();
                 foreach (var empresa in empresas)
                 {
@@ -100,7 +98,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                     antecedentes = new REmpVsAspLeg();
                     int idCompany = 0;
                     using var context = new SqlCoreContext();
-                    var existCompany = await context.Companies.Where(x => x.OldCode == empresa.EmCodigo).FirstOrDefaultAsync();
+                   var existCompany = await context.Companies.Where(x => x.OldCode == empresa.EmCodigo).FirstOrDefaultAsync();
 
                     if (existCompany == null)
                     {
@@ -175,8 +173,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                             continue;
                         }                      
                     }
-                }
-            }
+                }            
 
             return true;
         }
@@ -429,7 +426,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                 {
                     if (empresa.EmInfgenIng != null)
                     {
-                        item.ShortValue = empresa.EmInfgenIng;
+                        item.LargeValue = empresa.EmInfgenIng;
                     }
                 }
             }
@@ -718,7 +715,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                         item.PaiMone == "ANG057" ? 69 : item.PaiMone == "ANG081" ? 69 : null,
                             Amount = (decimal)item.VeVentas,
                             ExchangeRate = (decimal)item.VeTipcam,
-                            EquivalentToDollars = (decimal)item.VeVentas / (decimal)item.VeTipcam,
+                            EquivalentToDollars = (decimal)item.VeTipcam==0?0:(decimal)item.VeVentas / (decimal)item.VeTipcam,
 
                         };
                         list.Add(objeto);
@@ -824,9 +821,9 @@ namespace DRRCore.Application.Main.MigrationApplication
                             PUtilities = (decimal)balance.BaUtili2,
                             POther = (decimal)balance.BaPatOtr2,
                             TotalLiabilitiesPatrimony = (decimal)balance.BaTotpas2,
-                            LiquidityRatio = ((decimal)balance.BaTotcor2 == 0) ? 0 : (decimal)balance.BaTotcor2 / (decimal)balance.BaTotcrr2,
+                            LiquidityRatio = ((decimal)balance.BaTotcrr2 == 0) ? 0 : (decimal)balance.BaTotcor2 / (decimal)balance.BaTotcrr2,
                             WorkingCapital = (decimal)balance.BaTotcor2 - (decimal)balance.BaTotcrr2,
-                            DebtRatio = ((decimal)balance.BaTotcor2 == 0) ? 0 : ((decimal)balance.BaTotpat2 / (decimal)balance.BaTotcrr2) * 100,
+                            DebtRatio = ((decimal)balance.BaTotcrr2 == 0) ? 0 : ((decimal)balance.BaTotpat2 / (decimal)balance.BaTotcrr2) * 100,
                             ProfitabilityRatio = ((decimal)balance.BaVentas2 == 0) ? 0 : (((decimal)balance.BaUtiper2 / (decimal)balance.BaVentas2)) * 100                  
                         };
                         list.Add(balance2);
