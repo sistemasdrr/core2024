@@ -80,6 +80,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.RealExpireDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.RealExpireDate)))
 
                  .ForMember(dest => dest.Price, opt => opt?.MapFrom(src => src.Price == null ? 0 : src.Price))
+
                  .ForMember(dest => dest.Quality, opt => opt?.MapFrom(src => src.About == "E" ? src.IdCompanyNavigation.Quality : src.IdPersonNavigation.Language))
                  .ForMember(dest => dest.DispatchDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DispatchtDate)))
                  .ForMember(dest => dest.StatusQuery, opt => opt?.MapFrom(src => src.TicketQuery!=null?src.TicketQuery.Status:0))
@@ -104,6 +105,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.StatusFinalOwner, opt => opt?.MapFrom(src => GetStatusFinalOwner(src.IdTicketNavigation.TicketHistories)))
                  .ForMember(dest => dest.Language, opt => opt?.MapFrom(src => src.IdTicketNavigation.IdCompanyNavigation.Language))
                  .ForMember(dest => dest.About, opt => opt?.MapFrom(src => src.IdTicketNavigation.About))
+                 .ForMember(dest => dest.AsignedTo, opt => opt?.MapFrom(src => src.AsignedTo == null ? "" : src.AsignedTo))
                  .ForMember(dest => dest.QueryCredit, opt => opt?.MapFrom(src => src.IdTicketNavigation.QueryCredit == null ? "" : src.IdTicketNavigation.QueryCredit))
                  .ForMember(dest => dest.TimeLimit, opt => opt?.MapFrom(src => src.IdTicketNavigation.TimeLimit == null ? "" : src.IdTicketNavigation.TimeLimit))
                  .ForMember(dest => dest.RevealName, opt => opt?.MapFrom(src => src.IdTicketNavigation.RevealName))
@@ -168,6 +170,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.Fullname, opt => opt?.MapFrom(src => src.IdEmployeeNavigation == null ? "" : src.IdEmployeeNavigation.FirstName.ToUpper() + " " + src.IdEmployeeNavigation.LastName.ToUpper()))
                 .ForMember(dest => dest.Type, opt => opt?.MapFrom(src => src.Type))
                 .ForMember(dest => dest.Code, opt => opt?.MapFrom(src => src.Code == null ? "" : src.Code))
+                .ForMember(dest => dest.IdUserLogin, opt => opt?.MapFrom(src => src.IdEmployeeNavigation != null ? src.IdEmployeeNavigation.UserLogins.FirstOrDefault().Id : 0))
                 .ForMember(dest => dest.Internal, opt => opt?.MapFrom(src => src.Internal))
                 .ReverseMap();
             CreateMap<Agent, GetPersonalAssignationResponseDto>()

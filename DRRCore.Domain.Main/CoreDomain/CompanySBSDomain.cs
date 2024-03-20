@@ -47,6 +47,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             throw new NotImplementedException();
         }
 
+        public async Task<bool> NewComercialReferences(int idCompany, int? idTicket)
+        {
+            return await _companySBSRepository.NewComercialReferences(idCompany, idTicket);
+        }
+
         public Task<bool> UpdateAsync(CompanySb obj)
         {
             throw new NotImplementedException();

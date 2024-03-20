@@ -145,6 +145,28 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
+        public async Task<bool> NewComercialReferences(int idCompany, int? idTicket)
+        {
+            try 
+            { 
+                using var context = new SqlCoreContext();
+                var providers = await context.Providers.Where(x => x.IdCompany == idCompany && x.Flag == true).ToListAsync();
+                foreach (var item in providers)
+                {
+                    item.Flag = false;
+                    item.IdTicket = idTicket;
+                    context.Providers.Update(item);
+                    await context.SaveChangesAsync();
+                }
+                return true;
+            }
+            catch(Exception ex) 
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
+
         public Task<bool> UpdateAsync(CompanySb obj)
         {
             throw new NotImplementedException();

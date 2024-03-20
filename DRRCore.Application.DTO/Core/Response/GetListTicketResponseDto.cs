@@ -55,6 +55,7 @@
         public string? DispatchDate { get; set; }
 
         //Consulta
+        public string AsignedTo { get; set; }
         public bool HasQuery { get; set; }
         public int StatusQuery { get; set; }
         public int Receptor { get; set; }

@@ -2249,5 +2249,18 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
+
+        public async Task<Response<bool>> NewComercialReferences(int idCompany, int? idTicket)
+        {
+            var response = new Response<bool>(); 
+            try
+            {
+
+            }catch(Exception ex)
+            {
+
+            }
+            return response;
+        }
     }
 }

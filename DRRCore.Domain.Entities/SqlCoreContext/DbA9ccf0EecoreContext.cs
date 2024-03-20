@@ -436,7 +436,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("memoEng");
             entity.Property(e => e.Qualification)
-                .HasMaxLength(30)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("qualification");
             entity.Property(e => e.QualificationEng)
@@ -1430,7 +1430,7 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("endorsementsObservations");
             entity.Property(e => e.ExchangeRate)
-                .HasColumnType("decimal(5, 2)")
+                .HasColumnType("decimal(8, 2)")
                 .HasColumnName("exchangeRate");
             entity.Property(e => e.GuaranteesOfferedFc)
                 .HasColumnType("decimal(15, 2)")
@@ -3545,10 +3545,12 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
+            entity.Property(e => e.Flag).HasColumnName("flag");
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdCountry).HasColumnName("idCountry");
             entity.Property(e => e.IdCurrency).HasColumnName("idCurrency");
             entity.Property(e => e.IdPerson).HasColumnName("idPerson");
+            entity.Property(e => e.IdTicket).HasColumnName("idTicket");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
             entity.Property(e => e.MaximumAmount)
                 .HasMaxLength(100)
@@ -3581,6 +3583,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.ReferentCommentary)
                 .IsUnicode(false)
                 .HasColumnName("referentCommentary");
+            entity.Property(e => e.ReferentName)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("referentName");
             entity.Property(e => e.Telephone)
                 .HasMaxLength(100)
                 .IsUnicode(false)

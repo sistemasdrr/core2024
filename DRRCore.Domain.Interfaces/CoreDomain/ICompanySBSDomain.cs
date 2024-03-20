@@ -7,5 +7,6 @@ namespace DRRCore.Domain.Interfaces.CoreDomain
         Task<int> AddCompanySBS(CompanySb companySb, List<Traduction> traductions);
         Task<int> UpdateCompanySBS(CompanySb companySb, List<Traduction> traductions);
         Task<CompanySb> GetByIdCompany(int idCompany);
+        Task<bool> NewComercialReferences(int idCompany, int? idTicket);
     }
 }

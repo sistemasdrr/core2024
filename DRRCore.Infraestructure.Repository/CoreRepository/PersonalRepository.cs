@@ -27,7 +27,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                var lista = await context.Personals.Where(x => x.Enable == true).Include(x => x.IdEmployeeNavigation).ToListAsync();
+                var lista = await context.Personals.Where(x => x.Enable == true).Include(x => x.IdEmployeeNavigation).Include(x => x.IdEmployeeNavigation.UserLogins).ToListAsync();
                 return lista;
             }catch (Exception ex)
             {

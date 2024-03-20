@@ -63,6 +63,12 @@ public partial class Provider
 
     public string? ComplianceEng { get; set; }
 
+    public int? IdTicket { get; set; }
+
+    public string? ReferentName { get; set; }
+
+    public bool? Flag { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Country? IdCountryNavigation { get; set; }
