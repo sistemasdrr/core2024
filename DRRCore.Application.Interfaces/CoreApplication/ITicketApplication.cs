@@ -25,7 +25,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetListTicketResponseDto>>> GetTicketsToUser(string userTo);
         Task<Response<List<GetPersonalAssignationResponseDto>>> GetPersonalAssignation();
         Task<Response<List<GetPersonalAssignationResponseDto>>> GetAgentAssignation();
-
+        Task<Response<bool>> AddTicketHistory(List<AddOrUpdateAssignationsRequestDto> obj);
 
         Task<Response<bool>> UploadFile(int idTicket, string numCupon, IFormFile file);
         Task<Response<GetFileDto>> DownloadFileByPath(string path);

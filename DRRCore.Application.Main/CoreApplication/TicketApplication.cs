@@ -968,5 +968,24 @@ namespace DRRCore.Application.Main.CoreApplication
             }
         }
 
+        public async Task<Response<bool>> AddTicketHistory(List<AddOrUpdateAssignationsRequestDto> obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                foreach (var item in obj)
+                {
+                    if(item.Type == "PA")
+                    {
+
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return response;
+        }
     }
 }
