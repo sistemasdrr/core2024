@@ -113,6 +113,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdTicketNavigation.IdSubscriberNavigation.IdCountryNavigation)
                     .Include(x => x.IdTicketNavigation.IdContinentNavigation)
                     .Include(x => x.IdTicketNavigation.IdCompanyNavigation)
+                    .Include(x => x.IdTicketNavigation.TicketAssignation.IdEmployeeNavigation.UserLogins)
                     .Include(x => x.IdTicketNavigation.IdCompanyNavigation.IdCountryNavigation)
                     .Include(x => x.IdTicketNavigation.IdCompanyNavigation.IdCountryNavigation.IdContinentNavigation)
                     .Include(x => x.IdTicketNavigation.IdPersonNavigation)

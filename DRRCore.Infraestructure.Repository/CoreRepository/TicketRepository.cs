@@ -198,6 +198,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdCountryNavigation)
                     .Include(x => x.TicketHistories.OrderByDescending(x => x.Id))
                     .Include(x=>x.TicketAssignation)
+                    .Include(X => X.TicketAssignation.IdEmployeeNavigation.UserLogins)
                     .Include(x => x.TicketFiles)
                     .Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Pendiente && x.Enable == true).ToListAsync();
             }
@@ -250,6 +251,20 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<TicketFile> GetFileByPath(string path)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var ticketFile = await context.TicketFiles.Where(x => x.Enable == true && x.Path == path).FirstOrDefaultAsync();
+                return ticketFile;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
             }
         }
 

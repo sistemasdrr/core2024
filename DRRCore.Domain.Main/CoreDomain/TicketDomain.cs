@@ -66,6 +66,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _ticketRepository.GetByNameAsync(name,empresaPersona);
         }
 
+        public async Task<TicketFile> GetFileByPath(string path)
+        {
+            return await _ticketRepository.GetFileByPath(path);
+        }
+
         public async Task<List<TicketFile>> GetFilesByIdTicket(int idTicket)
         {
             return  await _ticketRepository.GetFilesByIdTicket(idTicket);

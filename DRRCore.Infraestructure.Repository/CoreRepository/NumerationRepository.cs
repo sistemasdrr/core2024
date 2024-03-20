@@ -13,6 +13,64 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             _logger = logger;
         }
 
+        public async Task<bool> AddAsync(Numeration obj)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                await context.Numerations.AddAsync(obj);
+                await context.SaveChangesAsync();
+                return true;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var numeration = await context.Numerations.FindAsync(id);
+                numeration.Enable = false;
+                context.Numerations.Update(numeration);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
+            }
+        }
+
+        public Task<List<Numeration>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Numeration> GetByIdAsync(int id)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var numeration = await context.Numerations.FindAsync(id);
+                return numeration;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return null;
+            }
+        }
+
+        public Task<List<Numeration>> GetByNameAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Numeration> GetOrderNumberAsync()
         {
             throw new NotImplementedException();
@@ -29,6 +87,23 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 _logger.LogError(ex.Message);
                 return null;
+            }
+        }
+
+        public async Task<bool> UpdateAsync(Numeration obj)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                obj.UpdateDate = DateTime.Now;
+                context.Numerations.Update(obj);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return false;
             }
         }
 

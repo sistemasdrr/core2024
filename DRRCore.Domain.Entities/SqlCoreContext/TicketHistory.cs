@@ -29,6 +29,12 @@ public partial class TicketHistory
 
     public int? NumberAssign { get; set; }
 
+    public bool? Balance { get; set; }
+
+    public bool? References { get; set; }
+
+    public string? Observations { get; set; }
+
     public virtual StatusTicket? IdStatusTicketNavigation { get; set; }
 
     public virtual Ticket? IdTicketNavigation { get; set; }
