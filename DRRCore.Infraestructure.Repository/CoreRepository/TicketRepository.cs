@@ -122,7 +122,8 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdStatusTicketNavigation)
                     .Include(x => x.TicketQuery)
                     .Include(x => x.TicketHistories.OrderByDescending(x=>x.Id)).Where(x => x.Enable == true)
-                    .OrderByDescending(x => x.OrderDate).ToListAsync();
+                    .Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Pendiente && x.Enable == true)
+                    .OrderByDescending(x => x.Number).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -148,7 +149,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdStatusTicketNavigation)
                     .Include(x => x.IdCountryNavigation)
                     .Include(x => x.TicketHistories.OrderByDescending(x => x.Id))
-                    .Where(x => x.Enable == true).OrderByDescending(x => x.OrderDate).ToListAsync();
+                    .Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Pendiente && x.Enable == true).OrderByDescending(x => x.OrderDate).ToListAsync();
 
 
                 if (!string.IsNullOrEmpty(ticket))
