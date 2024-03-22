@@ -3539,6 +3539,9 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.Date)
                 .HasColumnType("datetime")
                 .HasColumnName("date");
+            entity.Property(e => e.DateReferent)
+                .HasColumnType("datetime")
+                .HasColumnName("dateReferent");
             entity.Property(e => e.DeleteDate)
                 .HasColumnType("datetime")
                 .HasColumnName("deleteDate");
@@ -3591,6 +3594,10 @@ public partial class DbA9ccf0EecoreContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("telephone");
+            entity.Property(e => e.Ticket)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("ticket");
             entity.Property(e => e.TimeLimit)
                 .HasMaxLength(100)
                 .IsUnicode(false)

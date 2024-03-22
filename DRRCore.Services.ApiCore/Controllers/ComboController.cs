@@ -38,6 +38,12 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _comboboxApplication.GetCountries());
         }
         [HttpGet()]
+        [Route("countryById")]
+        public async Task<ActionResult> GetCountryByIdCombo(int idCountry)
+        {
+            return Ok(await _comboboxApplication.GetCountryById(idCountry));
+        }
+        [HttpGet()]
         [Route("countrybycontinent")]
         public async Task<ActionResult> GetCountriesByContinentCombo(int continent)
         {

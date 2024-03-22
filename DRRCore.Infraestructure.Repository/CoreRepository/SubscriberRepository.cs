@@ -140,6 +140,26 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<Subscriber> LoginSubscriber(string usr, string psw)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var abonado = await context.Subscribers.Where(x => x.Usr == usr && x.Psw == psw).FirstOrDefaultAsync();
+                if(abonado != null)
+                {
+                    return abonado;
+                }
+                else
+                {
+                    return null;
+                }
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
 
         public async Task<bool> UpdateSubscriberAsync(Subscriber subscriber)
         {

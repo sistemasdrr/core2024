@@ -1,4 +1,5 @@
-﻿using DRRCore.Domain.Entities.SqlCoreContext;
+﻿using DRRCore.Application.DTO.Core.Response;
+using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 
@@ -44,6 +45,16 @@ namespace DRRCore.Domain.Main.CoreDomain
         public async Task<List<Provider>> GetProvidersByIdCompany(int idCompany)
         {
             return await _providerRepository.GetProviderByIdCompany(idCompany);
+        }
+
+        public async Task<List<GetProviderHistoryResponseDto>> GetProvidersHistoryByIdCompany(int idCompany)
+        {
+            return await _providerRepository.GetProvidersHistoryByIdCompany(idCompany);
+        }
+
+        public async Task<List<GetProviderHistoryResponseDto>> GetProvidersHistoryByIdPerson(int idPerson)
+        {
+            return await _providerRepository.GetProvidersHistoryByIdPerson(idPerson);
         }
 
         public async Task<bool> UpdateAsync(Provider obj)

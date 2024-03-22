@@ -181,6 +181,18 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _companyApplication.GetListProvidersAsync(idCompany));
         }
+        [HttpPost()]
+        [Route("addListProvider")]
+        public async Task<ActionResult> addListProvider(List<GetListProviderResponseDto> obj, int idCompany)
+        {
+            return Ok(await _companyApplication.AddOrUpdateProviderListAsync(obj, idCompany));
+        }
+        [HttpGet()]
+        [Route("getProviderHistory")]
+        public async Task<ActionResult> getProviderHistory(string type, int id)
+        {
+            return Ok(await _companyApplication.GetProviderHistory(type, id));
+        }
         [HttpGet()]
         [Route("getProviderById")]
         public async Task<ActionResult> getProviderById(int id)

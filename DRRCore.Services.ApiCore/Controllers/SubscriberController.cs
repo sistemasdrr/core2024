@@ -66,6 +66,13 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _subscriberPriceApplication.AddOrUpdateAsync(request));
         }
+
+        [HttpPost()]
+        [Route("loginSubscriber")]
+        public async Task<ActionResult> loginSubscriber(string? usr, string? psw)
+        {
+            return Ok(await _subscriberApplication.LoginSubscriber(usr,psw));
+        }
         [HttpGet()]
         [Route("getPrices")]
         public async Task<ActionResult> GetSubscriberPrice(int idSubscriber)

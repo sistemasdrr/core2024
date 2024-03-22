@@ -987,5 +987,47 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
+
+        public async Task<Response<string?>> GetNumCuponById(int idTicket)
+        {
+            var response = new Response<string?>();
+            try
+            {
+                var ticket = await _ticketDomain.GetByIdAsync(idTicket);
+                if(ticket !=  null)
+                {
+                    response.Data = ticket.Number.ToString("D6");
+                }
+            }catch(Exception ex)
+            {
+                response.Data = "";
+                _logger.LogError(ex.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetListTicketResponseDto>>> GetTicketsByIdSubscriber(int idSubscriber, string? company, DateTime from, DateTime until, int idCountry)
+        {
+            var response = new Response<List<GetListTicketResponseDto>>();
+            try
+            {
+                var tickets = await _ticketDomain.GetTicketsByIdSubscriber(idSubscriber, company, from, until, idCountry);
+                if(tickets.Count > 0)
+                {
+                    response.Data = _mapper.Map<List<GetListTicketResponseDto>>(tickets);
+                }
+                else
+                {
+                    response.Data = null;
+                    response.IsSuccess = false;
+                }
+            }catch(Exception ex)
+            {
+                response.Data = null;
+                response.IsSuccess = false;
+                _logger?.LogError(ex.Message, ex);
+            }
+            return response;
+        }
     }
 }

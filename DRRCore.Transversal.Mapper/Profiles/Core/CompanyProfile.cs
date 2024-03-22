@@ -135,15 +135,20 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountry))
                  .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency == 0 ? null : src.IdCurrency))
                  .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+                 .ForMember(dest => dest.DateReferent, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DateReferent)))
              .ReverseMap();
             CreateMap<Provider, GetListProviderResponseDto>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
                  .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))
+                 .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountry))
+
                  .ForMember(dest => dest.Country, opt => opt?.MapFrom(src => src.IdCountryNavigation.Name))
                  .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation.FlagIso))
                  .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
                  .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.Date)))
+                 .ForMember(dest => dest.DateReferent, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DateReferent)))
              .ReverseMap();
+          
             CreateMap<AddOrUpdateComercialLatePaymentRequestDto, ComercialLatePayment>()
                .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
                  .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == 0 ? null : src.IdPerson))

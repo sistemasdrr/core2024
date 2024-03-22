@@ -69,6 +69,10 @@ public partial class Provider
 
     public bool? Flag { get; set; }
 
+    public DateTime? DateReferent { get; set; }
+
+    public string? Ticket { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Country? IdCountryNavigation { get; set; }

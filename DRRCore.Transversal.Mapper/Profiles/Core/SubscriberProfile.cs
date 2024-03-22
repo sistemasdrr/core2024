@@ -37,8 +37,12 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             .ForMember(dest => dest.IdCurrency, opt => opt?.MapFrom(src => src.IdCurrency))
             .ForMember(dest => dest.Enable, opt => opt?.MapFrom(src => src.Enable))
             .ForMember(dest => dest.RemainingCoupons, opt => opt?.MapFrom(src => src.CouponBillingSubscribers.First().NumCoupon))
+        .ReverseMap(); 
+                 CreateMap<Subscriber, GetSubscriberDataResponseDto>()
+            .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Code, opt => opt?.MapFrom(src => src.Code))
+            .ForMember(dest => dest.Name, opt => opt?.MapFrom(src => src.Name))
         .ReverseMap();
-
             CreateMap<AddOrUpdateSubscriberPriceRequestDto, SubscriberPrice>()
             .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))
             .ForMember(dest => dest.IdSubscriber, opt => opt?.MapFrom(src => src.IdSubscriber == 0 ? null : src.IdSubscriber))

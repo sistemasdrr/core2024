@@ -1,5 +1,6 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
+using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Transversal.Common;
 using Microsoft.AspNetCore.Http;
 
@@ -30,6 +31,9 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> UploadFile(int idTicket, string numCupon, IFormFile file);
         Task<Response<GetFileDto>> DownloadFileByPath(string path);
         Task<Response<bool?>> DeleteFile(int id);
+        Task<Response<string?>> GetNumCuponById(int idTicket);
+
+        Task<Response<List<GetListTicketResponseDto>>> GetTicketsByIdSubscriber(int idSubscriber, string? company, DateTime from, DateTime until, int idCountry);
 
     }
 }

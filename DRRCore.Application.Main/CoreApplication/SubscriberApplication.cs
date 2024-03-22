@@ -190,5 +190,27 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
+
+        public async Task<Response<GetSubscriberDataResponseDto>> LoginSubscriber(string? user, string? psw)
+        {
+            var response = new Response<GetSubscriberDataResponseDto>();
+            try
+            {
+                var subscriber = await _subscriberDomain.LoginSubscriber(user, psw);
+                if (subscriber == null)
+                {
+                    response.Data = null;
+                }
+                else
+                {
+                    response.Data = _mapper.Map<GetSubscriberDataResponseDto>(subscriber);
+                }
+            }catch(Exception ex)
+            {
+                _logger.LogError(response.Message, ex);
+                response.IsSuccess = false;
+            }
+            return response;
+        }
     }
 }

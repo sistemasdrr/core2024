@@ -1,6 +1,7 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Transversal.Common;
+using System.Reflection.Metadata;
 
 namespace DRRCore.Application.Interfaces.CoreApplication
 {
@@ -28,6 +29,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetFinancialBalanceResponseDto>> GetFinancialBalanceById(int id);
         Task<Response<bool>> DeleteFinancialBalance(int id);
         Task<Response<bool>> AddOrUpdateProviderAsync(AddOrUpdateProviderRequestDto obj);
+        Task<Response<bool>> AddOrUpdateProviderListAsync(List<GetListProviderResponseDto> obj, int idCompany);
         Task<Response<List<GetListProviderResponseDto>>> GetListProvidersAsync(int idCompany);
         Task<Response<GetProviderResponseDto>> GetProviderById(int id);
         Task<Response<bool>> DeleteProvider(int id);
@@ -56,7 +58,6 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetImportsAndExportResponseDto>> GetImportAndExportById(int id);
         Task<Response<List<GetImportsAndExportResponseDto>>> GetListImportAndExportByIdCompany(int idCompany, string type);
         Task<Response<GetStatusCompanyResponseDto>> GetStatusCompany(int idCompany);
-
         Task<Response<bool>> AddOrUpdateCompanyPartner(AddOrUpdateCompanyPartnersRequestDto obj);
         Task<Response<GetCompanyPartnersResponseDto>> GetCompanyPartnerById(int id);
         Task<Response<bool>> DeleteCompanyPartner(int id);
@@ -78,5 +79,6 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetFileResponseDto>> DownloadF8(int idCompany, string language, string format);
 
         Task<Response<bool>> NewComercialReferences(int idCompany, int? idTicket);
+        Task<Response<List<GetProviderHistoryResponseDto>>> GetProviderHistory(string type, int id);
     }
 }

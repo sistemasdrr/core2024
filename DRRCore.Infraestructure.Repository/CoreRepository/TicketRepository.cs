@@ -186,7 +186,8 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Include(x => x.IdSubscriberNavigation)
+                return await context.Tickets
+                    .Include(x => x.IdSubscriberNavigation)
                     .Include(x => x.IdSubscriberNavigation.IdCountryNavigation)
                     .Include(x => x.IdContinentNavigation).Include(x => x.IdCompanyNavigation)
                     .Include(x => x.IdCompanyNavigation.IdCountryNavigation)
@@ -385,6 +386,39 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<Ticket>> GetTicketsByIdSubscriber(int idSubscriber, string? name,DateTime from, DateTime until, int idCountry)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var tickets = await context.Tickets
+                    .Include(x => x.IdSubscriberNavigation)
+                    .Include(x => x.IdSubscriberNavigation.IdCountryNavigation)
+                    .Include(x => x.IdContinentNavigation).Include(x => x.IdCompanyNavigation)
+                    .Include(x => x.IdCompanyNavigation.IdCountryNavigation)
+                    .Include(x => x.IdCompanyNavigation.IdCountryNavigation.IdContinentNavigation)
+                    .Include(x => x.IdPersonNavigation)
+                    .Include(x => x.IdPersonNavigation.IdCountryNavigation)
+                    .Include(x => x.TicketQuery)
+                    .Include(x => x.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
+                    .Include(x => x.IdStatusTicketNavigation)
+                    .Include(x => x.IdCountryNavigation)
+                    .Include(x => x.TicketHistories.OrderByDescending(x => x.Id))
+                    .Include(x => x.TicketAssignation)
+                    .Include(X => X.TicketAssignation.IdEmployeeNavigation.UserLogins)
+                    .Include(x => x.TicketFiles)
+                    .Where(x => x.IdSubscriber == idSubscriber && x.OrderDate >= from && x.OrderDate <= until &&
+                    x.Enable == true && x.ProcedureType == "T4" && x.BusineesName.Contains(name.Trim()) && x.IdCompanyNavigation.IdCountry == idCountry ||
+                    x.IdSubscriber == idSubscriber && x.OrderDate >= from && x.OrderDate <= until &&
+                    x.Enable == true && x.ProcedureType == "T4" && x.BusineesName.Contains(name.Trim()) && x.IdPersonNavigation.IdCountry == idCountry).ToListAsync();
+                return tickets;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
             }
         }
 
