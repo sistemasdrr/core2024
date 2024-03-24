@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using DRRCore.Domain.Entities.MySqlContextFotos;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection.Emit;
+using System.Collections.Generic;
 
 namespace DRRCore.Application.Main.MigrationApplication
 {
@@ -163,7 +164,7 @@ namespace DRRCore.Application.Main.MigrationApplication
 
                             idCompany = await _companyDomain.AddCompanyAsync(company);
                             var emp = await _companyDomain.GetByIdAsync(idCompany);
-                            emp.Traductions = await GetAllTraductions(idCompany, empresa);
+                            emp.Traductions = await GetAllTraductions(empresa);
                             await _companyDomain.UpdateAsync(emp);
                             await _mempresaDomain.MigrateEmpresa(empresa.EmCodigo);
                         }
@@ -209,226 +210,237 @@ namespace DRRCore.Application.Main.MigrationApplication
             return new List<WorkersHistory>();
         }
 
-        private async Task<List<Traduction>> GetAllTraductions(int idCompany, MEmpresa empresa)
+        private async Task<List<Traduction>> GetAllTraductions(MEmpresa empresa)
         {
+            List<Traduction> traductions = new List<Traduction>();
             using var context = new SqlCoreContext();
-            var traductions = await context.Traductions.Where(x => x.IdCompany == idCompany).ToListAsync();
+        
 
-
-            foreach (var item in traductions)
+            foreach (var item in Constants.TRADUCTIONS_FORMS)
             {
-                if (item.Identifier == "L_E_COMIDE")
+                string? shortValue=null;
+                string? largeValue=null;
+                if (item == "L_E_COMIDE")
                 {
                     if (empresa.EmComideIng != null)
                     {
-                        item.LargeValue = empresa.EmComideIng;
+                        largeValue = empresa.EmComideIng;
                     }
                 }
-                else if (item.Identifier == "L_E_REPUTATION")
+                else if (item == "L_E_REPUTATION")
                 {
                     if (empresa.EmComrepIng != null)
                     {
-                        item.LargeValue = empresa.EmComrepIng;
+                        largeValue = empresa.EmComrepIng;
                     }
                 }
-                else if (item.Identifier == "L_E_NEW")
+                else if (item == "L_E_NEW")
                 {
                     if (empresa.EmPrensaIng != null || empresa.EmPrensaselIng != null)
                     {
-                        item.LargeValue = string.IsNullOrEmpty(empresa.EmPrensaIng) ? empresa.EmPrensaselIng : empresa.EmPrensaIng;
+                        largeValue = string.IsNullOrEmpty(empresa.EmPrensaIng) ? empresa.EmPrensaselIng : empresa.EmPrensaIng;
                     }
                 }
                 if (antecedentes != null)
                 {
-                    if (item.Identifier == "S_B_DURATION")
+                    if (item == "S_B_DURATION")
                     {
                         if (antecedentes.EmDuraciIng != null)
                         {
-                            item.ShortValue = antecedentes.EmDuraciIng;
+                           shortValue = antecedentes.EmDuraciIng;
                         }
                     }
-                    else if (item.Identifier == "S_B_REGISTERIN")
+                    else if (item == "S_B_REGISTERIN")
                     {
                         if (antecedentes.EmRegenIng != null)
                         {
-                            item.ShortValue = antecedentes.EmRegenIng;
+                            shortValue = antecedentes.EmRegenIng;
                         }
                     }
-                    else if (item.Identifier == "S_B_PUBLICREGIS")
+                    else if (item == "S_B_PUBLICREGIS")
                     {
                         if (antecedentes.EmRegistIng != null)
                         {
-                            item.ShortValue = antecedentes.EmRegistIng;
+                            shortValue = antecedentes.EmRegistIng;
                         }
                     }
-                    else if (item.Identifier == "L_B_PAIDCAPITAL")
+                    else if (item == "L_B_PAIDCAPITAL")
                     {
                         if (antecedentes.EmDuraciIng != null)
                         {
-                            item.LargeValue = "";
+                            largeValue = "";
                         }
                     }
-                    else if (item.Identifier == "S_B_INCREASEDATE")
+                    else if (item == "S_B_INCREASEDATE")
                     {
                         if (antecedentes.EmFecaumIng != null)
                         {
-                            item.ShortValue = antecedentes.EmFecaumIng;
+                            shortValue = antecedentes.EmFecaumIng;
                         }
                     }
-                    else if (item.Identifier == "S_B_TAXRATE")
+                    else if (item == "S_B_TAXRATE")
                     {
                         if (antecedentes.EmTipcamIng != null)
                         {
-                            item.ShortValue = antecedentes.EmTipcamIng;
+                            shortValue = antecedentes.EmTipcamIng;
                         }
                     }
-                    else if (item.Identifier == "L_B_LEGALBACK")
+                    else if (item == "L_B_LEGALBACK")
                     {
                         if (antecedentes.EmComentIng != null)
                         {
-                            item.LargeValue = antecedentes.EmComentIng;
+                            largeValue = antecedentes.EmComentIng;
                         }
                     }
-                    else if (item.Identifier == "L_B_HISTORY")
+                    else if (item == "L_B_HISTORY")
                     {
                         if (antecedentes.EmAnteceIng != null)
                         {
-                            item.LargeValue = antecedentes.EmAnteceIng;
+                            largeValue = antecedentes.EmAnteceIng;
                         }
                     }
                 }
                 if (ramo != null)
                 {
-                    if (item.Identifier == "S_R_TOTALAREA")
+                    if (item == "S_R_TOTALAREA")
                     {
                         if (ramo.EmAreaIng != null)
                         {
-                            item.ShortValue = ramo.EmAreaIng;
+                            shortValue = ramo.EmAreaIng;
                         }
                     }
-                    else if (item.Identifier == "L_R_OTRHERLOCALS")
+                    else if (item == "L_R_OTRHERLOCALS")
                     {
                         if (ramo.EmObservIng != null)
                         {
-                            item.LargeValue = ramo.EmObservIng;
+                            largeValue = ramo.EmObservIng;
                         }
                     }
-                    else if (item.Identifier == "L_R_PRINCACT")
+                    else if (item == "L_R_PRINCACT")
                     {
                         if (ramo.EmActiviIng != null)
                         {
-                            item.LargeValue = ramo.EmActiviIng;
+                            largeValue = ramo.EmActiviIng;
                         }
                     }
-                    else if (item.Identifier == "L_R_ADIBUS")
+                    else if (item == "L_R_ADIBUS")
                     {
                         if (ramo.EmComenIng != null)
                         {
-                            item.LargeValue = ramo.EmComenIng;
+                            largeValue = ramo.EmComenIng;
                         }
                     }
                 }
                 if (finanzas != null)
                 {
-                    if (item.Identifier == "S_F_JOB")
+                    if (item == "S_F_JOB")
                     {
                         if (finanzas.EmCargosIng != null)
                         {
-                            item.ShortValue = finanzas.EmCargosIng;
+                            shortValue = finanzas.EmCargosIng;
                         }
                     }
-                    else if (item.Identifier == "L_F_COMENT")
+                    else if (item == "L_F_COMENT")
                     {
                         if (finanzas.EmConinfIng != null)
                         {
-                            item.LargeValue = finanzas.EmConinfIng;
+                            largeValue = finanzas.EmConinfIng;
                         }
                     }
-                    else if (item.Identifier == "L_F_PRINCACTIV")
+                    else if (item == "L_F_PRINCACTIV")
                     {
                         if (finanzas.EmPropieIng != null)
                         {
-                            item.LargeValue = finanzas.EmPropieIng;
+                            largeValue = finanzas.EmPropieIng;
                         }
                     }
-                    else if (item.Identifier == "L_F_SELECTFIN")
+                    else if (item == "L_F_SELECTFIN")
                     {
                         if (finanzas.EmSitfinIng != null)
                         {
-                            item.LargeValue = finanzas.EmSitfinIng;
+                            largeValue = finanzas.EmSitfinIng;
                         }
                     }
-                    else if (item.Identifier == "L_F_ANALISTCOM")
+                    else if (item == "L_F_ANALISTCOM")
                     {
                         if (finanzas.EmAnalistaIng != null)
                         {
-                            item.LargeValue = finanzas.EmAnalistaIng;
+                            largeValue = finanzas.EmAnalistaIng;
                         }
                     }
                 }
-                if (item.Identifier == "L_S_COMENTARY")
+                if (item == "L_S_COMENTARY")
                 {
                     if (empresa.EmCenrieIng != null)
                     {
-                        item.LargeValue = empresa.EmCenrieIng;
+                        largeValue = empresa.EmCenrieIng;
                     }
                 }
-                else if (item.Identifier == "L_S_BANCARIOS")
+                else if (item == "L_S_BANCARIOS")
                 {
                     if (empresa.EmSupbanIng != null)
                     {
-                        item.LargeValue = empresa.EmSupbanIng;
+                        largeValue = empresa.EmSupbanIng;
                     }
                 }
-                else if (item.Identifier == "L_S_AVALES")
+                else if (item == "L_S_AVALES")
                 {
                     if (aval != null)
                     {
-                        item.LargeValue = aval.AvObservacionIng;
+                        largeValue = aval.AvObservacionIng;
                     }
                 }
-                else if (item.Identifier == "L_S_LITIG")
+                else if (item == "L_S_LITIG")
                 {
                     if (empresa.EmComlitIng != null)
                     {
-                        item.LargeValue = empresa.EmComlitIng;
+                        largeValue = empresa.EmComlitIng;
                     }
                 }
-                else if (item.Identifier == "L_S_CREDHIS")
+                else if (item == "L_S_CREDHIS")
                 {
                     if (empresa.EmAntcreIng != null)
                     {
-                        item.LargeValue = empresa.EmAntcreIng;
+                        largeValue = empresa.EmAntcreIng;
                     }
                 }
-                else if (item.Identifier == "S_O_QUERYCREDIT")
+                else if (item == "S_O_QUERYCREDIT")
                 {
                     if (empresa.EmMtopcrIng != null)
                     {
-                        item.ShortValue = empresa.EmMtopcrIng;
+                        shortValue = empresa.EmMtopcrIng;
                     }
                 }
-                else if (item.Identifier == "S_O_SUGCREDIT")
+                else if (item == "S_O_SUGCREDIT")
                 {
                     if (empresa.EmCrerecIng != null)
                     {
-                        item.LargeValue = empresa.EmCrerecIng;
+                        largeValue = empresa.EmCrerecIng;
                     }
                 }
-                else if (item.Identifier == "L_O_COMENTARY")
+                else if (item == "L_O_COMENTARY")
                 {
                     if (empresa.EmOcDescriIng != null)
                     {
-                        item.LargeValue = empresa.EmOcDescriIng;
+                        largeValue = empresa.EmOcDescriIng;
                     }
                 }
-                else if (item.Identifier == "L_I_GENERAL")
+                else if (item == "L_I_GENERAL")
                 {
                     if (empresa.EmInfgenIng != null)
                     {
-                        item.LargeValue = empresa.EmInfgenIng;
+                        largeValue = empresa.EmInfgenIng;
                     }
                 }
+                traductions.Add(new Traduction
+                {
+                    IdPerson = null,
+                    Identifier = item,
+                    IdLanguage = 1,
+                    LastUpdaterUser = 1,
+                    ShortValue = shortValue,
+                    LargeValue = largeValue
+                });
             }
             return traductions;
 
@@ -3167,14 +3179,15 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 Providers = await GetProviders(empresa.EmCodigo),
                                 ComercialLatePayments = await GetComercialLatePayments(empresa.EmCodigo),
                                 BankDebts = await GetBankDebts(empresa.EmCodigo),
-                                WorkersHistories = await GetWorkersHistories(empresa)
+                                WorkersHistories = await GetWorkersHistories(empresa),
+                                Traductions= await GetAllTraductions(empresa)
 
                             };
 
                             idCompany = await _companyDomain.AddCompanyAsync(company);
-                            var emp = await _companyDomain.GetByIdAsync(idCompany);
-                            emp.Traductions = await GetAllTraductions(idCompany, empresa);
-                            await _companyDomain.UpdateAsync(emp);
+                           // var emp = await _companyDomain.GetByIdAsync(idCompany);
+                          //  emp.Traductions = await GetAllTraductions(empresa);
+                           // await _companyDomain.UpdateAsync(emp);
                             await _mempresaDomain.MigrateEmpresa(empresa.EmCodigo);
                         }
                         catch (Exception ex)
@@ -3182,6 +3195,10 @@ namespace DRRCore.Application.Main.MigrationApplication
                             _logger.LogError("Error empresa :" + empresa.EmCodigo + " : " + ex.Message);
                             continue;
                         }
+                    }
+                    else
+                    {
+                        await _mempresaDomain.MigrateEmpresa(existCompany.OldCode);
                     }
                 }
             }

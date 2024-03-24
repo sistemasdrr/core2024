@@ -85,9 +85,12 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                                 IdPerson = null,
                                 Identifier = item,
                                 IdLanguage = 1,
-                                LastUpdaterUser = 1
+                                LastUpdaterUser = 1,
+                              
+                                
                             });
                         }
+                       
                     
                     }
                     await context.Companies.AddAsync(obj);
