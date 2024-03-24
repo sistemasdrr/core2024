@@ -257,6 +257,23 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<GetComboValueFlagResponseDto>> GetCountryById(int idCountry)
+        {
+            var response = new Response<GetComboValueFlagResponseDto>();
+            try
+            {
+                var country = await _countryDomain.GetByIdAsync(idCountry);
+                response.Data = _mapper.Map<GetComboValueFlagResponseDto>(country);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
         public async Task<Response<List<GetComboCreditRiskResponseDto>>> GetCreditRisk()
         {
             var response = new Response<List<GetComboCreditRiskResponseDto>>();

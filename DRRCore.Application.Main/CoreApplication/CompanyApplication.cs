@@ -1,17 +1,15 @@
-﻿using AspNetCore.Reporting;
-using AutoMapper;
+﻿using AutoMapper;
 using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.Interfaces.CoreApplication;
-using DRRCore.Domain.Entities.MYSQLContext;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -762,7 +760,6 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
-
         public async Task<Response<GetProviderResponseDto>> GetProviderById(int id)
         {
             var response = new Response<GetProviderResponseDto>();
@@ -2257,6 +2254,83 @@ namespace DRRCore.Application.Main.CoreApplication
             {
 
             }catch(Exception ex)
+            {
+
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetProviderHistoryResponseDto>>> GetProviderHistory(string type, int id)
+        {
+            var response = new Response<List<GetProviderHistoryResponseDto>>();
+            try
+            {
+                if(type == "E")
+                {
+                    response.Data = await _providerDomain.GetProvidersHistoryByIdCompany(id);
+                }else if(type == "P")
+                {
+                    response.Data = await _providerDomain.GetProvidersHistoryByIdPerson(id);
+                }
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddOrUpdateProviderListAsync(List<GetListProviderResponseDto> obj, int idCompany)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var list = await context.Providers.Where(x => x.Enable == true && x.IdCompany == idCompany && x.Flag == true).ToListAsync();
+                foreach (var item in list)
+                {
+                    item.Flag = false;
+                    context.Providers.Update(item);
+                }
+                foreach (var item1 in obj)
+                {
+                    await context.Providers.AddAsync(new Provider
+                    {
+                        Id = 0,
+                        IdCompany = item1.IdCompany == 0 || item1.IdCompany == null ? null : item1.IdCompany,
+                        Name = item1.Name,
+                        IdCountry = item1.IdCountry,
+                        Qualification = item1.Qualification,
+                        QualificationEng = item1.QualificationEng,
+                        Date = StaticFunctions.VerifyDate(item1.Date),
+                        Telephone = item1.Telephone,
+                        AttendedBy = item1.AttendedBy,
+                        IdCurrency = item1.IdCurrency,
+                        MaximumAmount = item1.MaximumAmount,
+                        MaximumAmountEng = item1.MaximumAmountEng,
+                        TimeLimit = item1.TimeLimit,
+                        TimeLimitEng = item1.TimeLimitEng,
+                        Compliance = item1.Compliance,
+                        ComplianceEng = item1.ComplianceEng,
+                        ClientSince = item1.ClientSince,
+                        ClientSinceEng = item1.ClientSinceEng,
+                        ProductsTheySell = item1.ProductsTheySell,
+                        ProductsTheySellEng = item1.ProductsTheySellEng,
+                        AdditionalCommentary = item1.AdditionalCommentary,
+                        AdditionalCommentaryEng = item1.AdditionalCommentaryEng,
+                        ReferentCommentary = item1.ReferentCommentary,
+                        IdPerson = item1.IdPerson == 0 || item1.IdPerson == null ? null : item1.IdPerson,
+                        IdTicket = item1.IdTicket,
+                        ReferentName = item1.ReferentName,
+                        Flag = true,
+                        Ticket = item1.Ticket,
+                        DateReferent = StaticFunctions.VerifyDate(item1.DateReferent)
+                    });
+                }
+                await context.SaveChangesAsync();
+                response.Data = true;
+            }
+            catch(Exception ex)
             {
 
             }

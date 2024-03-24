@@ -21,7 +21,19 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _ticketApplication.GetTicketNumberAsync());
         }
-
+        [HttpGet()]
+        [Route("getNumTicketById")]
+        public async Task<ActionResult> getNumTicketById(int idTicket)
+        {
+            return Ok(await _ticketApplication.GetNumCuponById(idTicket));
+        }
+        [HttpGet()]
+        [Route("getTicketsBySubscriber")]
+        public async Task<ActionResult> getTicketsBySubscriber(int idSubscriber, string? company, DateTime from, DateTime until, int idCountry)
+        {
+            return Ok(await _ticketApplication.GetTicketsByIdSubscriber(idSubscriber, company, from, until, idCountry));
+        }
+        
         [HttpPost()]
         [Route("add")]
         public async Task<ActionResult> AddTicket(AddOrUpdateTicketRequestDto request)

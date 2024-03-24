@@ -9,6 +9,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetComboValueResponseDto>>> GetCivilStatus();
         Task<Response<List<GetComboValueResponseDto>>> GetContinents();
         Task<Response<List<GetComboValueFlagResponseDto>>> GetCountries();
+        Task<Response<GetComboValueFlagResponseDto>> GetCountryById(int idCountry);
         Task<Response<List<GetComboValueFlagResponseDto>>> GetCountriesByContinent(int idContinent);
         Task<Response<List<GetComboValueResponseDto>>> GetDepartment();
         Task<Response<List<GetComboValueResponseDto>>> GetJobByDepartment(int idDepartment);

@@ -84,6 +84,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             CreateMap<Country, GetComboValueFlagResponseDto>()
              .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
              .ForMember(dest => dest.Valor, opt => opt?.MapFrom(src => src.Name))
+             .ForMember(dest => dest.Abreviation, opt => opt?.MapFrom(src => src.Iso))
              .ForMember(dest => dest.Bandera, opt => opt?.MapFrom(src => src.FlagIso))
              .ForMember(dest => dest.Regtrib, opt => opt?.MapFrom(src => src.TaxTypeName))
              .ForMember(dest => dest.CodCel, opt => opt?.MapFrom(src => src.CodePhone))

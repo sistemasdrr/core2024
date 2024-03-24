@@ -23,5 +23,6 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
         Task<bool?> AddTicketFile(TicketFile obj);
         Task<bool?> UpdateTicketFile(TicketFile obj);
         Task<bool?> DeleteTicketFile(int id);
+        Task<List<Ticket>> GetTicketsByIdSubscriber(int idSubscriber, string? company,DateTime from, DateTime until, int idCountry);   
     }
 }
