@@ -4174,6 +4174,9 @@ public partial class DbA9ccf0EecoreContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
+            entity.Property(e => e.Web)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("web");
 
             entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.IdCompany)

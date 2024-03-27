@@ -272,6 +272,38 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<List<Company>> GetCompanySearch(string name, string taxCode, int? idCountry)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var companies = new List<Company>();
+                if (idCountry != null && idCountry != 0)
+                {
+                    companies = await context.Companies
+                        .Where(x => x.Name.Contains(name) && x.TaxTypeCode.Contains(taxCode) && x.IdCountry == idCountry)
+                        .Include(x => x.FinancialBalances.Where(x => x.BalanceType == "GENERAL"))
+                        .Include(x => x.IdCountryNavigation)
+                        .Take(100)
+                        .ToListAsync();
+                }
+                else
+                {
+                    companies = await context.Companies
+                        .Where(x => x.Name.Contains(name) && x.TaxTypeCode.Contains(taxCode))
+                        .Include(x => x.FinancialBalances.Where(x => x.BalanceType == "GENERAL"))
+                        .Include(x => x.IdCountryNavigation)
+                        .Take(100)
+                        .ToListAsync();
+                }
+                return companies;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
         public async Task<bool> UpdateAsync(Company obj)
         {
             try

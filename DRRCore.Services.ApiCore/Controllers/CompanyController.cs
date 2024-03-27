@@ -50,6 +50,14 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _companyApplication.GetAllCompanys(name,form,idCountry,haveReport,similar));
         }
         [HttpGet()]
+        [Route("getCompanySearch")]
+        public async Task<ActionResult> getCompanySearch(string? name, string? taxCode, int idCountry)
+        {
+            name ??= string.Empty;
+            taxCode ??= string.Empty;
+            return Ok(await _companyApplication.GetCompanySearch(name,taxCode,idCountry));
+        }
+        [HttpGet()]
         [Route("getBack")]
         public async Task<ActionResult> GetCompanyBackground(int idCompany)
         {

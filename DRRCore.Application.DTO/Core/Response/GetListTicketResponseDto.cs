@@ -62,6 +62,7 @@
         public string Commentary { get; set; } = string.Empty;
         public bool HasFiles { get; set; }
         public List<TicketFileResponseDto> Files { get; set; } = new List<TicketFileResponseDto>();
+        public string Origen { get; set; }
 
     }
 }

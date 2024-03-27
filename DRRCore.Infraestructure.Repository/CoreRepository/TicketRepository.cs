@@ -373,6 +373,59 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<List<Ticket>> GetTicketHistoryByIdSubscriber(int idSubscriber, string? name, DateTime? from, DateTime? until, int? idCountry)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var tickets = new List<Ticket>();
+                if (idCountry != null && idCountry != 0)
+                {
+                    if(from != null && until != null)
+                    {
+                        tickets = await context.Tickets
+                           .Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Despachado && x.BusineesName.Contains(name) && x.OrderDate >= from.Value.Date && x.OrderDate <= until.Value.Date.AddDays(1).AddTicks(-1) && x.IdCountry == idCountry && x.ProcedureType == "T4" 
+                           || x.IdStatusTicket == (int?)TicketStatusEnum.Despachado && x.BusineesName.Contains(name) && x.OrderDate >= from.Value.Date && x.OrderDate <= until.Value.Date.AddDays(1).AddTicks(-1) && x.IdCountry == idCountry && x.ProcedureType == "T5")
+                           .Include(x => x.IdCountryNavigation)
+                           .ToListAsync();
+                    }
+                    else
+                    {
+                        tickets = await context.Tickets
+                           .Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Despachado && x.BusineesName.Contains(name) && x.IdCountry == idCountry && x.ProcedureType == "T4"
+                           || x.IdStatusTicket == (int?)TicketStatusEnum.Despachado && x.BusineesName.Contains(name) && x.IdCountry == idCountry && x.ProcedureType == "T5")
+                           .Include(x => x.IdCountryNavigation)
+                           .ToListAsync();
+                    }
+                }
+                else
+                {
+                    if (from != null && until != null)
+                    {
+                        tickets = await context.Tickets
+                           .Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Despachado && x.BusineesName.Contains(name) && x.OrderDate >= from.Value.Date && x.OrderDate <= until.Value.Date.AddDays(1).AddTicks(-1) && x.ProcedureType == "T4" 
+                           || x.IdStatusTicket == (int?)TicketStatusEnum.Despachado && x.BusineesName.Contains(name) && x.OrderDate >= from && x.OrderDate <= until && x.ProcedureType == "T5")
+                           .Include(x => x.IdCountryNavigation)
+                           .ToListAsync();
+                    }
+                    else
+                    {
+                        tickets = await context.Tickets
+                          .Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Despachado && x.BusineesName.Contains(name) && x.ProcedureType == "T4" 
+                          || x.IdStatusTicket == (int?)TicketStatusEnum.Despachado && x.BusineesName.Contains(name) && x.ProcedureType == "T5")
+                          .Include(x => x.IdCountryNavigation)
+                          .ToListAsync();
+                    }
+                }
+               
+                return tickets;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return null;
+            }
+        }
+
         public async Task<TicketQuery> GetTicketQuery(int idTicket)
         {
             try

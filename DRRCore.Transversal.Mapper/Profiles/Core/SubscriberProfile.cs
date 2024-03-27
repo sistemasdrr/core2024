@@ -42,6 +42,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
             .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
             .ForMember(dest => dest.Code, opt => opt?.MapFrom(src => src.Code))
             .ForMember(dest => dest.Name, opt => opt?.MapFrom(src => src.Name))
+            .ForMember(dest => dest.TypeFact, opt => opt?.MapFrom(src => src.FacturationType))
         .ReverseMap();
             CreateMap<AddOrUpdateSubscriberPriceRequestDto, SubscriberPrice>()
             .ForMember(dest => dest.Date, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.Date)))

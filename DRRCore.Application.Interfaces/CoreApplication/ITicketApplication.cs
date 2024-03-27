@@ -10,10 +10,13 @@ namespace DRRCore.Application.Interfaces.CoreApplication
     {
         Task<Response<List<GetTicketFileResponseDto>>> GetTicketFilesByIdTicket(int idTicket);
         Task<Response<bool>> AddTicketAsync(AddOrUpdateTicketRequestDto request);
+        Task<Response<bool>> AddTicketByWeb(AddOrUpdateTicketRequestDto request);
+        Task<Response<bool>> AddTicketOnline(AddOrUpdateTicketRequestDto request, string rubro, string sendTo);
         Task<Response<GetExistingTicketResponseDto>> GetReportType(int id, string type);
         Task<Response<GetNumerationResponseDto>> GetTicketNumberAsync();
         Task<Response<GetTicketRequestDto>> GetTicketRequestAsync(int id);
         Task<Response<List<GetListTicketResponseDto>>> GetTicketListAsync();
+        Task<Response<List<GetTicketHistorySubscriberResponseDto>>> GetTicketHistoryByIdSubscriber(int idSubscriber, string? name, DateTime? from, DateTime? until, int? idCountry);
         Task<Response<bool>> DeleteTicket(int id);
         Task<Response<List<GetListTicketResponseDto>>> GetTicketListPendingAsync();
         Task<Response<List<GetListTicketResponseDto>>> GetTicketListByAsync(string ticket, string name, string subscriber, string type, string procedure);

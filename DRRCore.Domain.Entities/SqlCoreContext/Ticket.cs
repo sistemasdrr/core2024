@@ -81,6 +81,8 @@ public partial class Ticket
 
     public string? DispatchedName { get; set; }
 
+    public bool? Web { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Continent? IdContinentNavigation { get; set; }

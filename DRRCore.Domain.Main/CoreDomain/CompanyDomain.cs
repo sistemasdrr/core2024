@@ -61,6 +61,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _companyRepository.GetByOldCode(oldCode);
         }
 
+        public async Task<List<Company>> GetCompanySearch(string name, string taxCode, int? idCountry)
+        {
+            return await _companyRepository.GetCompanySearch(name, taxCode, idCountry);
+        }
+
         public async Task<bool> UpdateAsync(Company obj)
         {
             return await _companyRepository.UpdateAsync(obj);
