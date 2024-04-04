@@ -13,6 +13,7 @@ using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using System.Collections;
 using System.IO.Compression;
@@ -632,7 +633,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 var query = await _ticketDomain.GetTicketQuery(idTicket);
 
                
-                if (query.Status == 0)
+                if (query == null)
                 {
                     var ticket = await _ticketDomain.GetByIdAsync(idTicket);
                     response.Data = new GetTicketQueryResponseDto
@@ -642,6 +643,7 @@ namespace DRRCore.Application.Main.CoreApplication
                         IdSubscriber = ticket.IdSubscriber,
                         Report=ticket.RequestedName??string.Empty,
                         Email=ticket.IdSubscriberNavigation.Email,
+                        Language=ticket.Language,
                         SubscriberName = ticket.IdSubscriberNavigation == null ? string.Empty :ticket.IdSubscriberNavigation.Code+"||"+ ticket.IdSubscriberNavigation.Name ?? string.Empty
                        
                     };
@@ -659,17 +661,16 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<bool>> AnswerTicket(int idTicket)
+        public async Task<Response<bool>> AnswerTicket(int idTicket,string subscriberResponse)
         {
             var response = new Response<bool>();
             try
             {
                 var ticket = await _ticketDomain.GetByIdAsync(idTicket);
                 ticket.IdStatusTicket = (int?)TicketStatusEnum.Pendiente;
-
                 await _ticketDomain.UpdateAsync(ticket);
 
-                response.Data= await _ticketDomain.TicketQueryAnswered(idTicket);
+                response.Data= await _ticketDomain.TicketQueryAnswered(idTicket, subscriberResponse);
             }
             catch (Exception ex)
             {
@@ -683,6 +684,7 @@ namespace DRRCore.Application.Main.CoreApplication
         public async Task<Response<bool>> SendTicketQuery(SendTicketQueryRequestDto request)
         {
             var listEmailTo=new List<string>();
+            var listEmailCC = new List<string>();
             var response = new Response<bool>();
             try
             {
@@ -690,12 +692,12 @@ namespace DRRCore.Application.Main.CoreApplication
                 query.IdEmployee = 1;
                 response.Data = await _ticketDomain.AddTicketQuery(query);
 
-                var user = await _userLoginDomain.GetByIdAsync(19);
+                var user = await _userLoginDomain.GetByIdAsync(int.Parse(request.User));
 
                 var ticket = await _ticketDomain.GetByIdAsync(request.IdTicket);
 
                 listEmailTo.AddRange(request.Email.Split(';'));
-                listEmailTo.Add(user.IdEmployeeNavigation.Email);
+                listEmailCC.Add(user.IdEmployeeNavigation.Email);
 
                 string subject;
                 if (request.Language == "I")
@@ -715,7 +717,8 @@ namespace DRRCore.Application.Main.CoreApplication
                     From = user.IdEmployeeNavigation.Email,
                     To = listEmailTo,
                     DisplayName = user.IdEmployeeNavigation.FirstName + ' ' + user.IdEmployeeNavigation.LastName,
-                    User = "19",
+                    User = request.User,
+                    CC=listEmailCC,
                     IsBodyHTML = true,
                     Subject = subject,
                     Parameters = new List<string>
@@ -1028,6 +1031,36 @@ namespace DRRCore.Application.Main.CoreApplication
                 _logger?.LogError(ex.Message, ex);
             }
             return response;
+        }
+
+        public async Task<Response<bool?>> AssignTicket(List<AssignTicketRequestDto> list)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                using (var context=new SqlCoreContext())
+                {
+                    if (list.Count > 0) {
+                        var history = await context.TicketHistories.Where(x => x.IdTicket == list[0].IdTicket && x.Flag.Value).FirstOrDefaultAsync();
+
+                        foreach (var item in list)
+                        {
+                            if (history != null)
+                            {
+
+                            }
+                           
+                        }
+                    }
+                }
+               
+               
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return new Response<bool?>();
         }
     }
 }

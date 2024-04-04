@@ -122,7 +122,8 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdStatusTicketNavigation)
                     .Include(x => x.TicketQuery)
                     .Include(x => x.TicketHistories.OrderByDescending(x=>x.Id)).Where(x => x.Enable == true)
-                    .Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Pendiente && x.Enable == true)
+                    .Where(x => (x.IdStatusTicket == (int?)TicketStatusEnum.Pendiente ||
+                    x.IdStatusTicket == (int?)TicketStatusEnum.En_Consulta) && x.Enable == true)
                     .OrderByDescending(x => x.Number).ToListAsync();
             }
             catch (Exception ex)
@@ -385,7 +386,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                throw new Exception(ex.Message);
+                return null;
             }
         }
 
@@ -422,7 +423,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
-        public async Task<bool> TicketQueryAnswered(int idTicket)
+        public async Task<bool> TicketQueryAnswered(int idTicket, string subscriberResponse)
         {
             try
             {
@@ -431,6 +432,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
 
                 query.Status = (int)TicketQueryEnum.Resuelta;
                 query.UpdateDate= DateTime.Now;
+                query.Response = subscriberResponse;
 
                 context.TicketQueries.Update(query);
                 await context.SaveChangesAsync();

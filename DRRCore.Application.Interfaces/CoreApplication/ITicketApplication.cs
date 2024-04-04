@@ -18,7 +18,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetListTicketResponseDto>>> GetTicketListPendingAsync();
         Task<Response<List<GetListTicketResponseDto>>> GetTicketListByAsync(string ticket, string name, string subscriber, string type, string procedure);
         Task<Response<GetTicketQueryResponseDto>> GetTicketQuery(int idTicket);
-        Task<Response<bool>> AnswerTicket(int idTicket);
+        Task<Response<bool>> AnswerTicket(int idTicket, string subscriberResponse);
         Task<Response<bool>> SendTicketQuery(SendTicketQueryRequestDto request);
         Task<Response<byte[]>> DownloadReport();
         Task<Response<bool>> SavePreAsignTicket(List<SavePreAsignTicketDto> lista);
@@ -34,6 +34,6 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<string?>> GetNumCuponById(int idTicket);
 
         Task<Response<List<GetListTicketResponseDto>>> GetTicketsByIdSubscriber(int idSubscriber, string? company, DateTime from, DateTime until, int idCountry);
-
+        Task<Response<bool?>> AssignTicket(List<AssignTicketRequestDto> list);
     }
 }

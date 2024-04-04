@@ -125,13 +125,13 @@ namespace DRRCore.Application.DTO
                         Code = company.IdLegalPersonTypeNavigation == null || company.IdLegalPersonTypeNavigation.ApiCode == null ? "" : company.IdLegalPersonTypeNavigation.ApiCode,//"JF26",
                         Description = company.IdLegalPersonTypeNavigation == null || company.IdLegalPersonTypeNavigation.EnglishName == null ? "" : company.IdLegalPersonTypeNavigation.EnglishName//"Publicly Held Corporation"
                     },
-                    Main_Address = company.Address == null ? "" : company.Address,//"Argentina, 4793, ****",
-                    CityProvincie = company.Place == null ? "" : company.Place, //"Callao",
-                    PostalCode = company.PostalCode == null ? "" : company.PostalCode,//"Callao, 3",
+                    Main_Address = company.Address??string.Empty,//"Argentina, 4793, ****",
+                    CityProvincie = company.Place ?? string.Empty, //"Callao",
+                    PostalCode = company.PostalCode ?? string.Empty,//"Callao, 3",
                     Country = company.IdCountryNavigation == null || company.IdCountryNavigation.Iso == null ? "" : company.IdCountryNavigation.Iso,//"PER",
-                    Phone = company.Cellphone == null ? "" : company.Cellphone,// "+511  3150800 - 2154130-11054",
-                    Email = company.Email == null ? "" : company.Email,//"******@alicorp.com.pe ; ******@alicorp.com.pe",
-                    WebUrl = company.WebPage == null ? "" : company.WebPage,//"www.alicorp.com.pe",
+                    Phone = company.Cellphone ?? string.Empty,// "+511  3150800 - 2154130-11054",
+                    Email = company.Email ?? string.Empty,//"******@alicorp.com.pe ; ******@alicorp.com.pe",
+                    WebUrl = company.WebPage ?? string.Empty,//"www.alicorp.com.pe",
                     Comment = company.Traductions.Where(x => x.Identifier == "L_E_COMIDE").FirstOrDefault().LargeValue == null ? "" : company.Traductions.Where(x => x.Identifier == "L_E_COMIDE").FirstOrDefault().LargeValue//"Email: s*****@gromero.com.pe\r\n\r\nIt should be mentioned the currently investigated Company is NOT INCLUDED IN THE OFAC Sanctions List (List of companies and individuals linked with money from terrorism and narcotics trafficking published by the Office of Foreign Assets Control of the United States Department of the Treasury)."
                 };
                 return information;

@@ -447,7 +447,7 @@ public partial class SqlCoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("qualification");
             entity.Property(e => e.QualificationEng)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("qualificationEng");
             entity.Property(e => e.UpdateDate)
@@ -2771,7 +2771,7 @@ public partial class SqlCoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("address");
             entity.Property(e => e.BirthDate)
-                .HasMaxLength(30)
+                .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("birthDate");
             entity.Property(e => e.BirthPlace)
@@ -2791,7 +2791,7 @@ public partial class SqlCoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("clubMember");
             entity.Property(e => e.CodeDocumentType)
-                .HasMaxLength(30)
+                .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("codeDocumentType");
             entity.Property(e => e.CodePhone)
@@ -3236,7 +3236,7 @@ public partial class SqlCoreContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("date");
             entity.Property(e => e.DebtRecordedDate)
-                .HasMaxLength(30)
+                .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("debtRecordedDate");
             entity.Property(e => e.DeleteDate)
@@ -3690,7 +3690,7 @@ public partial class SqlCoreContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Amount)
-                .HasColumnType("decimal(15, 2)")
+                .HasColumnType("money")
                 .HasColumnName("amount");
             entity.Property(e => e.CreationDate)
                 .HasDefaultValueSql("(getdate())")
@@ -4148,7 +4148,7 @@ public partial class SqlCoreContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("realExpireDate");
             entity.Property(e => e.ReferenceNumber)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("referenceNumber");
             entity.Property(e => e.ReportType)
@@ -4181,6 +4181,9 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
+            entity.Property(e => e.Web)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("web");
 
             entity.HasOne(d => d.IdCompanyNavigation).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.IdCompany)
@@ -4303,6 +4306,9 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.Enable)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
+            entity.Property(e => e.EndDate)
+                .HasColumnType("datetime")
+                .HasColumnName("endDate");
             entity.Property(e => e.Flag)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("flag");
@@ -4313,6 +4319,9 @@ public partial class SqlCoreContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("observations");
             entity.Property(e => e.References).HasColumnName("references");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("startDate");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");

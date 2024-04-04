@@ -86,9 +86,9 @@ namespace DRRCore.Services.ApiCore.Controllers
         }
         [HttpPost()]
         [Route("answeredTicketQuery")]
-        public async Task<ActionResult> answeredTicketQuery(int idTicket)
+        public async Task<ActionResult> answeredTicketQuery(int idTicket, string response)
         {
-            return Ok(await _ticketApplication.AnswerTicket(idTicket));
+            return Ok(await _ticketApplication.AnswerTicket(idTicket, response));
         }
         [HttpPost()]
         [Route("sendQuery")]
@@ -166,6 +166,12 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> deleteFile(int id)
         {
             return Ok(await _ticketApplication.DeleteFile(id));
+        }
+        [HttpPost()]
+        [Route("assignTicket")]
+        public async Task<ActionResult> AssignTicket(List<AssignTicketRequestDto> list)
+        {
+            return Ok(await _ticketApplication.AssignTicket(list));
         }
     }
 }

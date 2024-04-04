@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DRRCore.Application.DTO.Core.Request
+{
+    public class AssignTicketRequestDto
+    {
+        public string? UserFrom { get; set; }
+        public string? UserTo { get; set; }
+        public string? AssignedToCode { get; set; }
+        public string? AssignedToName { get; set; }      
+        public bool References { get; set; }
+        public string? Observations { get; set; }
+        public string? Type { get; set; }
+        public bool Internal { get; set; }
+        public bool Balance { get; set; }
+        public string? StartDate { get; set; }
+        public string? EndDate { get; set; }
+        public int IdTicket { get; set; }
+    }
+}
+
+

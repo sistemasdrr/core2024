@@ -187,6 +187,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
              .ForMember(dest => dest.QueryDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.QueryDate)))
              .ForMember(dest => dest.SubscriberName, opt => opt?.MapFrom(src =>src.IdSubscriberNavigation==null?string.Empty: src.IdSubscriberNavigation.Code +"||"+src.IdSubscriberNavigation.Name))
              .ForMember(dest => dest.Report, opt => opt?.MapFrom(src => src.IdTicketNavigation == null ? string.Empty : src.IdTicketNavigation.RequestedName))
+             .ForMember(dest => dest.Response, opt => opt?.MapFrom(src => src.IdTicketNavigation == null ? string.Empty : src.Response))
             .ReverseMap();
             CreateMap<SendTicketQueryRequestDto, TicketQuery>()
             .ForMember(dest => dest.QueryDate, opt => opt?.MapFrom(src => StaticFunctions.VerifyDate(src.QueryDate)))

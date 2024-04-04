@@ -116,9 +116,9 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _ticketRepository.GetTicketsByIdSubscriber(idSubscriber, company, from, until, idCountry);
         }
 
-        public async Task<bool> TicketQueryAnswered(int idTicket)
+        public async Task<bool> TicketQueryAnswered(int idTicket, string subscriberResponse)
         {
-            return await _ticketRepository.TicketQueryAnswered(idTicket);
+            return await _ticketRepository.TicketQueryAnswered(idTicket, subscriberResponse);
         }
 
         public async Task<bool> UpdateAsync(Ticket obj)

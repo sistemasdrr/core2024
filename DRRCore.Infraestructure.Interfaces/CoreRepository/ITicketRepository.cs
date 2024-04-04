@@ -11,7 +11,7 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
         Task<List<Ticket>> GetAllByAsync(string ticket, string name, string subscriber, string type, string procedure);
         Task<bool> AddTicketQuery(TicketQuery query);
         Task<TicketQuery> GetTicketQuery(int idTicket);
-        Task<bool> TicketQueryAnswered(int idTicket);
+        Task<bool> TicketQueryAnswered(int idTicket, string subscriberResponse);
         Task<List<OldTicket>> GetSimilarByNameAsync(string name, string empresaPersona);
         Task<List<OldTicket>> GetOldTicketByCompany(string oldCode);
         Task<List<OldTicket>> GetOldTicketByPerson(string oldCode);

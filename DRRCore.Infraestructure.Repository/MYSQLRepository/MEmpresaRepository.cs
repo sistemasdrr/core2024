@@ -260,7 +260,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
                 using (var context = new MySqlContext())
                 {
                     var empresas = await context.MEmpresas
-                        .Where(x => x.EmCodigo== "E0001006519").ToListAsync();
+                        .Where(x => x.EmCodigo== "E0001003807").ToListAsync();
 
                     empresas = empresas.Where(x => !x.EmCodigo.StartsWith('Z')).ToList();
 

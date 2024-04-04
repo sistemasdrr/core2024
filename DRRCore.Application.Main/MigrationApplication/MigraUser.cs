@@ -158,16 +158,14 @@ namespace DRRCore.Application.Main.MigrationApplication
                                 Providers = await GetProviders(empresa.EmCodigo),
                                 ComercialLatePayments = await GetComercialLatePayments(empresa.EmCodigo),
                                 BankDebts = await GetBankDebts(empresa.EmCodigo),
-                                WorkersHistories = await GetWorkersHistories(empresa)
+                                WorkersHistories = await GetWorkersHistories(empresa),
+                                Traductions = await GetAllTraductions(empresa)
 
                             };
 
-                            idCompany = await _companyDomain.AddCompanyAsync(company);
-                            var emp = await _companyDomain.GetByIdAsync(idCompany);
-                            emp.Traductions = await GetAllTraductions(empresa);
-                            await _companyDomain.UpdateAsync(emp);
-                            await _mempresaDomain.MigrateEmpresa(empresa.EmCodigo);
-                        }
+                        idCompany = await _companyDomain.AddCompanyAsync(company);
+                        await _mempresaDomain.MigrateEmpresa(empresa.EmCodigo);
+                    }
                         catch (Exception ex)
                         {
                             _logger.LogError("Error empresa :" + empresa.EmCodigo + " : " + ex.Message);
@@ -175,6 +173,102 @@ namespace DRRCore.Application.Main.MigrationApplication
                         }                      
                     }
                 }            
+
+            return true;
+        }
+        public async Task<bool> MigrateCompanyOthers(int migra)
+        {
+            for (int i = 0; i < 360; i++)
+            {
+                var empresas = await _mempresaDomain.GetNotMigratedEmpresa(migra);
+                foreach (var empresa in empresas)
+                {
+                    finanzas = new REmpVsInfFin();
+                    ramo = new REmpVsRamNeg();
+                    aval = new TCabEmpAval();
+                    antecedentes = new REmpVsAspLeg();
+                    int idCompany = 0;
+                    using var context = new SqlCoreContext();
+                    var existCompany = await context.Companies.Where(x => x.OldCode == empresa.EmCodigo).FirstOrDefaultAsync();
+
+                    if (existCompany == null)
+                    {
+                        try
+                        {
+                            var reputacion = await _mempresaDomain.GetmEmpresaReputacionByCodigoAsync(empresa.EmCodigo);
+                            int idReputacion = 0;
+                            if (reputacion != null)
+                            {
+                                idReputacion = ObtenerReputacion(reputacion.RcCodigo);
+                            }
+
+                            var company = new Company
+                            {
+                                OldCode = empresa.EmCodigo,
+                                Name = empresa.EmNombre,
+                                SocialName = empresa.EmSiglas,
+                                LastSearched = empresa.EmFecinf,
+                                Language = Dictionary.LanguageMigra[empresa.IdiCodigo.Value],
+                                TypeRegister = empresa.EmTipper == 0 ? "PJ" : "PN",
+                                YearFundation = empresa.EmAnofun,
+                                Quality = ObtenerCalidad(empresa.CalCodigo),
+                                IdLegalPersonType = ObtenerPersoneriaLegal(empresa.JuCodigo),
+                                TaxTypeCode = empresa.EmRegtri,
+                                IdCountry = ObtenerCodigoPais(empresa.PaiCodigo),
+                                HaveReport = ObtenerReportes(empresa.EmCodigo),
+                                IdLegalRegisterSituation = GetLegalRegisterSituation(empresa.SitCodigo),
+                                Address = empresa.EmDirecc,
+                                Place = empresa.EmCiudad,
+                                Telephone = empresa.EmTelef1,
+                                SubTelephone = empresa.EmPrftlf,
+                                Cellphone = empresa.EmPrffax,
+                                PostalCode = empresa.EmCodpos,
+                                WhatsappPhone = empresa.EmFax,
+                                Email = empresa.EmEmail,
+                                WebPage = empresa.EmPagweb,
+                                IdCreditRisk = GetCreditRisk(empresa.CrCodigo),
+                                IdPaymentPolicy = GetPaymentPolicy(empresa.PaCodigo),
+                                IdReputation = idReputacion != 0 ? idReputacion : null,
+                                NewsComentary = string.IsNullOrEmpty(empresa.EmPrensa) ? empresa.EmPrensasel : empresa.EmPrensa,
+                                IdentificacionCommentary = empresa.EmComide,
+                                Enable = empresa.EmActivo == 1,
+                                LastUpdaterUser = 1,
+                                OnWeb = empresa.EmOnline == "SI",
+                                ReputationComentary = empresa.EmComrep,
+                                Print = empresa.EmLogpre == 1,
+                                CompanyBackgrounds = await GetCompanyBackground(empresa.EmCodigo),
+                                CompanyBranches = await GetCompanyBranch(empresa.EmCodigo),
+                                CompanyFinancialInformations = await GetCompanyFinancialInformations(empresa.EmCodigo, empresa.EmAudito ?? string.Empty),
+                                CompanySbs = await GetCompanySbs(empresa),
+                                CompanyCreditOpinions = await GetCompanyCreditOpinions(empresa),
+                                CompanyGeneralInformations = await GetCompanyGeneralInformation(empresa.EmInfgen, empresa.EmCodigo),
+                                FinancialBalances = await GetFinancialBalances(empresa.EmCodigo),
+                                SalesHistories = await GetSalesHistories(empresa.EmCodigo),
+                                ImportsAndExports = await GetImportsAndExports(empresa.EmCodigo),
+                                Providers = await GetProviders(empresa.EmCodigo),
+                                ComercialLatePayments = await GetComercialLatePayments(empresa.EmCodigo),
+                                BankDebts = await GetBankDebts(empresa.EmCodigo),
+                                WorkersHistories = await GetWorkersHistories(empresa),
+                                Traductions = await GetAllTraductions(empresa)
+
+                            };
+
+                            idCompany = await _companyDomain.AddCompanyAsync(company);
+                          
+                            await _mempresaDomain.MigrateEmpresa(empresa.EmCodigo);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError("Error empresa :" + empresa.EmCodigo + " : " + ex.Message);
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        await _mempresaDomain.MigrateEmpresa(existCompany.OldCode);
+                    }
+                }
+            }
 
             return true;
         }
@@ -607,7 +701,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                         QualificationEng = item.CumCodigo == "02" ? "Prompt" : item.CumCodigo == "03" ? "Sometimes delayed" :
                      item.CumCodigo == "04" ? "Always delayed" : item.CumCodigo == "05" ? "Delinquent" :
                       item.CumCodigo == "06" ? "No experience" : item.CumCodigo == "01" ? "" : null,
-                        Date = item.ProvFecha,
+                        Date =StaticFunctions.VerifyDate(item.ProvFecha),
                         Telephone = item.ProvTelefo,
                         AttendedBy = item.ProvAtendio,
                         IdCurrency = item.ProvMnLiCr == "US$" ? 1 : item.ProvMnLiCr == "MN" ? 31 : item.ProvMnLiCr == "EUR" ? 2 : null,
@@ -622,12 +716,14 @@ namespace DRRCore.Application.Main.MigrationApplication
                         ProductsTheySellEng = item.ProvVendenIng,
                         AdditionalCommentary = item.ProvComen,
                         AdditionalCommentaryEng = item.ProvComenIng,
-                        ReferentCommentary = item.ProvTexto
+                        ReferentCommentary = item.ProvTexto,
+                       
 
                     };
                     lista.Add(objeto);
-                    return lista;
+                   
                 }
+                return lista;
             }
             catch (Exception ex)
             {
@@ -1167,7 +1263,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                         BankingCommentary = empresa.EmSupban,
                         EndorsementsObservations = aval != null ? aval.AvObservacion : "",
                         ReferentOrAnalyst = empresa.PerCodref,
-                        Date = empresa.EmFecref,
+                        Date = StaticFunctions.VerifyDate(empresa.EmFecref),
                         LitigationsCommentary = empresa.EmComlit,
                         CreditHistoryCommentary = empresa.EmAntcre,
                         GuaranteesOfferedNc = (decimal)empresa.EmGaomn,
@@ -3107,104 +3203,7 @@ namespace DRRCore.Application.Main.MigrationApplication
             return true;
         }
                
-        public async Task<bool> MigrateCompanyOthers(int migra)
-        {
-            for (int i = 0; i < 360; i++)
-            {
-                var empresas = await _mempresaDomain.GetNotMigratedEmpresa(migra);
-                foreach (var empresa in empresas)
-                {
-                    finanzas = new REmpVsInfFin();
-                    ramo = new REmpVsRamNeg();
-                    aval = new TCabEmpAval();
-                    antecedentes = new REmpVsAspLeg();
-                    int idCompany = 0;
-                    using var context = new SqlCoreContext();
-                    var existCompany = await context.Companies.Where(x => x.OldCode == empresa.EmCodigo).FirstOrDefaultAsync();
-
-                    if (existCompany == null)
-                    {
-                        try
-                        {
-                            var reputacion = await _mempresaDomain.GetmEmpresaReputacionByCodigoAsync(empresa.EmCodigo);
-                            int idReputacion = 0;
-                            if (reputacion != null)
-                            {
-                                idReputacion = ObtenerReputacion(reputacion.RcCodigo);
-                            }
-
-                            var company = new Company
-                            {
-                                OldCode = empresa.EmCodigo,
-                                Name = empresa.EmNombre,
-                                SocialName = empresa.EmSiglas,
-                                LastSearched = empresa.EmFecinf,
-                                Language = Dictionary.LanguageMigra[empresa.IdiCodigo.Value],
-                                TypeRegister = empresa.EmTipper == 0 ? "PJ" : "PN",
-                                YearFundation = empresa.EmAnofun,
-                                Quality = ObtenerCalidad(empresa.CalCodigo),
-                                IdLegalPersonType = ObtenerPersoneriaLegal(empresa.JuCodigo),
-                                TaxTypeCode = empresa.EmRegtri,
-                                IdCountry = ObtenerCodigoPais(empresa.PaiCodigo),
-                                HaveReport = ObtenerReportes(empresa.EmCodigo),
-                                IdLegalRegisterSituation = GetLegalRegisterSituation(empresa.SitCodigo),
-                                Address = empresa.EmDirecc,
-                                Place = empresa.EmCiudad,
-                                Telephone = empresa.EmTelef1,
-                                SubTelephone = empresa.EmPrftlf,
-                                Cellphone = empresa.EmPrffax,
-                                PostalCode = empresa.EmCodpos,
-                                WhatsappPhone = empresa.EmFax,
-                                Email = empresa.EmEmail,
-                                WebPage = empresa.EmPagweb,
-                                IdCreditRisk = GetCreditRisk(empresa.CrCodigo),
-                                IdPaymentPolicy = GetPaymentPolicy(empresa.PaCodigo),
-                                IdReputation = idReputacion != 0 ? idReputacion : null,
-                                NewsComentary = string.IsNullOrEmpty(empresa.EmPrensa) ? empresa.EmPrensasel : empresa.EmPrensa,
-                                IdentificacionCommentary = empresa.EmComide,
-                                Enable = empresa.EmActivo == 1,
-                                LastUpdaterUser = 1,
-                                OnWeb = empresa.EmOnline == "SI",
-                                ReputationComentary = empresa.EmComrep,
-                                Print = empresa.EmLogpre == 1,
-                                CompanyBackgrounds = await GetCompanyBackground(empresa.EmCodigo),
-                                CompanyBranches = await GetCompanyBranch(empresa.EmCodigo),
-                                CompanyFinancialInformations = await GetCompanyFinancialInformations(empresa.EmCodigo, empresa.EmAudito ?? string.Empty),
-                                CompanySbs = await GetCompanySbs(empresa),
-                                CompanyCreditOpinions = await GetCompanyCreditOpinions(empresa),
-                                CompanyGeneralInformations = await GetCompanyGeneralInformation(empresa.EmInfgen, empresa.EmCodigo),
-                                FinancialBalances = await GetFinancialBalances(empresa.EmCodigo),
-                                SalesHistories = await GetSalesHistories(empresa.EmCodigo),
-                                ImportsAndExports = await GetImportsAndExports(empresa.EmCodigo),
-                                Providers = await GetProviders(empresa.EmCodigo),
-                                ComercialLatePayments = await GetComercialLatePayments(empresa.EmCodigo),
-                                BankDebts = await GetBankDebts(empresa.EmCodigo),
-                                WorkersHistories = await GetWorkersHistories(empresa),
-                                Traductions= await GetAllTraductions(empresa)
-
-                            };
-
-                            idCompany = await _companyDomain.AddCompanyAsync(company);
-                           // var emp = await _companyDomain.GetByIdAsync(idCompany);
-                          //  emp.Traductions = await GetAllTraductions(empresa);
-                           // await _companyDomain.UpdateAsync(emp);
-                            await _mempresaDomain.MigrateEmpresa(empresa.EmCodigo);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError("Error empresa :" + empresa.EmCodigo + " : " + ex.Message);
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        await _mempresaDomain.MigrateEmpresa(existCompany.OldCode);
-                    }
-                }
-            }
-
-            return true;
-        }
+        
 
         public Task<bool> MigrateAgent()
         {

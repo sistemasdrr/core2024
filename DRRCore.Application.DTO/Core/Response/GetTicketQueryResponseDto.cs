@@ -11,6 +11,7 @@
         public string? Message { get; set; }     
         public int Status { get; set; }
         public string Report { get; set; } = string.Empty;
-    
+        public string Response { get; set; } = string.Empty;
+
     }
 }
