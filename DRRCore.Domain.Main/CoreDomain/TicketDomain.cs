@@ -96,6 +96,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _ticketRepository.GetTicketByCompany(id);
         }
 
+        public async Task<List<Ticket>> GetTicketByCompanyOrPerson(string about, int id)
+        {
+            return await _ticketRepository.GetTicketByCompanyOrPerson(about, id);
+        }
+
         public async Task<List<Ticket>> GetTicketByPerson(int id)
         {
            return await _ticketRepository.GetTicketByPerson(id);
@@ -111,6 +116,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _ticketRepository.GetTicketHistoryByIdSubscriber(idSubscriber, name, from, until, idCountry);
         }
 
+        public async Task<List<TicketHistory>> GetTicketHistoryByIdTicket(int idTicket)
+        {
+            return await _ticketRepository.GetTicketHistoryByIdTicket(idTicket);
+        }
+
         public async Task<TicketQuery> GetTicketQuery(int idTicket)
         {
             return await _ticketRepository.GetTicketQuery(idTicket);
@@ -121,6 +131,12 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _ticketRepository.GetTicketsByIdSubscriber(idSubscriber, company, from, until, idCountry);
         }
 
+        public async Task<List<Ticket>> GetTicketSituation(string about, string typeSearch, string? search, int? idCountry)
+        {
+            return await _ticketRepository.GetTicketSituation(about, typeSearch, search, idCountry);
+        }
+
+        
         public async Task<bool> TicketQueryAnswered(int idTicket, string subscriberResponse)
         {
             return await _ticketRepository.TicketQueryAnswered(idTicket, subscriberResponse);

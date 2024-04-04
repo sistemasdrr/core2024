@@ -179,7 +179,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
-            }
+            }   
         }
 
         public async Task<List<Ticket>> GetAllPendingTickets()
@@ -248,12 +248,75 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Include(x => x.IdCountryNavigation).Where(x => x.RequestedName.Contains(name) && x.IdStatusTicket == 9 && x.About==empresaPersona).ToListAsync();
+                return await context.Tickets.Include(x => x.IdCountryNavigation).Where(x => x.RequestedName.Contains(name) && x.IdStatusTicket == 9 && x.About==empresaPersona || x.BusineesName.Contains(name) && x.IdStatusTicket == 9 && x.About == empresaPersona).ToListAsync();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<Ticket>> GetTicketSituation(string about, string typeSearch, string? search, int? idCountry)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var tickets = new List<Ticket>(); 
+                if(about == "E")
+                {
+                    if (typeSearch == "N")
+                    {
+                        tickets = await context.Tickets
+                            .Include(x => x.IdCompanyNavigation)
+                            .Where(x => x.About == about && x.BusineesName.Contains(search) || x.About == about && x.RequestedName.Contains(search) || x.About == about && x.IdCompanyNavigation.Name.Contains(search))
+                            .Take(100).ToListAsync();
+                    }
+                    else if (typeSearch == "R")
+                    {
+                        tickets = await context.Tickets
+                            .Include(x => x.IdCompanyNavigation)
+                            .Where(x => x.About == about && x.TaxCode.Contains(search) || x.About == about && x.IdCompanyNavigation.TaxTypeCode.Contains(search))
+                            .Take(100).ToListAsync();
+                    }
+                    else if (typeSearch == "T")
+                    {
+                        tickets = await context.Tickets
+                            .Include(x => x.IdCompanyNavigation)
+                            .Where(x => x.About == about && x.Telephone.Contains(search) || x.About == about && x.IdCompanyNavigation.Telephone.Contains(search))
+                           .Take(100).ToListAsync();
+                    }
+                }
+                else if(about == "P")
+                {
+                    if (typeSearch == "N")
+                    {
+                        tickets = await context.Tickets
+                            .Include(x => x.IdPersonNavigation)
+                            .Where(x => x.About == about && x.BusineesName.Contains(search) || x.About == about && x.RequestedName.Contains(search))
+                            .Take(100).ToListAsync();
+                    }
+                    else if (typeSearch == "R")
+                    {
+                        tickets = await context.Tickets
+                            .Include(x => x.IdPersonNavigation)
+                            .Where(x => x.About == about && x.TaxCode.Contains(search) || x.About == about && x.IdPersonNavigation.TaxTypeCode.Contains(search))
+                            .Take(100).ToListAsync();
+                    }
+                    else if (typeSearch == "T")
+                    {
+                        tickets = await context.Tickets
+                            .Include(x => x.IdPersonNavigation)
+                            .Where(x => x.About == about && x.Telephone.Contains(search) || x.About == about && x.IdPersonNavigation.Cellphone.Contains(search))
+                            .Take(100).ToListAsync();
+                    }
+                }
+                
+                return tickets;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return null;
             }
         }
 
@@ -533,6 +596,53 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             {
                 _logger.LogError(ex.Message, ex);
                 return false;
+            }
+        }
+
+        public async Task<List<Ticket>> GetTicketByCompanyOrPerson(string about, int id)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var tickets = new List<Ticket>();
+                if (about == "E")
+                {
+                    tickets = await context.Tickets.Where(x => x.About == "E" && x.IdCompany == id && x.IdStatusTicket != 11)
+                        .Include(x => x.IdSubscriberNavigation)
+                        .Include(x => x.IdStatusTicketNavigation)
+                        .ToListAsync();
+                }
+                else
+                {
+                    tickets = await context.Tickets.Where(x => x.About == "P" && x.IdPerson == id && x.IdStatusTicket != 11)
+                        .Include(x => x.IdSubscriberNavigation)
+                        .Include(x => x.IdStatusTicketNavigation)
+                        .ToListAsync();
+
+                }
+                return tickets;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<List<TicketHistory>> GetTicketHistoryByIdTicket(int idTicket)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var ticketHistory = await context.TicketHistories
+                    .Include(x => x.IdStatusTicketNavigation)
+                    .Where(x => x.IdTicket == idTicket && x.Enable == true)
+                    .ToListAsync();
+                return ticketHistory;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
             }
         }
     }

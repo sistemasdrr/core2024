@@ -236,14 +236,14 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name, string form, int idCountry, bool haveReport, bool similar)
+        public async Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name, string form, int idCountry, bool haveReport, string filterBy)
         {
             var response = new Response<List<GetListCompanyResponseDto>>();
             try
             {
-                if (!similar)
+                if (filterBy != "S")
                 {
-                    var company = await _companyDomain.GetByNameAsync(name, form, idCountry, haveReport, similar);
+                    var company = await _companyDomain.GetByNameAsync(name, form, idCountry, haveReport, filterBy);
                     if (company == null)
                     {
                         response.IsSuccess = false;

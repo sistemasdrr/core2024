@@ -44,11 +44,11 @@ namespace DRRCore.Services.ApiCore.Controllers
         }
         [HttpGet()]
         [Route("getListPerson")]
-        public async Task<ActionResult> getListPerson(string? fullname, string? form, int idCountry, bool haveReport,bool similar)
+        public async Task<ActionResult> getListPerson(string? fullname, string? form, int idCountry, bool haveReport, string filterBy)
         {
             fullname ??= string.Empty;
             form ??= string.Empty;
-            return Ok(await _personApplication.GetListPerson(fullname, form, idCountry, haveReport,similar));
+            return Ok(await _personApplication.GetListPerson(fullname, form, idCountry, haveReport, filterBy));
         }
         [HttpGet()]
         [Route("getPerson")]

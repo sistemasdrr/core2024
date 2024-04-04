@@ -13,6 +13,7 @@
        Despachado=9,
        Observado=10,
        Rechazado=11,
-       Pre_Asignacion = 12
+       Pre_Asignacion = 12,
+        Asig_Referencista = 13,
     }
 }

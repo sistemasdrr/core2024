@@ -13,11 +13,6 @@ using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using System.Collections;
-using System.IO.Compression;
-using System.Net;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Org.BouncyCastle.Crypto.Engines;
 
 namespace DRRCore.Application.Main.CoreApplication
@@ -35,6 +30,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IUserLoginDomain _userLoginDomain;
         private readonly IEmailApplication _emailApplication;
         private readonly IReportingDownload _reportingDownload;
+        private readonly IEmployeeDomain _employeeDomain;
         private readonly IPersonDomain _personDomain;
         private readonly ISubscriberDomain _subscriberDomain;
         private readonly IPersonalDomain _personalDomain;
@@ -43,7 +39,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private IMapper _mapper;
         private ILogger _logger;
        
-        public TicketApplication(INumerationDomain numerationDomain, ITicketAssignationDomain ticketAssignationDomain,
+        public TicketApplication(INumerationDomain numerationDomain, ITicketAssignationDomain ticketAssignationDomain, IEmployeeDomain employeeDomain,
             ITCuponDomain tCuponDomain,ITicketDomain ticketDomain, IPersonalDomain personalDomain, IAgentDomain agentDomain,
             ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain, ICountryDomain countryDomain,
             ICompanyDomain companyDomain,IMapper mapper, ILogger logger,IReportingDownload reportingDownload,
@@ -67,6 +63,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _personalDomain = personalDomain;
             _agentDomain = agentDomain;
             _countryDomain = countryDomain;
+            _employeeDomain = employeeDomain;
         }
         public async Task<Response<List<GetTicketFileResponseDto>>> GetTicketFilesByIdTicket(int idTicket)
         {
@@ -178,13 +175,18 @@ namespace DRRCore.Application.Main.CoreApplication
                     newTicket.TicketHistories.Add(new TicketHistory
                     {
                         IdStatusTicket= (int?)TicketStatusEnum.Pendiente,
-                        UserFrom="1"
+                        UserFrom= request.UserFrom
                     });
+                    var idEmployee = await GetReceptorDefault(request.IdCountry ?? 0, request.ReportType, request.IdSubscriber);
+                    using var context = new SqlCoreContext();
+                    var userLogin = await context.UserLogins
+                        .Include(x => x.IdEmployeeNavigation).Where(x => x.IdEmployeeNavigation.Id == idEmployee).FirstOrDefaultAsync();
                     newTicket.TicketAssignation = new TicketAssignation
                     {
-                        IdEmployee = await GetReceptorDefault(request.IdCountry??0, request.ReportType,request.IdSubscriber)
+                        //IdEmployee = idEmployee,
+                        IdUserLogin = userLogin.Id
                     };
-                  
+
                     if ( await _ticketDomain.AddAsync(newTicket))
                     {
                       //  await CopyReportForm(request.Number);
@@ -223,23 +225,17 @@ namespace DRRCore.Application.Main.CoreApplication
                             {
                                 var data = doc.Data;
                                 var path = await UploadF1(ticket.Id,"RV_"+ticket.RequestedName,data.File);
-                                using(var context= new SqlCoreContext())
-                                {
-                                    await context.TicketFiles.AddAsync(new TicketFile
-                                    {
-                                        IdTicket = ticket.Id,
-                                        Path = path,
-                                        Name= "RV_"+DateTime.Now.ToString("ddMMyy")+"_"+request.Number.ToString("D6"),
-                                        Extension=".pdf"  
-                                    }) ;
-                                    await context.SaveChangesAsync();
-                                }
                                
+                                await context.TicketFiles.AddAsync(new TicketFile
+                                {
+                                    IdTicket = ticket.Id,
+                                    Path = path,
+                                    Name= "RV_"+DateTime.Now.ToString("ddMMyy")+"_"+request.Number.ToString("D6"),
+                                    Extension=".pdf"  
+                                }) ;
+                                await context.SaveChangesAsync();
                             }
-                            
                         }
-
-
                         response.Data = true;
                     }
                 }
@@ -776,7 +772,8 @@ namespace DRRCore.Application.Main.CoreApplication
                     if (ticketAssignation != null)
                     {
                         ticketAssignation.Commentary = item.Commentary;
-                        ticketAssignation.IdEmployee = item.IdReceptor;
+                        //ticketAssignation.IdEmployee = item.IdReceptor;
+                        ticketAssignation.IdUserLogin = item.IdReceptor;
                         await _ticketAssignationDomain.UpdateAsync(ticketAssignation);
                     }
                 }
@@ -816,6 +813,8 @@ namespace DRRCore.Application.Main.CoreApplication
                             IdTicket = item.Id,
                             UserFrom = item.IdEmisor.ToString(),
                             UserTo = item.IdReceptor.ToString(),
+                            AsignedTo = item.IdReceptor == 21 ? "PA1" : item.IdReceptor == 33 ? "PA2" : item.IdReceptor == 37 ? "PA3" :
+                            item.IdReceptor == 38 ? "PA4" : item.IdReceptor == 42 ? "PA5" : item.IdReceptor == 50 ? "PA6" : item.IdReceptor == 23 ? "PA7" : "",
                             IdStatusTicket = ticket.IdStatusTicket
                         };
                         await _ticketHistoryDomain.AddAsync(newTicketHistory);
@@ -1067,10 +1066,16 @@ namespace DRRCore.Application.Main.CoreApplication
                     IdStatusTicket = (int?)TicketStatusEnum.Pendiente,
                     UserFrom = "1"
                 });
+                var idEmployee = await GetReceptorDefault(request.IdCountry ?? 0, request.ReportType, request.IdSubscriber);
+                using var context = new SqlCoreContext();
+                var userLogin = await context.UserLogins
+                    .Include(x => x.IdEmployeeNavigation).Where(x => x.IdEmployeeNavigation.Id == idEmployee).FirstOrDefaultAsync();
                 newTicket.TicketAssignation = new TicketAssignation
                 {
-                    IdEmployee = await GetReceptorDefault(request.IdCountry ?? 0, request.ReportType, request.IdSubscriber)
+                    IdEmployee = idEmployee,
+                    IdUserLogin = userLogin.Id
                 };
+                
 
                 if (await _ticketDomain.AddAsync(newTicket))
                 {
@@ -1111,17 +1116,15 @@ namespace DRRCore.Application.Main.CoreApplication
                         {
                             var data = doc.Data;
                             var path = await UploadF1(ticket.Id, "RV_" + ticket.RequestedName, data.File);
-                            using (var context = new SqlCoreContext())
+                           
+                            await context.TicketFiles.AddAsync(new TicketFile
                             {
-                                await context.TicketFiles.AddAsync(new TicketFile
-                                {
-                                    IdTicket = ticket.Id,
-                                    Path = path,
-                                    Name = "RV_" + DateTime.Now.ToString("ddMMyy") + "_" + request.Number.ToString("D6"),
-                                    Extension = ".pdf"
-                                });
-                                await context.SaveChangesAsync();
-                            }
+                                IdTicket = ticket.Id,
+                                Path = path,
+                                Name = "RV_" + DateTime.Now.ToString("ddMMyy") + "_" + request.Number.ToString("D6"),
+                                Extension = ".pdf"
+                            });
+                            await context.SaveChangesAsync();
                         }
                     }
                     response.Data = true;
@@ -1195,6 +1198,245 @@ namespace DRRCore.Application.Main.CoreApplication
                 response.Data = null;
                 response.IsSuccess = false;
                 _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetSearchSituationResponseDto>>> GetSearchSituation(string about, string typeSearch, string? search, int? idCountry)
+        {
+            var response = new Response<List<GetSearchSituationResponseDto>>();
+            var listCompanies = new List<Company>();
+            var listPersons = new List<Person>();
+            try
+            {
+                if(about == "E")
+                {
+                    var companies = await _companyDomain.GetCompanySituation(typeSearch, search, idCountry);
+                    if(companies != null)
+                    {
+                        listCompanies = companies;
+                    }
+                    var searchTickets = await _ticketDomain.GetTicketSituation(about, typeSearch, search, idCountry);
+                    foreach (var item in searchTickets)
+                    {
+                        bool idCompanyExistente = listCompanies.Any(company => company.Id == item.IdCompany);
+                        if (!idCompanyExistente)
+                        {
+                            var company = await _companyDomain.GetByIdAsync((int)item.IdCompany);
+                            listCompanies.Add(company);
+                        }
+                    }
+                    response.Data = _mapper.Map<List<GetSearchSituationResponseDto>>(listCompanies);
+                }
+                else if(about == "P")
+                {
+                    var persons = await _personDomain.GetPersonSituation(typeSearch, search, idCountry);
+                    if (persons != null)
+                    {
+                        listPersons = persons;
+                    }
+                    var searchTickets = await _ticketDomain.GetTicketSituation(about, typeSearch, search, idCountry);
+                    foreach (var item in searchTickets)
+                    {
+                        bool idPersonExistente = listPersons.Any(person => person.Id == item.IdPerson);
+                        if (!idPersonExistente)
+                        {
+                            var person = await _personDomain.GetByIdAsync((int)item.IdPerson);
+                            listPersons.Add(person);
+                        }
+                    }
+                    response.Data = _mapper.Map<List<GetSearchSituationResponseDto>>(listPersons);
+                }
+            }catch(Exception ex)
+            {
+                response.Data = null;
+                response.IsSuccess = false;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetTicketsByCompanyOrPersonResponseDto>>> GetTicketsByCompanyOrPerson(string about, int id, string oldCode)
+        {
+            var response = new Response<List<GetTicketsByCompanyOrPersonResponseDto>>();
+
+            try
+            {
+                var tickets = await _ticketDomain.GetTicketByCompanyOrPerson(about, id);
+                if(tickets != null)
+                {
+                    response.Data = _mapper.Map<List<GetTicketsByCompanyOrPersonResponseDto>>(tickets);
+                }
+                var oldTickets = await _ticketDomain.GetOldTicketByCompany(oldCode);
+                if(oldTickets != null)
+                {
+                    foreach (var item in oldTickets)
+                    {
+                        response.Data.Add(new GetTicketsByCompanyOrPersonResponseDto
+                        {
+                            Id = 0,
+                            Ticket = "A-"+ item.Cupcodigo.ToString().PadLeft(6, '0'),
+                            IdStatusTicket = 0,
+                            Status = "DESPACHADO",
+                            Color = "label-success",
+                            RequestedName = item.NombreSolicitado,
+                            SubscriberCode = item.Abonado,
+                            ProcedureType = item.Tramite,
+                            ReportType = item.TipoInforme,
+                            Language = item.Idioma,
+                            Web = true,
+                            OrderDate = StaticFunctions.DateTimeToString(item.FechaPedido),
+                            EndDate = StaticFunctions.DateTimeToString(item.FechaVencimiento),
+                            DispatchDate = StaticFunctions.DateTimeToString(item.FechaDespacho)
+                        });
+                    }
+                }
+            }catch(Exception ex)
+            {
+                response.Data = null;
+                response.IsSuccess = false;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetTimeLineTicketHistoryResponseDto>>> GetTimeLineTicketHistory(int idTicket)
+        {
+            var response = new Response<List<GetTimeLineTicketHistoryResponseDto>>();
+            response.Data = new List<GetTimeLineTicketHistoryResponseDto>();
+            try
+            {
+                var ticketHistory = await _ticketDomain.GetTicketHistoryByIdTicket(idTicket);
+                if(ticketHistory != null)
+                {
+                    foreach (var item in ticketHistory)
+                    {
+                        var assignedToName = "";
+                        if (item.AsignedTo != null && item.AsignedTo.Contains("PA"))
+                        {
+                            assignedToName = item.AsignedTo == "PA1" ? "KATIA BUSTAMANTE" : item.AsignedTo == "PA2" ? "MARIELA ACOSTA" : item.AsignedTo == "PA3" ? "MONICA YEPEZ" :
+                                item.AsignedTo == "PA4" ? "RAFAEL DEL RISCO" : item.AsignedTo == "PA5" ? "CECILIA RODRIGUEZ" : item.AsignedTo == "PA6" ? "JESSICA LIAU" :
+                                item.AsignedTo == "PA7" ? "CECILIA SAYAS" : "";
+                        } 
+                        else if (item.AsignedTo != null && item.AsignedTo.Contains("D") || item.AsignedTo != null && item.AsignedTo.Contains("T")
+                            || item.AsignedTo != null && item.AsignedTo.Contains("R") || item.AsignedTo != null && item.AsignedTo.Contains("RC") || item.AsignedTo != null && item.AsignedTo.Contains("S"))
+                        {
+                            var employee = await _employeeDomain.FindByPersonalCode(item.AsignedTo);
+                            assignedToName = employee != null ? employee.FirstName + " " + employee.LastName : string.Empty;
+                        }
+                        else if(item.AsignedTo == null)
+                        {
+                            using var context = new SqlCoreContext();
+                            var user = await context.UserLogins
+                                .Include(x => x.IdEmployeeNavigation)
+                                .Where(x => x.Id == int.Parse(item.UserFrom)).FirstOrDefaultAsync();
+                            assignedToName = user.IdEmployeeNavigation != null ? user.IdEmployeeNavigation.FirstName + " " + user.IdEmployeeNavigation.LastName : "";
+                        }
+                        else
+                        {
+                            using var context = new SqlCoreContext();
+                            var agent = await context.Agents.Where(x => x.Code == item.AsignedTo).FirstOrDefaultAsync();
+                            assignedToName = agent != null ? agent.Name : "";
+                        }
+
+
+                        var newTimeLine = new GetTimeLineTicketHistoryResponseDto();
+
+                        newTimeLine.Id = item.Id;
+                        newTimeLine.AssignedTo = item.AsignedTo;
+                        newTimeLine.AssignedToName = assignedToName;
+                        newTimeLine.Date = StaticFunctions.DateTimeToString(item.CreationDate);
+                        newTimeLine.Time = item.CreationDate.Hour.ToString("00") + ":" + item.CreationDate.Minute.ToString("00");
+                        newTimeLine.IdStatusTicket = item.IdStatusTicket;
+                        newTimeLine.Status = item.IdStatusTicket == 1 && item.UserTo == null && item.AsignedTo == null ? "Creación del Pedido" : item.IdStatusTicketNavigation.Description;
+                        newTimeLine.Color = item.IdStatusTicket == 1 && item.UserTo == null && item.AsignedTo == null ? "label-success" : item.IdStatusTicketNavigation.Color;
+
+                        response.Data.Add(newTimeLine);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(response.Message, ex);
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<Response<GetTicketObservationsResponseDto>> GetTicketObservations(int idTicket)
+        {
+            var response = new Response<GetTicketObservationsResponseDto>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var ticket = await context.Tickets
+                    .Where(x => x.Id == idTicket)
+                    .Include(x => x.IdSubscriberNavigation)
+                    .Include(x => x.TicketHistories)
+                    .FirstOrDefaultAsync();
+                if (ticket != null)
+                {
+                    var latestSupervisor = ticket.TicketHistories
+                        .Where(x => x.AsignedTo != null && x.AsignedTo.Contains("S"))
+                        .OrderByDescending(x => x.CreationDate)
+                        .FirstOrDefault();
+
+                    if (latestSupervisor != null)
+                    {
+                        var personal = await context.Personals
+                            .Include(x => x.IdEmployeeNavigation)
+                            .Where(x => x.Code == latestSupervisor.AsignedTo).FirstOrDefaultAsync();
+                        response.Data = new GetTicketObservationsResponseDto
+                        {
+                            ReportName = ticket.BusineesName,
+                            SubscriberCode = ticket.IdSubscriberNavigation.Code,
+                            Supervisor = latestSupervisor.AsignedTo,
+                            NameSupervisor = personal.IdEmployeeNavigation.FirstName + " " + personal.IdEmployeeNavigation.LastName
+                        };
+                    }
+                    else
+                    {
+                        response.Data = null;
+                    }
+                }
+                else
+                {
+                    response.Data = null;
+                }
+
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(response.Message, ex);
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> AddTicketObservations(int idTicket, string observations, string userFrom)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var ticket = await context.Tickets.Where(x => x.Id == idTicket).FirstOrDefaultAsync();
+                if(ticket != null)
+                {
+                    ticket.IdStatusTicket = (int?)TicketStatusEnum.Observado;
+                }
+                context.Tickets.Update(ticket);
+                await context.TicketHistories.AddAsync(new TicketHistory
+                {
+                    IdTicket = (int?)idTicket,
+                    UserFrom = userFrom,
+                    IdStatusTicket = (int?)TicketStatusEnum.Observado,
+            });
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(response.Message, ex);
+                response.IsSuccess = false;
             }
             return response;
         }

@@ -6,7 +6,6 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
     {
         Task<List<Ticket>> GetTicketByCompany(int id);
         Task<List<Ticket>> GetAllPendingTickets();
-
         Task<List<Ticket>> GetTicketByPerson(int id);
         Task<List<Ticket>> GetAllByAsync(string ticket, string name, string subscriber, string type, string procedure);
         Task<bool> AddTicketQuery(TicketQuery query);
@@ -25,5 +24,10 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
         Task<bool?> DeleteTicketFile(int id);
         Task<List<Ticket>> GetTicketsByIdSubscriber(int idSubscriber, string? company,DateTime from, DateTime until, int idCountry);  
         Task<List<Ticket>> GetTicketHistoryByIdSubscriber(int idSubscriber, string? name, DateTime? from, DateTime? until, int? idCountry);
+
+        Task<List<Ticket>> GetTicketSituation(string about, string typeSearch, string? search, int? idCountry);
+        Task<List<Ticket>> GetTicketByCompanyOrPerson(string about, int id);
+
+        Task<List<TicketHistory>> GetTicketHistoryByIdTicket(int idTicket);
     }
 }

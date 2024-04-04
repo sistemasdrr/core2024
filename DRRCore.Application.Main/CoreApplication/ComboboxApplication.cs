@@ -5,6 +5,7 @@ using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -317,6 +318,33 @@ namespace DRRCore.Application.Main.CoreApplication
                 response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
             }
             catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboValueResponseDto>>> GetDocumentType()
+        {
+            var response = new Response<List<GetComboValueResponseDto>>();
+            response.Data = new List<GetComboValueResponseDto>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var docs = await context.DocumentTypes.ToListAsync();
+                foreach (var item in docs)
+                {
+                    response.Data.Add(new GetComboValueResponseDto
+                    {
+                        Id = item.Id,
+                        Valor = item.Abreviation + " - " + item.Name
+                    });
+
+                }
+            }
+            catch(Exception ex)
             {
                 response.IsSuccess = false;
                 response.Message = Messages.BadQuery;

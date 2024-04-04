@@ -6,6 +6,7 @@ using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace DRRCore.Application.Main.CoreApplication
@@ -1049,14 +1050,14 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<List<GetListPersonResponseDto>>> GetListPerson(string fullname, string form, int idCountry, bool haveReport,bool similar)
+        public async Task<Response<List<GetListPersonResponseDto>>> GetListPerson(string fullname, string form, int idCountry, bool haveReport, string filterBy)
         {
             var response = new Response<List<GetListPersonResponseDto>>();
             try
             {
-                if (!similar)
+                if (filterBy != "S")
                 {
-                    var list = await _personDomain.GetAllByAsync(fullname, form, idCountry, haveReport,similar);
+                    var list = await _personDomain.GetAllByAsync(fullname, form, idCountry, haveReport,filterBy);
                 if (list == null)
                 {
                     response.IsSuccess = false;
@@ -1467,8 +1468,9 @@ namespace DRRCore.Application.Main.CoreApplication
                     status.History = history != null ? true : false;
                     var infoGeneral = await _personGeneralInfoDomain.GetByIdPersonAsync(idPerson);
                     status.InfoGeneral = infoGeneral != null ? true : false;
-                    var images = await _personImagesDomain.GetByIdPerson(idPerson);
-                    status.Images = images != null ? true : false;
+                    using var context = new SqlCoreContext();
+                    var photo = await context.PhotoPeople.Where(x => x.IdPerson == idPerson).ToListAsync();
+                    status.Images = photo != null && photo.Count > 0 ? true : false;
                 }
                 response.Data = status;
             }

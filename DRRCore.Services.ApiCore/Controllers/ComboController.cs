@@ -20,6 +20,12 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _comboboxApplication.GetDocumentTypeNatural());
         }
         [HttpGet()]
+        [Route("documentType")]
+        public async Task<ActionResult> GetDocumentType()
+        {
+            return Ok(await _comboboxApplication.GetDocumentType());
+        }
+        [HttpGet()]
         [Route("civilstatus")]
         public async Task<ActionResult> GetCivilStatusCombo()
         {

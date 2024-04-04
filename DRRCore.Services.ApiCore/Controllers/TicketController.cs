@@ -2,6 +2,7 @@
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Application.Main.CoreApplication;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Emit;
 
 namespace DRRCore.Services.ApiCore.Controllers
 {
@@ -62,6 +63,29 @@ namespace DRRCore.Services.ApiCore.Controllers
             from ??= null;
             until ??= null;
             return Ok(await _ticketApplication.GetTicketHistoryByIdSubscriber(idSubscriber, name, from, until, idCountry));
+        }
+        [HttpGet()]
+        [Route("getSearchSituation")]
+        public async Task<ActionResult> getSearchSituation(string about, string typeSearch, string? search, int? idCountry)
+        {
+            about ??= string.Empty;
+            typeSearch ??= string.Empty;
+            search ??= string.Empty;
+            return Ok(await _ticketApplication.GetSearchSituation(about, typeSearch, search, idCountry));
+        }
+        [HttpGet()]
+        [Route("getListTicketSituation")]
+        public async Task<ActionResult> getListTicketSituation(string about, int id, string oldCode)
+        {
+            about ??= string.Empty;
+            oldCode ??= string.Empty;
+            return Ok(await _ticketApplication.GetTicketsByCompanyOrPerson(about, id, oldCode));
+        }
+        [HttpGet()]
+        [Route("getTimeLine")]
+        public async Task<ActionResult> getTimeLine(int idTicket)
+        {
+            return Ok(await _ticketApplication.GetTimeLineTicketHistory(idTicket));
         }
         [HttpGet()]
         [Route("getreporttype")]
@@ -151,11 +175,26 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _ticketApplication.GetPersonalAssignation());
         }
+        
         [HttpGet()]
         [Route("getAgentAssignation")]
         public async Task<ActionResult> getAgentAssignation()
         {
             return Ok(await _ticketApplication.GetAgentAssignation());
+        }
+        [HttpGet()]
+        [Route("getTicketObservations")]
+        public async Task<ActionResult> GetTicketObservations(int idTicket)
+        {
+            return Ok(await _ticketApplication.GetTicketObservations(idTicket));
+        }
+        [HttpPost()]
+        [Route("addTicketObservations")]
+        public async Task<ActionResult> addTicketObservations(int idTicket, string indications, string userFrom)
+        {
+            indications ??= string.Empty;
+            userFrom ??= string.Empty;
+            return Ok(await _ticketApplication.AddTicketObservations(idTicket,indications,userFrom));
         }
         [HttpPost()]
         [Route("uploadFile")]

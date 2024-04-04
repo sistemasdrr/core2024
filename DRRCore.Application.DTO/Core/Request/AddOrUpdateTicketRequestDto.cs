@@ -21,6 +21,7 @@
         public string? TimeLimit { get; set; }
 
         public string? AditionalData { get; set; }
+        public string? SubscriberIndications { get; set; }
 
         public string About { get; set; } = null!;
 
@@ -65,6 +66,7 @@
         public string? RequestedName { get; set; }
 
         public decimal? Price { get; set; }
+        public string? UserFrom { get; set; }
     }
     public class SavePreAsignTicketDto
     {

@@ -73,6 +73,37 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<Employee> FindByPersonalCode(string code)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var personal = await context.Personals.Where(x => x.Code == code).FirstOrDefaultAsync();
+                if(personal != null)
+                {
+                    var employee = await context.Employees.Where(x => x.Id == personal.IdEmployee).FirstOrDefaultAsync();
+                    if (employee != null)
+                    {
+                        return employee;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+                
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return null;
+            }
+        }
+
         public async Task<List<Employee>> GetAllAsync()
         {
             try

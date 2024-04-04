@@ -4,7 +4,7 @@ using DRRCore.Infraestructure.Interfaces.CoreRepository;
 
 namespace DRRCore.Domain.Main.CoreDomain
 {
-    public class EmployeeDomain:IEmployeeDomain
+    public class EmployeeDomain : IEmployeeDomain
     {
         private readonly IEmployeeRepository _repository;
         public EmployeeDomain(IEmployeeRepository repository)
@@ -25,6 +25,11 @@ namespace DRRCore.Domain.Main.CoreDomain
         public async Task<bool> DeleteAsync(int id)
         {
             return await _repository.DeleteAsync(id);
+        }
+
+        public async Task<Employee> FindByPersonalCode(string code)
+        {
+            return await _repository.FindByPersonalCode(code);
         }
 
         public async Task<List<Employee>> GetAllAsync()

@@ -17,8 +17,9 @@ namespace DRRCore.Application.DTO.Core.Response
         public string RealExpireDate { get; set; } = string.Empty;
         public string ExpireDate { get; set; } = string.Empty;
         public string DispatchtDate { get; set; } = string.Empty;
-        
+
         public int Receptor { get; set; }
+        public int Receptor2 { get; set; }
         public string Commentary { get; set; }=string.Empty;
         public bool HasFiles { get; set; }
         public List<TicketFileResponseDto> Files { get; set; } = new List<TicketFileResponseDto>();

@@ -160,78 +160,54 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             throw new NotImplementedException();
         }
 
-        public async Task<List<Person>> GetAllByAsync(string fullname, string form, int idCountry, bool haveReport, bool similar)
+        public async Task<List<Person>> GetAllByAsync(string fullname, string form, int idCountry, bool haveReport, string filterBy)
         {
            List<Person> people = new List<Person>();
                 try
                 {
                     using var context = new SqlCoreContext();
-                    if (haveReport)
+                    if (filterBy == "N")
                     {
-                        if (form == "C")
-                        {
-                            if (idCountry == 0)
-                            {
-                            people = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                                    Include(x => x.IdCountryNavigation).Where(x => (x.Fullname.Contains(fullname)) && x.HaveReport == haveReport).Take(100).ToListAsync();
-                            }
-                            else
-                            {
-                            people = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                                    Include(x => x.IdCountryNavigation).Where(x => x.IdCountry == idCountry && (x.Fullname.Contains(fullname)) && x.HaveReport == haveReport).Take(100).ToListAsync();
-                            }
-
-                        }
-                        else
-                        {
-                            if (idCountry == 0)
-                            {
-                            people = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                                    Include(x => x.IdCountryNavigation).Where(x => (x.Fullname.StartsWith(fullname)) && x.HaveReport == haveReport).Take(100).ToListAsync();
-                            }
-                            else
-                            {
-                            people = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                                    Include(x => x.IdCountryNavigation).Where(x => x.IdCountry == idCountry && (x.Fullname.StartsWith(fullname)) && x.HaveReport == haveReport).Take(100).ToListAsync();
-                            }
-
-                        }
+                        people = await context.People
+                            .Include(x => x.Traductions)
+                            .Include(x => x.IdCreditRiskNavigation)
+                            .Include(x => x.IdDocumentTypeNavigation)
+                            .Include(x => x.IdCountryNavigation)
+                            .Where(x => (idCountry == 0 || x.IdCountry == idCountry)
+                            && (form == "C" ? x.Fullname.Contains(fullname) : form == "I" ? x.Fullname.StartsWith(fullname) : false))
+                            .Take(100).ToListAsync();
                     }
-                    else
+                    else if (filterBy == "D")
                     {
-                        if (form == "C")
-                        {
-                            if (idCountry == 0)
-                            {
-                            people = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                                    Include(x => x.IdCountryNavigation).Where(x => (x.Fullname.Contains(fullname))).Take(100).ToListAsync();
-                            }
-                            else
-                            {
-                            people = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                                    Include(x => x.IdCountryNavigation).Where(x => x.IdCountry == idCountry && (x.Fullname.Contains(fullname))).Take(100).ToListAsync();
-                            }
-
-                        }
-                        else
-                        {
-                            if (idCountry == 0)
-                            {
-                            people = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                                    Include(x => x.IdCountryNavigation).Where(x => x.Fullname.StartsWith(fullname)).Take(100).ToListAsync();
-                            }
-                            else
-                            {
-                            people = await context.People.Include(x => x.Traductions).Include(x => x.IdCreditRiskNavigation).
-                                    Include(x => x.IdCountryNavigation).Where(x => x.IdCountry == idCountry && (x.Fullname.StartsWith(fullname))).Take(100).ToListAsync();
-                            }
-
-                        }
-
+                        people = await context.People
+                            .Include(x => x.Traductions)
+                            .Include(x => x.IdCreditRiskNavigation)
+                            .Include(x => x.IdDocumentTypeNavigation)
+                            .Include(x => x.IdCountryNavigation)
+                            .Where(x => (idCountry == 0 || x.IdCountry == idCountry)
+                            && (form == "C" ? x.Address.Contains(fullname) : form == "I" ? x.Address.StartsWith(fullname) : false)).Take(100).ToListAsync();
                     }
-
-
-                    return people;
+                    else if (filterBy == "R")
+                    {
+                        people = await context.People
+                            .Include(x => x.Traductions)
+                            .Include(x => x.IdCreditRiskNavigation)
+                            .Include(x => x.IdDocumentTypeNavigation)
+                            .Include(x => x.IdCountryNavigation)
+                            .Where(x => (idCountry == 0 || x.IdCountry == idCountry)
+                            && (form == "C" ? x.TaxTypeCode.Contains(fullname) : form == "I" ? x.TaxTypeCode.StartsWith(fullname) : false)).Take(100).ToListAsync();
+                    }
+                    else if (filterBy == "T")
+                    {
+                        people = await context.People
+                            .Include(x => x.Traductions)
+                            .Include(x => x.IdCreditRiskNavigation)
+                            .Include(x => x.IdDocumentTypeNavigation)
+                            .Include(x => x.IdCountryNavigation)
+                            .Where(x => (idCountry == 0 || x.IdCountry == idCountry)
+                            && (form == "C" ? x.Cellphone.Contains(fullname) : form == "I" ? x.Cellphone.StartsWith(fullname) : false)).Take(100).ToListAsync();
+                    }
+                return people;
                 }
                 catch (Exception ex)
                 {
@@ -403,6 +379,36 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 using var context = new SqlCoreContext();
                 var person = await context.People.Include(x => x.IdCountryNavigation).FirstOrDefaultAsync(x => x.OldCode == empresa);
                 return person;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<List<Person>> GetPersonSituation(string typeSearch, string? search, int? idCountry)
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var persons = new List<Person>();
+                if (typeSearch == "N")
+                {
+                    persons = await context.People.Include(x => x.IdCountryNavigation)
+                        .Where(x => x.Fullname.Contains(search) || x.Fullname.Contains(search) && x.IdCountry == idCountry).Take(100).ToListAsync();
+                }
+                else if (typeSearch == "R")
+                {
+                    persons = await context.People.Include(x => x.IdCountryNavigation)
+                        .Where(x => x.TaxTypeCode.Contains(search) || x.TaxTypeCode.Contains(search) && x.IdCountry == idCountry).Take(100).ToListAsync();
+                }
+                else if (typeSearch == "T")
+                {
+                    persons = await context.People.Include(x => x.IdCountryNavigation)
+                        .Where(x => x.Cellphone.Contains(search) || x.Cellphone.Contains(search) && x.IdCountry == idCountry).Take(100).ToListAsync();
+                }
+                return persons;
             }
             catch (Exception ex)
             {

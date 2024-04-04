@@ -4162,6 +4162,9 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.RevealName)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("revealName");
+            entity.Property(e => e.SubscriberIndications)
+                .IsUnicode(false)
+                .HasColumnName("subscriberIndications");
             entity.Property(e => e.TaxCode)
                 .HasMaxLength(30)
                 .IsUnicode(false)
@@ -4233,13 +4236,14 @@ public partial class SqlCoreContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("enable");
             entity.Property(e => e.IdEmployee).HasColumnName("idEmployee");
+            entity.Property(e => e.IdUserLogin).HasColumnName("idUserLogin");
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("updateDate");
 
             entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.TicketAssignations)
                 .HasForeignKey(d => d.IdEmployee)
-                .HasConstraintName("FK__TicketAss__idEmp__7DEDA633");
+                .HasConstraintName("FK_TicketAssignation_Employee");
 
             entity.HasOne(d => d.IdTicketNavigation).WithOne(p => p.TicketAssignation)
                 .HasForeignKey<TicketAssignation>(d => d.IdTicket)

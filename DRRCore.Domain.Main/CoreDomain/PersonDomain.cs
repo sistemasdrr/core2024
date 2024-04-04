@@ -42,9 +42,9 @@ namespace DRRCore.Domain.Main.CoreDomain
             throw new NotImplementedException();
         }
 
-        public async Task<List<Person>> GetAllByAsync(string fullname, string form, int idCountry, bool haveReport, bool similar)
+        public async Task<List<Person>> GetAllByAsync(string fullname, string form, int idCountry, bool haveReport, string filterBy)
         {
-            return await _personRepository.GetAllByAsync(fullname, form, idCountry, haveReport,similar);
+            return await _personRepository.GetAllByAsync(fullname, form, idCountry, haveReport,filterBy);
         }
 
         public async Task<Person> GetByIdAsync(int id)
@@ -60,6 +60,11 @@ namespace DRRCore.Domain.Main.CoreDomain
         public async Task<Person> GetByOldCode(string? empresa)
         {
             return await _personRepository.GetByOldCode(empresa);
+        }
+
+        public async Task<List<Person>> GetPersonSituation(string typeSearch, string? search, int? idCountry)
+        {
+            return await _personRepository.GetPersonSituation(typeSearch, search, idCountry);
         }
 
         public async Task<bool> UpdateAsync(Person obj)

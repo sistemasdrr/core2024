@@ -37,6 +37,12 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<string?>> GetNumCuponById(int idTicket);
 
         Task<Response<List<GetListTicketResponseDto>>> GetTicketsByIdSubscriber(int idSubscriber, string? company, DateTime from, DateTime until, int idCountry);
+        Task<Response<List<GetSearchSituationResponseDto>>> GetSearchSituation(string about, string typeSearch, string? search, int? idCountry);
+        Task<Response<List<GetTicketsByCompanyOrPersonResponseDto>>> GetTicketsByCompanyOrPerson(string about, int id, string oldCode);
+        Task<Response<List<GetTimeLineTicketHistoryResponseDto>>> GetTimeLineTicketHistory(int idTicket);
+        Task<Response<GetTicketObservationsResponseDto>> GetTicketObservations(int idTicket);
+        Task<Response<bool>> AddTicketObservations(int idTicket, string observations, string userFrom);
+
         Task<Response<bool?>> AssignTicket(List<AssignTicketRequestDto> list);
     }
 }

@@ -6,6 +6,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
     public interface IComboboxApplication
     {
         Task<Response<List<GetComboValueResponseDto>>> GetDocumentTypeNatural();
+        Task<Response<List<GetComboValueResponseDto>>> GetDocumentType();
         Task<Response<List<GetComboValueResponseDto>>> GetCivilStatus();
         Task<Response<List<GetComboValueResponseDto>>> GetContinents();
         Task<Response<List<GetComboValueFlagResponseDto>>> GetCountries();

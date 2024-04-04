@@ -5,7 +5,7 @@
         Task MigrateUser();
         Task<bool> MigrateCompany();
         Task<bool> MigrateCompanyOthers(int migra);
-        
+        Task<bool> CorrecPersona(int migra);
         Task<bool> MigratePerson();
         Task<bool> MigratePersonByMigra(int migra);
         Task<bool> MigratePersonCorreccion();

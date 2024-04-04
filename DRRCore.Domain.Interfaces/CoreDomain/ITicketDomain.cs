@@ -24,5 +24,8 @@ namespace DRRCore.Domain.Interfaces.CoreDomain
         Task<bool?> DeleteTicketFile(int id);
         Task<List<Ticket>> GetTicketsByIdSubscriber(int idSubscriber, string? company, DateTime from, DateTime until, int idCountry);
         Task<List<Ticket>> GetTicketHistoryByIdSubscriber(int idSubscriber, string? name, DateTime? from, DateTime? until, int? idCountry);
+        Task<List<Ticket>> GetTicketSituation(string about, string typeSearch, string? search, int? idCountry);
+        Task<List<Ticket>> GetTicketByCompanyOrPerson(string about, int id);
+        Task<List<TicketHistory>> GetTicketHistoryByIdTicket(int idTicket);
     }
 }
