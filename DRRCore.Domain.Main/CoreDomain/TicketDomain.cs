@@ -106,6 +106,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _ticketRepository.GetTicketFileById(id);
         }
 
+        public async Task<List<Ticket>> GetTicketHistoryByIdSubscriber(int idSubscriber, string? name, DateTime? from, DateTime? until, int? idCountry)
+        {
+            return await _ticketRepository.GetTicketHistoryByIdSubscriber(idSubscriber, name, from, until, idCountry);
+        }
+
         public async Task<TicketQuery> GetTicketQuery(int idTicket)
         {
             return await _ticketRepository.GetTicketQuery(idTicket);

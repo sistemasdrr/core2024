@@ -9,5 +9,6 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
         Task<bool> DesactiveWebVision(int id);
         Task<int> AddCompanyAsync(Company obj);
         Task<Company> GetByOldCode(string oldCode);
+        Task<List<Company>> GetCompanySearch(string name, string taxCode, int? idCountry);
     }
 }

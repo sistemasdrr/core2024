@@ -3,6 +3,7 @@ using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Transversal.Common;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DRRCore.Transversal.Mapper.Profiles.Core
 {
@@ -47,8 +48,22 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.TaxTypeName, opt => opt?.MapFrom(src => src.IdCountryNavigation.TaxTypeName))
                 .ForMember(dest => dest.IdContinent, opt => opt?.MapFrom(src => src.IdCountryNavigation.IdContinent))
                 .ForMember(dest => dest.TaxTypeByCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation.TaxTypeName))
+                .ReverseMap(); 
+            CreateMap<Company, GetCompanySearchResponseDto>()
+                .ForMember(dest => dest.LastSearched, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.LastSearched)))
+                .ForMember(dest => dest.Name, opt => opt?.MapFrom(src => src.Name))
+                .ForMember(dest => dest.SocialName, opt => opt?.MapFrom(src => src.SocialName))
+                .ForMember(dest => dest.OldCode, opt => opt?.MapFrom(src => string.IsNullOrEmpty(src.OldCode) ? "N" + src.Id.ToString("D10") : src.OldCode))
+                .ForMember(dest => dest.Place, opt => opt?.MapFrom(src => src.Place))
+                .ForMember(dest => dest.Address, opt => opt?.MapFrom(src => src.Address))
+                .ForMember(dest => dest.YearFundation, opt => opt?.MapFrom(src => src.YearFundation))
+                .ForMember(dest => dest.TaxTypeName, opt => opt?.MapFrom(src => src.TaxTypeName.IsNullOrEmpty() == true ? src.IdCountryNavigation.TaxTypeName : src.TaxTypeName))
+                .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == null ? 0 : src.IdCountry))
+                .ForMember(dest => dest.Country, opt => opt?.MapFrom(src => src.IdCountryNavigation == null ? "" : src.IdCountryNavigation.Iso))
+                .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation == null ? "" : src.IdCountryNavigation.FlagIso))
+                .ForMember(dest => dest.HaveBalance, opt => opt?.MapFrom(src => src.FinancialBalances.Count() > 0 ? "SI" : "NO"))
+                .ForMember(dest => dest.BalanceDate, opt => opt?.MapFrom(src => src.FinancialBalances.Count() > 0 && src.FinancialBalances.OrderByDescending(fb => fb.Date).FirstOrDefault().Date != null ? StaticFunctions.DateTimeToString(src.FinancialBalances.OrderByDescending(fb => fb.Date).FirstOrDefault().Date) : ""))
                 .ReverseMap();
-
             CreateMap<Company, GetListCompanyResponseDto>()
                 .ForMember(dest => dest.Id, opt => opt?.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Name, opt => opt?.MapFrom(src => src.Name))

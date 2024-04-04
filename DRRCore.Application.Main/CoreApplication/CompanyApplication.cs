@@ -7,6 +7,7 @@ using DRRCore.Domain.Interfaces.CoreDomain;
 using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
+using log4net.Config;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -2333,6 +2334,21 @@ namespace DRRCore.Application.Main.CoreApplication
             catch(Exception ex)
             {
 
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetCompanySearchResponseDto>>> GetCompanySearch(string name, string taxCode, int idCountry)
+        {
+            var response = new Response<List<GetCompanySearchResponseDto>>();
+            try
+            {
+                var companies = await _companyDomain.GetCompanySearch(name, taxCode, idCountry);
+                response.Data = _mapper.Map<List<GetCompanySearchResponseDto>>(companies);
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                response.IsSuccess = false;
             }
             return response;
         }

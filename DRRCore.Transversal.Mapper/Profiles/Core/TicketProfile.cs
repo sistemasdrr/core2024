@@ -5,6 +5,7 @@ using DRRCore.Application.DTO.Enum;
 using DRRCore.Domain.Entities.MYSQLContext;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Transversal.Common;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DRRCore.Transversal.Mapper.Profiles.Core
 {
@@ -18,6 +19,8 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                     .ForMember(dest => dest.RealExpireDate, opt => opt?.MapFrom(src => src.RealExpireDate))
                     .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson==0?null:src.IdPerson))
                     .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
+                    .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == 0 ? null : src.IdCountry))
+                    .ForMember(dest => dest.IdContinent, opt => opt?.MapFrom(src => src.IdContinent == 0 ? null : src.IdContinent))
 
                    .ReverseMap();
 
@@ -31,6 +34,16 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                   .ForMember(dest => dest.Dispatch, opt => opt?.MapFrom(src => src.DispatchedName))
                   .ForMember(dest => dest.Subscriber, opt => opt?.MapFrom(src => src.IdSubscriberNavigation.Code))
                   .ForMember(dest => dest.Procedure, opt => opt?.MapFrom(src => src.ProcedureType))
+                  .ReverseMap(); 
+
+            CreateMap<Ticket, GetTicketHistorySubscriberResponseDto>()
+                  .ForMember(dest => dest.Name, opt => opt?.MapFrom(src => src.RequestedName))
+                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany != null ? src.IdCompany : 0))
+                  .ForMember(dest => dest.Ticket, opt => opt?.MapFrom(src => src.Number.ToString("D6")))
+                  .ForMember(dest => dest.DispatchDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.DispatchtDate)))
+                  .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == null ? 0 : src.IdCountry))
+                  .ForMember(dest => dest.Country, opt => opt?.MapFrom(src => src.IdCountryNavigation == null ? "" : src.IdCountryNavigation.Name))
+                  .ForMember(dest => dest.FlagCountry, opt => opt?.MapFrom(src => src.IdCountryNavigation == null ? "" : src.IdCountryNavigation.FlagIso))
                   .ReverseMap();
 
             CreateMap<OldTicket, GetListSameSearchedReportResponseDto>()
@@ -59,6 +72,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.IdCountry, opt => opt?.MapFrom(src => src.IdCountry == null ? 0 : src.IdCountry))
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == null ? 0 : src.IdCompany))
                  .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == null ? 0 : src.IdPerson))
+                 .ForMember(dest => dest.BusineesName, opt => opt?.MapFrom(src => src.BusineesName.IsNullOrEmpty() == false ? src.BusineesName : src.RequestedName))
                  .ForMember(dest => dest.Number, opt => opt?.MapFrom(src => src.Number.ToString("D6")))
                  .ForMember(dest => dest.Status, opt => opt?.MapFrom(src => src.IdStatusTicketNavigation.Abrev))
                  .ForMember(dest => dest.StatusColor, opt => opt?.MapFrom(src => src.IdStatusTicketNavigation.Color))
@@ -90,6 +104,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.Receptor, opt => opt?.MapFrom(src => src.TicketAssignation == null ? 0 : src.TicketAssignation.IdEmployeeNavigation.UserLogins.FirstOrDefault().Id))
                 .ForMember(dest => dest.HasFiles, opt => opt?.MapFrom(src => src.TicketFiles.Count > 0))
                 .ForMember(dest => dest.Files, opt => opt?.MapFrom(src => src.TicketFiles))
+                .ForMember(dest => dest.Origen, opt => opt?.MapFrom(src => src.Web == false ? "E&E" : "WEB"))
 
                   .ReverseMap();
             CreateMap<TicketHistory, GetListTicketResponseDto>()
@@ -112,7 +127,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.NameRevealed, opt => opt?.MapFrom(src => src.IdTicketNavigation.NameRevealed == null ? "" : src.IdTicketNavigation.NameRevealed))
                  .ForMember(dest => dest.ReferenceNumber, opt => opt?.MapFrom(src => src.IdTicketNavigation.ReferenceNumber == null ? "" : src.IdTicketNavigation.ReferenceNumber))
                  .ForMember(dest => dest.AditionalData, opt => opt?.MapFrom(src => src.IdTicketNavigation.AditionalData == null ? "" : src.IdTicketNavigation.AditionalData))
-                 .ForMember(dest => dest.BusineesName, opt => opt?.MapFrom(src => src.IdTicketNavigation.BusineesName == null ? "" : src.IdTicketNavigation.BusineesName))
+                 .ForMember(dest => dest.BusineesName, opt => opt?.MapFrom(src => src.IdTicketNavigation.BusineesName.IsNullOrEmpty() == false ? src.IdTicketNavigation.BusineesName : src.IdTicketNavigation.RequestedName))
                  .ForMember(dest => dest.ComercialName, opt => opt?.MapFrom(src => src.IdTicketNavigation.ComercialName == null ? "" : src.IdTicketNavigation.ComercialName))
                  .ForMember(dest => dest.RequestedName, opt => opt?.MapFrom(src => src.IdTicketNavigation.RequestedName == null ? "" : src.IdTicketNavigation.RequestedName))
                  .ForMember(dest => dest.TaxType, opt => opt?.MapFrom(src => src.IdTicketNavigation.TaxType == null ? "" : src.IdTicketNavigation.TaxType))
@@ -150,6 +165,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.Receptor, opt => opt?.MapFrom(src => src.IdTicketNavigation.TicketAssignation == null ? 0 : src.IdTicketNavigation.TicketAssignation.IdEmployeeNavigation.UserLogins.FirstOrDefault().Id))
                 .ForMember(dest => dest.HasFiles, opt => opt?.MapFrom(src => src.IdTicketNavigation.TicketFiles.Count > 0))
                 .ForMember(dest => dest.Files, opt => opt?.MapFrom(src => src.IdTicketNavigation.TicketFiles))
+                .ForMember(dest => dest.Origen, opt => opt?.MapFrom(src => src.IdTicketNavigation.Web == false ? "E&E" : "WEB"))
 
                   .ReverseMap();
 

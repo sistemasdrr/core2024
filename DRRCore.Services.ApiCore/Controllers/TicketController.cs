@@ -40,6 +40,29 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _ticketApplication.AddTicketAsync(request));
         }
+        [HttpPost()]
+        [Route("addByWeb")]
+        public async Task<ActionResult> AddTicketByWeb(AddOrUpdateTicketRequestDto request)
+        {
+            return Ok(await _ticketApplication.AddTicketByWeb(request));
+        }
+        [HttpPost()]
+        [Route("addOnline")]
+        public async Task<ActionResult> AddTicketOnline(AddOrUpdateTicketRequestDto request, string rubro, string sendTo)
+        {
+            rubro ??= string.Empty;
+            sendTo ??= string.Empty;
+            return Ok(await _ticketApplication.AddTicketOnline(request,rubro, sendTo));
+        }
+        [HttpGet()]
+        [Route("getTicketHistorySubscriber")]
+        public async Task<ActionResult> getTicketHistorySubscriber(int idSubscriber, string? name, DateTime? from, DateTime? until, int? idCountry)
+        {
+            name ??= string.Empty;
+            from ??= null;
+            until ??= null;
+            return Ok(await _ticketApplication.GetTicketHistoryByIdSubscriber(idSubscriber, name, from, until, idCountry));
+        }
         [HttpGet()]
         [Route("getreporttype")]
         public async Task<ActionResult> GetReportType(int id, string type)
