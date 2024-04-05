@@ -18,8 +18,18 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                await context.Numerations.AddAsync(obj);
-                await context.SaveChangesAsync();
+                var existingNumeration = await context.Numerations.Where(x => x.Name == obj.Name).FirstOrDefaultAsync();
+                if (existingNumeration != null)
+                {
+                    existingNumeration.Number++;
+                    context.Numerations.Update(existingNumeration);
+                    await context.SaveChangesAsync();
+                }
+                else
+                {
+                    await context.Numerations.AddAsync(obj);
+                    await context.SaveChangesAsync();
+                }
                 return true;
             }catch(Exception ex)
             {

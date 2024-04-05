@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DRRCore.Domain.Entities.SqlContext;
+namespace DRRCore.Domain.Entities.SQLContext;
 
 public partial class ApiUser
 {

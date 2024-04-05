@@ -818,12 +818,11 @@ namespace DRRCore.Application.Main.CoreApplication
                             IdStatusTicket = ticket.IdStatusTicket
                         };
                         await _ticketHistoryDomain.AddAsync(newTicketHistory);
+                        
                         await _numerationDomain.AddAsync(new Numeration
                         {
-                            Id = 0,
-                            Name = "PRE_ASSIGN",
-                            Description = "Pre-Asinación del Cupón",
-                            Number = 1,
+                            Name = "PRE_ASSIGN_"+ newTicketHistory.AsignedTo,
+                            Description = "Pre-Asinación " + newTicketHistory.AsignedTo,
                         });
                         if (ticketAssignation != null)
                         {

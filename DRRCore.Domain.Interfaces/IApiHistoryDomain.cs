@@ -1,6 +1,6 @@
 ﻿
 
-using DRRCore.Domain.Entities.SqlContext;
+using DRRCore.Domain.Entities.SQLContext;
 
 namespace DRRCore.Domain.Interfaces
 {

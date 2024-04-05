@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
+using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Transversal.Common;
 using Microsoft.IdentityModel.Tokens;
@@ -236,13 +237,13 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
                  .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Traductions))
            .ReverseMap();
-            CreateMap<AddOrUpdateCompanyImagesRequestDto, CompanyImage>()
+            CreateMap<AddOrUpdateCompanyImagesRequestDto, DRRCore.Domain.Entities.SQLContext.CompanyImage>()
                .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
          .ReverseMap();
-            CreateMap<CompanyImage, GetCompanyImageResponseDto>()
+            CreateMap<DRRCore.Domain.Entities.SQLContext.CompanyImage, GetCompanyImageResponseDto>()
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
-                 .ForMember(dest => dest.Traductions, opt => opt?.MapFrom(src => src.IdCompanyNavigation.Traductions))
            .ReverseMap();
+
             CreateMap<ImportsAndExport, GetImportsAndExportResponseDto>()
                 .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == 0 ? null : src.IdCompany))
           .ReverseMap();

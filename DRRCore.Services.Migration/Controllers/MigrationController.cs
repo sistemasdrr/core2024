@@ -79,6 +79,18 @@ namespace DRRCore.Services.Migration.Controllers
         {
             return Ok(await _migraUser.MigrateCompanyOthers(migra));
         }
+        [HttpPost()]
+        [Route("empresasOtherImages")]
+        public async Task<ActionResult> empresasOtherImages(int migra)
+        {
+            return Ok(await _migraUser.MigrateCompanyImageOthers(migra));
+        }
+        [HttpPost()]
+        [Route("empresasImagesByOldCode")]
+        public async Task<ActionResult> empresasImagesByOldCode(string oldCode)
+        {
+            return Ok(await _migraUser.MigrateCompanyImageByOldCode(oldCode));
+        }
         //[HttpPost()]
         //[Route("modificarEmpresa")]
         //public async Task<ActionResult> ModificarEmpresa(int migra,int nivel)

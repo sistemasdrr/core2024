@@ -13,6 +13,7 @@ using System.Reflection.Emit;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Data.SqlTypes;
+using DRRCore.Domain.Entities.SqlContext;
 
 namespace DRRCore.Application.Main.MigrationApplication
 {
@@ -180,7 +181,7 @@ namespace DRRCore.Application.Main.MigrationApplication
         }
         public async Task<bool> MigrateCompanyOthers(int migra)
         {
-            for (int i = 0; i < 360; i++)
+            for (int i = 0; i < 200; i++)
             {
                 var empresas = await _mempresaDomain.GetNotMigratedEmpresa(migra);
                 foreach (var empresa in empresas)
@@ -191,83 +192,72 @@ namespace DRRCore.Application.Main.MigrationApplication
                     antecedentes = new REmpVsAspLeg();
                     int idCompany = 0;
                     using var context = new SqlCoreContext();
-                    var existCompany = await context.Companies.Where(x => x.OldCode == empresa.EmCodigo).FirstOrDefaultAsync();
-
-                    if (existCompany == null)
+                    using var contextsql = new SqlContext();
+                    try
                     {
-                        try
+                        var reputacion = await _mempresaDomain.GetmEmpresaReputacionByCodigoAsync(empresa.EmCodigo);
+                        int idReputacion = 0;
+                        if (reputacion != null)
                         {
-                            var reputacion = await _mempresaDomain.GetmEmpresaReputacionByCodigoAsync(empresa.EmCodigo);
-                            int idReputacion = 0;
-                            if (reputacion != null)
-                            {
-                                idReputacion = ObtenerReputacion(reputacion.RcCodigo);
-                            }
-
-                            var company = new Company
-                            {
-                                OldCode = empresa.EmCodigo,
-                                Name = empresa.EmNombre,
-                                SocialName = empresa.EmSiglas,
-                                LastSearched = empresa.EmFecinf,
-                                Language = Dictionary.LanguageMigra[empresa.IdiCodigo.Value],
-                                TypeRegister = empresa.EmTipper == 0 ? "PJ" : "PN",
-                                YearFundation = empresa.EmAnofun,
-                                Quality = ObtenerCalidad(empresa.CalCodigo),
-                                IdLegalPersonType = ObtenerPersoneriaLegal(empresa.JuCodigo),
-                                TaxTypeCode = empresa.EmRegtri,
-                                IdCountry = ObtenerCodigoPais(empresa.PaiCodigo),
-                                HaveReport = ObtenerReportes(empresa.EmCodigo),
-                                IdLegalRegisterSituation = GetLegalRegisterSituation(empresa.SitCodigo),
-                                Address = empresa.EmDirecc,
-                                Place = empresa.EmCiudad,
-                                Telephone = empresa.EmTelef1,
-                                SubTelephone = empresa.EmPrftlf,
-                                Cellphone = empresa.EmPrffax,
-                                PostalCode = empresa.EmCodpos,
-                                WhatsappPhone = empresa.EmFax,
-                                Email = empresa.EmEmail,
-                                WebPage = empresa.EmPagweb,
-                                IdCreditRisk = GetCreditRisk(empresa.CrCodigo),
-                                IdPaymentPolicy = GetPaymentPolicy(empresa.PaCodigo),
-                                IdReputation = idReputacion != 0 ? idReputacion : null,
-                                NewsComentary = string.IsNullOrEmpty(empresa.EmPrensa) ? empresa.EmPrensasel : empresa.EmPrensa,
-                                IdentificacionCommentary = empresa.EmComide,
-                                Enable = empresa.EmActivo == 1,
-                                LastUpdaterUser = 1,
-                                OnWeb = empresa.EmOnline == "SI",
-                                ReputationComentary = empresa.EmComrep,
-                                Print = empresa.EmLogpre == 1,
-                                CompanyBackgrounds = await GetCompanyBackground(empresa.EmCodigo),
-                                CompanyBranches = await GetCompanyBranch(empresa.EmCodigo),
-                                CompanyFinancialInformations = await GetCompanyFinancialInformations(empresa.EmCodigo, empresa.EmAudito ?? string.Empty),
-                                CompanySbs = await GetCompanySbs(empresa),
-                                CompanyCreditOpinions = await GetCompanyCreditOpinions(empresa),
-                                CompanyGeneralInformations = await GetCompanyGeneralInformation(empresa.EmInfgen, empresa.EmCodigo),
-                                FinancialBalances = await GetFinancialBalances(empresa.EmCodigo),
-                                SalesHistories = await GetSalesHistories(empresa.EmCodigo),
-                                ImportsAndExports = await GetImportsAndExports(empresa.EmCodigo),
-                                Providers = await GetProviders(empresa.EmCodigo),
-                                ComercialLatePayments = await GetComercialLatePayments(empresa.EmCodigo),
-                                BankDebts = await GetBankDebts(empresa.EmCodigo),
-                                WorkersHistories = await GetWorkersHistories(empresa),
-                                Traductions = await GetAllTraductions(empresa)
-
-                            };
-
-                            idCompany = await _companyDomain.AddCompanyAsync(company);
-                          
-                            await _mempresaDomain.MigrateEmpresa(empresa.EmCodigo);
+                            idReputacion = ObtenerReputacion(reputacion.RcCodigo);
                         }
-                        catch (Exception ex)
+
+                        var company = new Company
                         {
-                            _logger.LogError("Error empresa :" + empresa.EmCodigo + " : " + ex.Message);
-                            continue;
-                        }
+                            OldCode = empresa.EmCodigo,
+                            Name = empresa.EmNombre,
+                            SocialName = empresa.EmSiglas,
+                            LastSearched = empresa.EmFecinf,
+                            Language = Dictionary.LanguageMigra[empresa.IdiCodigo.Value],
+                            TypeRegister = empresa.EmTipper == 0 ? "PJ" : "PN",
+                            YearFundation = empresa.EmAnofun,
+                            Quality = ObtenerCalidad(empresa.CalCodigo),
+                            IdLegalPersonType = ObtenerPersoneriaLegal(empresa.JuCodigo),
+                            TaxTypeCode = empresa.EmRegtri,
+                            IdCountry = ObtenerCodigoPais(empresa.PaiCodigo),
+                            HaveReport = ObtenerReportes(empresa.EmCodigo),
+                            IdLegalRegisterSituation = GetLegalRegisterSituation(empresa.SitCodigo),
+                            Address = empresa.EmDirecc,
+                            Place = empresa.EmCiudad,
+                            Telephone = empresa.EmTelef1,
+                            SubTelephone = empresa.EmPrftlf,
+                            Cellphone = empresa.EmPrffax,
+                            PostalCode = empresa.EmCodpos,
+                            WhatsappPhone = empresa.EmFax,
+                            Email = empresa.EmEmail,
+                            WebPage = empresa.EmPagweb,
+                            IdCreditRisk = GetCreditRisk(empresa.CrCodigo),
+                            IdPaymentPolicy = GetPaymentPolicy(empresa.PaCodigo),
+                            IdReputation = idReputacion != 0 ? idReputacion : null,
+                            NewsComentary = string.IsNullOrEmpty(empresa.EmPrensa) ? empresa.EmPrensasel : empresa.EmPrensa,
+                            IdentificacionCommentary = empresa.EmComide,
+                            Enable = empresa.EmActivo == 1,
+                            LastUpdaterUser = 1,
+                            OnWeb = empresa.EmOnline == "SI",
+                            ReputationComentary = empresa.EmComrep,
+                            Print = empresa.EmLogpre == 1,
+                            CompanyBackgrounds = await GetCompanyBackground(empresa.EmCodigo),
+                            CompanyBranches = await GetCompanyBranch(empresa.EmCodigo),
+                            CompanyFinancialInformations = await GetCompanyFinancialInformations(empresa.EmCodigo, empresa.EmAudito ?? string.Empty),
+                            CompanySbs = await GetCompanySbs(empresa),
+                            CompanyCreditOpinions = await GetCompanyCreditOpinions(empresa),
+                            CompanyGeneralInformations = await GetCompanyGeneralInformation(empresa.EmInfgen, empresa.EmCodigo),
+                            FinancialBalances = await GetFinancialBalances(empresa.EmCodigo),
+                            SalesHistories = await GetSalesHistories(empresa.EmCodigo),
+                            ImportsAndExports = await GetImportsAndExports(empresa.EmCodigo),
+                            Providers = await GetProviders(empresa.EmCodigo),
+                            ComercialLatePayments = await GetComercialLatePayments(empresa.EmCodigo),
+                            BankDebts = await GetBankDebts(empresa.EmCodigo),
+                            WorkersHistories = await GetWorkersHistories(empresa),
+                            Traductions = await GetAllTraductions(empresa)
+                        };
+                        idCompany = await _companyDomain.AddCompanyAsync(company);
+                        await _mempresaDomain.MigrateEmpresa(empresa.EmCodigo);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        await _mempresaDomain.MigrateEmpresa(existCompany.OldCode);
+                        _logger.LogError("Error empresa :" + empresa.EmCodigo + " : " + ex.Message);
+                        continue;
                     }
                 }
             }
@@ -1251,7 +1241,15 @@ namespace DRRCore.Application.Main.MigrationApplication
         {
             var lista = new List<CompanySb>();
             aval = await _mempresaDomain.GetmEmpresaAvalByCodigoAsync(empresa.EmCodigo);
-
+            string? endorsement = string.Empty;
+            if (aval == null)
+            {
+                endorsement = string.Empty;
+            }
+            else
+            {
+                endorsement = aval.AvObservacion ?? string.Empty;
+            }
             if (empresa != null)
             {
                 try
@@ -1261,15 +1259,15 @@ namespace DRRCore.Application.Main.MigrationApplication
                         IdOpcionalCommentarySbs = 1,
                         AditionalCommentaryRiskCenter = empresa.EmCenrie,
                         DebtRecordedDate = StaticFunctions.VerifyDate(empresa.EmFecreg), //*
-                        ExchangeRate = (decimal)empresa.EmTcsbs,
+                        ExchangeRate =empresa.EmTcsbs==null?null: (decimal)empresa.EmTcsbs,
                         BankingCommentary = empresa.EmSupban,
-                        EndorsementsObservations = aval != null ? aval.AvObservacion : "",
+                        EndorsementsObservations = endorsement,
                         ReferentOrAnalyst = empresa.PerCodref,
                         Date = StaticFunctions.VerifyDate(empresa.EmFecref),
                         LitigationsCommentary = empresa.EmComlit,
                         CreditHistoryCommentary = empresa.EmAntcre,
-                        GuaranteesOfferedNc = (decimal)empresa.EmGaomn,
-                        GuaranteesOfferedFc = (decimal)empresa.EmGaome
+                        GuaranteesOfferedNc = empresa.EmGaomn == null ? null : (decimal)empresa.EmGaomn,
+                        GuaranteesOfferedFc = empresa.EmGaome == null ? null : (decimal)empresa.EmGaome
 
                     };
                     lista.Add(sbs);
@@ -3146,6 +3144,119 @@ namespace DRRCore.Application.Main.MigrationApplication
 
 
             return true;
+        }
+
+        public async Task<bool> MigrateCompanyImageOthers(int migra)
+        {
+            using var coreContext = new SqlCoreContext();
+            using var context = new SqlContext();
+            using var mysqlContext = new MySqlContext();
+            using var imageMysqlContext = new FotoContext();
+            for (int i = 0; i < 200; i++)
+            {
+                try
+                {
+                    var empresas = await mysqlContext.MEmpresas.Where(x => x.Migra == migra && x.EmActivo == 1).Take(100).ToListAsync();
+                    foreach (var item in empresas)
+                    {
+                        var company = await coreContext.Companies.Where(x => x.OldCode == item.EmCodigo).FirstOrDefaultAsync();
+                        if(company != null)
+                        {
+                            var images = await imageMysqlContext.REmpVsFotos.Where(x => x.EmCodigo == item.EmCodigo).FirstOrDefaultAsync();
+                            if (images != null)
+                            {
+                                    await context.CompanyImages.AddAsync(new Domain.Entities.SQLContext.CompanyImage
+                                    {
+                                        IdCompany = company.Id,
+                                        Img1 = images.EfLocal.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal) : "",
+                                        ImgDesc1 = images.EfLocaltxt.IsNullOrEmpty() == false ? images.EfLocaltxt : "",
+                                        ImgDescEng1 = images.EfLocaltxtIng.IsNullOrEmpty() == false ? images.EfLocaltxtIng : "",
+                                        ImgPrint1 = images.EfLocal.IsNullOrEmpty() == false ? true : false,
+                                        Img2 = images.EfLocal2.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal2) : "",
+                                        ImgDesc2 = images.EfLocal2txt.IsNullOrEmpty() == false ? images.EfLocal2txt : "",
+                                        ImgDescEng2 = images.EfLocal2txtIng.IsNullOrEmpty() == false ? images.EfLocal2txtIng : "",
+                                        ImgPrint2 = images.EfLocal2.IsNullOrEmpty() == false ? true : false,
+                                        Img3 = images.EfLocal3.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal3) : "",
+                                        ImgDesc3 = images.EfLocal3txt.IsNullOrEmpty() == false ? images.EfLocal3txt : "",
+                                        ImgDescEng3 = images.EfLocal3txtIng.IsNullOrEmpty() == false ? images.EfLocal3txtIng : "",
+                                        ImgPrint3 = images.EfLocal3.IsNullOrEmpty() == false ? true : false,
+                                        Img4 = images.EfLocal4.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal4) : "",
+                                        ImgDesc4 = images.EfLocal4txt.IsNullOrEmpty() == false ? images.EfLocal4txt : "",
+                                        ImgDescEng4 = images.EfLocal4txtIng.IsNullOrEmpty() == false ? images.EfLocal4txtIng : "",
+                                        ImgPrint4 = images.EfLocal4.IsNullOrEmpty() == false ? true : false,
+                                    });
+                                item.Migra = 1;
+                                mysqlContext.MEmpresas.Update(item);
+                                await context.SaveChangesAsync();
+                                await mysqlContext.SaveChangesAsync();
+                            }
+                        }
+                       
+                    }
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError(ex.Message);
+                    continue;
+                }
+            }
+            return true;
+
+        }
+
+        public async Task<bool> MigrateCompanyImageByOldCode(string oldCode)
+        {
+            using var coreContext = new SqlCoreContext();
+            using var context = new SqlContext();
+            using var mysqlContext = new MySqlContext();
+            using var imageMysqlContext = new FotoContext();
+           
+                try
+                {
+                var empresa = await mysqlContext.MEmpresas.Where(x => x.EmCodigo == oldCode && x.EmActivo == 1).FirstOrDefaultAsync();
+                if (empresa != null)
+                {
+                    var company = await coreContext.Companies.Where(x => x.OldCode == oldCode).FirstOrDefaultAsync();
+                    if (company != null)
+                    {
+                        var images = await imageMysqlContext.REmpVsFotos.Where(x => x.EmCodigo == oldCode).FirstOrDefaultAsync();
+                        if (images != null)
+                        {
+                            await context.CompanyImages.AddAsync(new Domain.Entities.SQLContext.CompanyImage
+                            {
+                                IdCompany = company.Id,
+                                Img1 = images.EfLocal.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal) : "",
+                                ImgDesc1 = images.EfLocaltxt.IsNullOrEmpty() == false ? images.EfLocaltxt : "",
+                                ImgDescEng1 = images.EfLocaltxtIng.IsNullOrEmpty() == false ? images.EfLocaltxtIng : "",
+                                ImgPrint1 = images.EfLocal.IsNullOrEmpty() == false ? true : false,
+                                Img2 = images.EfLocal2.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal2) : "",
+                                ImgDesc2 = images.EfLocal2txt.IsNullOrEmpty() == false ? images.EfLocal2txt : "",
+                                ImgDescEng2 = images.EfLocal2txtIng.IsNullOrEmpty() == false ? images.EfLocal2txtIng : "",
+                                ImgPrint2 = images.EfLocal2.IsNullOrEmpty() == false ? true : false,
+                                Img3 = images.EfLocal3.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal3) : "",
+                                ImgDesc3 = images.EfLocal3txt.IsNullOrEmpty() == false ? images.EfLocal3txt : "",
+                                ImgDescEng3 = images.EfLocal3txtIng.IsNullOrEmpty() == false ? images.EfLocal3txtIng : "",
+                                ImgPrint3 = images.EfLocal3.IsNullOrEmpty() == false ? true : false,
+                                Img4 = images.EfLocal4.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal4) : "",
+                                ImgDesc4 = images.EfLocal4txt.IsNullOrEmpty() == false ? images.EfLocal4txt : "",
+                                ImgDescEng4 = images.EfLocal4txtIng.IsNullOrEmpty() == false ? images.EfLocal4txtIng : "",
+                                ImgPrint4 = images.EfLocal4.IsNullOrEmpty() == false ? true : false,
+                            });
+                            empresa.Migra = 1;
+                            mysqlContext.MEmpresas.Update(empresa);
+                            await context.SaveChangesAsync();
+                            await mysqlContext.SaveChangesAsync();
+                            }
+                        }
+                    }
+                return true;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
+                return false;
+                }
+            
         }
     }
 }

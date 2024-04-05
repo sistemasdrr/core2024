@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using DRRCore.Domain.Entities.SQLContext;
-using DRRCore.Domain.Entities.SqlCoreContext;
 using Microsoft.EntityFrameworkCore;
 
-namespace DRRCore.Domain.Entities.SqlContext;
+namespace DRRCore.Domain.Entities.SQLContext;
 
-public partial class SqlContext : DbContext
+public partial class DbA9ccf0AdmindrrContext : DbContext
 {
-    public SqlContext()
+    public DbA9ccf0AdmindrrContext()
     {
     }
 
-    public SqlContext(DbContextOptions<SqlContext> options)
+    public DbA9ccf0AdmindrrContext(DbContextOptions<DbA9ccf0AdmindrrContext> options)
         : base(options)
     {
     }
@@ -23,7 +21,7 @@ public partial class SqlContext : DbContext
 
     public virtual DbSet<AttachmentsNotSend> AttachmentsNotSends { get; set; }
 
-    public virtual DbSet<DRRCore.Domain.Entities.SQLContext.CompanyImage> CompanyImages { get; set; }
+    public virtual DbSet<CompanyImage> CompanyImages { get; set; }
 
     public virtual DbSet<EmailConfiguration> EmailConfigurations { get; set; }
 
@@ -134,7 +132,7 @@ public partial class SqlContext : DbContext
                 .HasConstraintName("FK__Attachmen__idEma__2739D489");
         });
 
-        modelBuilder.Entity<DRRCore.Domain.Entities.SQLContext.CompanyImage>(entity =>
+        modelBuilder.Entity<CompanyImage>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__CompanyI__3213E83FD8FA642A");
 

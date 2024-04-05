@@ -4,8 +4,9 @@ using CoreFtp;
 using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.Interfaces.CoreApplication;
-using DRRCore.Domain.Entities.SqlCoreContext;
+using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
+using DRRCore.Domain.Interfaces.EmailDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.AspNetCore.Http;
@@ -14,20 +15,19 @@ namespace DRRCore.Application.Main.CoreApplication
 {
     public class CompanyImagesApplication : ICompanyImagesApplication
     {
-        private readonly ICompanyImagesDomain _companyImagesDomain;
+        private readonly ICompanyImageDomain _companyImagesDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
-        public CompanyImagesApplication(ICompanyImagesDomain companyImagesDomain, IMapper mapper, ILogger logger)
+        public CompanyImagesApplication(ICompanyImageDomain companyImagesDomain, IMapper mapper, ILogger logger)
         {
             _companyImagesDomain = companyImagesDomain;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<Response<int>> AddOrUpdateImages(AddOrUpdateCompanyImagesRequestDto obj)
+        public async Task<Response<int?>> AddOrUpdateImages(AddOrUpdateCompanyImagesRequestDto obj)
         {
-            List<Traduction> traductions = new List<Traduction>();
-            var response = new Response<int>();
+            var response = new Response<int?>();
             try
             {
                 if (obj == null)
@@ -39,45 +39,8 @@ namespace DRRCore.Application.Main.CoreApplication
                 }
                 if (obj.Id == 0)
                 {
-                    foreach (var item in obj.Traductions)
-                    {
-                        traductions.Add(new Traduction
-                        {
-                            Identifier = item.Key,
-                            ShortValue = item.Key.Split('_')[0] == "S" ? item.Value : string.Empty,
-                            LargeValue = item.Key.Split('_')[0] == "L" ? item.Value : string.Empty,
-                            IdLanguage = 1,
-                            LastUpdaterUser = 1
-                        });
-                    }
                     var newImages = _mapper.Map<CompanyImage>(obj);
-                    response.Data = await _companyImagesDomain.AddCompanyImage(newImages, traductions);
-                }
-                else
-                {
-                    var existingImages = await _companyImagesDomain.GetByIdCompany((int)obj.IdCompany);
-                    if (existingImages == null)
-                    {
-                        response.IsSuccess = false;
-                        response.Message = Messages.MessageNoDataCompany;
-                        _logger.LogError(response.Message);
-                        return response;
-                    }
-                    existingImages = _mapper.Map(obj, existingImages);
-
-                    foreach (var item in obj.Traductions)
-                    {
-                        traductions.Add(new Traduction
-                        {
-                            Identifier = item.Key,
-                            ShortValue = item.Key.Split('_')[0] == "S" ? item.Value : string.Empty,
-                            LargeValue = item.Key.Split('_')[0] == "L" ? item.Value : string.Empty,
-                            IdLanguage = 1,
-                            LastUpdaterUser = 1
-                        });
-                    }
-                    existingImages.UpdateDate = DateTime.Now;
-                    response.Data = await _companyImagesDomain.UpdateCompanyImage(existingImages, traductions);
+                    response.Data = await _companyImagesDomain.AddCompanyImage(newImages);
                 }
             }
             catch (Exception ex)
@@ -125,7 +88,7 @@ namespace DRRCore.Application.Main.CoreApplication
             var response = new Response<GetCompanyImageResponseDto>();
             try
             {
-                var images = await _companyImagesDomain.GetByIdCompany(idCompany);
+                var images = await _companyImagesDomain.GetImagesByIdCompany(idCompany);
                 if (images == null)
                 {
                     response.IsSuccess = false;

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DRRCore.Application.DTO.API;
-using DRRCore.Domain.Entities.SqlContext;
+using DRRCore.Domain.Entities.SQLContext;
 using System.ComponentModel.DataAnnotations;
 
 namespace DRRCore.Transversal.Mapper.Profiles.Api

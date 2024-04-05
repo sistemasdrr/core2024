@@ -7,7 +7,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
 {
     public interface ICompanyImagesApplication
     {
-        Task<Response<int>> AddOrUpdateImages(AddOrUpdateCompanyImagesRequestDto obj); 
+        Task<Response<int?>> AddOrUpdateImages(AddOrUpdateCompanyImagesRequestDto obj); 
         Task<Response<GetCompanyImageResponseDto>> GetCompanyImagesByIdCompany(int idCompany);
         Task<Response<bool>> UploadImage(IFormFile File);
         Task<Response<bool>> DeleteImage(int idCompany, int number);
