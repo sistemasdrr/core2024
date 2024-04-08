@@ -19,5 +19,8 @@
        Asig_Agente_Espera = 16,
        Por_Referencia = 17,
        Por_Despachar = 18,
+       Por_Supervisar=19,
+        Por_Digitar = 20,
+        Por_Traducir = 21
     }
 }

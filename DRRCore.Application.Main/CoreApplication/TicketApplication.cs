@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MySqlX.XDevAPI.Common;
 using Newtonsoft.Json;
+using ZstdSharp.Unsafe;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
@@ -1508,9 +1509,14 @@ namespace DRRCore.Application.Main.CoreApplication
 
                             if (history != null)
                             {
-                                var ticket = await context.Tickets.Where(x => x.Id == history.IdTicket).FirstOrDefaultAsync();
+                                var ticket = await context.Tickets.Include(x=>x.TicketHistories).Where(x => x.Id == history.IdTicket).FirstOrDefaultAsync();
                                 if (ticket != null)
                                 {
+                                    if (item.AssignedFromCode.Contains("SU"))
+                                    {
+                                        ticket.Quality = item.Quality;
+                                        ticket.UpdateDate = DateTime.Now;
+                                    }
                                     if (item.Type == "PA")
                                     {
                                        string nameAssignedTo = "PRE_ASSIGN_" + item.AssignedToCode;
@@ -1847,52 +1853,96 @@ namespace DRRCore.Application.Main.CoreApplication
                                     }
                                     if (item.Type == "DI")
                                     {
-                                        string nameAssignedTo = "DIGITADOR" + item.AssignedToCode;
-                                        string descriptionAssignedTo = "Digitador " + item.AssignedToCode;
-                                        var numeration = await context.Numerations.Where(x => x.Name == nameAssignedTo).FirstOrDefaultAsync();
-                                        int? number = 1;
-                                        if (numeration == null)
+                                        if (item.AssignedToCode=="D15")
                                         {
-                                            await context.Numerations.AddAsync(new Numeration
+
+                                            string nameAssignedToRef = "PORDIGITAR_CR4";
+                                            string descriptionAssignedToRef = "Por Digitar ";
+                                            var numerationRef = await context.Numerations.Where(x => x.Name == nameAssignedToRef).FirstOrDefaultAsync();
+                                            int? numberRef = 1;
+                                            if (numerationRef == null)
                                             {
-                                                Name = nameAssignedTo,
-                                                Description = descriptionAssignedTo,
-                                                Number = 1
-                                            });
+                                                await context.Numerations.AddAsync(new Numeration
+                                                {
+                                                    Name = nameAssignedToRef,
+                                                    Description = descriptionAssignedToRef,
+                                                    Number = 1
+                                                });
+                                            }
+                                            else
+                                            {
+                                                numberRef = numerationRef.Number + 1;
+                                                numerationRef.Number++;
+                                                numerationRef.UpdateDate = DateTime.Now;
+                                                context.Numerations.Update(numerationRef);
+                                            }
+                                            var newTicketHistory = new TicketHistory
+                                            {
+                                                IdTicket = ticket.Id,
+                                                UserFrom = item.UserFrom,
+                                                UserTo = "42",
+                                                AsignedTo = "CR4",
+                                                IdStatusTicket = (int)TicketStatusEnum.Por_Digitar,
+                                                NumberAssign = numberRef,
+                                                Flag = false,
+                                                StartDate = DateTime.Parse(item.StartDate),
+                                                EndDate = DateTime.Parse(item.EndDate),
+                                                Observations = item.Observations,
+                                                Balance = item.Balance,
+
+                                            };
+                                            await context.TicketHistories.AddAsync(newTicketHistory);
+
                                         }
                                         else
                                         {
-                                            number = numeration.Number + 1;
-                                            numeration.Number++;
-                                            numeration.UpdateDate = DateTime.Now;
-                                            context.Numerations.Update(numeration);
+                                            string nameAssignedTo = "DIGITADOR" + item.AssignedToCode;
+                                            string descriptionAssignedTo = "Digitador " + item.AssignedToCode;
+                                            var numeration = await context.Numerations.Where(x => x.Name == nameAssignedTo).FirstOrDefaultAsync();
+                                            int? number = 1;
+                                            if (numeration == null)
+                                            {
+                                                await context.Numerations.AddAsync(new Numeration
+                                                {
+                                                    Name = nameAssignedTo,
+                                                    Description = descriptionAssignedTo,
+                                                    Number = 1
+                                                });
+                                            }
+                                            else
+                                            {
+                                                number = numeration.Number + 1;
+                                                numeration.Number++;
+                                                numeration.UpdateDate = DateTime.Now;
+                                                context.Numerations.Update(numeration);
+                                            }
+
+
+                                            ticket.UpdateDate = DateTime.Now;
+                                            history.Flag = true;
+                                            history.UpdateDate = DateTime.Now;
+
+
+                                            ticket.IdStatusTicket = (int)TicketStatusEnum.Asig_Digitidor;
+                                            var newTicketHistory = new TicketHistory
+                                            {
+                                                IdTicket = ticket.Id,
+                                                UserFrom = item.UserFrom,
+                                                UserTo = item.UserTo,
+                                                AsignedTo = item.AssignedToCode,
+                                                IdStatusTicket = (int)TicketStatusEnum.Asig_Digitidor,
+                                                NumberAssign = number,
+                                                Flag = false,
+                                                StartDate = DateTime.Parse(item.StartDate),
+                                                EndDate = DateTime.Parse(item.EndDate),
+                                                Observations = item.Observations,
+                                                Balance = item.Balance,
+
+                                            };
+                                            await context.TicketHistories.AddAsync(newTicketHistory);
+
+
                                         }
-
-
-                                        ticket.UpdateDate = DateTime.Now;
-                                        history.Flag = true;
-                                        history.UpdateDate = DateTime.Now;
-
-
-                                        ticket.IdStatusTicket = (int)TicketStatusEnum.Asig_Digitidor;
-                                        var newTicketHistory = new TicketHistory
-                                        {
-                                            IdTicket = ticket.Id,
-                                            UserFrom = item.UserFrom,
-                                            UserTo = item.UserTo,
-                                            AsignedTo = item.AssignedToCode,
-                                            IdStatusTicket = (int)TicketStatusEnum.Asig_Digitidor,
-                                            NumberAssign = number,
-                                            Flag = false,
-                                            StartDate = DateTime.Parse(item.StartDate),
-                                            EndDate = DateTime.Parse(item.EndDate),
-                                            Observations = item.Observations,
-                                            Balance = item.Balance,
-
-                                        };
-                                        await context.TicketHistories.AddAsync(newTicketHistory);
-
-
 
                                         context.Tickets.Update(ticket);
                                         context.TicketHistories.Update(history);
@@ -1901,52 +1951,95 @@ namespace DRRCore.Application.Main.CoreApplication
                                     }
                                     if (item.Type == "TR")
                                     {
-                                        string nameAssignedTo = "TRADUCTOR" + item.AssignedToCode;
-                                        string descriptionAssignedTo = "Traductor " + item.AssignedToCode;
-                                        var numeration = await context.Numerations.Where(x => x.Name == nameAssignedTo).FirstOrDefaultAsync();
-                                        int? number = 1;
-                                        if (numeration == null)
+                                        if (item.AssignedToCode == "T14")
                                         {
-                                            await context.Numerations.AddAsync(new Numeration
+
+                                            string nameAssignedToRef = "PORTRADUCIR_CR5";
+                                            string descriptionAssignedToRef = "Por Digitar ";
+                                            var numerationRef = await context.Numerations.Where(x => x.Name == nameAssignedToRef).FirstOrDefaultAsync();
+                                            int? numberRef = 1;
+                                            if (numerationRef == null)
                                             {
-                                                Name = nameAssignedTo,
-                                                Description = descriptionAssignedTo,
-                                                Number = 1
-                                            });
+                                                await context.Numerations.AddAsync(new Numeration
+                                                {
+                                                    Name = nameAssignedToRef,
+                                                    Description = descriptionAssignedToRef,
+                                                    Number = 1
+                                                });
+                                            }
+                                            else
+                                            {
+                                                numberRef = numerationRef.Number + 1;
+                                                numerationRef.Number++;
+                                                numerationRef.UpdateDate = DateTime.Now;
+                                                context.Numerations.Update(numerationRef);
+                                            }
+                                            var newTicketHistory = new TicketHistory
+                                            {
+                                                IdTicket = ticket.Id,
+                                                UserFrom = item.UserFrom,
+                                                UserTo = "42",
+                                                AsignedTo = "CR5",
+                                                IdStatusTicket = (int)TicketStatusEnum.Por_Traducir,
+                                                NumberAssign = numberRef,
+                                                Flag = false,
+                                                StartDate = DateTime.Parse(item.StartDate),
+                                                EndDate = DateTime.Parse(item.EndDate),
+                                                Observations = item.Observations,
+                                                Balance = item.Balance,
+
+                                            };
+                                            await context.TicketHistories.AddAsync(newTicketHistory);
+
                                         }
                                         else
                                         {
-                                            number = numeration.Number + 1;
-                                            numeration.Number++;
-                                            numeration.UpdateDate = DateTime.Now;
-                                            context.Numerations.Update(numeration);
+                                            string nameAssignedTo = "TRADUCTOR" + item.AssignedToCode;
+                                            string descriptionAssignedTo = "Traductor " + item.AssignedToCode;
+                                            var numeration = await context.Numerations.Where(x => x.Name == nameAssignedTo).FirstOrDefaultAsync();
+                                            int? number = 1;
+                                            if (numeration == null)
+                                            {
+                                                await context.Numerations.AddAsync(new Numeration
+                                                {
+                                                    Name = nameAssignedTo,
+                                                    Description = descriptionAssignedTo,
+                                                    Number = 1
+                                                });
+                                            }
+                                            else
+                                            {
+                                                number = numeration.Number + 1;
+                                                numeration.Number++;
+                                                numeration.UpdateDate = DateTime.Now;
+                                                context.Numerations.Update(numeration);
+                                            }
+
+
+                                            ticket.UpdateDate = DateTime.Now;
+                                            history.Flag = true;
+                                            history.UpdateDate = DateTime.Now;
+
+
+                                            ticket.IdStatusTicket = (int)TicketStatusEnum.Asig_Traductor;
+                                            var newTicketHistory = new TicketHistory
+                                            {
+                                                IdTicket = ticket.Id,
+                                                UserFrom = item.UserFrom,
+                                                UserTo = item.UserTo,
+                                                AsignedTo = item.AssignedToCode,
+                                                IdStatusTicket = (int)TicketStatusEnum.Asig_Traductor,
+                                                NumberAssign = number,
+                                                Flag = false,
+                                                StartDate = DateTime.Parse(item.StartDate),
+                                                EndDate = DateTime.Parse(item.EndDate),
+                                                Observations = item.Observations,
+                                                Balance = item.Balance,
+
+                                            };
+                                            await context.TicketHistories.AddAsync(newTicketHistory);
+
                                         }
-
-
-                                        ticket.UpdateDate = DateTime.Now;
-                                        history.Flag = true;
-                                        history.UpdateDate = DateTime.Now;
-
-
-                                        ticket.IdStatusTicket = (int)TicketStatusEnum.Asig_Traductor;
-                                        var newTicketHistory = new TicketHistory
-                                        {
-                                            IdTicket = ticket.Id,
-                                            UserFrom = item.UserFrom,
-                                            UserTo = item.UserTo,
-                                            AsignedTo = item.AssignedToCode,
-                                            IdStatusTicket = (int)TicketStatusEnum.Asig_Traductor,
-                                            NumberAssign = number,
-                                            Flag = false,
-                                            StartDate = DateTime.Parse(item.StartDate),
-                                            EndDate = DateTime.Parse(item.EndDate),
-                                            Observations = item.Observations,
-                                            Balance = item.Balance,
-
-                                        };
-                                        await context.TicketHistories.AddAsync(newTicketHistory);
-
-
 
                                         context.Tickets.Update(ticket);
                                         context.TicketHistories.Update(history);
@@ -1955,52 +2048,94 @@ namespace DRRCore.Application.Main.CoreApplication
                                     }
                                     if (item.Type == "SU")
                                     {
-                                        string nameAssignedTo = "SUPERVISOR" + item.AssignedToCode;
-                                        string descriptionAssignedTo = "Supervisor " + item.AssignedToCode;
-                                        var numeration = await context.Numerations.Where(x => x.Name == nameAssignedTo).FirstOrDefaultAsync();
-                                        int? number = 1;
-                                        if (numeration == null)
+                                        if (ticket.TicketHistories.Any(x => x.AsignedTo.Contains("RC") && x.Flag == false))
                                         {
-                                            await context.Numerations.AddAsync(new Numeration
+
+                                            string nameAssignedToRef = "SUPERVISAR_CR3";
+                                            string descriptionAssignedToRef = "Por Supervisar ";
+                                            var numerationRef = await context.Numerations.Where(x => x.Name == nameAssignedToRef).FirstOrDefaultAsync();
+                                            int? numberRef = 1;
+                                            if (numerationRef == null)
                                             {
-                                                Name = nameAssignedTo,
-                                                Description = descriptionAssignedTo,
-                                                Number = 1
-                                            });
+                                                await context.Numerations.AddAsync(new Numeration
+                                                {
+                                                    Name = nameAssignedToRef,
+                                                    Description = descriptionAssignedToRef,
+                                                    Number = 1
+                                                });
+                                            }
+                                            else
+                                            {
+                                                numberRef = numerationRef.Number + 1;
+                                                numerationRef.Number++;
+                                                numerationRef.UpdateDate = DateTime.Now;
+                                                context.Numerations.Update(numerationRef);
+                                            }
+                                            var newTicketHistory = new TicketHistory
+                                            {
+                                                IdTicket = ticket.Id,
+                                                UserFrom = item.UserFrom,
+                                                UserTo = "42",
+                                                AsignedTo = "CR3",
+                                                IdStatusTicket = (int)TicketStatusEnum.Por_Supervisar,
+                                                NumberAssign = numberRef,
+                                                Flag = false,
+                                                StartDate = DateTime.Parse(item.StartDate),
+                                                EndDate = DateTime.Parse(item.EndDate),
+                                                Observations = item.Observations,
+                                                Balance = item.Balance,
+
+                                            };
+                                            await context.TicketHistories.AddAsync(newTicketHistory);
+
                                         }
                                         else
                                         {
-                                            number = numeration.Number + 1;
-                                            numeration.Number++;
-                                            numeration.UpdateDate = DateTime.Now;
-                                            context.Numerations.Update(numeration);
+                                            string nameAssignedTo = "SUPERVISOR" + item.AssignedToCode;
+                                            string descriptionAssignedTo = "Supervisor " + item.AssignedToCode;
+                                            var numeration = await context.Numerations.Where(x => x.Name == nameAssignedTo).FirstOrDefaultAsync();
+                                            int? number = 1;
+                                            if (numeration == null)
+                                            {
+                                                await context.Numerations.AddAsync(new Numeration
+                                                {
+                                                    Name = nameAssignedTo,
+                                                    Description = descriptionAssignedTo,
+                                                    Number = 1
+                                                });
+                                            }
+                                            else
+                                            {
+                                                number = numeration.Number + 1;
+                                                numeration.Number++;
+                                                numeration.UpdateDate = DateTime.Now;
+                                                context.Numerations.Update(numeration);
+                                            }
+
+
+                                            history.Flag = true;
+                                            history.UpdateDate = DateTime.Now;
+
+
+                                            ticket.IdStatusTicket = (int)TicketStatusEnum.Asig_Supervisor;
+                                            var newTicketHistory = new TicketHistory
+                                            {
+                                                IdTicket = ticket.Id,
+                                                UserFrom = item.UserFrom,
+                                                UserTo = item.UserTo,
+                                                AsignedTo = item.AssignedToCode,
+                                                IdStatusTicket = (int)TicketStatusEnum.Asig_Supervisor,
+                                                NumberAssign = number,
+                                                Flag = false,
+                                                StartDate = DateTime.Parse(item.StartDate),
+                                                EndDate = DateTime.Parse(item.EndDate),
+                                                Observations = item.Observations,
+                                                Balance = item.Balance,
+
+                                            };
+                                            await context.TicketHistories.AddAsync(newTicketHistory);
+
                                         }
-
-                                        ticket.Quality = item.Quality;
-                                        ticket.UpdateDate = DateTime.Now;
-                                        history.Flag = true;
-                                        history.UpdateDate = DateTime.Now;
-
-
-                                        ticket.IdStatusTicket = (int)TicketStatusEnum.Asig_Supervisor;
-                                        var newTicketHistory = new TicketHistory
-                                        {
-                                            IdTicket = ticket.Id,
-                                            UserFrom = item.UserFrom,
-                                            UserTo = item.UserTo,
-                                            AsignedTo = item.AssignedToCode,
-                                            IdStatusTicket = (int)TicketStatusEnum.Asig_Supervisor,
-                                            NumberAssign = number,
-                                            Flag = false,
-                                            StartDate = DateTime.Parse(item.StartDate),
-                                            EndDate = DateTime.Parse(item.EndDate),
-                                            Observations = item.Observations,
-                                            Balance = item.Balance,
-
-                                        };
-                                        await context.TicketHistories.AddAsync(newTicketHistory);
-
-
 
                                         context.Tickets.Update(ticket);
                                         context.TicketHistories.Update(history);
@@ -2211,6 +2346,127 @@ namespace DRRCore.Application.Main.CoreApplication
                 response.Data = false;
             }
             return response;
+        }
+
+        public async Task<Response<bool>> FinishWork(AssignTicketRequestDto obj)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                using (var context = new SqlCoreContext())
+                {
+                    var history = await context.TicketHistories.Where(x => x.IdTicket == obj.IdTicket && x.AsignedTo == obj.AssignedFromCode && x.NumberAssign == obj.NumberAssign).FirstOrDefaultAsync();
+                    if (history != null)
+                    {
+                        var ticket = await context.Tickets.Include(x => x.TicketHistories).Where(x => x.Id == history.IdTicket).FirstOrDefaultAsync();
+                        if (ticket != null)
+                        {
+                            if (obj.AssignedFromCode.Contains("DI"))
+                            {
+                               
+                                    string nameAssignedToRef = "SUPERVISAR_CR3";
+                                    string descriptionAssignedToRef = "Por Supervisar ";
+                                    var numerationRef = await context.Numerations.Where(x => x.Name == nameAssignedToRef).FirstOrDefaultAsync();
+                                    int? numberRef = 1;
+                                    if (numerationRef == null)
+                                    {
+                                        await context.Numerations.AddAsync(new Numeration
+                                        {
+                                            Name = nameAssignedToRef,
+                                            Description = descriptionAssignedToRef,
+                                            Number = 1
+                                        });
+                                    }
+                                    else
+                                    {
+                                        numberRef = numerationRef.Number + 1;
+                                        numerationRef.Number++;
+                                        numerationRef.UpdateDate = DateTime.Now;
+                                        context.Numerations.Update(numerationRef);
+                                    }
+                                    var newTicketHistory = new TicketHistory
+                                    {
+                                        IdTicket = ticket.Id,
+                                        UserFrom = obj.UserFrom,
+                                        UserTo = "42",
+                                        AsignedTo = "CR3",
+                                        IdStatusTicket = (int)TicketStatusEnum.Por_Supervisar,
+                                        NumberAssign = numberRef,
+                                        Flag = false,
+                                        StartDate = DateTime.Parse(obj.StartDate),
+                                        EndDate = DateTime.Parse(obj.EndDate),
+                                        Observations = obj.Observations,
+                                        Balance = obj.Balance,
+
+                                    };
+                                    await context.TicketHistories.AddAsync(newTicketHistory);
+
+                                }
+                               
+
+                        }
+                        if (obj.AssignedFromCode.Contains("TR"))
+                            {
+                                string nameAssignedTo = "DESPACHO_D1";
+                                string descriptionAssignedTo = "Despacho";
+                                var numeration = await context.Numerations.Where(x => x.Name == nameAssignedTo).FirstOrDefaultAsync();
+                                int? number = 1;
+                                if (numeration == null)
+                                {
+                                    await context.Numerations.AddAsync(new Numeration
+                                    {
+                                        Name = nameAssignedTo,
+                                        Description = descriptionAssignedTo,
+                                        Number = 1
+                                    });
+                                }
+                                else
+                                {
+                                    number = numeration.Number + 1;
+                                    numeration.Number++;
+                                    numeration.UpdateDate = DateTime.Now;
+                                    context.Numerations.Update(numeration);
+                                }
+
+
+                                ticket.UpdateDate = DateTime.Now;
+                                ticket.IdStatusTicket = (int)TicketStatusEnum.Por_Despachar;
+                                history.Flag = true;
+                                history.UpdateDate = DateTime.Now;
+
+                                context.Tickets.Update(ticket);
+                                context.TicketHistories.Update(history);
+
+                                var newTicketHistory = new TicketHistory
+                                {
+                                    IdTicket = ticket.Id,
+                                    UserFrom = obj.UserFrom,
+                                    UserTo = null,
+                                    AsignedTo = null,
+                                    IdStatusTicket = (int)TicketStatusEnum.Por_Despachar,
+                                    NumberAssign = number,
+                                    Flag = false,
+                                    StartDate = DateTime.Parse(obj.StartDate),
+                                    EndDate = DateTime.Parse(obj.EndDate),
+                                    Observations = obj.Observations,
+                                    Balance = obj.Balance,
+
+
+                                };
+                                await context.TicketHistories.AddAsync(newTicketHistory);
+
+                                await context.SaveChangesAsync();
+                            }
+                        }
+                    }
+                return new Response<bool>();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return new Response<bool>();
         }
     }
 

@@ -253,5 +253,11 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _ticketApplication.AssignTicket(list));
         }
+        [HttpPost()]
+        [Route("finishWork")]
+        public async Task<ActionResult> FinishWork(AssignTicketRequestDto obj)
+        {
+            return Ok(await _ticketApplication.FinishWork(obj));
+        }
     }
 }

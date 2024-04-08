@@ -47,5 +47,6 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool>> AddTicketObservations(int idTicket, string observations, string userFrom);
 
         Task<Response<bool?>> AssignTicket(List<AssignTicketRequestDto> list);
+        Task<Response<bool>> FinishWork(AssignTicketRequestDto obj);
     }
 }
