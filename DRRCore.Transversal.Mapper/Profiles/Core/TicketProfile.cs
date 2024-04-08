@@ -175,7 +175,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.Observations, opt => opt?.MapFrom(src => src.Observations))
                 .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.StartDate)))
                 .ForMember(dest => dest.EndDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.EndDate)))
-
+                .ForMember(dest => dest.References, opt => opt?.MapFrom(src => src.IdTicketNavigation.TicketHistories.Where(x => x.AsignedTo.Contains("RC")).FirstOrDefault() != null ? src.IdTicketNavigation.TicketHistories.Where(x => x.AsignedTo.Contains("RC")).FirstOrDefault().Flag == true ? 1 : 0 : -1))
                   .ReverseMap();
 
             CreateMap<Ticket, GetListPendingTicketResponseDto>()
