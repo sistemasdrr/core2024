@@ -2,6 +2,7 @@
 using AutoMapper;
 using AutoMapper.Execution;
 using CoreFtp;
+using DRRCore.Application.DTO.API;
 using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.DTO.Email;
@@ -2477,6 +2478,39 @@ namespace DRRCore.Application.Main.CoreApplication
 
             }
             return new Response<bool>();
+        }
+
+        public async Task<Response<List<GetShortProviderByTicket>>> GetProvidersByIdTicket(int idTicket)
+        {
+            var response = new Response<List<GetShortProviderByTicket>>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var ticket = await context.Tickets.FindAsync(idTicket);
+                if(ticket != null)
+                {
+                    var providers = new List<Domain.Entities.SqlCoreContext.Provider>();
+                    if(ticket.About == "E")
+                    {
+                        providers = await context.Providers
+                            .Include(x => x.IdCountryNavigation)
+                            .Where(x => x.IdCompany == ticket.IdCompany && x.IdTicket == idTicket).ToListAsync();
+                    }
+                    else
+                    {
+                        providers = await context.Providers
+                            .Include(x => x.IdCountryNavigation)
+                            .Where(x => x.IdPerson== ticket.IdPerson && x.IdTicket == idTicket).ToListAsync();
+                    }
+                    response.Data = _mapper.Map<List<GetShortProviderByTicket>>(providers);
+                }
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response.Data = null;
+                response.IsSuccess = false;
+            }
+            return response;
         }
     }
 

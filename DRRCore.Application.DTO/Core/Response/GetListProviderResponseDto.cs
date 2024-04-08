@@ -88,4 +88,16 @@
         public string? DateReferent { get; set; }
         public string? Ticket { get; set; }
     }
+
+    public class GetShortProviderByTicket
+    {
+        public int Id { get; set; }
+        public int? IdCompany { get; set; }
+        public int? IdPerson { get; set; }
+        public string? Name { get; set; }
+        public string? Telephone { get; set; }
+        public string? Country { get; set; }
+        public string? FlagCountry { get; set; }
+        public int? IdTicket { get; set; }
+    }
 }
