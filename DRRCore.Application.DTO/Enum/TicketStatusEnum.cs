@@ -15,5 +15,8 @@
        Rechazado=11,
        Pre_Asignacion = 12,
         Asig_Referencista = 13,
+        Asig_Reportero_Espera = 15,
+        Asig_Agente_Espera = 16,
+        Por_Referencia = 17,
     }
 }

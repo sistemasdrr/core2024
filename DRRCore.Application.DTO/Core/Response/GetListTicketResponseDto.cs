@@ -64,6 +64,8 @@
         public bool HasFiles { get; set; }
         public List<TicketFileResponseDto> Files { get; set; } = new List<TicketFileResponseDto>();
         public string Origen { get; set; }
+        public int? NumberAssign { get; set; }
+        public string? AssinedTo { get; set; }
 
     }
 }

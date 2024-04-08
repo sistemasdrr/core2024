@@ -4162,9 +4162,9 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.RevealName)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("revealName");
-            entity.Property(e => e.SubscriberIndications)
-                .IsUnicode(false)
-                .HasColumnName("subscriberIndications");
+            //entity.Property(e => e.SubscriberIndications)
+            //    .IsUnicode(false)
+            //    .HasColumnName("subscriberIndications");
             entity.Property(e => e.TaxCode)
                 .HasMaxLength(30)
                 .IsUnicode(false)

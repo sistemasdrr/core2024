@@ -399,7 +399,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.Tickets.Include(x=>x.IdSubscriberNavigation).Where(x => x.IdCompany == id && x.IdStatusTicket==(int)TicketStatusEnum.Despachado).ToListAsync();
+                return await context.Tickets.Include(x=>x.IdSubscriberNavigation).Where(x => x.IdCompany == id && x.Enable==true).ToListAsync();
             }
             catch (Exception ex)
             {

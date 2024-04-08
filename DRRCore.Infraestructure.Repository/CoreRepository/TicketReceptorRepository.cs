@@ -88,7 +88,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.TicketReceptors.Where(x => x.IsDobleFecha == true && x.IdCountry==idCountry).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
+                return await context.TicketReceptors.Where(x => x.IsDobleFecha == true && x.IdCountry==idCountry && x.IsEnFecha==false).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {
@@ -102,7 +102,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.TicketReceptors.Where(x => x.IsEnFecha == true && x.IdCountry == idCountry).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
+                return await context.TicketReceptors.Where(x => x.IsEnFecha == true && x.IdCountry == idCountry && x.IsDobleFecha == false).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {
@@ -116,7 +116,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             try
             {
                 using var context = new SqlCoreContext();
-                return await context.TicketReceptors.Where(x => x.IdCountry == idCountry).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
+                return await context.TicketReceptors.Where(x => x.IdCountry == idCountry && x.IsEnFecha == false && x.IsDobleFecha == false).FirstOrDefaultAsync() ?? throw new Exception("No existe el objeto solicitado");
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
-﻿using DRRCore.Domain.Entities.SqlCoreContext;
+﻿using DRRCore.Application.DTO.Enum;
+using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -122,9 +123,10 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .Include(x => x.IdTicketNavigation.IdCountryNavigation)
                     .Include(x => x.IdTicketNavigation.IdStatusTicketNavigation)
                     .Include(x => x.IdTicketNavigation.TicketQuery)
+                     .Include(x => x.IdTicketNavigation.TicketFiles)
                     .Include(x => x.IdTicketNavigation.TicketHistories.OrderByDescending(x => x.Id)).Where(x => x.Enable == true)
                     .OrderByDescending(x => x.IdTicketNavigation.OrderDate)
-                    .Where(x => x.UserTo == userTo && x.Flag == true && x.IdTicketNavigation.IdStatusTicket != 9 && x.IdTicketNavigation.IdStatusTicket != 10 && x.IdTicketNavigation.IdStatusTicket != 11)
+                    .Where(x => x.UserTo == userTo && x.Flag == false && x.IdTicketNavigation.IdStatusTicket != (int)TicketStatusEnum.Despachado && x.IdTicketNavigation.IdStatusTicket != (int)TicketStatusEnum.Observado && x.IdTicketNavigation.IdStatusTicket != (int)TicketStatusEnum.Rechazado)
                         .ToListAsync();
                     return list;
                 }
