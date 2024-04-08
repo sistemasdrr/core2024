@@ -2075,7 +2075,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     };
                     emailDataDto.CCO = new List<string>
                     {
-                        //"crc@del-risco.com"
+                        "jfernandez@del-risco.com"//"crc@del-risco.com"
                     };
                     emailDataDto.Subject = (ticket.About == "E" ? ticket.IdCompanyNavigation.Name : ticket.IdPersonNavigation.Fullname) + "/" + ticket.ReportType + "/" + DateTime.Now.ToShortDateString();
                     emailDataDto.IsBodyHTML = true;
@@ -2098,6 +2098,12 @@ namespace DRRCore.Application.Main.CoreApplication
                     emailHistory.Success = result;
                     response.Data = await _emailHistoryDomain.AddAsync(emailHistory);
                     _logger.LogInformation(Messages.MailSuccessSend);
+
+                    ticket.IdStatusTicket = (int?)TicketStatusEnum.Despachado;
+                    ticket.DispatchtDate = DateTime.Now;
+                    ticket.DispatchedName = emailDataDto.Subject;
+                    context.Tickets.Update(ticket);
+                    await context.SaveChangesAsync();
                     response.IsSuccess = true;
                     response.Data = result;
                 }
@@ -2162,6 +2168,46 @@ namespace DRRCore.Application.Main.CoreApplication
                 response.IsSuccess = false;
                 response.Message = Messages.BadQuery;
                 _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DeleteTicketHistory(int idTicket, string? assignedTo, int? numberAssign)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var ticketHistory = await context.TicketHistories.Where(x => x.IdTicket == idTicket && x.AsignedTo == assignedTo && x.NumberAssign == numberAssign).FirstOrDefaultAsync();
+                if(ticketHistory != null)
+                {
+                    context.TicketHistories.Remove(ticketHistory);
+                    var lastTicketHistory = await context.TicketHistories.Where(x => x.IdTicket == idTicket).OrderByDescending(x => x.CreationDate).FirstOrDefaultAsync();
+                    var ticket = await context.Tickets.Where(x => x.Id == idTicket).FirstOrDefaultAsync();
+                    if(lastTicketHistory != null && ticket != null)
+                    {
+                        lastTicketHistory.Flag = false;
+                        context.TicketHistories.Update(lastTicketHistory);
+                        ticket.IdStatusTicket = lastTicketHistory.IdStatusTicket;
+                        context.Tickets.Update(ticket);
+                        await context.SaveChangesAsync();
+                        response.Data = true;
+                    }
+                    else
+                    {
+                        response.Data = false;
+                        response.IsSuccess = false;
+                    }
+                }
+                else
+                {
+                    response.Data = false;
+                    response.IsSuccess = false;
+                }
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response.Data = false;
             }
             return response;
         }

@@ -112,7 +112,7 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _ticketApplication.GetTicketListToDispatchAsync());
         }
         [HttpPost()]
-        [Route("DispatchTicekt")]
+        [Route("DispatchTicket")]
         public async Task<ActionResult> DispatchTicekt(int idTicket, int idUser)
         {
             return Ok(await _ticketApplication.DispatchTicket(idTicket, idUser));
@@ -180,6 +180,12 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> getTicketPreassignToUser(string userTo)
         {
             return Ok(await _ticketApplication.GetTicketsToUser(userTo));
+        }
+        [HttpGet()]
+        [Route("deleteTicketHistory")]
+        public async Task<ActionResult> deleteTicketHistory(int idTicket, string? assignedTo, int? numberAssign)
+        {
+            return Ok(await _ticketApplication.DeleteTicketHistory(idTicket,assignedTo,numberAssign));
         }
         [HttpGet()]
         [Route("getPersonalAssignation")]
