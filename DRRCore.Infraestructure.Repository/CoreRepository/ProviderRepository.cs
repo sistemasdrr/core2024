@@ -137,12 +137,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                 foreach (var item in providers)
                 {
                     if (!list.Any(x => x.Ticket == item.Ticket))
-                    {
-                        if (string.IsNullOrEmpty(item.Ticket))
-                        {
-                            item.Ticket = "Historico migrado";
-                        }
-                       
+                    {                       
                         list.Add(item);
                     }
                 }
