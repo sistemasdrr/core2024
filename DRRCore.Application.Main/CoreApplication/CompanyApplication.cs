@@ -2281,20 +2281,26 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<bool>> AddOrUpdateProviderListAsync(List<GetListProviderResponseDto> obj, int idCompany)
+        public async Task<Response<bool>> AddOrUpdateProviderListAsync(List<GetListProviderResponseDto> obj, int idCompany,string user)
         {
             var response = new Response<bool>();
             try
             {
+                int? idTicket = 0;
                 using var context = new SqlCoreContext();
+
+                var currentUser =await context.UserLogins.Include(x=>x.IdEmployeeNavigation).Where(x => x.Id == int.Parse(user)).FirstOrDefaultAsync();
+
                 var list = await context.Providers.Where(x => x.Enable == true && x.IdCompany == idCompany && x.Flag == true).ToListAsync();
                 foreach (var item in list)
                 {
                     item.Flag = false;
                     context.Providers.Update(item);
                 }
+                
                 foreach (var item1 in obj)
                 {
+                    idTicket = item1.IdTicket;
                     await context.Providers.AddAsync(new Provider
                     {
                         Id = 0,
@@ -2322,11 +2328,19 @@ namespace DRRCore.Application.Main.CoreApplication
                         ReferentCommentary = item1.ReferentCommentary,
                         IdPerson = item1.IdPerson == 0 || item1.IdPerson == null ? null : item1.IdPerson,
                         IdTicket = item1.IdTicket,
-                        ReferentName = item1.ReferentName,
+                        ReferentName = currentUser.IdEmployeeNavigation.FirstName+" "+ currentUser.IdEmployeeNavigation.LastName,
                         Flag = true,
                         Ticket = item1.Ticket,
-                        DateReferent = StaticFunctions.VerifyDate(item1.DateReferent)
+                        DateReferent =DateTime.Now
                     });
+
+                }
+                var history = await context.TicketHistories.Where(X => X.IdTicket == idTicket && X.AsignedTo.Contains("RC") && X.Flag == false).FirstOrDefaultAsync();
+                if (history != null)
+                {
+                    history.UpdateDate = DateTime.Now;
+                    history.Flag = true;
+                    context.TicketHistories.Update(history);
                 }
                 await context.SaveChangesAsync();
                 response.Data = true;

@@ -4,6 +4,7 @@ using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
@@ -118,6 +119,7 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
 
         public async Task<List<GetProviderHistoryResponseDto>> GetProvidersHistoryByIdCompany(int idCompany)
         {
+            var list = new List<GetProviderHistoryResponseDto>();
             try
             {
                 using var context = new SqlCoreContext();
@@ -129,11 +131,24 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                         NumReferences = context.Providers.Count(p => p.IdTicket == x.IdTicket && p.IdCompany == idCompany),
                         ReferentName = x.ReferentName,
                         Date = StaticFunctions.DateTimeToString(x.DateReferent)
-                    })
-                    .Distinct()
+                    })                               
                     .ToListAsync();
 
-                return providers;
+                foreach (var item in providers)
+                {
+                    if (!list.Any(x => x.Ticket == item.Ticket))
+                    {
+                        if (string.IsNullOrEmpty(item.Ticket))
+                        {
+                            item.Ticket = "Historico migrado";
+                        }
+                       
+                        list.Add(item);
+                    }
+                }
+              
+
+                return list;
             }
             catch (Exception ex)
             {

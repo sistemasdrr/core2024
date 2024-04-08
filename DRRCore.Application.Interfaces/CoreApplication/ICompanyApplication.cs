@@ -9,7 +9,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
     {
         Task<Response<int>> AddOrUpdateAsync(AddOrUpdateCompanyRequestDto obj);
         Task<Response<GetCompanyResponseDto>> GetCompanyById(int id);
-        Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name,string form,int idCountry,bool haveReport, string filterBy); 
+        Task<Response<List<GetListCompanyResponseDto>>> GetAllCompanys(string name,string form,int idCountry,bool haveReport,string similar); 
         Task<Response<List<GetCompanySearchResponseDto>>> GetCompanySearch(string name, string taxCode, int idCountry);
         Task<Response<bool>> DeleteAsync(int id);
         Task<Response<int?>> AddOrUpdateCompanyBackGroundAsync(AddOrUpdateCompanyBackgroundRequestDto obj);
@@ -30,7 +30,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetFinancialBalanceResponseDto>> GetFinancialBalanceById(int id);
         Task<Response<bool>> DeleteFinancialBalance(int id);
         Task<Response<bool>> AddOrUpdateProviderAsync(AddOrUpdateProviderRequestDto obj);
-        Task<Response<bool>> AddOrUpdateProviderListAsync(List<GetListProviderResponseDto> obj, int idCompany);
+        Task<Response<bool>> AddOrUpdateProviderListAsync(List<GetListProviderResponseDto> obj, int idCompany, string user);
         Task<Response<List<GetListProviderResponseDto>>> GetListProvidersAsync(int idCompany);
         Task<Response<GetProviderResponseDto>> GetProviderById(int id);
         Task<Response<bool>> DeleteProvider(int id);
