@@ -2317,23 +2317,33 @@ namespace DRRCore.Application.Main.CoreApplication
                 var ticketHistory = await context.TicketHistories.Where(x => x.IdTicket == idTicket && x.AsignedTo == assignedTo && x.NumberAssign == numberAssign).FirstOrDefaultAsync();
                 if(ticketHistory != null)
                 {
-                    context.TicketHistories.Remove(ticketHistory);
-                    var lastTicketHistory = await context.TicketHistories.Where(x => x.IdTicket == idTicket).OrderByDescending(x => x.CreationDate).FirstOrDefaultAsync();
-                    var ticket = await context.Tickets.Where(x => x.Id == idTicket).FirstOrDefaultAsync();
-                    if(lastTicketHistory != null && ticket != null)
+                    if (assignedTo.Contains("RC") == false && assignedTo.Contains("CR") == false)
                     {
-                        lastTicketHistory.Flag = false;
-                        context.TicketHistories.Update(lastTicketHistory);
-                        ticket.IdStatusTicket = lastTicketHistory.IdStatusTicket;
-                        context.Tickets.Update(ticket);
+                        context.TicketHistories.Remove(ticketHistory);
                         await context.SaveChangesAsync();
                         response.Data = true;
                     }
                     else
                     {
-                        response.Data = false;
-                        response.IsSuccess = false;
+                        context.TicketHistories.Remove(ticketHistory);
+                        var lastTicketHistory = await context.TicketHistories.Where(x => x.IdTicket == idTicket).OrderByDescending(x => x.CreationDate).FirstOrDefaultAsync();
+                        var ticket = await context.Tickets.Where(x => x.Id == idTicket).FirstOrDefaultAsync();
+                        if (lastTicketHistory != null && ticket != null)
+                        {
+                            lastTicketHistory.Flag = false;
+                            context.TicketHistories.Update(lastTicketHistory);
+                            ticket.IdStatusTicket = lastTicketHistory.IdStatusTicket;
+                            context.Tickets.Update(ticket);
+                            await context.SaveChangesAsync();
+                            response.Data = true;
+                        }
+                        else
+                        {
+                            response.Data = false;
+                            response.IsSuccess = false;
+                        }
                     }
+                    
                 }
                 else
                 {
