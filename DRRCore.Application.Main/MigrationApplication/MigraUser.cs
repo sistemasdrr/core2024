@@ -3152,7 +3152,11 @@ namespace DRRCore.Application.Main.MigrationApplication
             using var context = new SqlContext();
             using var mysqlContext = new MySqlContext();
             using var imageMysqlContext = new FotoContext();
-            for (int i = 0; i < 200; i++)
+            
+               
+            var images = await imageMysqlContext.REmpVsFotos.ToListAsync();
+
+            foreach (var item in images)
             {
                 try
                 {
@@ -3200,6 +3204,8 @@ namespace DRRCore.Application.Main.MigrationApplication
                     continue;
                 }
             }
+            
+
             return true;
 
         }

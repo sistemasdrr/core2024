@@ -3,6 +3,7 @@ using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Infraestructure.Interfaces.CoreRepository;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace DRRCore.Infraestructure.Repository.CoreRepository
 {
@@ -640,6 +641,32 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
                     .ToListAsync();
                 return ticketHistory;
             }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<List<Ticket>> GetTicketsToDispatch()
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var tickets = await context.Tickets
+                    .Include(x => x.IdSubscriberNavigation.IdCountryNavigation)
+                    .Include(x => x.IdContinentNavigation).Include(x => x.IdCompanyNavigation)
+                    .Include(x => x.IdCompanyNavigation.IdCountryNavigation)
+                    .Include(x => x.IdCompanyNavigation.IdCountryNavigation.IdContinentNavigation)
+                    .Include(x => x.IdPersonNavigation)
+                    .Include(x => x.IdPersonNavigation.IdCountryNavigation)
+                    .Include(x => x.IdPersonNavigation.IdCountryNavigation.IdContinentNavigation)
+                    .Include(x => x.IdCountryNavigation)
+                    .Include(x => x.IdStatusTicketNavigation)
+                    .Include(x => x.TicketQuery)
+                    .Include(x => x.TicketHistories.OrderByDescending(x => x.Id)).Where(x => x.Enable == true)
+                    .Where(x => x.IdStatusTicket == (int?)TicketStatusEnum.Por_Despachar).ToListAsync();
+                return tickets != null ? tickets : null;
+            }catch(Exception ex )
             {
                 _logger.LogError(ex.Message);
                 return null;

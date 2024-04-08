@@ -27,5 +27,6 @@ namespace DRRCore.Domain.Interfaces.CoreDomain
         Task<List<Ticket>> GetTicketSituation(string about, string typeSearch, string? search, int? idCountry);
         Task<List<Ticket>> GetTicketByCompanyOrPerson(string about, int id);
         Task<List<TicketHistory>> GetTicketHistoryByIdTicket(int idTicket);
+        Task<List<Ticket>> GetTicketsToDispatch();
     }
 }

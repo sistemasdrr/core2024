@@ -29,5 +29,6 @@ namespace DRRCore.Infraestructure.Interfaces.CoreRepository
         Task<List<Ticket>> GetTicketByCompanyOrPerson(string about, int id);
 
         Task<List<TicketHistory>> GetTicketHistoryByIdTicket(int idTicket);
+        Task<List<Ticket>> GetTicketsToDispatch();
     }
 }

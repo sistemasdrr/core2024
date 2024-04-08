@@ -4,26 +4,36 @@ using AutoMapper.Execution;
 using CoreFtp;
 using DRRCore.Application.DTO.Core.Request;
 using DRRCore.Application.DTO.Core.Response;
+using DRRCore.Application.DTO.Email;
 using DRRCore.Application.DTO.Enum;
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Application.Interfaces.EmailApplication;
+using DRRCore.Domain.Entities.SQLContext;
 using DRRCore.Domain.Entities.SqlCoreContext;
 using DRRCore.Domain.Interfaces.CoreDomain;
+using DRRCore.Domain.Interfaces.EmailDomain;
 using DRRCore.Domain.Interfaces.MysqlDomain;
 using DRRCore.Transversal.Common;
 using DRRCore.Transversal.Common.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Crypto.Engines;
+using MySqlX.XDevAPI.Common;
+using Newtonsoft.Json;
 
 namespace DRRCore.Application.Main.CoreApplication
 {
     public class TicketApplication : ITicketApplication
     {
+        private readonly IMailFormatter _mailFormatter;
+        private readonly IAttachmentsNotSendDomain _attachmentsNotSendDomain;
+        private readonly IEmailConfigurationDomain _emailConfigurationDomain;
+        private readonly IMailSender _mailSender;
+        private readonly IFileManager _fileManager;
+
         private readonly INumerationDomain _numerationDomain;
         private readonly ICountryDomain _countryDomain;
         private readonly ITicketDomain _ticketDomain;
-        private readonly ITicketHistoryDomain _ticketHistoryDomain;   
+        private readonly ITicketHistoryDomain _ticketHistoryDomain;
         private readonly ICompanyDomain _companyDomain;
         private readonly ITCuponDomain _tCuponDomain;
         private readonly ITicketAssignationDomain _ticketAssignationDomain;
@@ -37,34 +47,41 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly IPersonalDomain _personalDomain;
         private readonly IAgentDomain _agentDomain;
         private readonly ICompanyApplication _companyApplication;
+        private IEmailHistoryDomain _emailHistoryDomain;
         private IMapper _mapper;
         private ILogger _logger;
-       
+
         public TicketApplication(INumerationDomain numerationDomain, ITicketAssignationDomain ticketAssignationDomain, IEmployeeDomain employeeDomain,
-            ITCuponDomain tCuponDomain,ITicketDomain ticketDomain, IPersonalDomain personalDomain, IAgentDomain agentDomain,
-            ITicketReceptorDomain ticketReceptorDomain,ITicketHistoryDomain ticketHistoryDomain, ICountryDomain countryDomain,
-            ICompanyDomain companyDomain,IMapper mapper, ILogger logger,IReportingDownload reportingDownload,
-            IEmailApplication emailApplication,IUserLoginDomain userLoginDomain,IPersonDomain personDomain,ISubscriberDomain subscriberDomain,ICompanyApplication companyApplication)
+            ITCuponDomain tCuponDomain, ITicketDomain ticketDomain, IPersonalDomain personalDomain, IAgentDomain agentDomain,
+            ITicketReceptorDomain ticketReceptorDomain, ITicketHistoryDomain ticketHistoryDomain, ICountryDomain countryDomain,
+            ICompanyDomain companyDomain, IMapper mapper, ILogger logger, IReportingDownload reportingDownload, IMailFormatter mailFormatter, IEmailConfigurationDomain emailConfigurationDomain,
+            IEmailApplication emailApplication, IUserLoginDomain userLoginDomain, IPersonDomain personDomain, ISubscriberDomain subscriberDomain, ICompanyApplication companyApplication,
+            IMailSender mailSender, IFileManager fileManager, IEmailHistoryDomain emailHistoryDomain)
         {
             _numerationDomain = numerationDomain;
-            _companyApplication= companyApplication;
+            _companyApplication = companyApplication;
             _ticketDomain = ticketDomain;
             _ticketHistoryDomain = ticketHistoryDomain;
             _mapper = mapper;
             _companyDomain = companyDomain;
             _tCuponDomain = tCuponDomain;
-            _ticketReceptorDomain= ticketReceptorDomain;
-            _logger = logger;           
+            _ticketReceptorDomain = ticketReceptorDomain;
+            _logger = logger;
             _userLoginDomain = userLoginDomain;
             _emailApplication = emailApplication;
             _reportingDownload = reportingDownload;
             _subscriberDomain = subscriberDomain;
-            _personDomain= personDomain;
+            _personDomain = personDomain;
             _ticketAssignationDomain = ticketAssignationDomain;
             _personalDomain = personalDomain;
             _agentDomain = agentDomain;
             _countryDomain = countryDomain;
             _employeeDomain = employeeDomain;
+            _mailFormatter = mailFormatter;
+            _emailConfigurationDomain = emailConfigurationDomain;
+            _fileManager = fileManager;
+            _mailSender = mailSender;
+            _emailHistoryDomain = emailHistoryDomain;
         }
         public async Task<Response<List<GetTicketFileResponseDto>>> GetTicketFilesByIdTicket(int idTicket)
         {
@@ -89,7 +106,7 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var file = await _ticketDomain.GetFileByPath(path);
-                if(file != null)
+                if (file != null)
                 {
                     ms.Position = 0;
                     ms = await DescargarArchivo(path);
@@ -107,7 +124,7 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
-        
+
         private string GetContentType(string extension)
         {
             switch (extension.ToLower())
@@ -136,7 +153,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 case ".png":
                     return "image/png";
                 default:
-                    return "application/octet-stream"; 
+                    return "application/octet-stream";
             }
         }
         private async Task<MemoryStream> DescargarArchivo(string? path)
@@ -155,7 +172,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 }
             }
         }
-     
+
 
         public async Task<Response<bool>> AddTicketAsync(AddOrUpdateTicketRequestDto request)
         {
@@ -175,8 +192,8 @@ namespace DRRCore.Application.Main.CoreApplication
                     newTicket.IdStatusTicket = (int?)TicketStatusEnum.Pendiente;
                     newTicket.TicketHistories.Add(new TicketHistory
                     {
-                        IdStatusTicket= (int?)TicketStatusEnum.Pendiente,
-                        UserFrom= request.UserFrom
+                        IdStatusTicket = (int?)TicketStatusEnum.Pendiente,
+                        UserFrom = request.UserFrom
                     });
                     var idEmployee = await GetReceptorDefault(request.IdCountry ?? 0, request.ReportType, request.IdSubscriber);
                     using var context = new SqlCoreContext();
@@ -188,30 +205,30 @@ namespace DRRCore.Application.Main.CoreApplication
                         IdUserLogin = userLogin.Id
                     };
 
-                    if ( await _ticketDomain.AddAsync(newTicket))
+                    if (await _ticketDomain.AddAsync(newTicket))
                     {
                      
                         await _numerationDomain.UpdateTicketNumberAsync();
-                        if(request.About == "E" && newTicket.IdCompany==null  )
+                        if (request.About == "E" && newTicket.IdCompany == null)
                         {
-                          var company=  await _companyDomain.AddCompanyAsync(new Company
+                            var company = await _companyDomain.AddCompanyAsync(new Company
                             {
                                 Name = request.RequestedName ?? string.Empty,
-                                Language=request.Language
+                                Language = request.Language
 
                             });
-                            var ticket=await _ticketDomain.GetByIdAsync(newTicket.Id);
+                            var ticket = await _ticketDomain.GetByIdAsync(newTicket.Id);
                             ticket.IdCompany = company;
                             await _ticketDomain.UpdateAsync(ticket);
-                           
+
 
                         }
-                        if (request.About == "P" && newTicket.IdPerson == null )
+                        if (request.About == "P" && newTicket.IdPerson == null)
                         {
-                           var person= await _personDomain.AddPersonAsync(new Person
+                            var person = await _personDomain.AddPersonAsync(new Person
                             {
                                 Fullname = request.RequestedName ?? string.Empty,
-                                Language= request.Language
+                                Language = request.Language
                             });
                             var ticket = await _ticketDomain.GetByIdAsync(newTicket.Id);
                             ticket.IdPerson = person;
@@ -224,15 +241,15 @@ namespace DRRCore.Application.Main.CoreApplication
                             if(doc!=null && doc.Data != null)
                             {
                                 var data = doc.Data;
-                                var path = await UploadF1(ticket.Id,"RV_"+ticket.RequestedName,data.File);
-                               
+                                var path = await UploadF1(ticket.Id, "RV_" + ticket.RequestedName, data.File);
+
                                 await context.TicketFiles.AddAsync(new TicketFile
                                 {
                                     IdTicket = ticket.Id,
                                     Path = path,
-                                    Name= "RV_"+DateTime.Now.ToString("ddMMyy")+"_"+request.Number.ToString("D6"),
-                                    Extension=".pdf"  
-                                }) ;
+                                    Name = "RV_" + DateTime.Now.ToString("ddMMyy") + "_" + request.Number.ToString("D6"),
+                                    Extension = ".pdf"
+                                });
                                 await context.SaveChangesAsync();
                             }
                         }
@@ -266,11 +283,11 @@ namespace DRRCore.Application.Main.CoreApplication
 
         }
 
-        private async Task<int?> GetReceptorDefault(int idCountry, string reportType,int? idSubscriber)
+        private async Task<int?> GetReceptorDefault(int idCountry, string reportType, int? idSubscriber)
         {
-            var getReceptor=new TicketReceptor();
-            var subscriber = await _subscriberDomain.GetSubscriberById(idSubscriber??0);
-            if((subscriber != null && subscriber.Code=="0107" )|| reportType=="BC")
+            var getReceptor = new TicketReceptor();
+            var subscriber = await _subscriberDomain.GetSubscriberById(idSubscriber ?? 0);
+            if ((subscriber != null && subscriber.Code == "0107") || reportType == "BC")
             {
                 return 42;
             }
@@ -279,7 +296,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 getReceptor = await _ticketReceptorDomain.GetReceptorDoubleDate(idCountry);
                 return getReceptor.IdEmployee ?? null;
             }
-            if(reportType == "EF")
+            if (reportType == "EF")
             {
                 getReceptor = await _ticketReceptorDomain.GetReceptorInDate(idCountry);
                 return getReceptor.IdEmployee ?? null;
@@ -302,8 +319,8 @@ namespace DRRCore.Application.Main.CoreApplication
                 }
                 response.Data = await _ticketDomain.DeleteAsync(id);
             }
-            catch(Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 response.IsSuccess = false;
             }
             return response;
@@ -325,12 +342,12 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
                     var newBd = await _ticketDomain.GetTicketByCompany(company.Id);
 
-                    if(newBd!=null && newBd.Any())
+                    if (newBd != null && newBd.Any())
                     {
                         list.AddRange(_mapper.Map<List<GetListSameSearchedReportResponseDto>>(newBd));
                     }
 
-                    if (company.OldCode!=null && company.OldCode.StartsWith("E"))
+                    if (company.OldCode != null && company.OldCode.StartsWith("E"))
                     {
                         var oldBd = await _ticketDomain.GetOldTicketByCompany(company.OldCode);
                         if (oldBd != null && oldBd.Any())
@@ -361,7 +378,7 @@ namespace DRRCore.Application.Main.CoreApplication
                        
                         getExist.LastSearchedDate = firstTicket.DispatchtDate.ToShortDateString();
                     }
-                    getExist.ListSameSearched=list.ToList();
+                    getExist.ListSameSearched = list.ToList();
                     response.Data = getExist;
 
                 }
@@ -411,7 +428,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     response.Data = getExist;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.IsSuccess = false;
                 response.Message = ex.Message;
@@ -426,7 +443,7 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var list = await _ticketDomain.GetAllAsync();
-                if(list != null)
+                if (list != null)
                 {
                     response.Data = _mapper.Map<List<GetListTicketResponseDto>>(list);
                 }
@@ -450,7 +467,7 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var tickets = await _ticketDomain.GetAllPendingTickets();
-                response.Data= _mapper.Map<List<GetListTicketResponseDto>>(tickets);
+                response.Data = _mapper.Map<List<GetListTicketResponseDto>>(tickets);
 
                 return response;
             }
@@ -464,7 +481,7 @@ namespace DRRCore.Application.Main.CoreApplication
         }
 
         public async Task<Response<GetNumerationResponseDto>> GetTicketNumberAsync()
-        {            
+        {
             var response = new Response<GetNumerationResponseDto>();
             try
             {
@@ -515,24 +532,24 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
-        private async Task<string> UploadF1(int ticket,string fileName, byte[] byteArray)
+        private async Task<string> UploadF1(int ticket, string fileName, byte[] byteArray)
         {
             try
             {
-                var path = "/cupones/" + ticket.ToString("D6") + "/" + fileName+".pdf";
+                var path = "/cupones/" + ticket.ToString("D6") + "/" + fileName + ".pdf";
                 using (var ftpClient = new FtpClient(GetFtpClientConfiguration()))
                 {
                     await ftpClient.LoginAsync();
 
                     MemoryStream memoryStream = new MemoryStream(byteArray);
                     memoryStream.Position = 0;
-                         
-                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(path))
-                            {
-                                await memoryStream.CopyToAsync(writeStream);
-                            }
-                        
-                    
+
+                    using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(path))
+                    {
+                        await memoryStream.CopyToAsync(writeStream);
+                    }
+
+
                 }
                 return path;
             }
@@ -547,21 +564,21 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 var path = "/cupones/" + ticket.ToString("D6") + "/" + ticket.ToString("D6") + "_Planilla_Reportero.doc";
                 using (var ftpClient = new FtpClient(GetFtpClientConfiguration()))
-                {                    
+                {
                     await ftpClient.LoginAsync();
-                 
+
                     using (var ftpReadStream = await ftpClient.OpenFileReadStreamAsync("/plantillas/Planilla_Reportero.doc"))
                     {
 
                         using (var stream = new MemoryStream())
                         {
-                           await ftpReadStream.CopyToAsync(stream);
-                          stream.Position = 0;
+                            await ftpReadStream.CopyToAsync(stream);
+                            stream.Position = 0;
 
-                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(path)) 
+                            using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(path))
                             {
-                                await stream.CopyToAsync(writeStream);                                   
-                            }                           
+                                await stream.CopyToAsync(writeStream);
+                            }
                         }
                     }
                 }
@@ -586,7 +603,7 @@ namespace DRRCore.Application.Main.CoreApplication
 
                         using (var stream = new MemoryStream())
                         {
-                           await ftpReadStream.CopyToAsync(stream);
+                            await ftpReadStream.CopyToAsync(stream);
                             stream.Position = 0;
 
                             using (var writeStream = await ftpClient.OpenFileWriteStreamAsync(path))
@@ -612,14 +629,14 @@ namespace DRRCore.Application.Main.CoreApplication
                 Username = "drrcore2024",
                 Password = "drrti2023"
             };
-       }
+        }
 
         public async Task<Response<List<GetListTicketResponseDto>>> GetTicketListByAsync(string ticket, string name, string subscriber, string type, string procedure)
         {
             var response = new Response<List<GetListTicketResponseDto>>();
             try
             {
-                var list = await _ticketDomain.GetAllByAsync(ticket,name, subscriber,type,procedure);
+                var list = await _ticketDomain.GetAllByAsync(ticket, name, subscriber, type, procedure);
                 if (list != null)
                 {
                     response.Data = _mapper.Map<List<GetListTicketResponseDto>>(list);
@@ -645,25 +662,25 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 var query = await _ticketDomain.GetTicketQuery(idTicket);
 
-               
+
                 if (query == null)
                 {
                     var ticket = await _ticketDomain.GetByIdAsync(idTicket);
                     response.Data = new GetTicketQueryResponseDto
                     {
-                        IdTicket=ticket.Id,
+                        IdTicket = ticket.Id,
                         QueryDate = DateTime.Now,
                         IdSubscriber = ticket.IdSubscriber,
-                        Report=ticket.RequestedName??string.Empty,
-                        Email=ticket.IdSubscriberNavigation.Email,
-                        Language=ticket.Language,
-                        SubscriberName = ticket.IdSubscriberNavigation == null ? string.Empty :ticket.IdSubscriberNavigation.Code+"||"+ ticket.IdSubscriberNavigation.Name ?? string.Empty
-                       
+                        Report = ticket.RequestedName ?? string.Empty,
+                        Email = ticket.IdSubscriberNavigation.Email,
+                        Language = ticket.Language,
+                        SubscriberName = ticket.IdSubscriberNavigation == null ? string.Empty : ticket.IdSubscriberNavigation.Code + "||" + ticket.IdSubscriberNavigation.Name ?? string.Empty
+
                     };
                 }
                 else {
                     response.Data = _mapper.Map<GetTicketQueryResponseDto>(query);
-                }                
+                }
             }
             catch (Exception ex)
             {
@@ -674,7 +691,7 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<bool>> AnswerTicket(int idTicket,string subscriberResponse)
+        public async Task<Response<bool>> AnswerTicket(int idTicket, string subscriberResponse)
         {
             var response = new Response<bool>();
             try
@@ -683,7 +700,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 ticket.IdStatusTicket = (int?)TicketStatusEnum.Pendiente;
                 await _ticketDomain.UpdateAsync(ticket);
 
-                response.Data= await _ticketDomain.TicketQueryAnswered(idTicket, subscriberResponse);
+                response.Data = await _ticketDomain.TicketQueryAnswered(idTicket, subscriberResponse);
             }
             catch (Exception ex)
             {
@@ -696,7 +713,7 @@ namespace DRRCore.Application.Main.CoreApplication
 
         public async Task<Response<bool>> SendTicketQuery(SendTicketQueryRequestDto request)
         {
-            var listEmailTo=new List<string>();
+            var listEmailTo = new List<string>();
             var listEmailCC = new List<string>();
             var response = new Response<bool>();
             try
@@ -721,17 +738,17 @@ namespace DRRCore.Application.Main.CoreApplication
                 {
                     subject = "Consulta al requerimiento : " + ticket.RequestedName + "| Fecha : " + ticket.OrderDate.ToString("dd/MM/yyyy");
                 }
-                var responseEmail=await _emailApplication.SendMailAsync(new DTO.Email.EmailDataDTO
+                var responseEmail = await _emailApplication.SendMailAsync(new DTO.Email.EmailDataDTO
                 {
                     BeAuthenticated = true,
-                    UserName=user.IdEmployeeNavigation.Email,
-                    Password=user.EmailPassword,
+                    UserName = user.IdEmployeeNavigation.Email,
+                    Password = user.EmailPassword,
                     EmailKey = request.Language == "I" ? Constants.DRR_EECORE_ENG_QUERYTICKET : Constants.DRR_EECORE_ESP_QUERYTICKET,
                     From = user.IdEmployeeNavigation.Email,
                     To = listEmailTo,
                     DisplayName = user.IdEmployeeNavigation.FirstName + ' ' + user.IdEmployeeNavigation.LastName,
                     User = request.User,
-                    CC=listEmailCC,
+                    CC = listEmailCC,
                     IsBodyHTML = true,
                     Subject = subject,
                     Parameters = new List<string>
@@ -765,7 +782,7 @@ namespace DRRCore.Application.Main.CoreApplication
             var response = new Response<byte[]>();
             try
             {
-                response.Data= await _reportingDownload.GenerateReportAsync("reporteTicket", ReportRenderType.Excel, null);
+                response.Data = await _reportingDownload.GenerateReportAsync("reporteTicket", ReportRenderType.Excel, null);
             }
             catch (Exception ex)
             {
@@ -794,7 +811,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 }
                 response.Data = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
                 response.Data = false;
@@ -863,7 +880,7 @@ namespace DRRCore.Application.Main.CoreApplication
                             ticketAssignation.Commentary = item.Commentary;
                             ticketAssignation.IdEmployee = item.IdReceptor;
                             await _ticketAssignationDomain.UpdateAsync(ticketAssignation);
-                            
+
                         }
                         await context.SaveChangesAsync();
                     }
@@ -912,7 +929,7 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 var list = await _personalDomain.GetAllAsync();
                 response.Data = _mapper.Map<List<GetPersonalAssignationResponseDto>>(list);
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 response.IsSuccess = false;
                 _logger.LogError(response.Message, ex);
@@ -925,7 +942,7 @@ namespace DRRCore.Application.Main.CoreApplication
             var response = new Response<List<GetPersonalAssignationResponseDto>>();
             try
             {
-                var list = await _agentDomain.GetAllAgentsAsync("","","A");
+                var list = await _agentDomain.GetAllAgentsAsync("", "", "A");
                 response.Data = _mapper.Map<List<GetPersonalAssignationResponseDto>>(list);
             }
             catch (Exception ex)
@@ -981,7 +998,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 var ticketFile = await _ticketDomain.GetTicketFileById(id);
                 response.Data = await _ticketDomain.DeleteTicketFile(id);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.IsSuccess = false;
                 throw new Exception(ex.Message);
@@ -997,11 +1014,11 @@ namespace DRRCore.Application.Main.CoreApplication
                 try
                 {
                     await ftpClient.DeleteFileAsync(path);
-                    return true; 
+                    return true;
                 }
                 catch (Exception ex)
                 {
-                    return false; 
+                    return false;
                 }
             }
         }
@@ -1013,13 +1030,13 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 foreach (var item in obj)
                 {
-                    if(item.Type == "PA")
+                    if (item.Type == "PA")
                     {
 
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -1032,11 +1049,11 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var ticket = await _ticketDomain.GetByIdAsync(idTicket);
-                if(ticket !=  null)
+                if (ticket != null)
                 {
                     response.Data = ticket.Number.ToString("D6");
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 response.Data = "";
                 _logger.LogError(ex.Message, ex);
@@ -1050,7 +1067,7 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var tickets = await _ticketDomain.GetTicketsByIdSubscriber(idSubscriber, company, from, until, idCountry);
-                if(tickets.Count > 0)
+                if (tickets.Count > 0)
                 {
                     response.Data = _mapper.Map<List<GetListTicketResponseDto>>(tickets);
                 }
@@ -1059,7 +1076,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     response.Data = null;
                     response.IsSuccess = false;
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 response.Data = null;
                 response.IsSuccess = false;
@@ -1084,7 +1101,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 var newTicket = _mapper.Map<Ticket>(request);
                 newTicket.Web = true;
                 var country = await _countryDomain.GetByIdAsync((int)newTicket.IdCountry);
-                if(country != null)
+                if (country != null)
                 {
                     newTicket.IdContinent = country.IdContinent;
                     newTicket.TaxType = country.TaxTypeName;
@@ -1109,7 +1126,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     IdEmployee = idEmployee,
                     IdUserLogin = userLogin.Id
                 };
-                
+
 
                 if (await _ticketDomain.AddAsync(newTicket))
                 {
@@ -1150,7 +1167,7 @@ namespace DRRCore.Application.Main.CoreApplication
                         {
                             var data = doc.Data;
                             var path = await UploadF1(ticket.Id, "RV_" + ticket.RequestedName, data.File);
-                           
+
                             await context.TicketFiles.AddAsync(new TicketFile
                             {
                                 IdTicket = ticket.Id,
@@ -1199,7 +1216,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 newTicket.Number = currentNumber;
                 newTicket.IdStatusTicket = (int?)TicketStatusEnum.Despachado;
                 newTicket.DispatchtDate = DateTime.Now;
-                
+
                 response.Data = await _ticketDomain.AddAsync(newTicket);
             }
             catch (Exception ex)
@@ -1217,7 +1234,7 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var tickets = await _ticketDomain.GetTicketHistoryByIdSubscriber(idSubscriber, name, from, until, idCountry);
-                if(tickets != null)
+                if (tickets != null)
                 {
                     response.Data = _mapper.Map<List<GetTicketHistorySubscriberResponseDto>>(tickets);
                 }
@@ -1227,7 +1244,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     response.IsSuccess = false;
                     response.Message = Messages.BadQuery;
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 response.Data = null;
                 response.IsSuccess = false;
@@ -1243,10 +1260,10 @@ namespace DRRCore.Application.Main.CoreApplication
             var listPersons = new List<Person>();
             try
             {
-                if(about == "E")
+                if (about == "E")
                 {
                     var companies = await _companyDomain.GetCompanySituation(typeSearch, search, idCountry);
-                    if(companies != null)
+                    if (companies != null)
                     {
                         listCompanies = companies;
                     }
@@ -1262,7 +1279,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
                     response.Data = _mapper.Map<List<GetSearchSituationResponseDto>>(listCompanies);
                 }
-                else if(about == "P")
+                else if (about == "P")
                 {
                     var persons = await _personDomain.GetPersonSituation(typeSearch, search, idCountry);
                     if (persons != null)
@@ -1281,7 +1298,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
                     response.Data = _mapper.Map<List<GetSearchSituationResponseDto>>(listPersons);
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 response.Data = null;
                 response.IsSuccess = false;
@@ -1297,19 +1314,19 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var tickets = await _ticketDomain.GetTicketByCompanyOrPerson(about, id);
-                if(tickets != null)
+                if (tickets != null)
                 {
                     response.Data = _mapper.Map<List<GetTicketsByCompanyOrPersonResponseDto>>(tickets);
                 }
                 var oldTickets = await _ticketDomain.GetOldTicketByCompany(oldCode);
-                if(oldTickets != null)
+                if (oldTickets != null)
                 {
                     foreach (var item in oldTickets)
                     {
                         response.Data.Add(new GetTicketsByCompanyOrPersonResponseDto
                         {
                             Id = 0,
-                            Ticket = "A-"+ item.Cupcodigo.ToString().PadLeft(6, '0'),
+                            Ticket = "A-" + item.Cupcodigo.ToString().PadLeft(6, '0'),
                             IdStatusTicket = 0,
                             Status = "DESPACHADO",
                             Color = "label-success",
@@ -1325,7 +1342,7 @@ namespace DRRCore.Application.Main.CoreApplication
                         });
                     }
                 }
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 response.Data = null;
                 response.IsSuccess = false;
@@ -1341,7 +1358,7 @@ namespace DRRCore.Application.Main.CoreApplication
             try
             {
                 var ticketHistory = await _ticketDomain.GetTicketHistoryByIdTicket(idTicket);
-                if(ticketHistory != null)
+                if (ticketHistory != null)
                 {
                     foreach (var item in ticketHistory)
                     {
@@ -1351,14 +1368,14 @@ namespace DRRCore.Application.Main.CoreApplication
                             assignedToName = item.AsignedTo == "PA1" ? "KATIA BUSTAMANTE" : item.AsignedTo == "PA2" ? "MARIELA ACOSTA" : item.AsignedTo == "PA3" ? "MONICA YEPEZ" :
                                 item.AsignedTo == "PA4" ? "RAFAEL DEL RISCO" : item.AsignedTo == "PA5" ? "CECILIA RODRIGUEZ" : item.AsignedTo == "PA6" ? "JESSICA LIAU" :
                                 item.AsignedTo == "PA7" ? "CECILIA SAYAS" : "";
-                        } 
+                        }
                         else if (item.AsignedTo != null && item.AsignedTo.Contains("D") || item.AsignedTo != null && item.AsignedTo.Contains("T")
                             || item.AsignedTo != null && item.AsignedTo.Contains("R") || item.AsignedTo != null && item.AsignedTo.Contains("RC") || item.AsignedTo != null && item.AsignedTo.Contains("S"))
                         {
                             var employee = await _employeeDomain.FindByPersonalCode(item.AsignedTo);
                             assignedToName = employee != null ? employee.FirstName + " " + employee.LastName : string.Empty;
                         }
-                        else if(item.AsignedTo == null)
+                        else if (item.AsignedTo == null)
                         {
                             using var context = new SqlCoreContext();
                             var user = await context.UserLogins
@@ -1389,7 +1406,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(response.Message, ex);
                 response.IsSuccess = false;
@@ -1439,7 +1456,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(response.Message, ex);
                 response.IsSuccess = false;
@@ -1454,7 +1471,7 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 using var context = new SqlCoreContext();
                 var ticket = await context.Tickets.Where(x => x.Id == idTicket).FirstOrDefaultAsync();
-                if(ticket != null)
+                if (ticket != null)
                 {
                     ticket.IdStatusTicket = (int?)TicketStatusEnum.Observado;
                 }
@@ -1464,7 +1481,7 @@ namespace DRRCore.Application.Main.CoreApplication
                     IdTicket = (int?)idTicket,
                     UserFrom = userFrom,
                     IdStatusTicket = (int?)TicketStatusEnum.Observado,
-            });
+                });
                 await context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -1480,7 +1497,7 @@ namespace DRRCore.Application.Main.CoreApplication
             var response = new Response<bool>();
             try
             {
-                using (var context=new SqlCoreContext())
+                using (var context = new SqlCoreContext())
                 {
                     if (list.Count > 0) {
                         
@@ -1993,12 +2010,12 @@ namespace DRRCore.Application.Main.CoreApplication
 
                                 }
                             }
-                           
+
                         }
                     }
                 }
-               
-               
+
+
             }
             catch (Exception ex)
             {
@@ -2006,5 +2023,148 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return new Response<bool?>();
         }
+
+        public async Task<Response<List<GetListTicketResponseDto>>> GetTicketListToDispatchAsync()
+        {
+            var response = new Response<List<GetListTicketResponseDto>>();
+            try
+            {
+                var list = await _ticketDomain.GetTicketsToDispatch();
+                if (list != null)
+                {
+                    response.Data = _mapper.Map<List<GetListTicketResponseDto>>(list);
+                }
+                else
+                {
+                    response.Data = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> DispatchTicket(int idTicket, int idUser)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var emailDataDto = new EmailDataDTO();
+
+                using var context = new SqlCoreContext();
+                var ticket = await context.Tickets
+                    .Include(x => x.IdSubscriberNavigation)
+                    .Include(x => x.IdCompanyNavigation)
+                    .Include(x => x.IdPersonNavigation)
+                    .Where(x => x.Id == idTicket).FirstOrDefaultAsync();
+                var userLogin = await context.UserLogins.Include(x => x.IdEmployeeNavigation).Where(x => x.Id == idUser).FirstOrDefaultAsync(); ;
+                if (ticket != null && userLogin != null)
+                {
+                    emailDataDto.EmailKey = ticket.Language == "E" ? "DRR_WORKFLOW_ESP_0027" : "DRR_WORKFLOW_ENG_0027";
+                    emailDataDto.BeAuthenticated = true;
+                    emailDataDto.From = userLogin.IdEmployeeNavigation.Email;
+                    emailDataDto.UserName = emailDataDto.From;
+                    emailDataDto.Password = userLogin.EmailPassword;
+                    emailDataDto.To = new List<string>
+                    {
+                        "jfernandez@del-risco.com"//ticket.IdSubscriberNavigation.SendReportToEmail,
+                    };
+                    emailDataDto.CCO = new List<string>
+                    {
+                        //"crc@del-risco.com"
+                    };
+                    emailDataDto.Subject = (ticket.About == "E" ? ticket.IdCompanyNavigation.Name : ticket.IdPersonNavigation.Fullname) + "/" + ticket.ReportType + "/" + DateTime.Now.ToShortDateString();
+                    emailDataDto.IsBodyHTML = true;
+                    emailDataDto.BodyHTML = emailDataDto.IsBodyHTML ? await GetBodyHtml(emailDataDto) : emailDataDto.BodyHTML;
+                    _logger.LogInformation(JsonConvert.SerializeObject(emailDataDto));
+
+                    var attachment = new AttachmentDto();
+                    attachment.FileName = emailDataDto.Subject+".pdf";
+                    attachment.Content = Convert.ToBase64String(DownloadF8((int)ticket.IdCompany, ticket.Language, "pdf").Result.Data.File);
+                    attachment.Path = await UploadFile(attachment);
+                    emailDataDto.Attachments.Add(attachment);
+
+                    emailDataDto.Parameters.Add(ticket.IdSubscriberNavigation.Name);
+                    emailDataDto.Parameters.Add(userLogin.IdEmployeeNavigation.FirstName + " " + userLogin.IdEmployeeNavigation.LastName);
+                    emailDataDto.Parameters.Add(userLogin.IdEmployeeNavigation.Email);
+
+                    var result = await _mailSender.SendMailAsync(_mapper.Map<EmailValues>(emailDataDto));
+
+                    var emailHistory = _mapper.Map<EmailHistory>(emailDataDto);
+                    emailHistory.Success = result;
+                    response.Data = await _emailHistoryDomain.AddAsync(emailHistory);
+                    _logger.LogInformation(Messages.MailSuccessSend);
+                    response.IsSuccess = true;
+                    response.Data = result;
+                }
+                else
+                {
+                    response.Data = false;
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = string.Format(Messages.ExceptionMessage, ex.Message);
+                _logger.LogError(response.Message);
+
+            }
+            return response;
+        }
+        private async Task<string> GetBodyHtml(EmailDataDTO emailDataDto)
+        {
+            var emailConfiguration = await _emailConfigurationDomain.GetByNameAsync(emailDataDto.EmailKey);
+
+            var emailConfigurationFooter = await _emailConfigurationDomain.GetByNameAsync(Constants.DRR_WORKFLOW_FOOTER);
+            var stringBody = await _mailFormatter.GetEmailBody(emailConfiguration.Name, emailConfiguration.Value, emailDataDto.Parameters, emailDataDto.Table);
+            return stringBody.Replace(Constants.FOOTER, emailConfiguration.FlagFooter.Value ? emailConfigurationFooter.Value : string.Empty);
+
+        }
+        private async Task<string> UploadFile(AttachmentDto attachmentDto)
+        {
+            return await _fileManager.UploadFile(new MemoryStream(Convert.FromBase64String(attachmentDto.Content)), attachmentDto.FileName);
+        }
+        public async Task<Response<GetFileResponseDto>> DownloadF8(int idCompany, string language, string format)
+        {
+            var response = new Response<GetFileResponseDto>();
+            try
+            {
+                var company = await _companyDomain.GetByIdAsync(idCompany);
+
+                string companyCode = company.OldCode ?? "N" + company.Id.ToString("D6");
+                string languageFileName = language == "I" ? "ENG" : "ESP";
+                string fileFormat = "{0}_{1}{2}";
+                string report = language == "I" ? "F8-EMPRESAS-EN" : "F8-EMPRESAS-ES";
+                var reportRenderType = StaticFunctions.GetReportRenderType(format);
+                var extension = StaticFunctions.FileExtension(reportRenderType);
+                var contentType = StaticFunctions.GetContentType(reportRenderType);
+
+                var dictionary = new Dictionary<string, string>
+                {
+                    { "idCompany", idCompany.ToString() },
+                 };
+
+                response.Data = new GetFileResponseDto
+                {
+                    File = await _reportingDownload.GenerateReportAsync(report, reportRenderType, dictionary),
+                    ContentType = contentType,
+                    Name = string.Format(fileFormat, companyCode, languageFileName, extension)
+                };
+
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = Messages.BadQuery;
+                _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
     }
+
 }

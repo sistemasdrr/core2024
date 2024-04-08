@@ -106,6 +106,18 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _ticketApplication.GetTicketListAsync());
         }
         [HttpGet()]
+        [Route("getListToDispatch")]
+        public async Task<ActionResult> getListToDispatch()
+        {
+            return Ok(await _ticketApplication.GetTicketListToDispatchAsync());
+        }
+        [HttpPost()]
+        [Route("DispatchTicekt")]
+        public async Task<ActionResult> DispatchTicekt(int idTicket, int idUser)
+        {
+            return Ok(await _ticketApplication.DispatchTicket(idTicket, idUser));
+        }
+        [HttpGet()]
         [Route("getListby")]
         public async Task<ActionResult> getListBy(string? ticket, string? name, string? subscriber, string? type, string? procedure)
         {

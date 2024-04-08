@@ -34,4 +34,5 @@ public partial class REmpVsFoto
     public string? EfLocal4txt { get; set; }
 
     public string? EfLocal4txtIng { get; set; }
+    public int Migra { get; set; }
 }

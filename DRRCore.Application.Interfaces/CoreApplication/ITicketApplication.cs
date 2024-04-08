@@ -16,6 +16,8 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetNumerationResponseDto>> GetTicketNumberAsync();
         Task<Response<GetTicketRequestDto>> GetTicketRequestAsync(int id);
         Task<Response<List<GetListTicketResponseDto>>> GetTicketListAsync();
+        Task<Response<List<GetListTicketResponseDto>>> GetTicketListToDispatchAsync();
+        Task<Response<bool>> DispatchTicket(int idTicket, int idUser);
         Task<Response<List<GetTicketHistorySubscriberResponseDto>>> GetTicketHistoryByIdSubscriber(int idSubscriber, string? name, DateTime? from, DateTime? until, int? idCountry);
         Task<Response<bool>> DeleteTicket(int id);
         Task<Response<List<GetListTicketResponseDto>>> GetTicketListPendingAsync();
