@@ -1790,7 +1790,7 @@ namespace DRRCore.Application.Main.CoreApplication
 
                                         await context.SaveChangesAsync();
                                     }
-                                    if (item.Type == "RC")
+                                    if (item.Type == "RF")
                                     {
                                         string nameAssignedTo = "REFERENCISTA_" + item.AssignedToCode;
                                         string descriptionAssignedTo = "Referencia " + item.AssignedToCode;

@@ -2306,7 +2306,7 @@ namespace DRRCore.Application.Main.CoreApplication
                         Date = StaticFunctions.VerifyDate(item1.Date),
                         Telephone = item1.Telephone,
                         AttendedBy = item1.AttendedBy,
-                        IdCurrency = item1.IdCurrency,
+                        IdCurrency = item1.IdCurrency==0?null : item1.IdCurrency,
                         MaximumAmount = item1.MaximumAmount,
                         MaximumAmountEng = item1.MaximumAmountEng,
                         TimeLimit = item1.TimeLimit,
