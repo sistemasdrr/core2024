@@ -2372,7 +2372,7 @@ namespace DRRCore.Application.Main.CoreApplication
                         var ticket = await context.Tickets.Include(x => x.TicketHistories).Where(x => x.Id == history.IdTicket).FirstOrDefaultAsync();
                         if (ticket != null)
                         {
-                            if (obj.AssignedFromCode.Contains("DI"))
+                            if (obj.AssignedFromCode.Contains("D"))
                             {
                                
                                     string nameAssignedToRef = "SUPERVISAR_CR3";
@@ -2416,7 +2416,7 @@ namespace DRRCore.Application.Main.CoreApplication
                                
 
                         }
-                        if (obj.AssignedFromCode.Contains("TR"))
+                        if (obj.AssignedFromCode.Contains("T"))
                             {
                                 string nameAssignedTo = "DESPACHO_D1";
                                 string descriptionAssignedTo = "Despacho";
