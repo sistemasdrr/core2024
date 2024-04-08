@@ -172,6 +172,9 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                 .ForMember(dest => dest.AssinedTo, opt => opt?.MapFrom(src => src.AsignedTo))
                 .ForMember(dest => dest.NumberAssign, opt => opt?.MapFrom(src => src.NumberAssign))
                 .ForMember(dest => dest.Origen, opt => opt?.MapFrom(src => src.IdTicketNavigation.Web == false ? "E&E" : "WEB"))
+                .ForMember(dest => dest.Observations, opt => opt?.MapFrom(src => src.Observations))
+                .ForMember(dest => dest.StartDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.StartDate)))
+                .ForMember(dest => dest.EndDate, opt => opt?.MapFrom(src => StaticFunctions.DateTimeToString(src.EndDate)))
 
                   .ReverseMap();
 

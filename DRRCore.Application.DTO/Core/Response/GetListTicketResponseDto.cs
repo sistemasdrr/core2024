@@ -66,6 +66,9 @@
         public string Origen { get; set; }
         public int? NumberAssign { get; set; }
         public string? AssinedTo { get; set; }
+        public string? Observations { get; set; }
+        public string? StartDate { get; set; }
+        public string? EndDate { get; set; }
 
     }
 }
