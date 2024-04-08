@@ -3148,62 +3148,62 @@ namespace DRRCore.Application.Main.MigrationApplication
 
         public async Task<bool> MigrateCompanyImageOthers(int migra)
         {
-            using var coreContext = new SqlCoreContext();
-            using var context = new SqlContext();
-            using var mysqlContext = new MySqlContext();
-            using var imageMysqlContext = new FotoContext();
+            //using var coreContext = new SqlCoreContext();
+            //using var context = new SqlContext();
+            //using var mysqlContext = new MySqlContext();
+            //using var imageMysqlContext = new FotoContext();
             
                
-            var images = await imageMysqlContext.REmpVsFotos.ToListAsync();
+            //var images = await imageMysqlContext.REmpVsFotos.ToListAsync();
 
-            foreach (var item in images)
-            {
-                try
-                {
-                    var empresas = await mysqlContext.MEmpresas.Where(x => x.Migra == migra && x.EmActivo == 1).Take(100).ToListAsync();
-                    foreach (var item in empresas)
-                    {
-                        var company = await coreContext.Companies.Where(x => x.OldCode == item.EmCodigo).FirstOrDefaultAsync();
-                        if(company != null)
-                        {
-                            var images = await imageMysqlContext.REmpVsFotos.Where(x => x.EmCodigo == item.EmCodigo).FirstOrDefaultAsync();
-                            if (images != null)
-                            {
-                                    //await context.CompanyImages.AddAsync(new Domain.Entities.SQLContext.CompanyImage
-                                    //{
-                                    //    IdCompany = company.Id,
-                                    //    Img1 = images.EfLocal.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal) : "",
-                                    //    ImgDesc1 = images.EfLocaltxt.IsNullOrEmpty() == false ? images.EfLocaltxt : "",
-                                    //    ImgDescEng1 = images.EfLocaltxtIng.IsNullOrEmpty() == false ? images.EfLocaltxtIng : "",
-                                    //    ImgPrint1 = images.EfLocal.IsNullOrEmpty() == false ? true : false,
-                                    //    Img2 = images.EfLocal2.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal2) : "",
-                                    //    ImgDesc2 = images.EfLocal2txt.IsNullOrEmpty() == false ? images.EfLocal2txt : "",
-                                    //    ImgDescEng2 = images.EfLocal2txtIng.IsNullOrEmpty() == false ? images.EfLocal2txtIng : "",
-                                    //    ImgPrint2 = images.EfLocal2.IsNullOrEmpty() == false ? true : false,
-                                    //    Img3 = images.EfLocal3.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal3) : "",
-                                    //    ImgDesc3 = images.EfLocal3txt.IsNullOrEmpty() == false ? images.EfLocal3txt : "",
-                                    //    ImgDescEng3 = images.EfLocal3txtIng.IsNullOrEmpty() == false ? images.EfLocal3txtIng : "",
-                                    //    ImgPrint3 = images.EfLocal3.IsNullOrEmpty() == false ? true : false,
-                                    //    Img4 = images.EfLocal4.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal4) : "",
-                                    //    ImgDesc4 = images.EfLocal4txt.IsNullOrEmpty() == false ? images.EfLocal4txt : "",
-                                    //    ImgDescEng4 = images.EfLocal4txtIng.IsNullOrEmpty() == false ? images.EfLocal4txtIng : "",
-                                    //    ImgPrint4 = images.EfLocal4.IsNullOrEmpty() == false ? true : false,
-                                    //});
-                                item.Migra = 1;
-                                mysqlContext.MEmpresas.Update(item);
-                                await context.SaveChangesAsync();
-                                await mysqlContext.SaveChangesAsync();
-                            }
-                        }
+            //foreach (var item in images)
+            //{
+            //    try
+            //    {
+            //        var empresas = await mysqlContext.MEmpresas.Where(x => x.Migra == migra && x.EmActivo == 1).Take(100).ToListAsync();
+            //        foreach (var item in empresas)
+            //        {
+            //            var company = await coreContext.Companies.Where(x => x.OldCode == item.EmCodigo).FirstOrDefaultAsync();
+            //            if(company != null)
+            //            {
+            //                var images = await imageMysqlContext.REmpVsFotos.Where(x => x.EmCodigo == item.EmCodigo).FirstOrDefaultAsync();
+            //                if (images != null)
+            //                {
+            //                        //await context.CompanyImages.AddAsync(new Domain.Entities.SQLContext.CompanyImage
+            //                        //{
+            //                        //    IdCompany = company.Id,
+            //                        //    Img1 = images.EfLocal.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal) : "",
+            //                        //    ImgDesc1 = images.EfLocaltxt.IsNullOrEmpty() == false ? images.EfLocaltxt : "",
+            //                        //    ImgDescEng1 = images.EfLocaltxtIng.IsNullOrEmpty() == false ? images.EfLocaltxtIng : "",
+            //                        //    ImgPrint1 = images.EfLocal.IsNullOrEmpty() == false ? true : false,
+            //                        //    Img2 = images.EfLocal2.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal2) : "",
+            //                        //    ImgDesc2 = images.EfLocal2txt.IsNullOrEmpty() == false ? images.EfLocal2txt : "",
+            //                        //    ImgDescEng2 = images.EfLocal2txtIng.IsNullOrEmpty() == false ? images.EfLocal2txtIng : "",
+            //                        //    ImgPrint2 = images.EfLocal2.IsNullOrEmpty() == false ? true : false,
+            //                        //    Img3 = images.EfLocal3.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal3) : "",
+            //                        //    ImgDesc3 = images.EfLocal3txt.IsNullOrEmpty() == false ? images.EfLocal3txt : "",
+            //                        //    ImgDescEng3 = images.EfLocal3txtIng.IsNullOrEmpty() == false ? images.EfLocal3txtIng : "",
+            //                        //    ImgPrint3 = images.EfLocal3.IsNullOrEmpty() == false ? true : false,
+            //                        //    Img4 = images.EfLocal4.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal4) : "",
+            //                        //    ImgDesc4 = images.EfLocal4txt.IsNullOrEmpty() == false ? images.EfLocal4txt : "",
+            //                        //    ImgDescEng4 = images.EfLocal4txtIng.IsNullOrEmpty() == false ? images.EfLocal4txtIng : "",
+            //                        //    ImgPrint4 = images.EfLocal4.IsNullOrEmpty() == false ? true : false,
+            //                        //});
+            //                    item.Migra = 1;
+            //                    mysqlContext.MEmpresas.Update(item);
+            //                    await context.SaveChangesAsync();
+            //                    await mysqlContext.SaveChangesAsync();
+            //                }
+            //            }
                        
-                    }
-                }
-                catch(Exception ex)
-                {
-                    _logger.LogError(ex.Message);
-                    continue;
-                }
-            }
+            //        }
+            //    }
+            //    catch(Exception ex)
+            //    {
+            //        _logger.LogError(ex.Message);
+            //        continue;
+            //    }
+            //}
             
 
             return true;

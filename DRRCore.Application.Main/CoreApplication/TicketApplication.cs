@@ -1636,8 +1636,8 @@ namespace DRRCore.Application.Main.CoreApplication
                                         }
                                         if (item.References)
                                         {
-                                            string nameAssignedToRef = "REFERENCIA";
-                                            string descriptionAssignedToRef = "Referencia ";
+                                            string nameAssignedToRef = "REFERENCIA_CR1";
+                                            string descriptionAssignedToRef = "Por Referencia ";
                                             var numerationRef = await context.Numerations.Where(x => x.Name == nameAssignedToRef).FirstOrDefaultAsync();
                                             int? numberRef = 1;
                                             if (numerationRef == null)
@@ -1661,7 +1661,7 @@ namespace DRRCore.Application.Main.CoreApplication
                                                 IdTicket = ticket.Id,
                                                 UserFrom = item.UserFrom,
                                                 UserTo = "42",
-                                                AsignedTo = null,
+                                                AsignedTo = "CR1",
                                                 IdStatusTicket = (int)TicketStatusEnum.Por_Referencia,
                                                 NumberAssign = numberRef,
                                                 Flag = false,
@@ -1748,8 +1748,8 @@ namespace DRRCore.Application.Main.CoreApplication
                                         }
                                         if (item.References)
                                         {
-                                            string nameAssignedToRef = "REFERENCIA";
-                                            string descriptionAssignedToRef = "Referencia ";
+                                            string nameAssignedToRef = "REFERENCIA_CR2";
+                                            string descriptionAssignedToRef = "Por Referencia ";
                                             var numerationRef = await context.Numerations.Where(x => x.Name == nameAssignedToRef).FirstOrDefaultAsync();
                                             int? numberRef = 1;
                                             if (numerationRef == null)
@@ -1773,7 +1773,7 @@ namespace DRRCore.Application.Main.CoreApplication
                                                 IdTicket = ticket.Id,
                                                 UserFrom = item.UserFrom,
                                                 UserTo = "42",
-                                                AsignedTo = null,
+                                                AsignedTo = "CR2",
                                                 IdStatusTicket = (int)TicketStatusEnum.Por_Referencia,
                                                 NumberAssign = numberRef,
                                                 Flag = false,

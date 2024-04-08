@@ -17,7 +17,7 @@
        Asig_Referencista = 13,
        Asig_Reportero_Espera = 15,
        Asig_Agente_Espera = 16,
-       Por_Asignar_Referencista = 17,
+       Por_Referencia = 17,
        Por_Despachar = 18,
     }
 }
