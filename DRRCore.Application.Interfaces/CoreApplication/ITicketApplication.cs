@@ -49,5 +49,6 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<bool?>> AssignTicket(List<AssignTicketRequestDto> list);
         Task<Response<bool>> FinishWork(AssignTicketRequestDto obj);
         Task<Response<List<GetShortProviderByTicket>>> GetProvidersByIdTicket(int idTicket);
+        Task<Response<bool>> TicketToDispacth(int idTicket);
     }
 }

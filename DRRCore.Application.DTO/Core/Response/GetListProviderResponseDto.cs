@@ -98,6 +98,5 @@
         public string? Telephone { get; set; }
         public string? Country { get; set; }
         public string? FlagCountry { get; set; }
-        public int? IdTicket { get; set; }
     }
 }

@@ -2494,13 +2494,13 @@ namespace DRRCore.Application.Main.CoreApplication
                     {
                         providers = await context.Providers
                             .Include(x => x.IdCountryNavigation)
-                            .Where(x => x.IdCompany == ticket.IdCompany && x.IdTicket == idTicket).ToListAsync();
+                            .Where(x => x.IdCompany == ticket.IdCompany && x.Flag == true).ToListAsync();
                     }
                     else
                     {
                         providers = await context.Providers
                             .Include(x => x.IdCountryNavigation)
-                            .Where(x => x.IdPerson== ticket.IdPerson && x.IdTicket == idTicket).ToListAsync();
+                            .Where(x => x.IdPerson== ticket.IdPerson && x.Flag == true).ToListAsync();
                     }
                     response.Data = _mapper.Map<List<GetShortProviderByTicket>>(providers);
                 }
@@ -2508,6 +2508,20 @@ namespace DRRCore.Application.Main.CoreApplication
             {
                 _logger.LogError(ex.Message);
                 response.Data = null;
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> TicketToDispacth(int idTicket)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                using var context = new SqlCoreContext();
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
                 response.IsSuccess = false;
             }
             return response;
