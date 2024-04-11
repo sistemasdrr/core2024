@@ -2600,7 +2600,7 @@ namespace DRRCore.Application.Main.CoreApplication
                 using var context = new SqlCoreContext();
                 var ticketObservations = await context.DetailsTicketObservations
                     .Include(x => x.IdTicketObservationsNavigation).Include(x => x.IdTicketObservationsNavigation.IdReasonNavigation)
-                    .Where(x => x.IdTicketObservationsNavigation.IdTicket == idTicket && x.IdTicketObservationsNavigation.IdStatusTicketObservations == Constants.OS_Pendiente).ToListAsync();
+                    .Where(x => x.IdTicketObservationsNavigation.IdTicket == idTicket ).ToListAsync();
                 foreach (var item in ticketObservations.DistinctBy(x => x.IdTicketObservations).ToList())
                 {
                     var list = new List<GetEmployeeObservated>();
@@ -2643,6 +2643,7 @@ namespace DRRCore.Application.Main.CoreApplication
                         ObservationDate = item.IdTicketObservationsNavigation.CreationDate,
                         AsignedDate = item.IdTicketObservationsNavigation.AsignedDate,
                         EndDate = item.IdTicketObservationsNavigation.EndDate,
+                        SolutionDate = item.IdTicketObservationsNavigation.SolutionDate,
                         EmployeesObservated = new List<GetEmployeeObservated>(list)
                     });
 
@@ -2716,6 +2717,14 @@ namespace DRRCore.Application.Main.CoreApplication
                 using var context = new SqlCoreContext();
                 if(obj.Id == 0)
                 {
+                    var details = new List<DetailsTicketObservation>();
+                    foreach (var item in obj.EmployeesObservated)
+                    {
+                        details.Add(new DetailsTicketObservation
+                        {
+                            AssignedTo = item.Code,
+                        });
+                    }
                     var insert = new TicketObservation
                     {
                         About = obj.About,
@@ -2731,16 +2740,10 @@ namespace DRRCore.Application.Main.CoreApplication
                         AsignedDate = obj.AsignedDate,
                         EndDate = obj.EndDate,
                         SolutionDate =  null,
+                        DetailsTicketObservations = details
                     };
                     await context.TicketObservations.AddAsync(insert);
-                    await context.SaveChangesAsync();
-                    foreach (var item in obj.EmployeesObservated)
-                    {
-                        await context.DetailsTicketObservations.AddAsync(new DetailsTicketObservation{
-                            AssignedTo = item.Code,
-                            IdTicketObservations = Constants.OS_Pendiente
-                        });
-                    }
+                   
                     await context.SaveChangesAsync();
                     response.Data = true;
                 }
@@ -2768,6 +2771,61 @@ namespace DRRCore.Application.Main.CoreApplication
                 }
               
             }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<Response<bool>> FinishTicketObservation(int idTicketObservation, string? conclusion, bool dr, bool ag, bool cl)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var ticketObservation = await context.TicketObservations.Where(x => x.Id == idTicketObservation).FirstOrDefaultAsync();
+                if(ticketObservation != null)
+                {
+                    ticketObservation.Conclusion = conclusion;
+                    ticketObservation.RespDrr = dr;
+                    ticketObservation.RespAg = ag;
+                    ticketObservation.RespCl = cl;
+                    ticketObservation.SolutionDate = DateTime.Now;
+                    ticketObservation.IdStatusTicketObservations = Constants.OS_Resuelto;
+                    context.TicketObservations.Update(ticketObservation);
+                    await context.SaveChangesAsync();
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                }
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<Response<List<string>>> GetOtherUserCode(int idUser)
+        {
+            var response = new Response<List<string>>();
+            response.Data = new List<string>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var user = await context.UserLogins
+                    .Include(x => x.IdEmployeeNavigation)
+                    .Include(x => x.IdEmployeeNavigation.Personals)
+                    .Where(x => x.Id == idUser).FirstOrDefaultAsync();
+                foreach (var item in user.IdEmployeeNavigation.Personals)
+                {
+                    response.Data.Add(item.Code);
+                }
+
+            }
+            catch(Exception ex)
             {
                 _logger.LogError(ex.Message);
                 response.IsSuccess = false;

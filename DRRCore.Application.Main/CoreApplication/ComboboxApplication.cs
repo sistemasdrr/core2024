@@ -34,6 +34,7 @@ namespace DRRCore.Application.Main.CoreApplication
         private readonly ILandOwnershipDomain _landOwnershipDomain;
         private readonly IPersonSituationDomain _personSituationDomain;
         private readonly IProfessionDomain _professionDomain;
+        private readonly IUserLoginDomain _userLoginDomain;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         public ComboboxApplication(IDocumentTypeDomain documentTypeDomain,
@@ -59,6 +60,7 @@ namespace DRRCore.Application.Main.CoreApplication
                                    IPersonSituationDomain personSituationDomain,
                                    IProfessionDomain professionDomain,
                                    IJobDomain jobDomain,
+                                   IUserLoginDomain userLoginDomain,
                                     IMapper mapper,ILogger logger) { 
         
             _documentTypeDomain = documentTypeDomain;
@@ -86,6 +88,7 @@ namespace DRRCore.Application.Main.CoreApplication
             _personSituationDomain= personSituationDomain;
             _landOwnershipDomain = landOwnershipDomain;
             _professionDomain = professionDomain;
+            _userLoginDomain = userLoginDomain;
         }
 
         public async Task<Response<List<GetComboValueResponseDto>>> GetBankAccountType()
@@ -570,6 +573,23 @@ namespace DRRCore.Application.Main.CoreApplication
                 response.IsSuccess = false;
                 response.Message = Messages.BadQuery;
                 _logger.LogError(response.Message, ex);
+            }
+            return response;
+        }
+
+        public async Task<Response<List<GetComboNameValueResponseDto>>> GetUserEmails()
+        {
+            var response = new Response<List<GetComboNameValueResponseDto>>();
+            try
+            {
+                var list = await _userLoginDomain.GetUserLoginEmails();
+                response.Data = _mapper.Map<List<GetComboNameValueResponseDto>>(list);
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response.Message = Messages.BadQuery;
+                response.IsSuccess = false;
+                
             }
             return response;
         }

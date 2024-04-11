@@ -286,5 +286,18 @@ namespace DRRCore.Services.ApiCore.Controllers
         {
             return Ok(await _ticketApplication.AddOrUpdateTicketPendingObservations(obj));
         }
+        
+        [HttpPost()]
+        [Route("FinishTicketObservation")]
+        public async Task<ActionResult> FinishTicketObservation(int idTicketObservation, string? conclusion, bool dr, bool ag, bool cl)
+        {
+            return Ok(await _ticketApplication.FinishTicketObservation(idTicketObservation,conclusion,dr,ag,cl));
+        }
+        [HttpGet()]
+        [Route("GetOtherUserCode")]
+        public async Task<ActionResult> GetOtherUserCode(int idUser)
+        {
+            return Ok(await _ticketApplication.GetOtherUserCode(idUser));
+        }
     }
 }

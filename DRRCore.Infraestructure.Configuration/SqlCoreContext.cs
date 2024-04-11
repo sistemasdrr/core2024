@@ -4524,6 +4524,15 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.Message)
                 .IsUnicode(false)
                 .HasColumnName("message");
+            entity.Property(e => e.RespAg)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("respAg");
+            entity.Property(e => e.RespCl)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("respCl");
+            entity.Property(e => e.RespDrr)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("respDRR");
             entity.Property(e => e.SolutionDate)
                 .HasColumnType("datetime")
                 .HasColumnName("solutionDate");

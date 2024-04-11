@@ -95,6 +95,20 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        public async Task<List<UserLogin>> GetUserLoginEmails()
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                var users = await context.UserLogins.Include(x => x.IdEmployeeNavigation).ToListAsync();
+                return users != null ? users : null;
+            }catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return null;
+            }
+        }
+
         public async Task<bool> UpdateAsync(UserLogin obj)
         {
             try

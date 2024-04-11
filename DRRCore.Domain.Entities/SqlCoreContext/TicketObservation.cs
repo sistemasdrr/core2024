@@ -43,6 +43,12 @@ public partial class TicketObservation
 
     public int? IdTicket { get; set; }
 
+    public bool? RespDrr { get; set; }
+
+    public bool? RespAg { get; set; }
+
+    public bool? RespCl { get; set; }
+
     public virtual ICollection<DetailsTicketObservation> DetailsTicketObservations { get; set; } = new List<DetailsTicketObservation>();
 
     public virtual Company? IdCompanyNavigation { get; set; }

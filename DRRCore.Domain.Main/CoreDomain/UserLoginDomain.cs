@@ -42,6 +42,11 @@ namespace DRRCore.Domain.Main.CoreDomain
             return await _repository.GetIdUserByIdEmployee(idEmployee);
         }
 
+        public async Task<List<UserLogin>> GetUserLoginEmails()
+        {
+            return await _repository.GetUserLoginEmails();
+        }
+
         public async Task<bool> UpdateAsync(UserLogin obj)
         {
             return await _repository.UpdateAsync(obj);

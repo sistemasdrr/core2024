@@ -53,5 +53,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetTicketPendingObservationsResponseDto>>> GetTicketPendingObservations(int idTicket);
         Task<Response<bool>> AddOrUpdateTicketPendingObservations(AddOrUpdateTicketPendingObservationsResponseDto obj);
         Task<Response<List<GetEmployeeAssignated>>> GetEmployeesAssignatedToTicket(int idTicket);
+        Task<Response<bool>> FinishTicketObservation(int idTicketObservation, string? conclusion, bool dr, bool ag, bool cl);
+        Task<Response<List<string>>> GetOtherUserCode(int idUser);
     }
 }

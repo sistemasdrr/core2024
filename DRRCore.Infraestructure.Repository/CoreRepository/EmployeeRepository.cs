@@ -147,6 +147,8 @@ namespace DRRCore.Infraestructure.Repository.CoreRepository
             }
         }
 
+        
+
         public async Task<bool> UpdateAsync(Employee obj)
         {
             try

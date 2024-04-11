@@ -33,5 +33,6 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<List<GetComboValueResponseDto>>> GetLandOwnership(); 
         Task<Response<List<GetComboValueResponseDto>>> GetPersonSituation();
         Task<Response<List<GetComboValueResponseDto>>> GetProfession();
+        Task<Response<List<GetComboNameValueResponseDto>>> GetUserEmails();
     }
 }

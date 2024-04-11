@@ -32,6 +32,12 @@ namespace DRRCore.Services.ApiCore.Controllers
             return Ok(await _comboboxApplication.GetReasonTicket());
         }
         [HttpGet()]
+        [Route("userEmails")]
+        public async Task<ActionResult> userEmails()
+        {
+            return Ok(await _comboboxApplication.GetUserEmails());
+        }
+        [HttpGet()]
         [Route("civilstatus")]
         public async Task<ActionResult> GetCivilStatusCombo()
         {
