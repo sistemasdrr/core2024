@@ -151,6 +151,8 @@ public partial class Person
 
     public virtual ICollection<SearchedName> SearchedNames { get; set; } = new List<SearchedName>();
 
+    public virtual ICollection<TicketObservation> TicketObservations { get; set; } = new List<TicketObservation>();
+
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual ICollection<Traduction> Traductions { get; set; } = new List<Traduction>();

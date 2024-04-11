@@ -58,7 +58,7 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                   .ForMember(dest => dest.Subscriber, opt => opt?.MapFrom(src => src.Abonado))
                   .ForMember(dest => dest.Procedure, opt => opt?.MapFrom(src => src.Tramite))
                   .ReverseMap();
-
+            
             CreateMap<Ticket, GetTicketRequestDto>()
                  .ForMember(dest => dest.IdSubscriber, opt => opt?.MapFrom(src => src.IdSubscriber == null ? 0 : src.IdSubscriber))
                  .ForMember(dest => dest.IdContinent, opt => opt?.MapFrom(src => src.IdContinent == null ? 0 : src.IdContinent))
@@ -66,6 +66,9 @@ namespace DRRCore.Transversal.Mapper.Profiles.Core
                  .ForMember(dest => dest.IdCompany, opt => opt?.MapFrom(src => src.IdCompany == null ? 0 : src.IdCompany))
                  .ForMember(dest => dest.IdPerson, opt => opt?.MapFrom(src => src.IdPerson == null ? 0 : src.IdPerson))
                  .ReverseMap();
+            CreateMap<TicketHistory, GetEmployeeAssignated>()
+                .ForMember(dest => dest.Code, opt => opt?.MapFrom(src => src.AsignedTo))
+                .ReverseMap();
             CreateMap<Ticket, GetListTicketResponseDto>()
                  .ForMember(dest => dest.IdSubscriber, opt => opt?.MapFrom(src => src.IdSubscriber == null ? 0 : src.IdSubscriber))
                  .ForMember(dest => dest.ProcedureType, opt => opt?.MapFrom(src => src.ProcedureType == null ? string.Empty : src.ProcedureType.Trim()))

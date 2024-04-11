@@ -540,6 +540,23 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
+        public async Task<Response<List<GetComboValueResponseDto>>> GetReasonTicket()
+        {
+            var response = new Response<List<GetComboValueResponseDto>>();
+            try
+            {
+                using var context = new SqlCoreContext();
+                var list = await context.Reasons.Where(x => x.Enable == true).ToListAsync();
+                response.Data = _mapper.Map<List<GetComboValueResponseDto>>(list);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
         public async Task<Response<List<GetComboValueResponseDto>>> GetSubscriberCategories()
         {
             var response = new Response<List<GetComboValueResponseDto>>();

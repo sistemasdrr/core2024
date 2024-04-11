@@ -1,4 +1,5 @@
 ﻿using DRRCore.Application.DTO.Core.Request;
+using DRRCore.Application.DTO.Core.Response;
 using DRRCore.Application.Interfaces.CoreApplication;
 using DRRCore.Application.Main.CoreApplication;
 using Microsoft.AspNetCore.Mvc;
@@ -264,6 +265,26 @@ namespace DRRCore.Services.ApiCore.Controllers
         public async Task<ActionResult> FinishWork(AssignTicketRequestDto obj)
         {
             return Ok(await _ticketApplication.FinishWork(obj));
+        }
+        
+        [HttpGet()]
+        [Route("GetEmployeesAssignated")]
+        public async Task<ActionResult> GetEmployeesAssignatedToTicket(int idTicket)
+        {
+            return Ok(await _ticketApplication.GetEmployeesAssignatedToTicket(idTicket));
+        }
+        
+        [HttpGet()]
+        [Route("GetTicketPendingObservations")]
+        public async Task<ActionResult> GetTicketPendingObservations(int idTicket)
+        {
+            return Ok(await _ticketApplication.GetTicketPendingObservations(idTicket));
+        }
+        [HttpPost()]
+        [Route("AddOrUpdateTicketPendingObservations")]
+        public async Task<ActionResult> AddOrUpdateTicketPendingObservations(AddOrUpdateTicketPendingObservationsResponseDto obj)
+        {
+            return Ok(await _ticketApplication.AddOrUpdateTicketPendingObservations(obj));
         }
     }
 }

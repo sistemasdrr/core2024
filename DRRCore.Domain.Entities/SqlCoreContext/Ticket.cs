@@ -85,6 +85,10 @@ public partial class Ticket
 
     public string? SubscriberIndications { get; set; }
 
+    public string? Quality { get; set; }
+
+    public bool? Wrong { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Continent? IdContinentNavigation { get; set; }
@@ -103,6 +107,7 @@ public partial class Ticket
 
     public virtual ICollection<TicketHistory> TicketHistories { get; set; } = new List<TicketHistory>();
 
+    public virtual ICollection<TicketObservation> TicketObservations { get; set; } = new List<TicketObservation>();
+
     public virtual TicketQuery? TicketQuery { get; set; }
-    public string? Quality { get; set; }
 }

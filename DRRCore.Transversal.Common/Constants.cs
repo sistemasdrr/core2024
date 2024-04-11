@@ -40,12 +40,13 @@
         public const string DRR_WORKFLOW_ENG_0010 = "DRR_WORKFLOW_ENG_0010";
         public const string DRR_WORKFLOW_ENG_0020 = "DRR_WORKFLOW_ENG_0020";
         public const string DRR_WORKFLOW_ENG_0023 = "DRR_WORKFLOW_ENG_0023";
+        public const string DRR_WORKFLOW_ENG_0027 = "DRR_WORKFLOW_ENG_0027";
         public const string DRR_WORKFLOW_ENG_0032 = "DRR_WORKFLOW_ENG_0032";
         public const string DRR_WORKFLOW_ENG_0039_ERROR = "DRR_WORKFLOW_ENG_0039_ERROR";
         public const string DRR_WORKFLOW_ENG_0039 = "DRR_WORKFLOW_ENG_0039";
         public const string DRR_WORKFLOW_ESP_0001 = "DRR_WORKFLOW_ESP_0001";
         public const string DRR_WORKFLOW_ESP_0002 = "DRR_WORKFLOW_ESP_0002";
-        public const string DRR_WORKFLOW_ESP_0003 = "DRR_WORKFLOW_ESP_0003";
+        public const string DRR_WORKFLOW_ESP_0003 = "DRR_WORKFLOW_ESP_0003"; 
         public const string DRR_WORKFLOW_ESP_0004 = "DRR_WORKFLOW_ESP_0004";
         public const string DRR_WORKFLOW_ESP_0005 = "DRR_WORKFLOW_ESP_0005";
         public const string DRR_WORKFLOW_ESP_0006 = "DRR_WORKFLOW_ESP_0006";
@@ -105,5 +106,8 @@
                                                                      "L_H_DETAILS",
                                                                      "L_IG_DETAILS",
                                                                     };
+        public const int OS_Pendiente = 1;
+        public const int OS_Resuelto= 2;
+        public const int OS_Rechazado = 3;
     }
 }

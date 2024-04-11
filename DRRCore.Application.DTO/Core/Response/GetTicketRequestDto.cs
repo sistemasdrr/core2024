@@ -66,4 +66,55 @@
 
         public decimal? Price { get; set; }
     }
+    public class GetTicketPendingObservationsResponseDto
+    {
+        public int Id { get; set; }
+        public string? About { get; set; }
+        public int? IdCompany { get; set; }
+        public int? IdPerson { get; set; }
+        public int? IdSubscriber{ get; set; }
+        public int? IdReason { get; set; }
+        public string? Message { get; set; }
+        public string? Conclusion { get; set; }
+        public int? IdStatusTicketObservation{ get; set; }
+        public string? Cc { get; set; }
+        public DateTime? ObservationDate { get; set; }
+        public DateTime? AsignedDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public DateTime? SolutionDate { get; set; }
+        public List<GetEmployeeObservated>? EmployeesObservated { get; set; }
+    }
+    public class AddOrUpdateTicketPendingObservationsResponseDto
+    {
+        public int Id { get; set; }
+        public int? IdTicket { get; set; }
+        public string? About { get; set; }
+        public int? IdCompany { get; set; }
+        public int? IdPerson { get; set; }
+        public int? IdSubscriber { get; set; }
+        public int? IdReason { get; set; }
+        public string? Message { get; set; }
+        public string? Conclusion { get; set; }
+        public int? IdStatusTicketObservation { get; set; }
+        public string? Cc { get; set; }
+        public DateTime? ObservationDate { get; set; }
+        public DateTime? AsignedDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public DateTime? SolutionDate { get; set; }
+        public List<GetEmployeeObservated>? EmployeesObservated { get; set; }
+    }
+    public class GetEmployeeAssignated
+    {
+        public int Id { get; set; }
+        public string? UserTo { get; set; }
+        public string? Code { get; set; }
+        public string? Name { get; set; }
+    }
+    public class GetEmployeeObservated
+    {
+        public int Id { get; set; }
+        public string? UserTo { get; set; }
+        public string? Code { get; set; }
+        public string? Name { get; set; }
+    }
 }
