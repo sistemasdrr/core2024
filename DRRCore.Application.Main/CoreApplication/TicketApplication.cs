@@ -1,4 +1,5 @@
 ﻿using AspNetCore.Reporting;
+using AspNetCore.ReportingServices.ReportProcessing.ReportObjectModel;
 using AutoMapper;
 using AutoMapper.Execution;
 using CoreFtp;
@@ -932,15 +933,45 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<List<GetListTicketResponseDto>>> GetTicketsToUser(string userTo)
+        public async Task<Response<List<GetListTicketResponseDto2>>> GetTicketsToUser(string userTo)
         {
-            var response = new Response<List<GetListTicketResponseDto>>();
+            var response = new Response<List<GetListTicketResponseDto2>>();
             try
             {
+                using var context = new SqlCoreContext();
+                var user = await context.UserLogins
+                    .Include(x => x.IdEmployeeNavigation)
+                    .Include(x => x.IdEmployeeNavigation.Personals)
+                    .Where(x => x.Id == int.Parse(userTo)).FirstOrDefaultAsync();
                 var list = await _ticketHistoryDomain.GetTicketsPreAssignedToUser(userTo);
                 if (list != null)
                 {
-                    response.Data = _mapper.Map<List<GetListTicketResponseDto>>(list);
+                    response.Data = _mapper.Map<List<GetListTicketResponseDto2>>(list);
+                    foreach (var item in response.Data)
+                    {
+                        item.OtherUserCode = new List<UserCode>();
+                        var otherCodes = new List<UserCode>();
+                        foreach (var item1 in user.IdEmployeeNavigation.Personals)
+                        {
+                            if(item1.Code.Trim() != item.AsignedTo.Trim())
+                            {
+                                item.OtherUserCode.Add(new UserCode
+                                {
+                                    Code = item1.Code,
+                                    Active = false
+                                });
+                            }
+                            else
+                            {
+                                item.OtherUserCode.Add(new UserCode
+                                {
+                                    Code = item1.Code,
+                                    Active = true
+                                });
+                            }
+                        }
+                    }
+
                 }
                 else
                 {
@@ -1533,16 +1564,52 @@ namespace DRRCore.Application.Main.CoreApplication
             return response;
         }
 
-        public async Task<Response<bool?>> AssignTicket(List<AssignTicketRequestDto> list)
+        public async Task<Response<bool?>> AssignTicket(NewAsignationDto obj)
         {
             var response = new Response<bool>();
             try
             {
                 using (var context = new SqlCoreContext())
                 {
-                    if (list.Count > 0) {
+                    if(obj.OtherUserCode.Count > 0)
+                    {
+                        var ticketHistory = await context.TicketHistories.Where(x => x.Id == obj.IdTicketHistory).FirstOrDefaultAsync();
+                        if (ticketHistory != null)
+                        {
+                            foreach (var item in obj.OtherUserCode)
+                            {
+                                if (item.Code.Trim() != obj.AsignedTo.Trim() && item.Active)
+                                {
+                                    var newTicketHistory = new TicketHistory();
+                                    newTicketHistory.Id = 0;
+                                    newTicketHistory.AsignedTo = item.Code;
+                                    newTicketHistory.IdTicket = ticketHistory.IdTicket;
+                                    newTicketHistory.UserFrom = ticketHistory.UserFrom;
+                                    newTicketHistory.UserTo = ticketHistory.UserTo;
+                                    newTicketHistory.CreationDate = ticketHistory.CreationDate;
+                                    newTicketHistory.UpdateDate = ticketHistory.UpdateDate;
+                                    newTicketHistory.DeleteDate = ticketHistory.DeleteDate;
+                                    newTicketHistory.Enable = ticketHistory.Enable;
+                                    newTicketHistory.IdStatusTicket = item.Code.Contains("RC") ? (int)TicketStatusEnum.Asig_Referencista : item.Code.Contains("A") ? (int)TicketStatusEnum.Asig_Agente:
+                                        item.Code.Contains("D") ? (int)TicketStatusEnum.Asig_Digitidor : item.Code.Contains("R") ? (int)TicketStatusEnum.Asig_Reportero : item.Code.Contains("T") ? (int)TicketStatusEnum.Asig_Traductor :
+                                        item.Code.Contains("S") ? (int)TicketStatusEnum.Asig_Supervisor : null;
+                                    newTicketHistory.AsignedTo = item.Code;
+                                    newTicketHistory.Flag = ticketHistory.Flag;
+                                    newTicketHistory.NumberAssign = ticketHistory.NumberAssign;
+                                    newTicketHistory.Balance = ticketHistory.Balance;
+                                    newTicketHistory.References = ticketHistory.References;
+                                    newTicketHistory.Observations = ticketHistory.Observations;
+                                    newTicketHistory.StartDate = ticketHistory.StartDate;
+                                    newTicketHistory.EndDate = ticketHistory.EndDate;
+
+                                    await context.TicketHistories.AddAsync(newTicketHistory);
+                                }
+                            }
+                        }
+                    }
+                    if (obj.Asignacion.Count > 0) {
                         
-                        foreach (var item in list)
+                        foreach (var item in obj.Asignacion)
                         {
                             var history = await context.TicketHistories.Where(x => x.IdTicket == item.IdTicket && x.AsignedTo == item.AssignedFromCode && x.NumberAssign==item.NumberAssign).FirstOrDefaultAsync();
 
@@ -1551,6 +1618,14 @@ namespace DRRCore.Application.Main.CoreApplication
                                 var ticket = await context.Tickets.Include(x=>x.TicketHistories).Where(x => x.Id == history.IdTicket).FirstOrDefaultAsync();
                                 if (ticket != null)
                                 {
+                                    foreach (var item3 in obj.OtherUserCode)
+                                    {
+                                        if (item3.Code.Contains("S") && item3.Active == true)
+                                        {
+                                            ticket.Quality = item.Quality;
+                                            ticket.UpdateDate = DateTime.Now;
+                                        }
+                                    }
                                     if (item.AssignedFromCode.Contains("SU"))
                                     {
                                         ticket.Quality = item.Quality;

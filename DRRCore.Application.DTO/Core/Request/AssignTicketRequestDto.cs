@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DRRCore.Application.DTO.Core.Response;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DRRCore.Application.DTO.Core.Request
 {
+    
     public class AssignTicketRequestDto
     {
         public string? UserFrom { get; set; }
@@ -24,6 +26,14 @@ namespace DRRCore.Application.DTO.Core.Request
         public string? EndDate { get; set; }
         public int IdTicket { get; set; }
         public int? NumberAssign { get; set; }
+    }
+    public class NewAsignationDto
+    {
+
+        public int? IdTicketHistory { get; set; }
+        public string? AsignedTo { get; set; }
+        public List<AssignTicketRequestDto>? Asignacion { get; set; }
+        public List<UserCode>? OtherUserCode { get; set; }
     }
 }
 

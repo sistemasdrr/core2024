@@ -75,6 +75,7 @@
     public class GetListTicketResponseDto2
     {
         public int Id { get; set; }
+        public int? IdTicket { get; set; }
         public string Number { get; set; }
         public int? IdSubscriber { get; set; }
         public string? Language { get; set; }

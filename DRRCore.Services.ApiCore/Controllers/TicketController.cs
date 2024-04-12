@@ -250,9 +250,9 @@ namespace DRRCore.Services.ApiCore.Controllers
         }
         [HttpPost()]
         [Route("assignTicket")]
-        public async Task<ActionResult> AssignTicket(List<AssignTicketRequestDto> list)
+        public async Task<ActionResult> AssignTicket(NewAsignationDto obj)
         {
-            return Ok(await _ticketApplication.AssignTicket(list));
+            return Ok(await _ticketApplication.AssignTicket(obj));
         }
         [HttpGet()]
         [Route("providerByIdTicket")]

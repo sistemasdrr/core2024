@@ -29,7 +29,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<byte[]>> DownloadReport();
         Task<Response<bool>> SavePreAsignTicket(List<SavePreAsignTicketDto> lista);
         Task<Response<bool>> SendPreAsignTicket(List<SavePreAsignTicketDto> lista);
-        Task<Response<List<GetListTicketResponseDto>>> GetTicketsToUser(string userTo);
+        Task<Response<List<GetListTicketResponseDto2>>> GetTicketsToUser(string userTo);
         Task<Response<List<GetPersonalAssignationResponseDto>>> GetPersonalAssignation();
         Task<Response<List<GetPersonalAssignationResponseDto>>> GetAgentAssignation();
         Task<Response<bool>> AddTicketHistory(List<AddOrUpdateAssignationsRequestDto> obj);
@@ -46,7 +46,7 @@ namespace DRRCore.Application.Interfaces.CoreApplication
         Task<Response<GetTicketObservationsResponseDto>> GetTicketObservations(int idTicket);
         Task<Response<bool>> AddTicketObservations(int idTicket, string observations, string userFrom);
 
-        Task<Response<bool?>> AssignTicket(List<AssignTicketRequestDto> list);
+        Task<Response<bool?>> AssignTicket(NewAsignationDto obj);
         Task<Response<bool>> FinishWork(AssignTicketRequestDto obj);
         Task<Response<List<GetShortProviderByTicket>>> GetProvidersByIdTicket(int idTicket);
         Task<Response<bool>> TicketToDispacth(int idTicket);
