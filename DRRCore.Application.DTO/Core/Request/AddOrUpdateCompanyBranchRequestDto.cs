@@ -57,6 +57,9 @@
         public string? CountriesExport { get; set; }
 
         public string? CountriesImport { get; set; }
+        public string? CountriesExportEng { get; set; }
+
+        public string? CountriesImportEng { get; set; }
 
         public string? SpecificActivities { get; set; }
         public string? SpecificActivitiesEng { get; set; }

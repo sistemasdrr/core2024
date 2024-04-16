@@ -65,6 +65,7 @@ namespace DRRCore.Application.DTO.Core.Response
         public string? CountriesImportEng { get; set; }
 
         public string? SpecificActivities { get; set; }
+        public string? SpecificActivitiesEng { get; set; }
         public List<TraductionDto> Traductions { get; set; } = new List<TraductionDto>();
     }
 }

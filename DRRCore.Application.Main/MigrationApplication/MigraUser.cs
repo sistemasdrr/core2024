@@ -18,6 +18,7 @@ using DRRCore.Domain.Entities.SqlContext;
 namespace DRRCore.Application.Main.MigrationApplication
 {
     public class MigraUser : IMigraUser
+
     {
 
         private readonly IMEmpresaDomain _mempresaDomain;
@@ -3262,6 +3263,36 @@ namespace DRRCore.Application.Main.MigrationApplication
                     _logger.LogError(ex.Message);
                 return false;
                 }
+            
+        }
+
+        public async Task<bool> MigrateProfesion()
+        {
+            try
+            {
+                using var context = new SqlCoreContext();
+                using var mysqlcontext = new MySqlContext();
+                var profesiones = await mysqlcontext.TProfesions.ToListAsync();
+                foreach(var prof in profesiones)
+                {
+                    if (prof != null)
+                    {
+                        await context.Professions.AddAsync(new Profession
+                        {
+                            Id = 0,
+                            Name = prof.PfNombre,
+                            EnglishName = prof.PfNombreIng == null ? "" : prof.PfNombreIng
+                        });
+                        await context.SaveChangesAsync();
+                    }
+                }
+                return true;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
             
         }
     }

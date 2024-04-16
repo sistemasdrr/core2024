@@ -15,6 +15,7 @@
         Task<bool> MigrateSubscriber();
         Task<bool> MigrateOldTicket();
         Task<bool> MigrateCountry();
+        Task<bool> MigrateProfesion();
         Task<bool> MigrateSubscriberCategory();
         Task<bool> MigratePersonal();
         Task<bool> MigrateAgent();

@@ -109,5 +109,11 @@ namespace DRRCore.Services.Migration.Controllers
         {
             return Ok(await _migraUser.MigratePersonal());
         }
+        [HttpPost()]
+        [Route("Profesion")]
+        public async Task<ActionResult> MigrateProfesion()
+        {
+            return Ok(await _migraUser.MigrateProfesion());
+        }
     }
 }
