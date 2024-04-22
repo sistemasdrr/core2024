@@ -25,6 +25,8 @@ public partial class CompanyRelation
 
     public string? RelationEng { get; set; }
 
+    public string? Participation { get; set; }
+
     public virtual Company? IdCompanyNavigation { get; set; }
 
     public virtual Company? IdCompanyRelationNavigation { get; set; }

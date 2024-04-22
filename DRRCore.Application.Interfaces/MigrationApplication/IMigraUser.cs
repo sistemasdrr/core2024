@@ -19,7 +19,8 @@
         Task<bool> MigrateSubscriberCategory();
         Task<bool> MigratePersonal();
         Task<bool> MigrateAgent();
-
+        Task<bool> MigrateCompanyRelationated();
+        Task<bool> MigrateCompanyShareholder();
 
     }
 }

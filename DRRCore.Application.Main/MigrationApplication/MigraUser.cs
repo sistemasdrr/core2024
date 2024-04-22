@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Data.SqlTypes;
 using DRRCore.Domain.Entities.SqlContext;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DRRCore.Application.Main.MigrationApplication
 {
@@ -1382,7 +1383,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                 if (string.IsNullOrEmpty(valores)) return null;
 
                 int number;
-                if (valores.Contains(","))
+                if (valores.Contains(','))
                 {
                     valores = valores.Replace(",", "");
                 }
@@ -1392,7 +1393,7 @@ namespace DRRCore.Application.Main.MigrationApplication
             else
             {
                 int number;
-                if (value.Contains(","))
+                if (value.Contains(','))
                 {
                     value = value.Replace(",", "");
                 }
@@ -1948,13 +1949,13 @@ namespace DRRCore.Application.Main.MigrationApplication
                         {
                             Id = 0,
                             OldCode = persona.PeCodigo,
-                            Fullname = persona.PeNombre == null ? "" : persona.PeNombre,
+                            Fullname = persona.PeNombre ?? "",
                             LastSearched = persona.PeFecinf,
                             Language = Dictionary.LanguageMigra[persona.IdiCodigo.Value],
                             Quality = ObtenerCalidad(persona.CalCodigoPer),
-                            Nationality = persona.PeNacion == null ? "" : persona.PeNacion,
-                            BirthDate = persona.PeFecnac == null ? "" : persona.PeFecnac,
-                            BirthPlace = persona.PeLugnac == null ? "" : persona.PeLugnac,
+                            Nationality = persona.PeNacion ?? "",
+                            BirthDate = persona.PeFecnac ?? "",
+                            BirthPlace = persona.PeLugnac ?? "",
                             IdDocumentType = persona.TiCodigo == "CExt" ? 2 : persona.TiCodigo == "C.I." ? 6 :
                                      persona.TiCodigo == "C.C." ? 7 : persona.TiCodigo == "CPF/MF" ? 9 :
                                      persona.TiCodigo == "CURP" ? 10 : persona.TiCodigo == "D.I." ? 11 :
@@ -2042,7 +2043,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                 {
                     var activity = new PersonActivity
                     {
-                        ActivitiesCommentary = persona.PeOtrrec == null ? "" : persona.PeOtrrec
+                        ActivitiesCommentary = persona.PeOtrrec ?? ""
                     };
                     lista.Add(activity);
                 }
@@ -2063,7 +2064,7 @@ namespace DRRCore.Application.Main.MigrationApplication
                 {
                     var generalInformation = new PersonGeneralInformation
                     {
-                        GeneralInformation = persona.PeObserv == null ? "" : persona.PeObserv
+                        GeneralInformation = persona.PeObserv ?? ""
                     };
                     lista.Add(generalInformation);
                 }
@@ -3229,26 +3230,26 @@ namespace DRRCore.Application.Main.MigrationApplication
                         var images = await imageMysqlContext.REmpVsFotos.Where(x => x.EmCodigo == oldCode).FirstOrDefaultAsync();
                         if (images != null)
                         {
-                            //await context.CompanyImages.AddAsync(new Domain.Entities.SQLContext.CompanyImage
-                            //{
-                            //    IdCompany = company.Id,
-                            //    Img1 = images.EfLocal.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal) : "",
-                            //    ImgDesc1 = images.EfLocaltxt.IsNullOrEmpty() == false ? images.EfLocaltxt : "",
-                            //    ImgDescEng1 = images.EfLocaltxtIng.IsNullOrEmpty() == false ? images.EfLocaltxtIng : "",
-                            //    ImgPrint1 = images.EfLocal.IsNullOrEmpty() == false ? true : false,
-                            //    Img2 = images.EfLocal2.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal2) : "",
-                            //    ImgDesc2 = images.EfLocal2txt.IsNullOrEmpty() == false ? images.EfLocal2txt : "",
-                            //    ImgDescEng2 = images.EfLocal2txtIng.IsNullOrEmpty() == false ? images.EfLocal2txtIng : "",
-                            //    ImgPrint2 = images.EfLocal2.IsNullOrEmpty() == false ? true : false,
-                            //    Img3 = images.EfLocal3.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal3) : "",
-                            //    ImgDesc3 = images.EfLocal3txt.IsNullOrEmpty() == false ? images.EfLocal3txt : "",
-                            //    ImgDescEng3 = images.EfLocal3txtIng.IsNullOrEmpty() == false ? images.EfLocal3txtIng : "",
-                            //    ImgPrint3 = images.EfLocal3.IsNullOrEmpty() == false ? true : false,
-                            //    Img4 = images.EfLocal4.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal4) : "",
-                            //    ImgDesc4 = images.EfLocal4txt.IsNullOrEmpty() == false ? images.EfLocal4txt : "",
-                            //    ImgDescEng4 = images.EfLocal4txtIng.IsNullOrEmpty() == false ? images.EfLocal4txtIng : "",
-                            //    ImgPrint4 = images.EfLocal4.IsNullOrEmpty() == false ? true : false,
-                            //});
+                            await context.CompanyImages.AddAsync(new Domain.Entities.SQLContext.CompanyImage
+                            {
+                                IdCompany = company.Id,
+                                Img1 = images.EfLocal.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal) : "",
+                                ImgDesc1 = images.EfLocaltxt.IsNullOrEmpty() == false ? images.EfLocaltxt : "",
+                                ImgDescEng1 = images.EfLocaltxtIng.IsNullOrEmpty() == false ? images.EfLocaltxtIng : "",
+                                ImgPrint1 = images.EfLocal.IsNullOrEmpty() == false ? true : false,
+                                Img2 = images.EfLocal2.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal2) : "",
+                                ImgDesc2 = images.EfLocal2txt.IsNullOrEmpty() == false ? images.EfLocal2txt : "",
+                                ImgDescEng2 = images.EfLocal2txtIng.IsNullOrEmpty() == false ? images.EfLocal2txtIng : "",
+                                ImgPrint2 = images.EfLocal2.IsNullOrEmpty() == false ? true : false,
+                                Img3 = images.EfLocal3.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal3) : "",
+                                ImgDesc3 = images.EfLocal3txt.IsNullOrEmpty() == false ? images.EfLocal3txt : "",
+                                ImgDescEng3 = images.EfLocal3txtIng.IsNullOrEmpty() == false ? images.EfLocal3txtIng : "",
+                                ImgPrint3 = images.EfLocal3.IsNullOrEmpty() == false ? true : false,
+                                Img4 = images.EfLocal4.IsNullOrEmpty() == false ? Convert.ToBase64String(images.EfLocal4) : "",
+                                ImgDesc4 = images.EfLocal4txt.IsNullOrEmpty() == false ? images.EfLocal4txt : "",
+                                ImgDescEng4 = images.EfLocal4txtIng.IsNullOrEmpty() == false ? images.EfLocal4txtIng : "",
+                                ImgPrint4 = images.EfLocal4.IsNullOrEmpty() == false ? true : false,
+                            });
                             empresa.Migra = 1;
                             mysqlContext.MEmpresas.Update(empresa);
                             await context.SaveChangesAsync();
@@ -3294,6 +3295,82 @@ namespace DRRCore.Application.Main.MigrationApplication
                 return false;
             }
             
+        }
+
+        public async Task<bool> MigrateCompanyRelationated()
+        {
+            using var mysqlcontext = new MySqlContext();
+            using var context = new SqlCoreContext();
+            for (int i = 0; i < 4000; i++)
+            {
+                try
+                {
+                    var list = await mysqlcontext.REmpVsEmps.Where(x => x.Migra == 0).Take(100).ToListAsync();
+                    foreach (var item in list)
+                    {
+                        var company = await context.Companies.Where(x => x.OldCode == item.EmCodigo).FirstOrDefaultAsync();
+                        if(company != null)
+                        {
+                            var companyRel = await context.Companies.Where(x => x.OldCode == item.EeCodigo).FirstOrDefaultAsync();
+                            if (companyRel != null)
+                            {
+                                await context.CompanyRelations.AddAsync(new CompanyRelation
+                                {
+                                    IdCompany = company.Id,
+                                    IdCompanyRelation = companyRel.Id,
+                                    Relation = item.ReNombre,
+                                    RelationEng = item.ReNombreIng,
+                                    Participation = item.EePorAcc
+                                });
+                                await context.SaveChangesAsync();
+                                item.Migra = 1;
+                                mysqlcontext.REmpVsEmps.Update(item);
+                                await mysqlcontext.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                var listCompany = await mysqlcontext.REmpVsEmps.Where(x => x.EmCodigo == item.EeCodigo && x.Migra == 0).ToListAsync();
+                                foreach (var item1 in listCompany)
+                                {
+                                    item1.Migra = 2;
+                                    mysqlcontext.REmpVsEmps.Update(item1);
+                                    await mysqlcontext.SaveChangesAsync();
+                                }
+                                item.Migra = 1;
+                                mysqlcontext.REmpVsEmps.Update(item);
+                                await mysqlcontext.SaveChangesAsync();
+                            }
+
+                        }
+                        else
+                        {
+                            var listCompany = await mysqlcontext.REmpVsEmps.Where(x => x.EmCodigo == item.EmCodigo && x.Migra == 0).ToListAsync();
+                            foreach (var item1 in listCompany)
+                            {
+                                item1.Migra = 2;
+                                mysqlcontext.REmpVsEmps.Update(item1);
+                                await mysqlcontext.SaveChangesAsync();
+                            }
+                            item.Migra = 1;
+                            mysqlcontext.REmpVsEmps.Update(item);
+                            await mysqlcontext.SaveChangesAsync();
+                        }
+                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.Message);
+                    continue;
+                }
+            }
+               
+            return true;
+        }
+
+        public Task<bool> MigrateCompanyShareholder()
+        {
+            throw new NotImplementedException();
         }
     }
 }

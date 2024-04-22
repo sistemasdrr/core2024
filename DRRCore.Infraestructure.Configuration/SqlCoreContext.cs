@@ -1387,6 +1387,10 @@ public partial class SqlCoreContext : DbContext
             entity.Property(e => e.IdCompany).HasColumnName("idCompany");
             entity.Property(e => e.IdCompanyRelation).HasColumnName("idCompanyRelation");
             entity.Property(e => e.LastUpdateUser).HasColumnName("lastUpdateUser");
+            entity.Property(e => e.Participation)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("participation");
             entity.Property(e => e.Relation)
                 .HasMaxLength(50)
                 .IsUnicode(false)
