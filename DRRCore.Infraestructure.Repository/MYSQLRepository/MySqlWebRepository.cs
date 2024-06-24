@@ -15,7 +15,7 @@ namespace DRRCore.Infraestructure.Repository.MYSQLRepository
         public async Task<List<ViewConsultaWeb>> Get()
         {           
             using var mysqlContext = new MySqlContext();     
-            return await mysqlContext.ViewConsultaWebs.ToListAsync();           
+            return await mysqlContext.ViewConsultaWebs.Where(x=>x.CodigoEmpresa== "E0000988937").ToListAsync();           
         }
     }
 }

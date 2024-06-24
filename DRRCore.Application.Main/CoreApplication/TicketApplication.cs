@@ -249,8 +249,11 @@ namespace DRRCore.Application.Main.CoreApplication
                             if(doc!=null && doc.Data != null)
                             {
                                 var data = doc.Data;
-                                var path = await UploadF1(ticket.Id, "RV_" + ticket.RequestedName, data.File);
 
+                                var path = "/cupones/" + ticket.Number.ToString("D6") + "/" + "RV_" + ticket.RequestedName + ".pdf";
+
+                                await UploadF1(path, data.File).ConfigureAwait(false);
+                               
                                 await context.TicketFiles.AddAsync(new TicketFile
                                 {
                                     IdTicket = ticket.Id,
@@ -540,12 +543,12 @@ namespace DRRCore.Application.Main.CoreApplication
             }
             return response;
         }
-        private async Task<string> UploadF1(int idTicket, string fileName, byte[] byteArray)
+        private async Task<string> UploadF1(string path, byte[] byteArray)
         {
             try
             {
-                var ticket = await _ticketDomain.GetByIdAsync(idTicket);
-                var path = "/cupones/" + ticket.Number.ToString("D6") + "/" + fileName + ".pdf";
+               // var ticket = await _ticketDomain.GetByIdAsync(idTicket);
+              //  var path = "/cupones/" + ticket.Number.ToString("D6") + "/" + fileName + ".pdf";
                 using (var ftpClient = new FtpClient(GetFtpClientConfiguration()))
                 {
                     await ftpClient.LoginAsync();
@@ -1196,8 +1199,6 @@ namespace DRRCore.Application.Main.CoreApplication
 
                 if (await _ticketDomain.AddAsync(newTicket))
                 {
-                    //  await CopyReportForm(request.Number);
-                    // await CopyReportPerson(request.Number);
                     await _numerationDomain.UpdateTicketNumberAsync();
                     if (request.About == "E" && newTicket.IdCompany == null)
                     {
@@ -1232,7 +1233,9 @@ namespace DRRCore.Application.Main.CoreApplication
                         if (doc != null && doc.Data != null)
                         {
                             var data = doc.Data;
-                            var path = await UploadF1(ticket.Id, "RV_" + ticket.RequestedName, data.File);
+                            var path = "/cupones/" + ticket.Number.ToString("D6") + "/" + "RV_" + ticket.RequestedName + ".pdf";
+
+                            await UploadF1(path, data.File);
 
                             await context.TicketFiles.AddAsync(new TicketFile
                             {
